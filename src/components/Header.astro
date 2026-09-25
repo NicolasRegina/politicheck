@@ -1,0 +1,92 @@
+---
+interface Props {
+  activeTab?: string;
+}
+
+const { activeTab = 'temas-del-dia' } = Astro.props;
+---
+
+<header class="sticky top-0 z-50 bg-[#090D16]/90 backdrop-blur-md border-b border-slate-850">
+  <!-- Top ticker bar -->
+  <div class="bg-slate-950/80 border-b border-slate-900 py-1.5 px-4 text-xs font-mono text-slate-400">
+    <div class="max-w-6xl mx-auto flex items-center justify-between">
+      <div class="flex items-center gap-2">
+        <span class="relative flex h-2 w-2">
+          <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+          <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+        </span>
+        <span class="text-slate-300 font-semibold tracking-wider text-[11px] uppercase">
+          En Vivo • Monitor Electoral Argentina
+        </span>
+      </div>
+      <div class="hidden sm:flex items-center gap-4 text-[11px] text-slate-400">
+        <span>Feeds RSS verificados</span>
+        <span>•</span>
+        <a href="#metodologia" class="hover:text-slate-200 transition-colors underline underline-offset-2">
+          Metodología y Fuentes
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main navigation container -->
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 py-4 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+    <!-- Brand identity -->
+    <div class="flex items-center justify-between">
+      <a href="/" class="flex items-center gap-2.5 group">
+        <div class="w-8 h-8 rounded-lg bg-slate-100 flex items-center justify-center font-bold text-slate-950 font-mono text-lg shadow-sm group-hover:bg-white transition-colors">
+          P
+        </div>
+        <div class="flex flex-col">
+          <div class="flex items-center gap-1.5">
+            <span class="font-extrabold tracking-tight text-xl text-white font-mono uppercase">
+              POLITICHECK
+            </span>
+            <span class="text-[10px] font-mono px-1.5 py-0.5 rounded bg-slate-800 text-slate-300 border border-slate-700">
+              .ar
+            </span>
+          </div>
+          <span class="text-[10px] text-slate-400 font-mono tracking-wider">
+            ANÁLISIS DE SESGOS & PROMESAS
+          </span>
+        </div>
+      </a>
+    </div>
+
+    <!-- View Switcher Tabs -->
+    <nav class="flex items-center p-1 rounded-xl bg-slate-900 border border-slate-800 text-xs font-medium" id="view-tabs">
+      <button 
+        type="button"
+        data-tab="temas-del-dia"
+        class="tab-btn px-4 py-2 rounded-lg transition-all duration-200 flex items-center gap-2 text-white bg-slate-800 shadow-sm"
+      >
+        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+        </svg>
+        <span>Temas del Día</span>
+      </button>
+
+      <button 
+        type="button"
+        data-tab="ultimo-momento"
+        class="tab-btn px-4 py-2 rounded-lg transition-all duration-200 flex items-center gap-2 text-slate-400 hover:text-slate-200"
+      >
+        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+        </svg>
+        <span>Último Momento</span>
+      </button>
+
+      <button 
+        type="button"
+        data-tab="mirada-exterior"
+        class="tab-btn px-4 py-2 rounded-lg transition-all duration-200 flex items-center gap-2 text-slate-400 hover:text-slate-200"
+      >
+        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+        <span>Mirada Exterior</span>
+      </button>
+    </nav>
+  </div>
+</header>
