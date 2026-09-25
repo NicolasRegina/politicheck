@@ -15,7 +15,7 @@ const {
 ---
 
 <!doctype html>
-<html lang="es" class="dark scroll-smooth">
+<html lang="es" class="scroll-smooth">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -37,8 +37,18 @@ const {
     <meta property="twitter:card" content="summary_large_image" />
     <meta property="twitter:title" content={title} />
     <meta property="twitter:description" content={description} />
+
+    <!-- Theme Initialization Script (Prevents FOUC) -->
+    <script is:inline>
+      const savedTheme = localStorage.getItem('politicheck-theme');
+      if (savedTheme === 'dark' || (!savedTheme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+        document.documentElement.classList.add('dark');
+      } else {
+        document.documentElement.classList.remove('dark');
+      }
+    </script>
   </head>
-  <body class="min-h-screen flex flex-col bg-[#090D16] text-slate-100 antialiased selection:bg-slate-700 selection:text-white">
+  <body class="min-h-screen flex flex-col bg-[#F8FAFC] dark:bg-[#090D16] text-slate-900 dark:text-slate-100 antialiased selection:bg-slate-300 dark:selection:bg-slate-700 selection:text-slate-900 dark:selection:text-white transition-colors duration-200">
     <Header />
     <main class="flex-1 max-w-6xl w-full mx-auto px-4 sm:px-6 py-8">
       <slot />
