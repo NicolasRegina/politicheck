@@ -7,16 +7,16 @@ interface Props {
 
 const { article } = Astro.props;
 
-// Outlet monogram / badge helper
+// Outlet monogram / badge helper (editorial newspaper style)
 const getOutletBadge = (id: string) => {
   switch (id) {
-    case 'clarin': return { code: 'CL', color: 'bg-red-700/10 text-red-700 dark:text-red-400 border-red-200 dark:border-red-900/40' };
-    case 'lanacion': return { code: 'LN', color: 'bg-sky-700/10 text-sky-800 dark:text-sky-300 border-sky-200 dark:border-sky-900/40' };
-    case 'pagina12': return { code: 'P12', color: 'bg-amber-700/10 text-amber-800 dark:text-amber-300 border-amber-200 dark:border-amber-900/40' };
-    case 'infobae': return { code: 'INFO', color: 'bg-orange-700/10 text-orange-800 dark:text-orange-300 border-orange-200 dark:border-orange-900/40' };
-    case 'ambito': return { code: 'ÁMB', color: 'bg-indigo-700/10 text-indigo-800 dark:text-indigo-300 border-indigo-200 dark:border-indigo-900/40' };
-    case 'cronista': return { code: 'CRON', color: 'bg-blue-700/10 text-blue-800 dark:text-blue-300 border-blue-200 dark:border-blue-900/40' };
-    default: return { code: 'RSS', color: 'bg-slate-700/10 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-800' };
+    case 'clarin': return { code: 'CLARÍN', color: 'bg-red-50 text-red-900 dark:bg-red-950/60 dark:text-red-300 border-red-200 dark:border-red-900/60' };
+    case 'lanacion': return { code: 'LA NACIÓN', color: 'bg-sky-50 text-sky-950 dark:bg-sky-950/60 dark:text-sky-300 border-sky-200 dark:border-sky-900/60' };
+    case 'pagina12': return { code: 'PÁGINA 12', color: 'bg-amber-50 text-amber-950 dark:bg-amber-950/60 dark:text-amber-300 border-amber-200 dark:border-amber-900/60' };
+    case 'infobae': return { code: 'INFOBAE', color: 'bg-orange-50 text-orange-950 dark:bg-orange-950/60 dark:text-orange-300 border-orange-200 dark:border-orange-900/60' };
+    case 'ambito': return { code: 'ÁMBITO', color: 'bg-indigo-50 text-indigo-950 dark:bg-indigo-950/60 dark:text-indigo-300 border-indigo-200 dark:border-indigo-900/60' };
+    case 'cronista': return { code: 'CRONISTA', color: 'bg-blue-50 text-blue-950 dark:bg-blue-950/60 dark:text-blue-300 border-blue-200 dark:border-blue-900/60' };
+    default: return { code: 'RSS', color: 'bg-slate-100 text-slate-800 dark:bg-slate-900 dark:text-slate-300 border-slate-300 dark:border-slate-700' };
   }
 };
 
@@ -25,52 +25,51 @@ const badge = getOutletBadge(article.outletId);
 
 <a 
   href={article.url}
-  target="_blank"
+  target="_blank" 
   rel="noopener noreferrer"
-  class="group block glass-panel rounded-xl p-4 sm:p-5 border border-slate-200 dark:border-slate-800/80 hover:border-slate-300 dark:hover:border-slate-700 transition-all duration-200"
+  class="group block bg-white dark:bg-[#0F1420] rounded-xl p-3.5 sm:p-4 border border-slate-200 dark:border-slate-800/80 hover:border-slate-300 dark:hover:border-slate-700 transition-all duration-200 shadow-xs"
 >
-  <div class="flex flex-col sm:flex-row gap-4 items-start">
+  <div class="flex gap-3.5 items-start">
     {article.imageUrl && (
-      <div class="thumbnail-wrapper w-full sm:w-28 sm:h-20 shrink-0 overflow-hidden rounded-lg border border-slate-200 dark:border-slate-800 bg-slate-100 dark:bg-slate-900">
+      <div class="thumbnail-wrapper w-20 h-20 sm:w-24 sm:h-20 shrink-0 overflow-hidden rounded-lg border border-slate-200 dark:border-slate-800 bg-slate-100 dark:bg-slate-900">
         <img 
           src={article.imageUrl} 
           alt={article.title}
           loading="lazy"
           referrerpolicy="no-referrer"
           onerror="const w = this.closest('.thumbnail-wrapper'); if (w) w.style.display = 'none';"
-          class="w-full h-24 sm:h-full object-cover group-hover:scale-105 transition-transform duration-300"
+          class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
         />
       </div>
     )}
 
-    <div class="flex-1 space-y-1.5 w-full">
-      <div class="flex items-center justify-between gap-3 text-xs mb-1">
-        <div class="flex items-center gap-2">
-          <span class={`px-1.5 py-0.5 rounded text-[10px] font-mono font-bold border ${badge.color}`}>
+    <div class="flex-1 space-y-1 min-w-0">
+      <div class="flex items-center justify-between gap-2 text-xs mb-1">
+        <div class="flex items-center gap-1.5 flex-wrap">
+          <span class={`px-1.5 py-0.5 rounded text-[9px] font-mono font-bold border ${badge.color}`}>
             {badge.code}
           </span>
-          <span class="font-semibold text-slate-800 group-hover:text-black dark:text-slate-200 dark:group-hover:text-white">
-            {article.outletName}
-          </span>
-          <span class="text-slate-300 dark:text-slate-600">•</span>
-          <span class="text-slate-500 dark:text-slate-400 font-mono text-[11px]">{article.publishedAt}</span>
+          <span class="text-slate-300 dark:text-slate-700">•</span>
+          <span class="text-slate-500 dark:text-slate-400 font-mono text-[10px] font-semibold">{article.publishedAt}</span>
         </div>
 
-        <span class="text-slate-500 group-hover:text-slate-800 dark:text-slate-400 dark:group-hover:text-slate-300 font-mono text-[11px] inline-flex items-center gap-1">
-          Fuente original
-          <svg class="w-3 h-3 group-hover:translate-x-0.5 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <span class="text-slate-400 group-hover:text-slate-700 dark:text-slate-500 dark:group-hover:text-slate-300 font-mono text-[10px] inline-flex items-center gap-1 shrink-0">
+          Nota original
+          <svg class="w-2.5 h-2.5 group-hover:translate-x-0.5 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
           </svg>
         </span>
       </div>
 
-      <h3 class="text-base font-semibold text-slate-900 group-hover:text-black dark:text-slate-100 dark:group-hover:text-white leading-snug">
+      <h4 class="font-editorial text-sm sm:text-base font-bold text-slate-900 group-hover:text-black dark:text-slate-100 dark:group-hover:text-white leading-snug transition-colors line-clamp-2">
         {article.title}
-      </h3>
+      </h4>
 
-      <p class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed line-clamp-2">
-        {article.snippet}
-      </p>
+      {article.snippet && (
+        <p class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed line-clamp-2 font-sans">
+          {article.snippet}
+        </p>
+      )}
     </div>
   </div>
 </a>

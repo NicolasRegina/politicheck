@@ -35,13 +35,32 @@ export interface SpectrumBreakdown {
 
 export interface StoryCluster {
   id: string;
+  kicker?: string; // Volanta periodística (ej: "TENSIÓN DIPLOMÁTICA • SOBERANÍA")
   neutralHeadline: string;
-  category: string; // 'Economía', 'Política', 'Justicia', 'Elecciones'
+  category: string; // 'Economía', 'Política', 'Justicia', 'Internacional'
   summary: string;
   updatedAt: string;
-  imageUrl?: string; // Fotografía periodística de portada de la historia
+  imageUrl?: string; // Fotografía periodística real de portada
+  imageCaption?: string; // Pie de foto periodístico y créditos de agencia
   spectrum: SpectrumBreakdown;
   articles: Article[];
-  aiComparisonNotice?: string; // Breve síntesis del contraste entre medios
+  aiComparisonNotice?: string; // Síntesis del contraste de encuadres por IA
+  isLeadStory?: boolean; // Para apertura de portada de gran diario
+}
+
+export type PromiseStatus = 'cumplida' | 'en_progreso' | 'incumplida' | 'en_pausa';
+
+export interface CampaignPromise {
+  id: string;
+  candidate: string;
+  coalition: string;
+  role: string;
+  category: string;
+  promiseText: string;
+  status: PromiseStatus;
+  statusLabel: string;
+  statedAt: string;
+  sourceUrl: string;
+  auditNotes: string;
 }
 

@@ -6,121 +6,179 @@ interface Props {
 const { activeTab = 'temas-del-dia' } = Astro.props;
 ---
 
-<header class="sticky top-0 z-50 bg-white/90 dark:bg-[#090D16]/90 backdrop-blur-md border-b border-slate-200 dark:border-slate-850 transition-colors duration-200">
-  <!-- Top ticker bar -->
-  <div class="bg-slate-100/90 dark:bg-slate-950/80 border-b border-slate-200/80 dark:border-slate-900 py-1.5 px-4 text-xs font-mono text-slate-600 dark:text-slate-400">
-    <div class="max-w-6xl mx-auto flex items-center justify-between">
-      <div class="flex items-center gap-2">
-        <span class="relative flex h-2 w-2">
-          <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-500 opacity-75"></span>
-          <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-600 dark:bg-emerald-500"></span>
+<header class="sticky top-0 z-50 bg-white/95 dark:bg-[#0A0E17]/95 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 transition-colors duration-200 shadow-xs">
+  <!-- Top Ticker Bar: Financial Indicators & Weather (Clarín / La Nación / Ámbito style) -->
+  <div class="bg-slate-100/90 dark:bg-slate-950 border-b border-slate-200/80 dark:border-slate-900 py-1 px-4 text-[11px] font-mono text-slate-600 dark:text-slate-400">
+    <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-y-1">
+      <!-- Date & Weather -->
+      <div class="flex items-center gap-3">
+        <span class="font-semibold text-slate-800 dark:text-slate-200">
+          Sábado, 26 de septiembre de 2026
         </span>
-        <span class="text-slate-800 dark:text-slate-300 font-semibold tracking-wider text-[11px] uppercase">
-          En Vivo • Monitor Electoral Argentina
+        <span class="text-slate-300 dark:text-slate-700">•</span>
+        <span class="hidden sm:inline text-slate-600 dark:text-slate-400">
+          Buenos Aires, Argentina (19°C)
         </span>
       </div>
-      <div class="flex items-center gap-4 text-[11px] text-slate-500 dark:text-slate-400">
-        <span class="hidden sm:inline">Feeds RSS verificados</span>
-        <span class="hidden sm:inline">•</span>
-        <a href="#metodologia" class="hover:text-slate-900 dark:hover:text-slate-200 transition-colors underline underline-offset-2">
-          Metodología y Fuentes
+
+      <!-- Financial Ticker (Signature of Argentine Daily Press) -->
+      <div class="hidden lg:flex items-center gap-4 text-[10px] tracking-tight">
+        <div class="flex items-center gap-1.5">
+          <span class="text-slate-500 dark:text-slate-400">DÓLAR BLUE:</span>
+          <span class="font-bold text-slate-900 dark:text-slate-100">$1.340</span>
+        </div>
+        <span class="text-slate-300 dark:text-slate-700">|</span>
+        <div class="flex items-center gap-1.5">
+          <span class="text-slate-500 dark:text-slate-400">OFICIAL:</span>
+          <span class="font-bold text-slate-900 dark:text-slate-100">$1.020</span>
+        </div>
+        <span class="text-slate-300 dark:text-slate-700">|</span>
+        <div class="flex items-center gap-1.5">
+          <span class="text-slate-500 dark:text-slate-400">MEP:</span>
+          <span class="font-bold text-slate-900 dark:text-slate-100">$1.285</span>
+        </div>
+        <span class="text-slate-300 dark:text-slate-700">|</span>
+        <div class="flex items-center gap-1.5">
+          <span class="text-slate-500 dark:text-slate-400">RIESGO PAÍS:</span>
+          <span class="font-bold text-slate-900 dark:text-slate-100">1.180 pts</span>
+        </div>
+        <span class="text-slate-300 dark:text-slate-700">|</span>
+        <div class="flex items-center gap-1.5">
+          <span class="text-slate-500 dark:text-slate-400">IPC MENSUAL:</span>
+          <span class="font-bold text-emerald-700 dark:text-emerald-400">2,4%</span>
+        </div>
+      </div>
+
+      <!-- Live Sync status & Methodology -->
+      <div class="flex items-center gap-3 text-[11px]">
+        <div class="flex items-center gap-1.5 text-slate-700 dark:text-slate-300">
+          <span class="relative flex h-2 w-2">
+            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-500 opacity-75"></span>
+            <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-600 dark:bg-emerald-500"></span>
+          </span>
+          <span class="font-semibold uppercase tracking-wider text-[10px]">Cables en Vivo</span>
+        </div>
+        <span class="text-slate-300 dark:text-slate-700">•</span>
+        <a href="#metodologia" class="hover:text-slate-900 dark:hover:text-slate-100 transition-colors underline underline-offset-2">
+          Metodología
         </a>
       </div>
     </div>
   </div>
 
-  <!-- Main navigation container -->
-  <div class="max-w-6xl mx-auto px-4 sm:px-6 py-3.5 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-    <!-- Brand identity -->
-    <div class="flex items-center justify-between">
-      <a href="/" class="flex items-center gap-2.5 group">
-        <div class="w-8 h-8 rounded-lg bg-slate-900 dark:bg-slate-100 flex items-center justify-center font-bold text-white dark:text-slate-950 font-mono text-lg shadow-sm group-hover:scale-105 transition-transform">
-          P
-        </div>
-        <div class="flex flex-col">
-          <div class="flex items-center gap-1.5">
-            <span class="font-extrabold tracking-tight text-xl text-slate-900 dark:text-white font-mono uppercase">
-              POLITICHECK
-            </span>
-            <span class="text-[10px] font-mono px-1.5 py-0.5 rounded bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-300 dark:border-slate-700 font-semibold">
-              .ar
-            </span>
-          </div>
-          <span class="text-[10px] text-slate-500 dark:text-slate-400 font-mono tracking-wider">
-            ANÁLISIS DE SESGOS & PROMESAS
-          </span>
-        </div>
-      </a>
+  <!-- The Editorial Masthead (The New York Times / La Nación format) -->
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 py-4">
+    <div class="grid grid-cols-1 md:grid-cols-12 items-center gap-4 border-b border-slate-200 dark:border-slate-800 pb-4">
+      <!-- Left Column: Edition Metadata -->
+      <div class="hidden md:flex md:col-span-3 flex-col text-[11px] font-mono text-slate-500 dark:text-slate-400 space-y-0.5">
+        <span class="font-semibold text-slate-700 dark:text-slate-300 uppercase tracking-widest text-[10px]">Edición Digital Nacional</span>
+        <span>Año III • Registro N° 842</span>
+        <span>Cobertura de 9 diarios en simultáneo</span>
+      </div>
 
-      <!-- Mobile Theme Toggle Button -->
-      <button 
-        type="button" 
-        class="theme-toggle md:hidden p-2 rounded-lg bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white transition-colors"
-        aria-label="Alternar tema claro y oscuro"
-      >
-        <svg class="w-4 h-4 hidden dark:block" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
-        </svg>
-        <svg class="w-4 h-4 block dark:hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
-        </svg>
-      </button>
+      <!-- Center Column: Grand Newspaper Title -->
+      <div class="col-span-12 md:col-span-6 text-center">
+        <a href="/" class="inline-block group">
+          <h1 class="font-editorial text-3xl sm:text-5xl md:text-5xl font-black tracking-wider text-slate-950 dark:text-white uppercase group-hover:opacity-90 transition-opacity">
+            POLITICHECK
+          </h1>
+          <div class="mt-1 flex items-center justify-center gap-2">
+            <span class="h-px w-6 sm:w-12 bg-slate-400 dark:bg-slate-600"></span>
+            <p class="font-mono text-[10px] sm:text-[11px] uppercase tracking-widest text-slate-600 dark:text-slate-400 font-medium">
+              Observatorio de Cobertura Periodística & Auditoría Electoral
+            </p>
+            <span class="h-px w-6 sm:w-12 bg-slate-400 dark:bg-slate-600"></span>
+          </div>
+        </a>
+      </div>
+
+      <!-- Right Column: Quick Status & Theme Switcher -->
+      <div class="col-span-12 md:col-span-3 flex items-center justify-between md:justify-end gap-3">
+        <div class="hidden sm:flex flex-col text-right text-[10px] font-mono text-slate-500 dark:text-slate-400">
+          <span class="font-semibold text-slate-800 dark:text-slate-200 uppercase">Sin Sesgo Partidario</span>
+          <span>100% Fuentes Oficiales RSS</span>
+        </div>
+
+        <!-- Theme Toggle Button -->
+        <button 
+          type="button" 
+          class="theme-toggle flex items-center justify-center gap-2 px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 dark:bg-slate-900 dark:hover:bg-slate-800 border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 text-xs font-mono transition-colors cursor-pointer"
+          aria-label="Alternar modo claro y oscuro"
+          title="Alternar entre modo papel (claro) y nocturno (oscuro)"
+        >
+          <!-- Sun icon for dark mode -->
+          <svg class="w-4 h-4 hidden dark:block" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+          </svg>
+          <!-- Moon icon for light mode -->
+          <svg class="w-4 h-4 block dark:hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+          </svg>
+          <span class="text-[11px] hidden sm:inline">Modo Lectura</span>
+        </button>
+      </div>
     </div>
 
-    <!-- Navigation & Controls -->
-    <div class="flex items-center gap-3">
-      <!-- View Switcher Tabs -->
-      <nav class="flex items-center p-1 rounded-xl bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-xs font-medium w-full md:w-auto overflow-x-auto" id="view-tabs">
+    <!-- Newspaper Sections Bar & View Switcher (The Classical Hairline Navigation) -->
+    <div class="pt-2 flex flex-col md:flex-row md:items-center justify-between gap-3">
+      <!-- Traditional Newspaper Sections -->
+      <nav class="flex items-center gap-1 sm:gap-2 overflow-x-auto text-[12px] font-semibold tracking-wide uppercase text-slate-700 dark:text-slate-300 py-1" aria-label="Secciones del periódico">
+        <a href="#view-temas-del-dia" class="px-2.5 py-1 rounded hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-slate-950 dark:hover:text-white transition-colors whitespace-nowrap">
+          Portada
+        </a>
+        <span class="text-slate-300 dark:text-slate-700">•</span>
+        <a href="#view-temas-del-dia" class="px-2.5 py-1 rounded hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-slate-950 dark:hover:text-white transition-colors whitespace-nowrap">
+          Política
+        </a>
+        <span class="text-slate-300 dark:text-slate-700">•</span>
+        <a href="#view-temas-del-dia" class="px-2.5 py-1 rounded hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-slate-950 dark:hover:text-white transition-colors whitespace-nowrap">
+          Economía
+        </a>
+        <span class="text-slate-300 dark:text-slate-700">•</span>
+        <a href="#view-temas-del-dia" class="px-2.5 py-1 rounded hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-slate-950 dark:hover:text-white transition-colors whitespace-nowrap">
+          Sociedad
+        </a>
+        <span class="text-slate-300 dark:text-slate-700">•</span>
+        <a href="#monitor-promesas" class="px-2.5 py-1 rounded bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-slate-100 hover:bg-slate-200 dark:hover:bg-slate-800 transition-colors whitespace-nowrap">
+          Promesas 2027
+        </a>
+      </nav>
+
+      <!-- View Switcher Tabs (Temas del Día / Cables / Mirada Exterior) -->
+      <nav class="flex items-center p-1 rounded-xl bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-xs font-mono w-full md:w-auto overflow-x-auto" id="view-tabs">
         <button 
           type="button"
           data-tab="temas-del-dia"
-          class="tab-btn px-3.5 sm:px-4 py-2 rounded-lg transition-all duration-200 flex items-center gap-2 text-slate-900 dark:text-white bg-white dark:bg-slate-800 shadow-sm whitespace-nowrap"
+          class="tab-btn px-3 py-1.5 rounded-lg transition-all duration-200 flex items-center gap-1.5 text-slate-900 dark:text-white bg-white dark:bg-slate-800 shadow-xs whitespace-nowrap font-bold"
         >
-          <svg class="w-4 h-4 text-slate-700 dark:text-slate-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <svg class="w-3.5 h-3.5 text-slate-700 dark:text-slate-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
           </svg>
-          <span>Temas del Día</span>
+          <span>Tapa del Día</span>
         </button>
 
         <button 
           type="button"
           data-tab="ultimo-momento"
-          class="tab-btn px-3.5 sm:px-4 py-2 rounded-lg transition-all duration-200 flex items-center gap-2 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 whitespace-nowrap"
+          class="tab-btn px-3 py-1.5 rounded-lg transition-all duration-200 flex items-center gap-1.5 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 whitespace-nowrap"
         >
-          <svg class="w-4 h-4 text-slate-500 dark:text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <svg class="w-3.5 h-3.5 text-slate-500 dark:text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
           </svg>
-          <span>Último Momento</span>
+          <span>Minuto a Minuto</span>
         </button>
 
         <button 
           type="button"
           data-tab="mirada-exterior"
-          class="tab-btn px-3.5 sm:px-4 py-2 rounded-lg transition-all duration-200 flex items-center gap-2 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 whitespace-nowrap"
+          class="tab-btn px-3 py-1.5 rounded-lg transition-all duration-200 flex items-center gap-1.5 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 whitespace-nowrap"
         >
-          <svg class="w-4 h-4 text-slate-500 dark:text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <svg class="w-3.5 h-3.5 text-slate-500 dark:text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
           </svg>
           <span>Mirada Exterior</span>
         </button>
       </nav>
-
-      <!-- Desktop Theme Toggle Button -->
-      <button 
-        type="button" 
-        class="theme-toggle hidden md:flex items-center justify-center w-9 h-9 rounded-xl bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white transition-colors cursor-pointer"
-        aria-label="Alternar tema claro y oscuro"
-        title="Alternar entre modo claro y oscuro"
-      >
-        <!-- Sun icon (shown in dark mode to switch to light) -->
-        <svg class="w-4 h-4 hidden dark:block" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
-        </svg>
-        <!-- Moon icon (shown in light mode to switch to dark) -->
-        <svg class="w-4 h-4 block dark:hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
-        </svg>
-      </button>
     </div>
   </div>
 </header>
