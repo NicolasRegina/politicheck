@@ -4,9 +4,20 @@ import StoryCard from '../components/StoryCard.astro';
 import LiveFeedItem from '../components/LiveFeedItem.astro';
 import PromiseCard from '../components/PromiseCard.astro';
 import { MOCK_STORIES, MOCK_LIVE_FEED, MOCK_FOREIGN_STORIES, MOCK_PROMISES } from '../data/mockData';
+import { getCachedArticles } from '../services/rss/sync';
+import { clusterArticlesWithGemini } from '../services/ai/clustering';
 
-const leadStory = MOCK_STORIES[0];
-const secondaryStories = MOCK_STORIES.slice(1);
+// Fetch live articles cached from official RSS feeds
+const cachedArticles = getCachedArticles();
+const liveArticles = cachedArticles.length > 0 ? cachedArticles : MOCK_LIVE_FEED;
+
+// Generate clustered stories dynamically from live articles
+const dynamicStories = await clusterArticlesWithGemini(liveArticles);
+const storiesToDisplay = dynamicStories.length > 0 ? dynamicStories : MOCK_STORIES;
+
+const leadStory = storiesToDisplay[0];
+const secondaryStories = storiesToDisplay.slice(1);
+const liveFeedArticles = liveArticles.slice(0, 20);
 ---
 
 <Layout>
@@ -94,7 +105,7 @@ const secondaryStories = MOCK_STORIES.slice(1);
 
         <!-- Wire Items List -->
         <div class="space-y-3" id="wire-rail-list">
-          {MOCK_LIVE_FEED.slice(0, 5).map((article) => (
+          {liveFeedArticles.slice(0, 5).map((article) => (
             <div class="live-item" data-text={`${article.title} ${article.snippet} ${article.outletName}`}>
               <LiveFeedItem article={article} />
             </div>
@@ -218,7 +229,7 @@ const secondaryStories = MOCK_STORIES.slice(1);
     </div>
 
     <div class="grid grid-cols-1 md:grid-cols-2 gap-4" id="live-feed-full-list">
-      {MOCK_LIVE_FEED.map((article) => (
+      {liveFeedArticles.map((article) => (
         <div class="live-item" data-text={`${article.title} ${article.snippet} ${article.outletName}`}>
           <LiveFeedItem article={article} />
         </div>
