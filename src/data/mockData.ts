@@ -82,6 +82,7 @@ export const MOCK_STORIES: StoryCluster[] = [
     category: 'Economía',
     summary: 'El INDEC reportó una inflación mensual del 2,4%. Paralelamente, el Palacio de Hacienda dispuso la reducción de aranceles de importación para insumos tecnológicos y bienes de capital.',
     updatedAt: 'Hace 18 minutos',
+    imageUrl: '/images/story-1.jpg',
     spectrum: {
       oficialismoPct: 40,
       centroDatosPct: 35,
@@ -138,6 +139,7 @@ export const MOCK_STORIES: StoryCluster[] = [
     category: 'Política',
     summary: 'Las comisiones de Asuntos Constitucionales y Presupuesto comenzaron el tratamiento del proyecto de ley que elimina las PASO y modifica topes de aportes privados para campañas.',
     updatedAt: 'Hace 42 minutos',
+    imageUrl: '/images/story-2.jpg',
     spectrum: {
       oficialismoPct: 33,
       centroDatosPct: 33,
@@ -184,6 +186,7 @@ export const MOCK_STORIES: StoryCluster[] = [
     category: 'Justicia',
     summary: 'El máximo tribunal desestimó los planteos de nulidad presentados por las defensas en un expediente de trascendencia política, habilitando la continuidad de las medidas cautelares.',
     updatedAt: 'Hace 1 hora',
+    imageUrl: '/images/story-3.jpg',
     spectrum: {
       oficialismoPct: 45,
       centroDatosPct: 25,
@@ -224,7 +227,8 @@ export const MOCK_LIVE_FEED: Article[] = [
     title: 'El Banco Central compró otros USD 115 millones y las reservas brutas alcanzaron su nivel más alto del semestre',
     snippet: 'La autoridad monetaria acumula 14 jornadas consecutivas con saldo favorable en el mercado libre de cambios.',
     url: 'https://www.infobae.com',
-    publishedAt: 'Hace 6 min'
+    publishedAt: 'Hace 6 min',
+    imageUrl: '/images/story-1.jpg'
   },
   {
     id: 'live-2',
@@ -233,7 +237,8 @@ export const MOCK_LIVE_FEED: Article[] = [
     title: 'Paritarias docentes: cinco provincias retomaron negociaciones con cláusulas atadas a la recaudación',
     snippet: 'Gremios advierten que la propuesta oficial no compensa la pérdida del poder adquisitivo del último año.',
     url: 'https://www.clarin.com',
-    publishedAt: 'Hace 14 min'
+    publishedAt: 'Hace 14 min',
+    imageUrl: '/images/story-2.jpg'
   },
   {
     id: 'live-3',
@@ -242,7 +247,8 @@ export const MOCK_LIVE_FEED: Article[] = [
     title: 'Subsidios al transporte: denuncian asimetrías tarifarias entre el AMBA y las provincias del interior',
     snippet: 'Intendentes de diversas ciudades reclaman un fondo federal compensatorio ante la escalada del boleto.',
     url: 'https://www.pagina12.com.ar',
-    publishedAt: 'Hace 21 min'
+    publishedAt: 'Hace 21 min',
+    imageUrl: '/images/story-3.jpg'
   },
   {
     id: 'live-4',
@@ -251,7 +257,8 @@ export const MOCK_LIVE_FEED: Article[] = [
     title: 'Energía y gasoductos: el sector privado confirma inversiones por USD 2.300 millones en Vaca Muerta',
     snippet: 'Consorcio de empresas proyecta duplicar la capacidad de evacuación de crudo hacia puertos del Atlántico.',
     url: 'https://www.cronista.com',
-    publishedAt: 'Hace 28 min'
+    publishedAt: 'Hace 28 min',
+    imageUrl: '/images/foreign-1.jpg'
   }
 ];
 
@@ -262,6 +269,7 @@ export const MOCK_FOREIGN_STORIES: StoryCluster[] = [
     category: 'Mirada Exterior',
     summary: 'Corresponsales extranjeros y centros de estudios evalúan la solidez del superávit fiscal, el alineamiento con Estados Unidos y el costo social de las reformas de shock.',
     updatedAt: 'Hace 35 minutos',
+    imageUrl: '/images/foreign-1.jpg',
     spectrum: {
       oficialismoPct: 35,
       centroDatosPct: 40,

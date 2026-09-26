@@ -21,6 +21,7 @@ export interface Article {
   snippet: string;
   url: string;
   publishedAt: string;
+  imageUrl?: string;
   framingSummary?: string; // Análisis del encuadre por IA
   specificFocus?: string; // En qué hace hincapié (ej. "Costo fiscal", "Alivio al agro")
 }
@@ -38,7 +39,9 @@ export interface StoryCluster {
   category: string; // 'Economía', 'Política', 'Justicia', 'Elecciones'
   summary: string;
   updatedAt: string;
+  imageUrl?: string; // Fotografía periodística de portada de la historia
   spectrum: SpectrumBreakdown;
   articles: Article[];
   aiComparisonNotice?: string; // Breve síntesis del contraste entre medios
 }
+
