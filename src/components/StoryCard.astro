@@ -67,12 +67,14 @@ const getOutletBadge = (id: string) => {
 
     <!-- Right: Editorial Image Banner -->
     {story.imageUrl && (
-      <div class="md:col-span-5 lg:col-span-4 w-full">
+      <div class="story-img-wrapper md:col-span-5 lg:col-span-4 w-full">
         <div class="relative overflow-hidden rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-100 dark:bg-slate-900 group/img shadow-sm aspect-video md:aspect-[4/3]">
           <img 
             src={story.imageUrl} 
             alt={story.neutralHeadline} 
             loading="lazy"
+            referrerpolicy="no-referrer"
+            onerror="const w = this.closest('.story-img-wrapper'); if (w) w.style.display = 'none';"
             class="w-full h-full object-cover transition-transform duration-500 group-hover/img:scale-105"
           />
           <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent pointer-events-none"></div>

@@ -31,11 +31,13 @@ const badge = getOutletBadge(article.outletId);
 >
   <div class="flex flex-col sm:flex-row gap-4 items-start">
     {article.imageUrl && (
-      <div class="w-full sm:w-28 sm:h-20 shrink-0 overflow-hidden rounded-lg border border-slate-200 dark:border-slate-800 bg-slate-100 dark:bg-slate-900">
+      <div class="thumbnail-wrapper w-full sm:w-28 sm:h-20 shrink-0 overflow-hidden rounded-lg border border-slate-200 dark:border-slate-800 bg-slate-100 dark:bg-slate-900">
         <img 
           src={article.imageUrl} 
           alt={article.title}
           loading="lazy"
+          referrerpolicy="no-referrer"
+          onerror="const w = this.closest('.thumbnail-wrapper'); if (w) w.style.display = 'none';"
           class="w-full h-24 sm:h-full object-cover group-hover:scale-105 transition-transform duration-300"
         />
       </div>
