@@ -61,6 +61,17 @@ const secondaryStories = MOCK_STORIES.slice(1);
           <span class="hidden sm:inline">Contraste simultáneo de redacciones</span>
         </div>
 
+        <!-- Filter Status Banner (Shown when a category is selected) -->
+        <div id="filter-status-banner" class="hidden p-3.5 rounded-xl bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-xs font-mono text-slate-700 dark:text-slate-300 items-center justify-between">
+          <div class="flex items-center gap-2">
+            <span class="w-2 h-2 rounded-full bg-slate-900 dark:bg-slate-100"></span>
+            <span>Filtro por sección: <strong id="filter-status-text" class="text-slate-950 dark:text-white uppercase font-bold"></strong></span>
+          </div>
+          <button type="button" id="clear-filter-btn" class="text-slate-500 hover:text-slate-900 dark:hover:text-white underline underline-offset-2 cursor-pointer">
+            Ver todas las secciones
+          </button>
+        </div>
+
         <div class="story-item" data-category={leadStory.category} data-text={`${leadStory.neutralHeadline} ${leadStory.summary} ${leadStory.articles.map(a => a.title + ' ' + a.outletName).join(' ')}`}>
           <StoryCard story={leadStory} />
         </div>
@@ -298,16 +309,59 @@ const secondaryStories = MOCK_STORIES.slice(1);
       btn.classList.add('bg-slate-900', 'dark:bg-slate-100', 'text-white', 'dark:text-slate-950', 'font-bold');
       btn.classList.remove('bg-white', 'dark:bg-slate-900', 'text-slate-700', 'dark:text-slate-300');
 
+      // Sync Header nav buttons
+      const navButtons = document.querySelectorAll<HTMLButtonElement>('.nav-section-btn');
+      navButtons.forEach(nb => {
+        const sec = nb.getAttribute('data-nav-section');
+        if (sec === selectedCat || (selectedCat === 'all' && sec === 'all')) {
+          nb.classList.add('text-slate-950', 'dark:text-white', 'font-bold');
+          nb.classList.remove('text-slate-700', 'dark:text-slate-300');
+        } else {
+          nb.classList.remove('text-slate-950', 'dark:text-white', 'font-bold');
+          nb.classList.add('text-slate-700', 'dark:text-slate-300');
+        }
+      });
+
+      // Filter banner management
+      const filterBanner = document.getElementById('filter-status-banner');
+      const filterText = document.getElementById('filter-status-text');
+      if (filterBanner && filterText) {
+        if (selectedCat === 'all') {
+          filterBanner.classList.add('hidden');
+          filterBanner.classList.remove('flex');
+        } else {
+          filterBanner.classList.remove('hidden');
+          filterBanner.classList.add('flex');
+          filterText.textContent = selectedCat;
+        }
+      }
+
+      let firstVisibleMatch: HTMLElement | null = null;
       storyItems.forEach(item => {
         const itemCat = item.getAttribute('data-category');
         if (selectedCat === 'all' || itemCat === selectedCat) {
           item.style.display = '';
+          if (!firstVisibleMatch) firstVisibleMatch = item;
         } else {
           item.style.display = 'none';
         }
       });
+
+      // If user filtered by a category and the lead story is hidden, scroll to the matching stories
+      if (selectedCat !== 'all' && firstVisibleMatch) {
+        firstVisibleMatch.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      }
     });
   });
+
+  // Clear filter button logic
+  const clearFilterBtn = document.getElementById('clear-filter-btn');
+  if (clearFilterBtn) {
+    clearFilterBtn.addEventListener('click', () => {
+      const allCatBtn = document.querySelector<HTMLButtonElement>('.cat-btn[data-cat="all"]');
+      if (allCatBtn) allCatBtn.click();
+    });
+  }
 
   // Client-side Quick Search Filter
   const searchInput = document.getElementById('search-input') as HTMLInputElement | null;

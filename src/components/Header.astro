@@ -1,41 +1,52 @@
 ---
+import { fetchLiveFinancialData, fetchLiveWeather } from '../services/finance';
+
 interface Props {
   activeTab?: string;
 }
 
 const { activeTab = 'temas-del-dia' } = Astro.props;
+
+// Fetch initial data at build/render time
+const finance = await fetchLiveFinancialData();
+const weather = await fetchLiveWeather();
+
+const initialBlue = finance ? finance.blue : 1340;
+const initialOficial = finance ? finance.oficial : 1020;
+const initialMep = finance ? finance.mep : 1285;
+const initialTemp = weather ? weather.temperature : 19;
 ---
 
 <header class="sticky top-0 z-50 bg-white/95 dark:bg-[#0A0E17]/95 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 transition-colors duration-200 shadow-xs">
   <!-- Top Ticker Bar: Financial Indicators & Weather (Clarín / La Nación / Ámbito style) -->
   <div class="bg-slate-100/90 dark:bg-slate-950 border-b border-slate-200/80 dark:border-slate-900 py-1 px-4 text-[11px] font-mono text-slate-600 dark:text-slate-400">
     <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-y-1">
-      <!-- Date & Weather -->
+      <!-- Date & Weather (Dynamic) -->
       <div class="flex items-center gap-3">
-        <span class="font-semibold text-slate-800 dark:text-slate-200">
+        <span class="font-semibold text-slate-800 dark:text-slate-200 capitalize" id="ticker-live-date">
           Sábado, 26 de septiembre de 2026
         </span>
         <span class="text-slate-300 dark:text-slate-700">•</span>
-        <span class="hidden sm:inline text-slate-600 dark:text-slate-400">
-          Buenos Aires, Argentina (19°C)
+        <span class="hidden sm:inline text-slate-600 dark:text-slate-400" id="ticker-live-weather">
+          Buenos Aires (<span id="weather-temp-val">{initialTemp}</span>°C)
         </span>
       </div>
 
-      <!-- Financial Ticker (Signature of Argentine Daily Press) -->
+      <!-- Financial Ticker (Live Dólar API Integration) -->
       <div class="hidden lg:flex items-center gap-4 text-[10px] tracking-tight">
-        <div class="flex items-center gap-1.5">
+        <div class="flex items-center gap-1.5" title="Cotización venta Dólar Blue (dolarapi.com)">
           <span class="text-slate-500 dark:text-slate-400">DÓLAR BLUE:</span>
-          <span class="font-bold text-slate-900 dark:text-slate-100">$1.340</span>
+          <span class="font-bold text-slate-900 dark:text-slate-100" id="ticker-blue-val">${initialBlue}</span>
         </div>
         <span class="text-slate-300 dark:text-slate-700">|</span>
-        <div class="flex items-center gap-1.5">
+        <div class="flex items-center gap-1.5" title="Cotización venta Dólar Oficial">
           <span class="text-slate-500 dark:text-slate-400">OFICIAL:</span>
-          <span class="font-bold text-slate-900 dark:text-slate-100">$1.020</span>
+          <span class="font-bold text-slate-900 dark:text-slate-100" id="ticker-oficial-val">${initialOficial}</span>
         </div>
         <span class="text-slate-300 dark:text-slate-700">|</span>
-        <div class="flex items-center gap-1.5">
+        <div class="flex items-center gap-1.5" title="Cotización Bolsa MEP">
           <span class="text-slate-500 dark:text-slate-400">MEP:</span>
-          <span class="font-bold text-slate-900 dark:text-slate-100">$1.285</span>
+          <span class="font-bold text-slate-900 dark:text-slate-100" id="ticker-mep-val">${initialMep}</span>
         </div>
         <span class="text-slate-300 dark:text-slate-700">|</span>
         <div class="flex items-center gap-1.5">
@@ -56,7 +67,7 @@ const { activeTab = 'temas-del-dia' } = Astro.props;
             <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-500 opacity-75"></span>
             <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-600 dark:bg-emerald-500"></span>
           </span>
-          <span class="font-semibold uppercase tracking-wider text-[10px]">Cables en Vivo</span>
+          <span class="font-semibold uppercase tracking-wider text-[10px]" id="ticker-sync-status">Cables en Vivo</span>
         </div>
         <span class="text-slate-300 dark:text-slate-700">•</span>
         <a href="#metodologia" class="hover:text-slate-900 dark:hover:text-slate-100 transition-colors underline underline-offset-2">
@@ -96,7 +107,7 @@ const { activeTab = 'temas-del-dia' } = Astro.props;
       <div class="col-span-12 md:col-span-3 flex items-center justify-between md:justify-end gap-3">
         <div class="hidden sm:flex flex-col text-right text-[10px] font-mono text-slate-500 dark:text-slate-400">
           <span class="font-semibold text-slate-800 dark:text-slate-200 uppercase">Sin Sesgo Partidario</span>
-          <span>100% Fuentes Oficiales RSS</span>
+          <span class="text-emerald-600 dark:text-emerald-400 font-bold">100% Fuentes Oficiales RSS</span>
         </div>
 
         <!-- Theme Toggle Button -->
@@ -121,27 +132,47 @@ const { activeTab = 'temas-del-dia' } = Astro.props;
 
     <!-- Newspaper Sections Bar & View Switcher (The Classical Hairline Navigation) -->
     <div class="pt-2 flex flex-col md:flex-row md:items-center justify-between gap-3">
-      <!-- Traditional Newspaper Sections -->
-      <nav class="flex items-center gap-1 sm:gap-2 overflow-x-auto text-[12px] font-semibold tracking-wide uppercase text-slate-700 dark:text-slate-300 py-1" aria-label="Secciones del periódico">
-        <a href="#view-temas-del-dia" class="px-2.5 py-1 rounded hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-slate-950 dark:hover:text-white transition-colors whitespace-nowrap">
+      <!-- Traditional Newspaper Sections (Dynamic Filtering) -->
+      <nav class="flex items-center gap-1 sm:gap-2 overflow-x-auto text-[12px] font-semibold tracking-wide uppercase text-slate-700 dark:text-slate-300 py-1" id="newspaper-sections-nav" aria-label="Secciones del periódico">
+        <button 
+          type="button" 
+          data-nav-section="all" 
+          class="nav-section-btn px-2.5 py-1 rounded hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-slate-950 dark:hover:text-white transition-colors whitespace-nowrap cursor-pointer text-slate-950 dark:text-white font-bold"
+        >
           Portada
-        </a>
+        </button>
         <span class="text-slate-300 dark:text-slate-700">•</span>
-        <a href="#view-temas-del-dia" class="px-2.5 py-1 rounded hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-slate-950 dark:hover:text-white transition-colors whitespace-nowrap">
+        <button 
+          type="button" 
+          data-nav-section="Política" 
+          class="nav-section-btn px-2.5 py-1 rounded hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-slate-950 dark:hover:text-white transition-colors whitespace-nowrap cursor-pointer"
+        >
           Política
-        </a>
+        </button>
         <span class="text-slate-300 dark:text-slate-700">•</span>
-        <a href="#view-temas-del-dia" class="px-2.5 py-1 rounded hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-slate-950 dark:hover:text-white transition-colors whitespace-nowrap">
+        <button 
+          type="button" 
+          data-nav-section="Economía" 
+          class="nav-section-btn px-2.5 py-1 rounded hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-slate-950 dark:hover:text-white transition-colors whitespace-nowrap cursor-pointer"
+        >
           Economía
-        </a>
+        </button>
         <span class="text-slate-300 dark:text-slate-700">•</span>
-        <a href="#view-temas-del-dia" class="px-2.5 py-1 rounded hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-slate-950 dark:hover:text-white transition-colors whitespace-nowrap">
+        <button 
+          type="button" 
+          data-nav-section="Sociedad" 
+          class="nav-section-btn px-2.5 py-1 rounded hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-slate-950 dark:hover:text-white transition-colors whitespace-nowrap cursor-pointer"
+        >
           Sociedad
-        </a>
+        </button>
         <span class="text-slate-300 dark:text-slate-700">•</span>
-        <a href="#monitor-promesas" class="px-2.5 py-1 rounded bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-slate-100 hover:bg-slate-200 dark:hover:bg-slate-800 transition-colors whitespace-nowrap">
+        <button 
+          type="button" 
+          data-nav-section="promesas" 
+          class="nav-section-btn px-2.5 py-1 rounded bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-slate-100 hover:bg-slate-200 dark:hover:bg-slate-800 transition-colors whitespace-nowrap cursor-pointer"
+        >
           Promesas 2027
-        </a>
+        </button>
       </nav>
 
       <!-- View Switcher Tabs (Temas del Día / Cables / Mirada Exterior) -->
@@ -184,9 +215,8 @@ const { activeTab = 'temas-del-dia' } = Astro.props;
 </header>
 
 <script>
-  // Theme Toggle Logic
+  // 1. Theme Toggle Logic
   const themeToggles = document.querySelectorAll('.theme-toggle');
-  
   themeToggles.forEach(toggle => {
     toggle.addEventListener('click', () => {
       const isDark = document.documentElement.classList.contains('dark');
@@ -196,6 +226,115 @@ const { activeTab = 'temas-del-dia' } = Astro.props;
       } else {
         document.documentElement.classList.add('dark');
         localStorage.setItem('politicheck-theme', 'dark');
+      }
+    });
+  });
+
+  // 2. Dynamic Live Date Formatting (Intl in Spanish)
+  const dateEl = document.getElementById('ticker-live-date');
+  if (dateEl) {
+    const now = new Date();
+    const formatter = new Intl.DateTimeFormat('es-AR', {
+      weekday: 'long',
+      day: 'numeric',
+      month: 'long',
+      year: 'numeric'
+    });
+    dateEl.textContent = formatter.format(now);
+  }
+
+  // 3. Client-Side Live Dollar Hydration via dolarapi.com
+  async function hydrateLiveRates() {
+    try {
+      const res = await fetch('https://dolarapi.com/v1/dolares');
+      if (!res.ok) return;
+      const data = await res.json();
+      
+      const blue = data.find((d: any) => d.casa === 'blue');
+      const oficial = data.find((d: any) => d.casa === 'oficial');
+      const mep = data.find((d: any) => d.casa === 'bolsa');
+
+      if (blue) {
+        const el = document.getElementById('ticker-blue-val');
+        if (el) el.textContent = `$${blue.venta}`;
+      }
+      if (oficial) {
+        const el = document.getElementById('ticker-oficial-val');
+        if (el) el.textContent = `$${oficial.venta}`;
+      }
+      if (mep) {
+        const el = document.getElementById('ticker-mep-val');
+        if (el) el.textContent = `$${Math.round(mep.venta)}`;
+      }
+    } catch (e) {
+      console.warn('Could not refresh live dollar rates:', e);
+    }
+  }
+
+  // 4. Client-Side Live Weather Hydration via open-meteo
+  async function hydrateLiveWeather() {
+    try {
+      const res = await fetch('https://api.open-meteo.com/v1/forecast?latitude=-34.6132&longitude=-58.3772&current_weather=true');
+      if (!res.ok) return;
+      const data = await res.json();
+      const tempVal = Math.round(data.current_weather.temperature);
+      const el = document.getElementById('weather-temp-val');
+      if (el) el.textContent = String(tempVal);
+    } catch (e) {
+      console.warn('Could not refresh live weather:', e);
+    }
+  }
+
+  // Trigger background updates on load
+  hydrateLiveRates();
+  hydrateLiveWeather();
+
+  // 5. Dynamic Navigation between Header Sections and Category Filters
+  const navSectionButtons = document.querySelectorAll<HTMLButtonElement>('.nav-section-btn');
+  navSectionButtons.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const targetSec = btn.getAttribute('data-nav-section');
+      if (!targetSec) return;
+
+      // Update active state in nav
+      navSectionButtons.forEach(b => {
+        b.classList.remove('text-slate-950', 'dark:text-white', 'font-bold');
+        b.classList.add('text-slate-700', 'dark:text-slate-300');
+      });
+      btn.classList.add('text-slate-950', 'dark:text-white', 'font-bold');
+      btn.classList.remove('text-slate-700', 'dark:text-slate-300');
+
+      if (targetSec === 'promesas') {
+        // Switch to main view first if hidden
+        const mainTab = document.querySelector<HTMLButtonElement>('[data-tab="temas-del-dia"]');
+        if (mainTab) mainTab.click();
+        
+        // Scroll to Promesas section
+        const promesasSec = document.getElementById('monitor-promesas');
+        if (promesasSec) {
+          promesasSec.scrollIntoView({ behavior: 'smooth' });
+        }
+        return;
+      }
+
+      // Switch to main view
+      const mainTab = document.querySelector<HTMLButtonElement>('[data-tab="temas-del-dia"]');
+      if (mainTab) mainTab.click();
+
+      // Trigger matching category filter button
+      const matchingCatBtn = document.querySelector<HTMLButtonElement>(`.cat-btn[data-cat="${targetSec}"]`);
+      if (matchingCatBtn) {
+        matchingCatBtn.click();
+      }
+
+      // Smooth scroll to top of news grid
+      if (targetSec === 'all') {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      } else {
+        const storiesGrid = document.getElementById('view-temas-del-dia');
+        if (storiesGrid) {
+          storiesGrid.scrollIntoView({ behavior: 'smooth' });
+        }
       }
     });
   });
