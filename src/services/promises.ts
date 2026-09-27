@@ -3,6 +3,7 @@ import path from 'node:path';
 import crypto from 'node:crypto';
 import type { CampaignPromise, CitizenVoteRecord } from '../types';
 import { MOCK_PROMISES } from '../data/mockData';
+import { recordSupabaseVote, getSupabaseVotesAggregated } from './supabase';
 
 const PROMISES_FILE = path.resolve(process.cwd(), 'src/data/promises.json');
 const VOTES_FILE = path.resolve(process.cwd(), 'src/data/citizen_votes.json');
@@ -120,9 +121,14 @@ export function votePromise(
       isNewVote = true;
     }
 
-    // Persist changes
+    // Persist changes locally
     saveCitizenVotes(votesLog);
     fs.writeFileSync(PROMISES_FILE, JSON.stringify(promises, null, 2), 'utf-8');
+
+    // Sync to Supabase cloud database
+    recordSupabaseVote(promiseId, voterHash, voteType).catch(err => {
+      console.warn('[Promises] Background Supabase vote sync error:', err);
+    });
 
     return { 
       success: true, 

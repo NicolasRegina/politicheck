@@ -2,12 +2,16 @@ import fs from 'node:fs';
 import path from 'node:path';
 import type { Article, StoryCluster, SpectrumBreakdown } from '../../types';
 import { OUTLETS, MOCK_STORIES } from '../../data/mockData';
+import { saveNewsClustersToSupabase, getNewsClustersFromSupabase } from '../supabase';
 
 const CLUSTERED_STORIES_FILE = path.resolve(process.cwd(), 'src/data/clustered_stories.json');
 
 export function saveClusteredStories(stories: StoryCluster[]) {
   try {
     fs.writeFileSync(CLUSTERED_STORIES_FILE, JSON.stringify(stories, null, 2), 'utf-8');
+    saveNewsClustersToSupabase(stories).catch(err => {
+      console.warn('[AI Clustering] Supabase background save notice:', err);
+    });
   } catch (err) {
     console.error('[AI Clustering] Error saving clustered stories:', err);
   }

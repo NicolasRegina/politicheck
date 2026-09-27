@@ -10,5 +10,11 @@
     "voterHash": "ceebc4e7df87ae18b21224f3c268ef8ea6502106eeac6c424ee0500492e22cf4",
     "voteType": "broken",
     "votedAt": "2026-09-27T20:49:50.991Z"
+  },
+  {
+    "promiseId": "prom-1",
+    "voterHash": "0afdc201872a196c8bfce6054eaac05cb6018058c0d5a65d6484b33e3ff6e5d3",
+    "voteType": "fulfilled",
+    "votedAt": "2026-09-27T22:16:32.336Z"
   }
 ]

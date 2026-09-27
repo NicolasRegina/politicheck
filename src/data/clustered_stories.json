@@ -2,17 +2,17 @@
   {
     "id": "story-ai-1",
     "isLeadStory": true,
-    "kicker": "JUSTICIA INTERNACIONAL",
-    "neutralHeadline": "Justicia estadounidense habilita embargos por US$ 390 millones a la Argentina por la expropiación de Aerolíneas Argentinas",
+    "kicker": "FONDOS BUITRES",
+    "neutralHeadline": "Una jueza de Estados Unidos habilitó a un fondo a pedir embargos contra la Argentina por la expropiación de Aerolíneas Argentinas",
     "category": "Economía",
-    "summary": "Una jueza federal de Estados Unidos autorizó a un fondo buitre a iniciar pedidos de embargo de activos argentinos por una demanda vinculada a la expropiación de Aerolíneas Argentinas. La medida representa un nuevo frente judicial y financiero para el Estado nacional en el exterior.",
+    "summary": "La magistrada federal estadounidense Jia Cobb autorizó al fondo Titan Consortium a iniciar el proceso para solicitar embargos de activos argentinos por un monto de 390 millones de dólares. La medida se produce tras la falta de pagos en los plazos previstos desde la sentencia original por la expropiación de la aerolínea de bandera.",
     "updatedAt": "Reciente",
     "imageUrl": "https://www.clarin.com/img/2026/08/06/Of7XDw3DA_1200x630__1.jpg",
     "imageCaption": "Cobertura periodística de Clarín.",
     "spectrum": {
-      "oficialismoPct": 30,
-      "centroDatosPct": 45,
-      "oposicionPct": 25,
+      "oficialismoPct": 33,
+      "centroDatosPct": 34,
+      "oposicionPct": 33,
       "totalOutlets": 2
     },
     "articles": [
@@ -37,6 +37,6 @@
         "imageUrl": "https://resizer.glanacion.com/resizer/v2/7563RYJASRGRDAAEBN373YKBL4.jpg?auth=77ded3a928413ff3b0a7568d57187fb3da35122e10ccf25f34a06dc704e31077&amp;smart=true&amp;width=2000&amp;height=1334"
       }
     ],
-    "aiComparisonNotice": "Ambos medios abordaron el hecho económico-judicial con enfoques similares, destacando el fallo de la jueza Jia Cobb a favor del fondo Titan Consortium. Mientras Clarín enfatizó la dimensión temporal del proceso y la falta de pagos previos, La Nación se centró en la habilitación formal del mecanismo de embargo sin emitir valoraciones políticas adicionales."
+    "aiComparisonNotice": "Ambos medios (Clarín y La Nación) abordaron el fallo judicial en Estados Unidos con un enfoque informativo casi idéntico, destacando el monto de 390 millones de dólares y la autorización a Titan Consortium, sin incurrir en valoraciones políticas disímiles en sus titulares."
   }
 ]
