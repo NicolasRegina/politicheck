@@ -1,0 +1,16 @@
+name: Sincronización Automática de Noticias Politicheck
+
+on:
+  schedule:
+    # Corre cada 30 minutos (100% gratuito en GitHub Actions)
+    - cron: '*/30 * * * *'
+  workflow_dispatch: # Permite ejecutarlo manualmente desde GitHub con 1 clic
+
+jobs:
+  sync-feeds:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ping al endpoint de sincronización
+        run: |
+          echo "Disparando actualización periódica de noticias y caché en Politicheck..."
+          curl -s -f "https://politicheck.ar/api/rss/sync?cron=true" || curl -s "https://politicheck.vercel.app/api/rss/sync?cron=true" || true
