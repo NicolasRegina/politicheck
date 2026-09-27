@@ -45,6 +45,46 @@ const {
     
     <link rel="canonical" href="https://politicheck.ar" />
 
+    <!-- Search Engine Indexing & Bot Directives -->
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+    <meta name="googlebot" content="index, follow" />
+    <meta name="author" content="Politicheck Argentina" />
+    <meta name="keywords" content="sesgo mediático, noticias argentina, encuadre de medios, elecciones argentina, promesas de campaña, verificación periodística, espectro editorial, clarín, la nación, infobae, página 12, ámbito" />
+
+    <!-- Theme & Colors -->
+    <meta name="theme-color" content="#090D16" media="(prefers-color-scheme: dark)" />
+    <meta name="theme-color" content="#F8FAFC" media="(prefers-color-scheme: light)" />
+
+    <!-- Structured Data (JSON-LD) for Google Rich Snippets -->
+    <script type="application/ld+json" is:inline>
+      {
+        "@context": "https://schema.org",
+        "@graph": [
+          {
+            "@type": "NewsMediaOrganization",
+            "@id": "https://politicheck.ar/#organization",
+            "name": "Politicheck",
+            "url": "https://politicheck.ar",
+            "logo": {
+              "@type": "ImageObject",
+              "url": "https://politicheck.ar/favicon.svg"
+            },
+            "description": "Plataforma cívica independiente para comparar el sesgo y encuadre entre medios de noticias en Argentina y auditar compromisos electorales."
+          },
+          {
+            "@type": "WebSite",
+            "@id": "https://politicheck.ar/#website",
+            "url": "https://politicheck.ar",
+            "name": "Politicheck",
+            "publisher": {
+              "@id": "https://politicheck.ar/#organization"
+            },
+            "inLanguage": "es-AR"
+          }
+        ]
+      }
+    </script>
+
     <!-- Theme Initialization Script (Prevents FOUC) -->
     <script is:inline>
       const savedTheme = localStorage.getItem('politicheck-theme');
