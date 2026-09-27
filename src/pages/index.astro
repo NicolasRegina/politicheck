@@ -93,7 +93,7 @@ const liveFeedArticles = liveArticles.slice(0, 20);
         </div>
       </div>
 
-      <!-- Right Column: Cables de Último Momento (The Live Wire Rail) -->
+      <!-- Right Column: Noticias de Último Momento (The Live Wire Rail) -->
       <aside class="lg:col-span-4 space-y-4 bg-slate-50/70 dark:bg-[#0C101A] border border-slate-200 dark:border-slate-800/80 rounded-2xl p-4 sm:p-5">
         <div class="flex items-center justify-between text-xs font-mono border-b border-slate-200 dark:border-slate-800 pb-3">
           <div class="flex items-center gap-2">
@@ -105,7 +105,7 @@ const liveFeedArticles = liveArticles.slice(0, 20);
               Minuto a Minuto
             </span>
           </div>
-          <span class="text-[10px] text-slate-500 dark:text-slate-400">Cables Oficiales RSS</span>
+          <span class="text-[10px] text-slate-500 dark:text-slate-400">Feeds Oficiales RSS</span>
         </div>
 
         <!-- Wire Items List -->
@@ -124,7 +124,7 @@ const liveFeedArticles = liveArticles.slice(0, 20);
             onclick="document.querySelector('[data-tab=ultimo-momento]')?.click()"
             class="w-full py-2 px-3 rounded-xl bg-white hover:bg-slate-100 dark:bg-slate-900 dark:hover:bg-slate-800 border border-slate-200 dark:border-slate-800 text-xs font-mono text-slate-700 dark:text-slate-300 font-semibold transition-colors cursor-pointer"
           >
-            Ver todos los cables en vivo →
+            Ver todas las noticias en vivo →
           </button>
         </div>
       </aside>
@@ -326,7 +326,7 @@ const liveFeedArticles = liveArticles.slice(0, 20);
       <div>
         <div class="flex items-center gap-2 text-xs font-mono text-slate-500 dark:text-slate-400">
           <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-          <span class="font-bold text-slate-900 dark:text-slate-100 uppercase tracking-wider">Cables de Redacción en Vivo</span>
+          <span class="font-bold text-slate-900 dark:text-slate-100 uppercase tracking-wider">Noticias de Redacción en Vivo</span>
         </div>
         <h2 class="font-editorial text-2xl sm:text-3xl font-bold text-slate-950 dark:text-white">
           Minuto a Minuto: Flujo Cronológico de Noticias
@@ -697,7 +697,7 @@ const liveFeedArticles = liveArticles.slice(0, 20);
   // Only execute on Portada ('/' or '/index.html'), NEVER on /historia/:id
   if (window.location.pathname === '/' || window.location.pathname === '' || window.location.pathname.endsWith('/index.html')) {
     let lastArticleCount = 0;
-    const initialBadge = document.querySelector<HTMLElement>('#cables-count-badge');
+    const initialBadge = document.querySelector<HTMLElement>('#news-count-badge');
     if (initialBadge) {
       const match = initialBadge.textContent?.match(/\d+/);
       if (match) lastArticleCount = parseInt(match[0], 10);

@@ -2,17 +2,17 @@
   {
     "id": "story-ai-1",
     "isLeadStory": true,
-    "kicker": "JUSTICIA INTERNACIONAL",
-    "neutralHeadline": "Una jueza de Estados Unidos habilitó a un fondo a pedir embargos contra la Argentina por la expropiación de Aerolíneas Argentinas",
-    "category": "Justicia",
-    "summary": "La magistrada federal estadounidense Jia Cobb autorizó a Titan Consortium a iniciar un pedido de embargos de activos argentinos por unos 390 millones de dólares. La medida se produce tras cumplirse veintiún meses desde la sentencia original sin que el país cancelara la acreencia.",
+    "kicker": "FONDOS BUITRES Y JUICIOS",
+    "neutralHeadline": "Una jueza de Estados Unidos habilitó pedidos de embargo contra activos argentinos por 390 millones de dólares debido a la expropiación de Aerolíneas Argentinas",
+    "category": "Economía",
+    "summary": "La justicia estadounidense autorizó al consorcio Titan Consortium a iniciar procesos de embargo contra activos nacionales en el exterior. La medida responde a reclamos derivados del proceso de expropiación de Aerolíneas Argentinas.",
     "updatedAt": "Reciente",
     "imageUrl": "https://www.clarin.com/img/2026/08/06/Of7XDw3DA_1200x630__1.jpg",
     "imageCaption": "Cobertura periodística de Clarín.",
     "spectrum": {
       "oficialismoPct": 30,
-      "centroDatosPct": 50,
-      "oposicionPct": 20,
+      "centroDatosPct": 45,
+      "oposicionPct": 25,
       "totalOutlets": 2
     },
     "articles": [
@@ -33,10 +33,10 @@
         "title": "Autorizaron a un fondo a pedir embargos por US$390 millones por la expropiación de Aerolíneas Argentinas",
         "snippet": "La jueza federal de Estados Unidos Jia Cobb habilitó a Titan Consortium a empezar el proceso para buscar y pedir la retención de activos argentinos en ese país",
         "url": "https://www.lanacion.com.ar/economia/autorizaron-a-un-fondo-a-pedir-embargos-por-us390-millones-por-la-expropiacion-de-aerolineas-nid27092026/",
-        "publishedAt": "Hace 35 min",
+        "publishedAt": "Hace 39 min",
         "imageUrl": "https://resizer.glanacion.com/resizer/v2/7563RYJASRGRDAAEBN373YKBL4.jpg?auth=77ded3a928413ff3b0a7568d57187fb3da35122e10ccf25f34a06dc704e31077&amp;smart=true&amp;width=2000&amp;height=1334"
       }
     ],
-    "aiComparisonNotice": "Ambos medios informaron sobre la habilitación judicial en Estados Unidos al fondo Titan Consortium por la expropiación de Aerolíneas Argentinas, coincidiendo en la cifra de 390 millones de dólares y el rol de la jueza Jia Cobb. Clarín enfatizó en su bajada la crítica del tribunal sobre el tiempo transcurrido sin pagos, mientras que La Nación optó por un enfoque más directo sobre los alcances técnicos de la retención de activos."
+    "aiComparisonNotice": "Ambos medios (Clarín y La Nación) informan de manera coincidente y factual sobre la decisión de la jueza Jia Cobb, detallando el monto de 390 millones de dólares y el trasfondo de la expropiación de la aerolínea de bandera, sin registrar sesgos partidarios significativos en sus titulares."
   }
 ]
