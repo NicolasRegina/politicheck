@@ -2,41 +2,41 @@
   {
     "id": "story-ai-1",
     "isLeadStory": true,
-    "kicker": "POLÍTICA / TENSIONES INTERNAS",
-    "neutralHeadline": "Patricia Bullrich se diferenció de Javier Milei y respaldó a periodistas condenados en Formosa",
-    "category": "Política",
-    "summary": "La referente oficialista y senadora Patricia Bullrich expresó su solidaridad con un equipo de trabajadores de prensa que recibió condena y arresto en Formosa. Su postura contrasta abiertamente con las declaraciones previas del presidente Javier Milei, quien había cuestionado a los comunicadores.",
+    "kicker": "JUSTICIA INTERNACIONAL",
+    "neutralHeadline": "Una jueza de Estados Unidos habilitó a un fondo a pedir embargos contra la Argentina por la expropiación de Aerolíneas Argentinas",
+    "category": "Justicia",
+    "summary": "La magistrada federal estadounidense Jia Cobb autorizó a Titan Consortium a iniciar un pedido de embargos de activos argentinos por unos 390 millones de dólares. La medida se produce tras cumplirse veintiún meses desde la sentencia original sin que el país cancelara la acreencia.",
     "updatedAt": "Reciente",
-    "imageUrl": "https://www.clarin.com/img/2026/02/16/ZWrEncPcw_1200x630__1.jpg",
+    "imageUrl": "https://www.clarin.com/img/2026/08/06/Of7XDw3DA_1200x630__1.jpg",
     "imageCaption": "Cobertura periodística de Clarín.",
     "spectrum": {
-      "oficialismoPct": 40,
-      "centroDatosPct": 35,
-      "oposicionPct": 25,
+      "oficialismoPct": 30,
+      "centroDatosPct": 50,
+      "oposicionPct": 20,
       "totalOutlets": 2
     },
     "articles": [
       {
-        "id": "art-clarin-10167601688",
+        "id": "art-clarin-213862042",
         "outletId": "clarin",
         "outletName": "Clarín",
-        "title": "Javier Milei y sus medidas, EN VIVO: al revés del Presidente, Bullrich respaldó a periodistas condenados en Formosa",
-        "snippet": "Luego que el mandatario culpara a un grupo de trabajadores de prensa que recibió cinco días de arresto por parte de un juez militante del gobernador Gildo Insfrán, la jefa del bloque libertario en el ",
-        "url": "https://www.clarin.com/politica/javier-milei-medidas-vivo-proximos-pasos-lla-congreso-viaje-presidente-paris-tenes-saber-26-septiembre_0_SRPJPtrGsl.html",
-        "publishedAt": "08:57 hs",
-        "imageUrl": "https://www.clarin.com/img/2026/02/16/ZWrEncPcw_1200x630__1.jpg"
+        "title": "Una jueza de Estados Unidos habilitó a un fondo buitre a pedir embargos de activos argentinos por la expropiación de Aerolíneas Argentinas",
+        "snippet": "La jueza Jia Cobb autorizó a Titan Consortium a iniciar el pedido de embargos por un monto de 390 millones de dólares. \"En los veintiún meses transcurridos desde la sentencia, Argentina aparentemente ",
+        "url": "https://www.clarin.com/economia/jueza-estados-unidos-habilito-fondo-buitre-pedir-embargos-activos-argentinos-expropiacion-aerolineas-argentinas_0_HmsXxGzxMu.html",
+        "publishedAt": "12:23 hs",
+        "imageUrl": "https://www.clarin.com/img/2026/08/06/Of7XDw3DA_1200x630__1.jpg"
       },
       {
-        "id": "art-lanacion-4199357798",
+        "id": "art-lanacion-6169085798",
         "outletId": "lanacion",
         "outletName": "La Nación",
-        "title": "Bullrich volvió a diferenciarse de Milei y se solidarizó con los periodistas que fueron perseguidos por la justicia de Insfrán",
-        "snippet": "La senadora de La Libertad Avanza se desmarcó nuevamente de la Casa Rosada; repudió la persecución política en Formosa contra un equipo de LA NACION; el Presidente los había acusado de trabajar para e",
-        "url": "https://www.lanacion.com.ar/politica/bullrich-volvio-a-diferenciarse-de-milei-y-se-solidarizo-con-los-periodistas-que-fueron-perseguidos-nid26092026/",
-        "publishedAt": "Hace 49 min",
-        "imageUrl": "https://resizer.glanacion.com/resizer/v2/T5MEGRYSTZA6RET7WTDTNDVTKA.jpg?auth=050d9b7464969c0d441acb2b403d2ccd448b8cf3512372253162ebab99dc2049&amp;smart=true&amp;width=2000&amp;height=1333"
+        "title": "Autorizaron a un fondo a pedir embargos por US$390 millones por la expropiación de Aerolíneas Argentinas",
+        "snippet": "La jueza federal de Estados Unidos Jia Cobb habilitó a Titan Consortium a empezar el proceso para buscar y pedir la retención de activos argentinos en ese país",
+        "url": "https://www.lanacion.com.ar/economia/autorizaron-a-un-fondo-a-pedir-embargos-por-us390-millones-por-la-expropiacion-de-aerolineas-nid27092026/",
+        "publishedAt": "Hace 35 min",
+        "imageUrl": "https://resizer.glanacion.com/resizer/v2/7563RYJASRGRDAAEBN373YKBL4.jpg?auth=77ded3a928413ff3b0a7568d57187fb3da35122e10ccf25f34a06dc704e31077&amp;smart=true&amp;width=2000&amp;height=1334"
       }
     ],
-    "aiComparisonNotice": "Ambos medios cubren la disidencia pública de Bullrich frente a los dichos de Milei sobre los periodistas de Formosa. Clarín e Infobae ponen el foco en la tensión dentro del propio espacio gobernante y las implicancias de la interna, mientras que La Nación detalla el repudio directo a la justicia de Gildo Insfrán y remarca el distanciamiento ideológico de la funcionaria respecto a la Casa Rosada."
+    "aiComparisonNotice": "Ambos medios informaron sobre la habilitación judicial en Estados Unidos al fondo Titan Consortium por la expropiación de Aerolíneas Argentinas, coincidiendo en la cifra de 390 millones de dólares y el rol de la jueza Jia Cobb. Clarín enfatizó en su bajada la crítica del tribunal sobre el tiempo transcurrido sin pagos, mientras que La Nación optó por un enfoque más directo sobre los alcances técnicos de la retención de activos."
   }
 ]
