@@ -1,6 +1,8 @@
 import type { APIRoute } from 'astro';
 import { votePromise } from '../../../services/promises';
 
+export const prerender = false;
+
 export const GET: APIRoute = async () => {
   return new Response(
     JSON.stringify({ message: 'Método no permitido por GET. Utilice POST enviando promiseId y voteType.' }),

@@ -55,7 +55,9 @@ const getOutletBadge = (id: string) => {
     <div class="space-y-6">
       <div class="space-y-3">
         <h2 class="font-editorial text-2xl sm:text-3xl md:text-4xl font-extrabold text-slate-950 dark:text-white leading-tight tracking-tight">
-          {story.neutralHeadline}
+          <a href={`/historia/${story.id}`} class="hover:text-blue-900 dark:hover:text-blue-300 transition-colors">
+            {story.neutralHeadline}
+          </a>
         </h2>
         <p class="text-base sm:text-lg text-slate-700 dark:text-slate-300 leading-relaxed font-sans max-w-4xl">
           {story.summary}
@@ -117,7 +119,9 @@ const getOutletBadge = (id: string) => {
 
       <div class="space-y-2">
         <h3 class="font-editorial text-xl sm:text-2xl font-bold text-slate-950 dark:text-white leading-snug tracking-tight">
-          {story.neutralHeadline}
+          <a href={`/historia/${story.id}`} class="hover:text-blue-900 dark:hover:text-blue-300 transition-colors">
+            {story.neutralHeadline}
+          </a>
         </h3>
         <p class="text-sm text-slate-600 dark:text-slate-300 leading-relaxed font-sans">
           {story.summary}
@@ -204,6 +208,22 @@ const getOutletBadge = (id: string) => {
           </a>
         );
       })}
+    </div>
+
+    <!-- Dedicated Story Analysis Link -->
+    <div class="pt-3 border-t border-slate-100 dark:border-slate-800/80 flex items-center justify-between">
+      <span class="text-[11px] font-mono text-slate-400">
+        Algoritmo de sesgo periodístico Politicheck
+      </span>
+      <a 
+        href={`/historia/${story.id}`}
+        class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-900 dark:text-slate-100 text-xs font-mono font-bold transition-colors cursor-pointer"
+      >
+        <span>Ver análisis profundo y timeline</span>
+        <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+        </svg>
+      </a>
     </div>
   </div>
 </article>

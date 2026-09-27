@@ -692,4 +692,83 @@ const liveFeedArticles = liveArticles.slice(0, 20);
       }
     });
   });
+
+  // --- Dynamic Live News Auto-Refresh with Scroll Preservation ---
+  // Only execute on Portada ('/' or '/index.html'), NEVER on /historia/:id
+  if (window.location.pathname === '/' || window.location.pathname === '' || window.location.pathname.endsWith('/index.html')) {
+    let lastArticleCount = 0;
+    const initialBadge = document.querySelector<HTMLElement>('#cables-count-badge');
+    if (initialBadge) {
+      const match = initialBadge.textContent?.match(/\d+/);
+      if (match) lastArticleCount = parseInt(match[0], 10);
+    }
+
+    // Auto-refresh interval (every 60 seconds)
+    const REFRESH_INTERVAL_MS = 60 * 1000;
+
+    async function checkForNewsUpdates() {
+      // If user is navigating away or in subpage like /historia/:id, abort
+      if (window.location.pathname !== '/' && window.location.pathname !== '' && !window.location.pathname.endsWith('/index.html')) {
+        return;
+      }
+
+      try {
+        const res = await fetch('/api/news/latest', { cache: 'no-store' });
+        if (!res.ok) return;
+
+        const data = await res.json();
+        if (!data.success) return;
+
+        // Check if new articles arrived
+        if (lastArticleCount > 0 && data.totalArticles > lastArticleCount) {
+          const newCount = data.totalArticles - lastArticleCount;
+          lastArticleCount = data.totalArticles;
+
+          // Notify reader with an elegant floating pill that preserves scroll position
+          showFloatingNewsAlert(newCount);
+        } else if (lastArticleCount === 0) {
+          lastArticleCount = data.totalArticles;
+        }
+      } catch (err) {
+        // Silent network fallback
+      }
+    }
+
+    function showFloatingNewsAlert(count: number) {
+      // Check if alert already exists
+      let alertEl = document.getElementById('live-news-update-pill');
+      if (!alertEl) {
+        alertEl = document.createElement('div');
+        alertEl.id = 'live-news-update-pill';
+        alertEl.className = 'fixed bottom-6 right-6 z-50 flex items-center gap-3 px-4 py-2.5 rounded-2xl bg-slate-900 text-white dark:bg-slate-100 dark:text-slate-950 font-mono text-xs font-bold shadow-xl border border-slate-700 dark:border-slate-300 transition-all transform translate-y-0 animate-bounce cursor-pointer';
+        alertEl.innerHTML = `
+          <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
+          <span>🔴 Hay ${count} noticias nuevas</span>
+          <button class="ml-2 px-2 py-1 rounded bg-slate-800 dark:bg-slate-200 text-[10px] text-white dark:text-slate-900 font-bold hover:underline">Ver ahora</button>
+        `;
+        
+        alertEl.addEventListener('click', () => {
+          // Store exact scroll position, refresh and restore
+          const currentY = window.scrollY;
+          sessionStorage.setItem('politicheck_restore_scroll', currentY.toString());
+          window.location.reload();
+        });
+
+        document.body.appendChild(alertEl);
+      }
+    }
+
+    // Restore scroll position after a reload
+    const restoreScroll = sessionStorage.getItem('politicheck_restore_scroll');
+    if (restoreScroll) {
+      sessionStorage.removeItem('politicheck_restore_scroll');
+      const y = parseInt(restoreScroll, 10);
+      if (!isNaN(y)) {
+        window.scrollTo({ top: y, behavior: 'instant' });
+      }
+    }
+
+    // Start background timer
+    setInterval(checkForNewsUpdates, REFRESH_INTERVAL_MS);
+  }
 </script>

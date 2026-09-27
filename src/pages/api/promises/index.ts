@@ -1,6 +1,8 @@
 import type { APIRoute } from 'astro';
 import { getPromises, getPromisesStats } from '../../../services/promises';
 
+export const prerender = false;
+
 export const GET: APIRoute = async () => {
   try {
     const promises = getPromises();

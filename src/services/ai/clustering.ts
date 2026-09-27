@@ -1,7 +1,40 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import type { Article, StoryCluster, SpectrumBreakdown } from '../../types';
-import { OUTLETS } from '../../data/mockData';
+import { OUTLETS, MOCK_STORIES } from '../../data/mockData';
+
+const CLUSTERED_STORIES_FILE = path.resolve(process.cwd(), 'src/data/clustered_stories.json');
+
+export function saveClusteredStories(stories: StoryCluster[]) {
+  try {
+    fs.writeFileSync(CLUSTERED_STORIES_FILE, JSON.stringify(stories, null, 2), 'utf-8');
+  } catch (err) {
+    console.error('[AI Clustering] Error saving clustered stories:', err);
+  }
+}
+
+export function getCachedClusteredStories(): StoryCluster[] {
+  try {
+    if (fs.existsSync(CLUSTERED_STORIES_FILE)) {
+      const data = fs.readFileSync(CLUSTERED_STORIES_FILE, 'utf-8');
+      const parsed = JSON.parse(data) as StoryCluster[];
+      if (Array.isArray(parsed) && parsed.length > 0) {
+        return parsed;
+      }
+    }
+  } catch (err) {
+    console.error('[AI Clustering] Error reading cached clustered stories:', err);
+  }
+  return [];
+}
+
+export function getStoryClusterById(id: string): StoryCluster | undefined {
+  const cached = getCachedClusteredStories();
+  const foundInCached = cached.find(s => s.id === id);
+  if (foundInCached) return foundInCached;
+
+  return MOCK_STORIES.find(s => s.id === id);
+}
 
 interface GeminiClusterResponse {
   clusters: {
@@ -164,11 +197,18 @@ ${JSON.stringify(articles.slice(0, 35).map(a => ({ id: a.id, medio: a.outletName
       };
     });
 
+    if (stories.length > 0) {
+      saveClusteredStories(stories);
+    }
     console.log(`[AI Clustering] Gemini successfully generated ${stories.length} story clusters!`);
     return stories;
   } catch (err) {
     console.warn('[AI Clustering] Gemini call failed, falling back to rule-based clustering:', (err as Error).message);
-    return ruleBasedClustering(articles);
+    const fallbackStories = ruleBasedClustering(articles);
+    if (fallbackStories.length > 0) {
+      saveClusteredStories(fallbackStories);
+    }
+    return fallbackStories;
   }
 }
 

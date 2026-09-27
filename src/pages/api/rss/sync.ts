@@ -1,6 +1,8 @@
 import type { APIRoute } from 'astro';
 import { syncAllRssFeeds, getCachedArticles } from '../../../services/rss/sync';
 
+export const prerender = false;
+
 export const GET: APIRoute = async ({ request }) => {
   const url = new URL(request.url);
   const forceRefresh = url.searchParams.get('refresh') === 'true';
