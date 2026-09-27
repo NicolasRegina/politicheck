@@ -28,7 +28,11 @@ export const POST: APIRoute = async ({ request }) => {
       );
     }
 
-    const result = votePromise(promiseId, voteType);
+    const rawIp = request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip') || '127.0.0.1';
+    const clientIp = rawIp.split(',')[0].trim();
+    const userAgent = request.headers.get('user-agent') || 'unknown';
+
+    const result = votePromise(promiseId, voteType, clientIp, userAgent);
 
     if (!result.success) {
       return new Response(

@@ -1,0 +1,14 @@
+[
+  {
+    "promiseId": "prom-3",
+    "voterHash": "90542e8457065d5898bd95029fa10e7516fdafe82a3b5b018b417509cbb97a48",
+    "voteType": "broken",
+    "votedAt": "2026-09-27T20:49:50.986Z"
+  },
+  {
+    "promiseId": "prom-3",
+    "voterHash": "ceebc4e7df87ae18b21224f3c268ef8ea6502106eeac6c424ee0500492e22cf4",
+    "voteType": "broken",
+    "votedAt": "2026-09-27T20:49:50.991Z"
+  }
+]

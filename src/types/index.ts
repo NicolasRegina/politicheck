@@ -56,6 +56,13 @@ export interface CitizenVotes {
   broken: number;
 }
 
+export interface CitizenVoteRecord {
+  promiseId: string;
+  voterHash: string; // Hash anónimo SHA-256 (IP + User-Agent + Salt)
+  voteType: 'fulfilled' | 'inProgress' | 'broken';
+  votedAt: string;
+}
+
 export interface CampaignPromise {
   id: string;
   candidate: string;

@@ -2,17 +2,17 @@
   {
     "id": "story-ai-1",
     "isLeadStory": true,
-    "kicker": "POLÍTICA Y JUSTICIA",
-    "neutralHeadline": "Patricia Bullrich se diferenció de Javier Milei y expresó respaldo a los periodistas condenados en Formosa",
+    "kicker": "POLÍTICA / TENSIONES INTERNAS",
+    "neutralHeadline": "Patricia Bullrich se diferenció de Javier Milei y respaldó a periodistas condenados en Formosa",
     "category": "Política",
-    "summary": "La legisladora y referente oficialista cuestionó el fallo judicial contra trabajadores de prensa en Formosa bajo la gobernación de Gildo Insfrán, apartándose de la postura inicial del presidente Javier Milei sobre el episodio.",
+    "summary": "La referente oficialista y senadora Patricia Bullrich expresó su solidaridad con un equipo de trabajadores de prensa que recibió condena y arresto en Formosa. Su postura contrasta abiertamente con las declaraciones previas del presidente Javier Milei, quien había cuestionado a los comunicadores.",
     "updatedAt": "Reciente",
     "imageUrl": "https://www.clarin.com/img/2026/02/16/ZWrEncPcw_1200x630__1.jpg",
     "imageCaption": "Cobertura periodística de Clarín.",
     "spectrum": {
       "oficialismoPct": 40,
-      "centroDatosPct": 40,
-      "oposicionPct": 20,
+      "centroDatosPct": 35,
+      "oposicionPct": 25,
       "totalOutlets": 2
     },
     "articles": [
@@ -37,76 +37,6 @@
         "imageUrl": "https://resizer.glanacion.com/resizer/v2/T5MEGRYSTZA6RET7WTDTNDVTKA.jpg?auth=050d9b7464969c0d441acb2b403d2ccd448b8cf3512372253162ebab99dc2049&amp;smart=true&amp;width=2000&amp;height=1333"
       }
     ],
-    "aiComparisonNotice": "Tanto Clarín como La Nación abordaron el cruce interno en el oficialismo respecto a la postura de la Casa Rosada frente a la Justicia de Formosa, destacando el rol diferenciado de Patricia Bullrich en contraste con los dichos presidenciales."
-  },
-  {
-    "id": "story-ai-2",
-    "isLeadStory": false,
-    "kicker": "DEPORTES",
-    "neutralHeadline": "Rosario Central venció a Estudiantes y se consagró campeón de la Supercopa Internacional",
-    "category": "Sociedad",
-    "summary": "Rosario Central derrotó a Estudiantes de La Plata en un partido definido por un polémico fallo del VAR y dos goles de Ángel Di María, encuentro que finalizó con incidentes entre los planteles.",
-    "updatedAt": "Reciente",
-    "imageUrl": "https://resizer.glanacion.com/resizer/v2/3PLJEAAADJBKTDPTX7R4U2M57E.jpg?auth=3cc4ec280cf4ca3ddaa29963fc4532d69b4d3ea8c0beeb38076838eb35c2e67f&amp;smart=true&amp;width=943&amp;height=604",
-    "imageCaption": "Cobertura periodística de La Nación.",
-    "spectrum": {
-      "oficialismoPct": 20,
-      "centroDatosPct": 60,
-      "oposicionPct": 20,
-      "totalOutlets": 5
-    },
-    "articles": [
-      {
-        "id": "art-lanacion-1483922325",
-        "outletId": "lanacion",
-        "outletName": "La Nación",
-        "title": "Rosario Central - Estudiantes: el fuerte mensaje de Sebastián Verón tras el polémico penal de VAR",
-        "snippet": "El presidente del Pincha, desde una tribuna, aplaudió irónico el cobro del árbitro Darío Herrera y publicó un duro mensaje en las redes",
-        "url": "https://www.lanacion.com.ar/deportes/futbol/rosario-central-estudiantes-el-fuerte-mensaje-de-sebastian-veron-tras-el-polemico-penal-de-var-nid26092026/",
-        "publishedAt": "Hace 3 min",
-        "imageUrl": "https://resizer.glanacion.com/resizer/v2/3PLJEAAADJBKTDPTX7R4U2M57E.jpg?auth=3cc4ec280cf4ca3ddaa29963fc4532d69b4d3ea8c0beeb38076838eb35c2e67f&amp;smart=true&amp;width=943&amp;height=604"
-      },
-      {
-        "id": "art-lanacion-14455758077",
-        "outletId": "lanacion",
-        "outletName": "La Nación",
-        "title": "Así fue el enfrentamiento entre los jugadores tras la victoria de Rosario Central ante Estudiantes",
-        "snippet": "Los futbolistas del Pincha salieron a buscar a los hombres de Canalla luego del tercer gol y al cierre del partido por la Supercopa Internacional",
-        "url": "https://www.lanacion.com.ar/deportes/asi-fue-el-enfrenamiento-entre-los-jugadores-tras-la-victoria-de-rosario-central-ante-estudiantes-nid26092026/",
-        "publishedAt": "Hace 6 min",
-        "imageUrl": "https://resizer.glanacion.com/resizer/v2/DRFCI6JQ2RBR5FJOPH4A5ZRW6I.png?auth=6b8b38920ad6ac526438b7f4f8d42310ec51d5964b8be8e425937b1edcb9e819&amp;smart=true&amp;width=1335&amp;height=809"
-      },
-      {
-        "id": "art-lanacion-3726132663",
-        "outletId": "lanacion",
-        "outletName": "La Nación",
-        "title": "Con un polémico arbitraje de Darío Herrera, dos goles de Ángel Di María y un final que incluyó golpes entre los jugadores, Rosario Central es campeón de la Supercopa Internacional",
-        "snippet": "Los rosarinos ganaron 3-1 con dos goles de Di María y el partido terminó en escándalo",
-        "url": "https://www.lanacion.com.ar/deportes/futbol/estudiantes-vs-rosario-central-en-vivo-por-la-supercopa-internacional-nid26092026/",
-        "publishedAt": "Hace 23 min",
-        "imageUrl": "https://resizer.glanacion.com/resizer/v2/3PLJEAAADJBKTDPTX7R4U2M57E.jpg?auth=3cc4ec280cf4ca3ddaa29963fc4532d69b4d3ea8c0beeb38076838eb35c2e67f&amp;smart=true&amp;width=943&amp;height=604"
-      },
-      {
-        "id": "art-lanacion-4412942399",
-        "outletId": "lanacion",
-        "outletName": "La Nación",
-        "title": "Así quedó la tabla de campeones del fútbol argentino, tras el título de Rosario Central en la Supercopa Internacional",
-        "snippet": "El Canalla se consagró en Santiago del Estero tras derrotar a Estudiantes de La Plata por 3 a 1 con un doblete de Ángel Di María y un tanto de Julián Fernández",
-        "url": "https://www.lanacion.com.ar/deportes/futbol/asi-quedo-la-tabla-de-campeones-del-futbol-argentino-tras-el-titulo-de-rosario-central-en-la-nid26092026/",
-        "publishedAt": "Hace 27 min",
-        "imageUrl": "https://resizer.glanacion.com/resizer/v2/24GXT4DI2FBXDIQSWZJ2MMISBY.JPG?auth=b56688eccb3c11dfafd6c414cb8f8837549b6b04f61dcdb1ec82292e033a25ab&amp;smart=true&amp;width=2000&amp;height=1332"
-      },
-      {
-        "id": "art-lanacion-15675138511",
-        "outletId": "lanacion",
-        "outletName": "La Nación",
-        "title": "Di María defendió el penal que pateó y apuntó contra Estudiantes tras la pelea: “Siempre pasa lo mismo”",
-        "snippet": "Los jugadores se dieron golpes y empujones en la cancha que luego trasladaron a la entrada de los vestuarios; el capitán defendió al Canalla y la decisión del VAR",
-        "url": "https://www.lanacion.com.ar/deportes/futbol/di-maria-defendio-el-penal-que-pateo-y-apunto-contra-estudiantes-tras-la-pelea-siempre-pasa-lo-mismo-nid26092026/",
-        "publishedAt": "Hace 40 min",
-        "imageUrl": "https://resizer.glanacion.com/resizer/v2/KY57JDVWH5CAPBUTS2AJP5Q6CQ.JPG?auth=ef2637452c59df60fea7d2f9605a47cd5ab4000ec889f53c9e189276d4b6b740&amp;smart=true&amp;width=2000&amp;height=1333"
-      }
-    ],
-    "aiComparisonNotice": "Los medios cubrieron el evento deportivo enfatizando la actuación de Ángel Di María, el arbitraje polémico del VAR y los incidentes posteriores entre los jugadores de ambos equipos, con foco en las declaraciones de los protagonistas."
+    "aiComparisonNotice": "Ambos medios cubren la disidencia pública de Bullrich frente a los dichos de Milei sobre los periodistas de Formosa. Clarín e Infobae ponen el foco en la tensión dentro del propio espacio gobernante y las implicancias de la interna, mientras que La Nación detalla el repudio directo a la justicia de Gildo Insfrán y remarca el distanciamiento ideológico de la funcionaria respecto a la Casa Rosada."
   }
 ]
