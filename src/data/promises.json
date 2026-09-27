@@ -1,0 +1,154 @@
+[
+  {
+    "id": "prom-1",
+    "candidate": "Javier Milei",
+    "coalition": "La Libertad Avanza",
+    "role": "Presidente de la Nación",
+    "category": "Presupuesto y Finanzas",
+    "promiseText": "\"El déficit fiscal cero no se negocia bajo ninguna circunstancia: no gastaremos un solo peso más de lo que ingresa.\"",
+    "status": "cumplida",
+    "statusLabel": "Cumplida (en vigencia)",
+    "statedAt": "Discurso de Asunción y Apertura de Sesiones Ordinarias",
+    "sourceUrl": "https://www.economia.gob.ar",
+    "officialProof": "Boletín de la Secretaría de Hacienda: Superávit primario y financiero consecutivo en los ejercicios 2024-2026.",
+    "auditNotes": "El Ministerio de Economía registró superávit financiero consecutivo sostenido por recorte en gastos de capital (obra pública), transferencias corrientes a provincias y saneamiento de cuentas públicas.",
+    "votes": {
+      "fulfilled": 1842,
+      "inProgress": 320,
+      "broken": 612
+    }
+  },
+  {
+    "id": "prom-2",
+    "candidate": "Javier Milei",
+    "coalition": "La Libertad Avanza",
+    "role": "Presidente de la Nación",
+    "category": "Economía y Moneda",
+    "promiseText": "\"Vamos a cerrar el Banco Central y permitir la libre competencia de monedas para terminar definitivamente con la inflación.\"",
+    "status": "en_pausa",
+    "statusLabel": "En pausa / Fase intermedia",
+    "statedAt": "Campaña Electoral 2023 / Plataforma Electoral LLA",
+    "sourceUrl": "https://www.bcra.gob.ar",
+    "officialProof": "Comunicación BCRA 'A' 7925 y decretos de saneamiento de pasivos remunerados (LEFI).",
+    "auditNotes": "El Banco Central sigue operativo bajo la conducción de Santiago Bausili, abocado al saneamiento de pasivos remunerados. La dolarización formal se encuentra pospuesta en favor de un esquema de bimonetarismo transaccional.",
+    "votes": {
+      "fulfilled": 421,
+      "inProgress": 980,
+      "broken": 1340
+    }
+  },
+  {
+    "id": "prom-3",
+    "candidate": "Javier Milei",
+    "coalition": "La Libertad Avanza",
+    "role": "Presidente de la Nación",
+    "category": "Reforma Institucional",
+    "promiseText": "\"Implementaremos la Boleta Única de Papel para terminar con el fraude de las boletas sábanas y el negocio de la impresión partidaria.\"",
+    "status": "cumplida",
+    "statusLabel": "Cumplida (Sancionada)",
+    "statedAt": "Plataforma de Gobierno y mensaje al Congreso de la Nación",
+    "sourceUrl": "https://www.boletinoficial.gob.ar",
+    "officialProof": "Ley 27.781 sancionada por el Congreso y promulgada en el Boletín Oficial de la República Argentina.",
+    "auditNotes": "El Congreso de la Nación aprobó el proyecto de Boleta Única de Papel (BUP) estilo cordobés para todas las elecciones nacionales a cargos legislativos y presidenciales.",
+    "votes": {
+      "fulfilled": 2150,
+      "inProgress": 180,
+      "broken": 115
+    }
+  },
+  {
+    "id": "prom-4",
+    "candidate": "Javier Milei",
+    "coalition": "La Libertad Avanza",
+    "role": "Presidente de la Nación",
+    "category": "Sector Agropecuario",
+    "promiseText": "\"Nuestro horizonte ineludible es la eliminación absoluta de los derechos de exportación (retenciones) al campo.\"",
+    "status": "en_progreso",
+    "statusLabel": "En progreso / Reducción gradual",
+    "statedAt": "Exposición Rural de Palermo / Mensaje al sector agropecuario",
+    "sourceUrl": "https://www.argentina.gob.ar/agricultura",
+    "officialProof": "Decreto 697/2024 y resoluciones de Secretaría de Bioeconomía eliminando retenciones a economías regionales y carnes blancas.",
+    "auditNotes": "Se eliminaron retenciones a lácteos y economías regionales, pero los principales complejos exportadores (soja, maíz y trigo) mantienen alícuotas vigentes sujetas al equilibrio fiscal.",
+    "votes": {
+      "fulfilled": 512,
+      "inProgress": 1280,
+      "broken": 790
+    }
+  },
+  {
+    "id": "prom-5",
+    "candidate": "Axel Kicillof",
+    "coalition": "Unión por la Patria",
+    "role": "Gobernador de Buenos Aires",
+    "category": "Desarrollo y Producción",
+    "promiseText": "\"La Provincia de Buenos Aires sostendrá la obra pública y el financiamiento productivo a través de la banca pública bonaerense.\"",
+    "status": "en_progreso",
+    "statusLabel": "En progreso / Verificable",
+    "statedAt": "Apertura de Sesiones Ordinarias de la Legislatura Bonaerense",
+    "sourceUrl": "https://www.gba.gob.ar",
+    "officialProof": "Licitaciones del Ministerio de Infraestructura Bonaerense y líneas 'Provincia en Marcha'.",
+    "auditNotes": "El Banco Provincia incrementó colocaciones de crédito a pymes bonaerenses con tasas bonificadas, si bien el freno de los giros de coparticipación y ATN obligó a priorizar obras esenciales de saneamiento y escuelas.",
+    "votes": {
+      "fulfilled": 890,
+      "inProgress": 950,
+      "broken": 620
+    }
+  },
+  {
+    "id": "prom-6",
+    "candidate": "Axel Kicillof",
+    "coalition": "Unión por la Patria",
+    "role": "Gobernador de Buenos Aires",
+    "category": "Consumo e Inclusión",
+    "promiseText": "\"Continuaremos subsidiando el consumo cotidiano de los bonaerenses mediante reintegros masivos de Cuenta DNI.\"",
+    "status": "cumplida",
+    "statusLabel": "Cumplida (en vigencia)",
+    "statedAt": "Conferencia de Prensa de Gestión de Gobierno",
+    "sourceUrl": "https://www.bancoprovincia.com.ar",
+    "officialProof": "Programa de promociones comerciales de Cuenta DNI con más de 9 millones de usuarios activos.",
+    "auditNotes": "Cuenta DNI superó los 9 millones de usuarios activos con beneficios semanales vigentes en carnicerías, almacenes barriales y ferias, financiado con utilidades del Banco de la Provincia de Buenos Aires.",
+    "votes": {
+      "fulfilled": 2340,
+      "inProgress": 210,
+      "broken": 180
+    }
+  },
+  {
+    "id": "prom-7",
+    "candidate": "Mauricio Macri",
+    "coalition": "Propuesta Republicana (PRO)",
+    "role": "Presidente del PRO",
+    "category": "Institucional y Gobernabilidad",
+    "promiseText": "\"El PRO garantizará las herramientas institucionales para que el gobierno no caiga, pero marcando los límites donde corresponda.\"",
+    "status": "cumplida",
+    "statusLabel": "Cumplida con observaciones",
+    "statedAt": "Documento Político del Consejo Nacional de Propuesta Republicana",
+    "sourceUrl": "https://pro.com.ar",
+    "officialProof": "Actas de votación en la Cámara de Diputados sobre Ley de Bases, Régimen RIGI y vetos presidenciales.",
+    "auditNotes": "Los bloques parlamentarios del PRO votaron favorablemente las leyes troncales del Ejecutivo nacional, absteniéndose o rechazando capítulos vinculados a fondos de inteligencia y financiamiento universitario.",
+    "votes": {
+      "fulfilled": 1420,
+      "inProgress": 540,
+      "broken": 490
+    }
+  },
+  {
+    "id": "prom-8",
+    "candidate": "Jorge Macri",
+    "coalition": "Juntos por el Cambio / PRO",
+    "role": "Jefe de Gobierno CABA",
+    "category": "Federalismo y Coparticipación",
+    "promiseText": "\"Exigiremos el cumplimiento estricto del fallo de la Corte Suprema sobre los fondos de coparticipación retenidos a la Ciudad.\"",
+    "status": "en_progreso",
+    "statusLabel": "En progreso / Acuerdo parcial",
+    "statedAt": "Discurso de asunción en la Legislatura Porteña",
+    "sourceUrl": "https://buenosaires.gob.ar",
+    "officialProof": "Actas de conciliación ante la Corte Suprema de Justicia entre el Ministerio de Economía de la Nación y la Ciudad.",
+    "auditNotes": "Se estableció un esquema de goteo semanal del 2,95% mediante depósitos directos del Banco Nación, aunque resta acordar el pago retroactivo de la deuda acumulada desde 2020.",
+    "votes": {
+      "fulfilled": 870,
+      "inProgress": 1130,
+      "broken": 340
+    }
+  }
+]

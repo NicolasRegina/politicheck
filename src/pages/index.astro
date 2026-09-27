@@ -3,16 +3,21 @@ import Layout from '../layouts/Layout.astro';
 import StoryCard from '../components/StoryCard.astro';
 import LiveFeedItem from '../components/LiveFeedItem.astro';
 import PromiseCard from '../components/PromiseCard.astro';
-import { MOCK_STORIES, MOCK_LIVE_FEED, MOCK_FOREIGN_STORIES, MOCK_PROMISES } from '../data/mockData';
+import { MOCK_STORIES, MOCK_LIVE_FEED, MOCK_FOREIGN_STORIES } from '../data/mockData';
 import { getCachedArticles } from '../services/rss/sync';
 import { clusterArticlesWithGemini } from '../services/ai/clustering';
+import { getPromises, getPromisesStats } from '../services/promises';
+
+// Fetch live dynamic campaign promises
+const allPromises = getPromises();
+const promisesStats = getPromisesStats(allPromises);
 
 // Fetch live articles cached from official RSS feeds
 const cachedArticles = getCachedArticles();
 const liveArticles = cachedArticles.length > 0 ? cachedArticles : MOCK_LIVE_FEED;
 
 // Generate clustered stories dynamically from live articles
-const dynamicStories = await clusterArticlesWithGemini(liveArticles);
+const dynamicStories = await clusterArticlesWithGemini(liveArticles, import.meta.env.GEMINI_API_KEY);
 const storiesToDisplay = dynamicStories.length > 0 ? dynamicStories : MOCK_STORIES;
 
 const leadStory = storiesToDisplay[0];
@@ -147,29 +152,131 @@ const liveFeedArticles = liveArticles.slice(0, 20);
 
     <!-- SECTION 3: Monitor de Promesas Electorales 2027 -->
     <section id="monitor-promesas" class="space-y-6 pt-6 border-t border-slate-200 dark:border-slate-800">
-      <div class="flex flex-col md:flex-row md:items-end justify-between gap-3 border-b border-slate-200 dark:border-slate-800 pb-4">
-        <div class="space-y-1">
-          <div class="inline-flex items-center gap-2 px-2 py-0.5 rounded bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-[10px] font-mono font-bold uppercase tracking-wider text-slate-800 dark:text-slate-200">
-            <span>Observatorio Cívico Electoral</span>
+      <!-- Section Header & Metrics Dashboard Bento -->
+      <div class="flex flex-col lg:flex-row lg:items-end justify-between gap-6 border-b border-slate-200 dark:border-slate-800 pb-5">
+        <div class="space-y-2 max-w-2xl">
+          <div class="inline-flex items-center gap-2 px-2.5 py-0.5 rounded-full bg-slate-900 dark:bg-slate-100 text-white dark:text-slate-900 text-[10px] font-mono font-bold uppercase tracking-wider">
+            <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+            <span>Observatorio Cívico Electoral • Politicheck</span>
           </div>
-          <h3 class="font-editorial text-2xl sm:text-3xl font-extrabold text-slate-950 dark:text-white tracking-tight">
+          <h3 class="font-editorial text-2xl sm:text-3xl lg:text-4xl font-extrabold text-slate-950 dark:text-white tracking-tight">
             Monitor de Promesas de Campaña 2027
           </h3>
-          <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-400 max-w-3xl font-sans">
-            Auditoría rigurosa y no partidaria de los compromisos asumidos por los principales dirigentes políticos. Cotejamos las declaraciones textuales contra resoluciones oficiales y datos estadísticos comprobables.
+          <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-400 font-sans leading-relaxed">
+            Auditoría rigurosa y no partidaria de los compromisos asumidos por los principales dirigentes políticos. Cotejamos las declaraciones textuales contra resoluciones oficiales, leyes sancionadas y el termómetro de percepción ciudadana en tiempo real.
           </p>
         </div>
 
-        <div class="text-right text-[11px] font-mono text-slate-500 dark:text-slate-400 shrink-0">
-          <div>TOTAL AUDITADAS: 4</div>
-          <div class="text-emerald-700 dark:text-emerald-400 font-bold">100% CITA TEXTUAL</div>
+        <!-- Metrics Dashboard Bar -->
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 font-mono text-center shrink-0">
+          <div class="bg-white dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800 rounded-xl p-3 shadow-2xs">
+            <div class="text-[10px] uppercase text-slate-500 dark:text-slate-400">Auditadas</div>
+            <div class="text-xl font-bold text-slate-900 dark:text-white">{promisesStats.total}</div>
+            <div class="text-[9px] text-slate-400">100% cita oficial</div>
+          </div>
+          <div class="bg-white dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800 rounded-xl p-3 shadow-2xs">
+            <div class="text-[10px] uppercase text-emerald-700 dark:text-emerald-400">Cumplidas</div>
+            <div class="text-xl font-bold text-emerald-700 dark:text-emerald-400">{promisesStats.fulfilledPct}%</div>
+            <div class="text-[9px] text-slate-400">{promisesStats.fulfilled} de {promisesStats.total}</div>
+          </div>
+          <div class="bg-white dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800 rounded-xl p-3 shadow-2xs">
+            <div class="text-[10px] uppercase text-amber-700 dark:text-amber-400">En Progreso</div>
+            <div class="text-xl font-bold text-amber-700 dark:text-amber-400">{promisesStats.inProgressPct}%</div>
+            <div class="text-[9px] text-slate-400">{promisesStats.inProgress} activas</div>
+          </div>
+          <div class="bg-white dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800 rounded-xl p-3 shadow-2xs">
+            <div class="text-[10px] uppercase text-sky-700 dark:text-sky-400">Votos Cívicos</div>
+            <div class="text-xl font-bold text-sky-700 dark:text-sky-400" id="total-citizen-votes-count">{promisesStats.totalCitizenVotes.toLocaleString('es-AR')}</div>
+            <div class="text-[9px] text-slate-400">participación viva</div>
+          </div>
         </div>
       </div>
 
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {MOCK_PROMISES.map((promise) => (
+      <!-- Promises Filter & Search Bar -->
+      <div class="space-y-3 bg-slate-50 dark:bg-slate-950/60 border border-slate-200 dark:border-slate-800/90 rounded-2xl p-4">
+        <!-- Top row: Candidate filter buttons & search -->
+        <div class="flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3">
+          <!-- Candidate Filter Pills -->
+          <div class="flex items-center gap-1.5 overflow-x-auto text-xs font-mono py-1" id="candidate-filters">
+            <button class="cand-filter-btn active px-3 py-1.5 rounded-lg bg-slate-900 dark:bg-slate-100 text-white dark:text-slate-950 font-bold transition-colors cursor-pointer" data-candidate="all">
+              Todos los Dirigentes
+            </button>
+            <button class="cand-filter-btn px-3 py-1.5 rounded-lg bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 border border-slate-200 dark:border-slate-800 transition-colors cursor-pointer" data-candidate="Javier Milei">
+              Javier Milei
+            </button>
+            <button class="cand-filter-btn px-3 py-1.5 rounded-lg bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 border border-slate-200 dark:border-slate-800 transition-colors cursor-pointer" data-candidate="Axel Kicillof">
+              Axel Kicillof
+            </button>
+            <button class="cand-filter-btn px-3 py-1.5 rounded-lg bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 border border-slate-200 dark:border-slate-800 transition-colors cursor-pointer" data-candidate="Mauricio Macri">
+              Mauricio Macri
+            </button>
+            <button class="cand-filter-btn px-3 py-1.5 rounded-lg bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 border border-slate-200 dark:border-slate-800 transition-colors cursor-pointer" data-candidate="Jorge Macri">
+              Jorge Macri
+            </button>
+          </div>
+
+          <!-- Promise Keyword Search -->
+          <div class="relative w-full md:w-72">
+            <input 
+              type="text" 
+              id="promise-search-input"
+              placeholder="Buscar promesa (ej. inflación, retenciones, coparticipación)..." 
+              class="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl px-3.5 py-1.5 text-xs text-slate-900 dark:text-slate-200 placeholder-slate-400 focus:outline-none focus:border-slate-400 dark:focus:border-slate-500 shadow-2xs transition-colors font-sans"
+            />
+            <svg class="w-3.5 h-3.5 text-slate-400 absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            </svg>
+          </div>
+        </div>
+
+        <!-- Bottom row: Status filter chips -->
+        <div class="flex items-center gap-1.5 overflow-x-auto text-[11px] font-mono pt-1 border-t border-slate-200/60 dark:border-slate-800/60" id="status-filters">
+          <span class="text-slate-400 dark:text-slate-500 text-[10px] uppercase tracking-wider mr-1">Filtrar por estado:</span>
+          <button class="stat-filter-btn active px-2.5 py-1 rounded-md bg-slate-200 dark:bg-slate-800 text-slate-900 dark:text-white font-bold transition-colors cursor-pointer" data-status="all">
+            Todos ({promisesStats.total})
+          </button>
+          <button class="stat-filter-btn px-2.5 py-1 rounded-md bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 border border-slate-200 dark:border-slate-800 transition-colors cursor-pointer" data-status="cumplida">
+            Cumplidas ({promisesStats.fulfilled})
+          </button>
+          <button class="stat-filter-btn px-2.5 py-1 rounded-md bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 border border-slate-200 dark:border-slate-800 transition-colors cursor-pointer" data-status="en_progreso">
+            En progreso ({promisesStats.inProgress})
+          </button>
+          <button class="stat-filter-btn px-2.5 py-1 rounded-md bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 border border-slate-200 dark:border-slate-800 transition-colors cursor-pointer" data-status="en_pausa">
+            En pausa ({promisesStats.paused})
+          </button>
+          <button class="stat-filter-btn px-2.5 py-1 rounded-md bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 border border-slate-200 dark:border-slate-800 transition-colors cursor-pointer" data-status="incumplida">
+            Incumplidas ({promisesStats.broken})
+          </button>
+        </div>
+      </div>
+
+      <!-- Active Promises Filter Banner Indicator -->
+      <div id="promises-filter-banner" class="hidden items-center justify-between p-3 rounded-xl bg-slate-100 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 text-xs font-mono">
+        <div class="flex items-center gap-2">
+          <span class="w-2 h-2 rounded-full bg-slate-900 dark:bg-white animate-pulse"></span>
+          <span>Filtro activo de promesas: <strong id="promises-filter-text"></strong></span>
+        </div>
+        <button id="clear-promises-filter-btn" class="text-xs font-bold text-slate-900 dark:text-white underline hover:no-underline cursor-pointer">
+          Restablecer todas las promesas
+        </button>
+      </div>
+
+      <!-- Promises Grid -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6" id="promises-container">
+        {allPromises.map((promise) => (
           <PromiseCard promise={promise} />
         ))}
+      </div>
+
+      <!-- Empty state if no promise matches filter -->
+      <div id="promises-empty-state" class="hidden text-center py-12 px-4 rounded-2xl border border-dashed border-slate-300 dark:border-slate-800 bg-slate-50 dark:bg-slate-900/40 space-y-3">
+        <div class="text-3xl">🔍</div>
+        <h4 class="font-editorial text-lg font-bold text-slate-900 dark:text-slate-100">
+          No se encontraron promesas para el filtro seleccionado
+        </h4>
+        <p class="text-xs text-slate-500 dark:text-slate-400 font-sans max-w-md mx-auto">
+          Probá seleccionando otro dirigente o limpiando el término de búsqueda para ver los compromisos auditados.
+        </p>
       </div>
     </section>
 
@@ -391,4 +498,198 @@ const liveFeedArticles = liveArticles.slice(0, 20);
       });
     });
   }
+
+  // --- Client-side Campaign Promises Filtering ---
+  let activeCandidate = 'all';
+  let activeStatus = 'all';
+  let promiseSearchQuery = '';
+
+  const candFilterButtons = document.querySelectorAll<HTMLButtonElement>('.cand-filter-btn');
+  const statFilterButtons = document.querySelectorAll<HTMLButtonElement>('.stat-filter-btn');
+  const promiseCards = document.querySelectorAll<HTMLElement>('.promise-card');
+  const promiseSearchInput = document.getElementById('promise-search-input') as HTMLInputElement | null;
+  const promisesFilterBanner = document.getElementById('promises-filter-banner');
+  const promisesFilterText = document.getElementById('promises-filter-text');
+  const clearPromisesFilterBtn = document.getElementById('clear-promises-filter-btn');
+  const promisesEmptyState = document.getElementById('promises-empty-state');
+
+  function applyPromisesFilters() {
+    let visibleCount = 0;
+
+    promiseCards.forEach(card => {
+      const cand = card.getAttribute('data-candidate') || '';
+      const stat = card.getAttribute('data-status') || '';
+      const text = card.textContent?.toLowerCase() || '';
+
+      const matchesCand = activeCandidate === 'all' || cand === activeCandidate;
+      const matchesStat = activeStatus === 'all' || stat === activeStatus;
+      const matchesSearch = !promiseSearchQuery || text.includes(promiseSearchQuery);
+
+      if (matchesCand && matchesStat && matchesSearch) {
+        card.style.display = '';
+        visibleCount++;
+      } else {
+        card.style.display = 'none';
+      }
+    });
+
+    // Update banner
+    if (promisesFilterBanner && promisesFilterText) {
+      if (activeCandidate === 'all' && activeStatus === 'all' && !promiseSearchQuery) {
+        promisesFilterBanner.classList.add('hidden');
+        promisesFilterBanner.classList.remove('flex');
+      } else {
+        promisesFilterBanner.classList.remove('hidden');
+        promisesFilterBanner.classList.add('flex');
+        const filterDescriptions = [];
+        if (activeCandidate !== 'all') filterDescriptions.push(`Dirigente: ${activeCandidate}`);
+        if (activeStatus !== 'all') filterDescriptions.push(`Estado: ${activeStatus}`);
+        if (promiseSearchQuery) filterDescriptions.push(`Búsqueda: "${promiseSearchQuery}"`);
+        promisesFilterText.textContent = `${filterDescriptions.join(' • ')} (${visibleCount} promesas encontradas)`;
+      }
+    }
+
+    // Empty state
+    if (promisesEmptyState) {
+      if (visibleCount === 0) {
+        promisesEmptyState.classList.remove('hidden');
+      } else {
+        promisesEmptyState.classList.add('hidden');
+      }
+    }
+  }
+
+  // Candidate buttons
+  candFilterButtons.forEach(btn => {
+    btn.addEventListener('click', () => {
+      candFilterButtons.forEach(b => {
+        b.classList.remove('bg-slate-900', 'dark:bg-slate-100', 'text-white', 'dark:text-slate-950', 'font-bold');
+        b.classList.add('bg-white', 'dark:bg-slate-900', 'text-slate-700', 'dark:text-slate-300');
+      });
+      btn.classList.add('bg-slate-900', 'dark:bg-slate-100', 'text-white', 'dark:text-slate-950', 'font-bold');
+      btn.classList.remove('bg-white', 'dark:bg-slate-900', 'text-slate-700', 'dark:text-slate-300');
+
+      activeCandidate = btn.getAttribute('data-candidate') || 'all';
+      applyPromisesFilters();
+    });
+  });
+
+  // Status buttons
+  statFilterButtons.forEach(btn => {
+    btn.addEventListener('click', () => {
+      statFilterButtons.forEach(b => {
+        b.classList.remove('bg-slate-200', 'dark:bg-slate-800', 'text-slate-900', 'dark:text-white', 'font-bold');
+        b.classList.add('bg-white', 'dark:bg-slate-900', 'text-slate-700', 'dark:text-slate-300');
+      });
+      btn.classList.add('bg-slate-200', 'dark:bg-slate-800', 'text-slate-900', 'dark:text-white', 'font-bold');
+      btn.classList.remove('bg-white', 'dark:bg-slate-900', 'text-slate-700', 'dark:text-slate-300');
+
+      activeStatus = btn.getAttribute('data-status') || 'all';
+      applyPromisesFilters();
+    });
+  });
+
+  // Search input
+  if (promiseSearchInput) {
+    promiseSearchInput.addEventListener('input', () => {
+      promiseSearchQuery = promiseSearchInput.value.toLowerCase().trim();
+      applyPromisesFilters();
+    });
+  }
+
+  // Clear filters button
+  if (clearPromisesFilterBtn) {
+    clearPromisesFilterBtn.addEventListener('click', () => {
+      const allCand = document.querySelector<HTMLButtonElement>('.cand-filter-btn[data-candidate="all"]');
+      const allStat = document.querySelector<HTMLButtonElement>('.stat-filter-btn[data-status="all"]');
+      if (allCand) allCand.click();
+      if (allStat) allStat.click();
+      if (promiseSearchInput) {
+        promiseSearchInput.value = '';
+        promiseSearchQuery = '';
+      }
+      applyPromisesFilters();
+    });
+  }
+
+  // --- Citizen Voting Interaction ---
+  const voteButtons = document.querySelectorAll<HTMLButtonElement>('.vote-btn');
+
+  // Highlight previously voted buttons from localStorage
+  voteButtons.forEach(btn => {
+    const promiseId = btn.getAttribute('data-promise-id');
+    const voteType = btn.getAttribute('data-vote-type');
+    if (!promiseId || !voteType) return;
+
+    const savedVote = localStorage.getItem(`politicheck_vote_${promiseId}`);
+    if (savedVote === voteType) {
+      btn.classList.add('ring-2', 'ring-slate-900', 'dark:ring-white', 'font-bold');
+    }
+  });
+
+  voteButtons.forEach(btn => {
+    btn.addEventListener('click', async () => {
+      const promiseId = btn.getAttribute('data-promise-id');
+      const voteType = btn.getAttribute('data-vote-type') as 'fulfilled' | 'inProgress' | 'broken';
+      if (!promiseId || !voteType) return;
+
+      const previousVote = localStorage.getItem(`politicheck_vote_${promiseId}`);
+      if (previousVote === voteType) {
+        return; // Already voted this option
+      }
+
+      // Optimistic UI updates
+      const card = btn.closest<HTMLElement>('.promise-card');
+      if (!card) return;
+
+      // Update button styles in this card
+      const cardVoteBtns = card.querySelectorAll<HTMLButtonElement>('.vote-btn');
+      cardVoteBtns.forEach(b => {
+        b.classList.remove('ring-2', 'ring-slate-900', 'dark:ring-white', 'font-bold');
+      });
+      btn.classList.add('ring-2', 'ring-slate-900', 'dark:ring-white', 'font-bold');
+
+      // Dispatch to API
+      try {
+        const res = await fetch('/api/promises/vote', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ promiseId, voteType })
+        });
+
+        if (res.ok) {
+          const data = await res.json();
+          if (data.success && data.promise && data.promise.votes) {
+            localStorage.setItem(`politicheck_vote_${promiseId}`, voteType);
+            const votes = data.promise.votes;
+
+            // Update DOM counters
+            const countFulfilled = card.querySelector('.count-fulfilled');
+            const countInProgress = card.querySelector('.count-in-progress');
+            const countBroken = card.querySelector('.count-broken');
+            if (countFulfilled) countFulfilled.textContent = `(${votes.fulfilled})`;
+            if (countInProgress) countInProgress.textContent = `(${votes.inProgress})`;
+            if (countBroken) countBroken.textContent = `(${votes.broken})`;
+
+            // Recalculate progress bars
+            const total = votes.fulfilled + votes.inProgress + votes.broken;
+            if (total > 0) {
+              const fPct = Math.round((votes.fulfilled / total) * 100);
+              const ipPct = Math.round((votes.inProgress / total) * 100);
+              const bPct = Math.round((votes.broken / total) * 100);
+
+              const barF = card.querySelector<HTMLElement>('.bar-fulfilled');
+              const barIP = card.querySelector<HTMLElement>('.bar-in-progress');
+              const barB = card.querySelector<HTMLElement>('.bar-broken');
+              if (barF) barF.style.width = `${fPct}%`;
+              if (barIP) barIP.style.width = `${ipPct}%`;
+              if (barB) barB.style.width = `${bPct}%`;
+            }
+          }
+        }
+      } catch (err) {
+        console.error('Error voting:', err);
+      }
+    });
+  });
 </script>

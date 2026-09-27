@@ -1,3 +1,5 @@
+import fs from 'node:fs';
+import path from 'node:path';
 import type { Article, StoryCluster, SpectrumBreakdown } from '../../types';
 import { OUTLETS } from '../../data/mockData';
 
@@ -13,11 +15,33 @@ interface GeminiClusterResponse {
   }[];
 }
 
+function getGeminiKey(explicitKey?: string): string | undefined {
+  if (explicitKey && explicitKey !== 'tu_clave_aqui') return explicitKey;
+  if (process.env.GEMINI_API_KEY && process.env.GEMINI_API_KEY !== 'tu_clave_aqui') return process.env.GEMINI_API_KEY;
+  if (typeof import.meta !== 'undefined' && import.meta.env?.GEMINI_API_KEY && import.meta.env.GEMINI_API_KEY !== 'tu_clave_aqui') {
+    return import.meta.env.GEMINI_API_KEY;
+  }
+  try {
+    const envFile = path.resolve(process.cwd(), '.env');
+    if (fs.existsSync(envFile)) {
+      const content = fs.readFileSync(envFile, 'utf-8');
+      const match = content.match(/^GEMINI_API_KEY=(.+)$/m);
+      if (match) {
+        const val = match[1].trim().replace(/^["']|["']$/g, '');
+        if (val && val !== 'tu_clave_aqui') return val;
+      }
+    }
+  } catch {
+    // fallback
+  }
+  return undefined;
+}
+
 export async function clusterArticlesWithGemini(
   articles: Article[],
   apiKey?: string
 ): Promise<StoryCluster[]> {
-  const geminiKey = apiKey || process.env.GEMINI_API_KEY;
+  const geminiKey = getGeminiKey(apiKey);
 
   if (!geminiKey) {
     console.log('[AI Clustering] No GEMINI_API_KEY found, using rule-based algorithmic clustering.');
@@ -25,7 +49,7 @@ export async function clusterArticlesWithGemini(
   }
 
   try {
-    console.log(`[AI Clustering] Calling Gemini 1.5 Flash to cluster ${articles.length} articles...`);
+    console.log(`[AI Clustering] Calling Gemini Flash to cluster ${articles.length} articles...`);
     const prompt = `
 Eres el motor de análisis editorial y verificación de Politicheck.
 Tu objetivo es analizar las siguientes noticias argentinas de las últimas horas publicadas por distintos medios (Clarín, La Nación, Infobae, Ámbito, El Cronista, Página 12, etc.) y agruparlas en torno al mismo hecho central ("Historia").
@@ -62,25 +86,52 @@ Noticias a analizar:
 ${JSON.stringify(articles.slice(0, 35).map(a => ({ id: a.id, medio: a.outletName, titulo: a.title, bajada: a.snippet })), null, 2)}
 `;
 
-    const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${geminiKey}`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        contents: [{ parts: [{ text: prompt }] }],
-        generationConfig: {
-          responseMimeType: 'application/json',
-          temperature: 0.2
-        }
-      })
-    });
+    const CANDIDATE_MODELS = [
+      'gemini-flash-latest',
+      'gemini-flash-lite-latest',
+      'gemini-3.5-flash-lite',
+      'gemini-3.8-flash'
+    ];
 
-    if (!res.ok) {
-      throw new Error(`Gemini API error ${res.status}: ${await res.text()}`);
+    let rawJson = '';
+    let usedModel = '';
+
+    for (const model of CANDIDATE_MODELS) {
+      try {
+        const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${geminiKey}`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            contents: [{ parts: [{ text: prompt }] }],
+            generationConfig: {
+              responseMimeType: 'application/json',
+              temperature: 0.2
+            }
+          })
+        });
+
+        if (res.ok) {
+          const data = await res.json();
+          const candidateText = data.candidates?.[0]?.content?.parts?.[0]?.text;
+          if (candidateText) {
+            rawJson = candidateText;
+            usedModel = model;
+            break;
+          }
+        } else {
+          console.warn(`[AI Clustering] Model ${model} returned ${res.status}. Probando alternativo...`);
+        }
+      } catch (fetchErr) {
+        console.warn(`[AI Clustering] Model ${model} network error:`, fetchErr);
+      }
     }
 
-    const data = await res.json();
-    const rawJson = data.candidates?.[0]?.content?.parts?.[0]?.text;
-    if (!rawJson) throw new Error('Empty response from Gemini');
+    if (!rawJson) {
+      console.warn('[AI Clustering] No se pudo obtener respuesta de Gemini, usando clustering algorítmico.');
+      return ruleBasedClustering(articles);
+    }
+
+    console.log(`[AI Clustering] Clustered successfully with Google Gemini (${usedModel})`);
 
     const parsed: GeminiClusterResponse = JSON.parse(rawJson);
     const articleMap = new Map(articles.map(a => [a.id, a]));

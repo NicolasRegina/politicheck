@@ -50,6 +50,12 @@ export interface StoryCluster {
 
 export type PromiseStatus = 'cumplida' | 'en_progreso' | 'incumplida' | 'en_pausa';
 
+export interface CitizenVotes {
+  fulfilled: number;
+  inProgress: number;
+  broken: number;
+}
+
 export interface CampaignPromise {
   id: string;
   candidate: string;
@@ -62,5 +68,7 @@ export interface CampaignPromise {
   statedAt: string;
   sourceUrl: string;
   auditNotes: string;
+  officialProof?: string;
+  votes?: CitizenVotes;
 }
 
