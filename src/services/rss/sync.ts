@@ -8,6 +8,7 @@ export interface SyncResult {
   timestamp: string;
   totalFetched: number;
   uniqueArticles: number;
+  newArticlesCount?: number;
   outletsCoverage: Record<string, number>;
   articles: Article[];
 }
@@ -52,10 +53,16 @@ export async function syncAllRssFeeds(): Promise<SyncResult> {
     }
   }
 
+  // Check how many are genuinely new compared to existing cache
+  const existingArticles = getCachedArticles();
+  const existingUrls = new Set(existingArticles.map(a => a.url.split('?')[0].toLowerCase()));
+  const newArticlesCount = uniqueArticles.filter(a => !existingUrls.has(a.url.split('?')[0].toLowerCase())).length;
+
   const syncResult: SyncResult = {
     timestamp: new Date().toISOString(),
     totalFetched: allArticles.length,
     uniqueArticles: uniqueArticles.length,
+    newArticlesCount,
     outletsCoverage,
     articles: uniqueArticles
   };

@@ -2,17 +2,17 @@
   {
     "id": "story-ai-1",
     "isLeadStory": true,
-    "kicker": "FONDOS BUITRES",
-    "neutralHeadline": "Una jueza de Estados Unidos habilitó a un fondo a pedir embargos contra la Argentina por la expropiación de Aerolíneas Argentinas",
-    "category": "Economía",
-    "summary": "La magistrada federal estadounidense Jia Cobb autorizó al fondo Titan Consortium a iniciar el proceso para solicitar embargos de activos argentinos por un monto de 390 millones de dólares. La medida se produce tras la falta de pagos en los plazos previstos desde la sentencia original por la expropiación de la aerolínea de bandera.",
+    "kicker": "JUSTICIA INTERNACIONAL",
+    "neutralHeadline": "Una jueza de Estados Unidos habilita a un fondo a pedir embargos contra la Argentina por la expropiación de Aerolíneas Argentinas",
+    "category": "Justicia",
+    "summary": "La magistrada federal estadounidense Jia Cobb autorizó a Titan Consortium a iniciar pedidos de embargo de activos argentinos por un monto de 390 millones de dólares. La medida responde a un reclamo derivado de la expropiación de la aerolínea de bandera.",
     "updatedAt": "Reciente",
     "imageUrl": "https://www.clarin.com/img/2026/08/06/Of7XDw3DA_1200x630__1.jpg",
     "imageCaption": "Cobertura periodística de Clarín.",
     "spectrum": {
-      "oficialismoPct": 33,
-      "centroDatosPct": 34,
-      "oposicionPct": 33,
+      "oficialismoPct": 30,
+      "centroDatosPct": 50,
+      "oposicionPct": 20,
       "totalOutlets": 2
     },
     "articles": [
@@ -37,6 +37,6 @@
         "imageUrl": "https://resizer.glanacion.com/resizer/v2/7563RYJASRGRDAAEBN373YKBL4.jpg?auth=77ded3a928413ff3b0a7568d57187fb3da35122e10ccf25f34a06dc704e31077&amp;smart=true&amp;width=2000&amp;height=1334"
       }
     ],
-    "aiComparisonNotice": "Ambos medios (Clarín y La Nación) abordaron el fallo judicial en Estados Unidos con un enfoque informativo casi idéntico, destacando el monto de 390 millones de dólares y la autorización a Titan Consortium, sin incurrir en valoraciones políticas disímiles en sus titulares."
+    "aiComparisonNotice": "Ambos medios (Clarín y La Nación) coinciden en los datos centrales y técnicos de la resolución judicial estadounidense, utilizando un tono informativo y directo sobre el perjuicio financiero potencial para el Estado argentino sin sesgos marcados en sus titulares."
   }
 ]

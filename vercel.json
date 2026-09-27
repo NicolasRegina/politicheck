@@ -1,0 +1,9 @@
+{
+  "framework": "astro",
+  "crons": [
+    {
+      "path": "/api/rss/sync?cron=true",
+      "schedule": "*/30 * * * *"
+    }
+  ]
+}
