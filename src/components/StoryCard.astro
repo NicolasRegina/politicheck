@@ -91,7 +91,7 @@ const getOutletBadge = (id: string) => {
           <span class="font-semibold">Distribución del Espectro Editorial</span>
           <span>Base: {story.spectrum.totalOutlets} medios monitoreados</span>
         </div>
-        <SpectrumBar spectrum={story.spectrum} />
+        <SpectrumBar spectrum={story.spectrum} articles={story.articles} />
       </div>
     </div>
   ) : (
@@ -134,7 +134,7 @@ const getOutletBadge = (id: string) => {
           <span>Espectro Editorial</span>
           <span>{story.spectrum.totalOutlets} medios</span>
         </div>
-        <SpectrumBar spectrum={story.spectrum} />
+        <SpectrumBar spectrum={story.spectrum} articles={story.articles} />
       </div>
     </div>
   )}

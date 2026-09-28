@@ -1,45 +1,90 @@
 ---
-import type { SpectrumBreakdown } from '../types';
+import type { SpectrumBreakdown, Article } from '../types';
+import { OUTLETS } from '../data/mockData';
 
 interface Props {
-  spectrum: SpectrumBreakdown;
+  spectrum?: SpectrumBreakdown;
+  articles?: Article[];
 }
 
-const { spectrum } = Astro.props;
+const { spectrum: initialSpectrum, articles } = Astro.props;
+
+// Calculate mathematically exact spectrum based on participating articles
+let spectrum = initialSpectrum;
+
+if (articles && articles.length > 0) {
+  let ofi = 0;
+  let centro = 0;
+  let opo = 0;
+
+  articles.forEach((a) => {
+    const outlet = OUTLETS[a.outletId];
+    const leaning = outlet?.baselineLeaning || 'centro_datos';
+    if (leaning === 'oficialismo') ofi++;
+    else if (leaning === 'oposicion') opo++;
+    else centro++;
+  });
+
+  const total = articles.length;
+  const ofiPct = Math.round((ofi / total) * 100);
+  const centroPct = Math.round((centro / total) * 100);
+  // Ensure the three sum exactly to 100%
+  const opoPct = Math.max(0, 100 - ofiPct - centroPct);
+
+  spectrum = {
+    oficialismoPct: ofiPct,
+    centroDatosPct: centroPct,
+    oposicionPct: opoPct,
+    totalOutlets: total
+  };
+}
+
+if (!spectrum) {
+  spectrum = { oficialismoPct: 0, centroDatosPct: 100, oposicionPct: 0, totalOutlets: 1 };
+}
 ---
 
 <div class="space-y-2">
-  <div class="flex items-center justify-between text-xs font-mono">
-    <span class="flex items-center gap-1.5 text-violet-700 dark:text-violet-300">
-      <span class="w-2.5 h-2.5 rounded-full bg-violet-600 dark:bg-violet-500 shadow-xs"></span>
+  <!-- Legend with real percentages derived from participating outlets -->
+  <div class="flex flex-wrap items-center justify-between gap-2 text-xs font-mono">
+    <span class={`flex items-center gap-1.5 ${spectrum.oficialismoPct > 0 ? 'text-violet-700 dark:text-violet-300 font-semibold' : 'text-slate-400 dark:text-slate-600'}`}>
+      <span class={`w-2.5 h-2.5 rounded-full ${spectrum.oficialismoPct > 0 ? 'bg-violet-600 dark:bg-violet-500 shadow-xs' : 'bg-slate-300 dark:bg-slate-700'}`}></span>
       <span>Oficialismo:</span> <strong class="font-bold">{spectrum.oficialismoPct}%</strong>
     </span>
-    <span class="flex items-center gap-1.5 text-emerald-700 dark:text-emerald-300">
-      <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 dark:bg-emerald-400 shadow-xs"></span>
+
+    <span class={`flex items-center gap-1.5 ${spectrum.centroDatosPct > 0 ? 'text-emerald-700 dark:text-emerald-300 font-semibold' : 'text-slate-400 dark:text-slate-600'}`}>
+      <span class={`w-2.5 h-2.5 rounded-full ${spectrum.centroDatosPct > 0 ? 'bg-emerald-500 dark:bg-emerald-400 shadow-xs' : 'bg-slate-300 dark:bg-slate-700'}`}></span>
       <span>Centro / Datos:</span> <strong class="font-bold">{spectrum.centroDatosPct}%</strong>
     </span>
-    <span class="flex items-center gap-1.5 text-amber-700 dark:text-amber-300">
-      <span class="w-2.5 h-2.5 rounded-full bg-amber-500 dark:bg-amber-400 shadow-xs"></span>
+
+    <span class={`flex items-center gap-1.5 ${spectrum.oposicionPct > 0 ? 'text-amber-700 dark:text-amber-300 font-semibold' : 'text-slate-400 dark:text-slate-600'}`}>
+      <span class={`w-2.5 h-2.5 rounded-full ${spectrum.oposicionPct > 0 ? 'bg-amber-500 dark:bg-amber-400 shadow-xs' : 'bg-slate-300 dark:bg-slate-700'}`}></span>
       <span>Oposición:</span> <strong class="font-bold">{spectrum.oposicionPct}%</strong>
     </span>
   </div>
 
-  <!-- Spectrum Bar with distinct, vivid color segments -->
+  <!-- Spectrum Bar: only renders segments with actual percentage > 0 -->
   <div class="w-full h-3 rounded-full bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-0.5 flex overflow-hidden gap-0.5 shadow-inner">
-    <div 
-      class="h-full bg-violet-600 dark:bg-violet-500 rounded-l-full transition-all duration-500 hover:opacity-90 cursor-help" 
-      style={`width: ${spectrum.oficialismoPct}%`}
-      title={`Oficialismo: ${spectrum.oficialismoPct}%`}
-    ></div>
-    <div 
-      class="h-full bg-emerald-500 dark:bg-emerald-400 transition-all duration-500 hover:opacity-90 cursor-help" 
-      style={`width: ${spectrum.centroDatosPct}%`}
-      title={`Centro / Datos Factuales: ${spectrum.centroDatosPct}%`}
-    ></div>
-    <div 
-      class="h-full bg-amber-500 dark:bg-amber-400 rounded-r-full transition-all duration-500 hover:opacity-90 cursor-help" 
-      style={`width: ${spectrum.oposicionPct}%`}
-      title={`Oposición: ${spectrum.oposicionPct}%`}
-    ></div>
+    {spectrum.oficialismoPct > 0 && (
+      <div 
+        class="h-full bg-violet-600 dark:bg-violet-500 rounded-l-full transition-all duration-500 hover:opacity-90 cursor-help" 
+        style={`width: ${spectrum.oficialismoPct}%`}
+        title={`Enfoque Oficialista: ${spectrum.oficialismoPct}%`}
+      ></div>
+    )}
+    {spectrum.centroDatosPct > 0 && (
+      <div 
+        class={`h-full bg-emerald-500 dark:bg-emerald-400 transition-all duration-500 hover:opacity-90 cursor-help ${spectrum.oficialismoPct === 0 ? 'rounded-l-full' : ''} ${spectrum.oposicionPct === 0 ? 'rounded-r-full' : ''}`} 
+        style={`width: ${spectrum.centroDatosPct}%`}
+        title={`Centro / Datos Factuales: ${spectrum.centroDatosPct}%`}
+      ></div>
+    )}
+    {spectrum.oposicionPct > 0 && (
+      <div 
+        class="h-full bg-amber-500 dark:bg-amber-400 rounded-r-full transition-all duration-500 hover:opacity-90 cursor-help" 
+        style={`width: ${spectrum.oposicionPct}%`}
+        title={`Enfoque Opositor: ${spectrum.oposicionPct}%`}
+      ></div>
+    )}
   </div>
 </div>

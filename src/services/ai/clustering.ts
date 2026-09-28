@@ -182,6 +182,22 @@ ${JSON.stringify(articles.slice(0, 35).map(a => ({ id: a.id, medio: a.outletName
       const leadImgArticle = clusterArticles.find(a => Boolean(a.imageUrl));
       const imageUrl = leadImgArticle?.imageUrl || '/images/malvinas.jpg';
 
+      // Calculate spectrum deterministically from participating articles and their outlets
+      let ofi = 0;
+      let centro = 0;
+      let opo = 0;
+      clusterArticles.forEach(a => {
+        const o = OUTLETS[a.outletId];
+        const leaning = o?.baselineLeaning || 'centro_datos';
+        if (leaning === 'oficialismo') ofi++;
+        else if (leaning === 'oposicion') opo++;
+        else centro++;
+      });
+      const total = clusterArticles.length || 1;
+      const ofiPct = Math.round((ofi / total) * 100);
+      const centroPct = Math.round((centro / total) * 100);
+      const opoPct = Math.max(0, 100 - ofiPct - centroPct);
+
       return {
         id: `story-ai-${idx + 1}`,
         isLeadStory: idx === 0,
@@ -193,8 +209,10 @@ ${JSON.stringify(articles.slice(0, 35).map(a => ({ id: a.id, medio: a.outletName
         imageUrl,
         imageCaption: `Cobertura periodística de ${leadImgArticle?.outletName || 'prensa oficial'}.`,
         spectrum: {
-          ...c.spectrum,
-          totalOutlets: clusterArticles.length
+          oficialismoPct: ofiPct,
+          centroDatosPct: centroPct,
+          oposicionPct: opoPct,
+          totalOutlets: total
         },
         articles: clusterArticles,
         aiComparisonNotice: c.aiComparisonNotice
