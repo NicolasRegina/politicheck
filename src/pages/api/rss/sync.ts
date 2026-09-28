@@ -37,14 +37,21 @@ export const GET: APIRoute = async ({ request }) => {
     const isCooldownActive = timeSinceLastCluster < COOLDOWN_MS;
 
     // Check if we should call Gemini AI:
+    // Check if clusters exist in database or cache
+    const existingClusters = (await getNewsClustersFromSupabase(1)) || getCachedClusteredStories();
+    const hasClusters = existingClusters.length > 0;
+
     // Only call Gemini if:
     // a) Admin explicitly requested with key, OR
-    // b) Cooldown has elapsed AND there are genuinely new articles (or first run)
+    // b) No clusters exist yet, OR
+    // c) Cooldown has elapsed AND there are genuinely new articles
+    const shouldCluster = isAuthorizedAdmin || !hasClusters || (!isCooldownActive && newArticlesCount > 0);
+
     let clustersCount = 0;
     let geminiInvoked = false;
 
-    if (isAuthorizedAdmin || (!isCooldownActive && newArticlesCount > 0) || lastClusterTimestamp === 0) {
-      console.log(`[Sync API] Re-clustering triggered (New articles: ${newArticlesCount}, Admin: ${isAuthorizedAdmin})`);
+    if (shouldCluster) {
+      console.log(`[Sync API] Re-clustering triggered (New articles: ${newArticlesCount}, Admin: ${isAuthorizedAdmin}, HasClusters: ${hasClusters})`);
       const clusters = await clusterArticlesWithGemini(articles);
       clustersCount = clusters.length;
       lastClusterTimestamp = now;

@@ -43,6 +43,16 @@ export function getPromises(): CampaignPromise[] {
       const data = fs.readFileSync(PROMISES_FILE, 'utf-8');
       const parsed = JSON.parse(data) as CampaignPromise[];
       if (Array.isArray(parsed) && parsed.length > 0) {
+        // Aggregate real votes strictly from votes log
+        const votesLog = getCitizenVotes();
+        parsed.forEach(p => {
+          const promiseVotes = votesLog.filter(v => v.promiseId === p.id);
+          p.votes = {
+            fulfilled: promiseVotes.filter(v => v.voteType === 'fulfilled').length,
+            inProgress: promiseVotes.filter(v => v.voteType === 'inProgress').length,
+            broken: promiseVotes.filter(v => v.voteType === 'broken').length
+          };
+        });
         return parsed;
       }
     }

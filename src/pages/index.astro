@@ -5,7 +5,7 @@ import LiveFeedItem from '../components/LiveFeedItem.astro';
 import PromiseCard from '../components/PromiseCard.astro';
 import { MOCK_STORIES, MOCK_LIVE_FEED, MOCK_FOREIGN_STORIES } from '../data/mockData';
 import { getCachedArticles } from '../services/rss/sync';
-import { clusterArticlesWithGemini } from '../services/ai/clustering';
+import { clusterArticlesWithGemini, getCachedClusteredStories } from '../services/ai/clustering';
 import { getPromises, getPromisesStats } from '../services/promises';
 
 // Fetch live dynamic campaign promises
@@ -16,8 +16,11 @@ const promisesStats = getPromisesStats(allPromises);
 const cachedArticles = getCachedArticles();
 const liveArticles = cachedArticles.length > 0 ? cachedArticles : MOCK_LIVE_FEED;
 
-// Generate clustered stories dynamically from live articles
-const dynamicStories = await clusterArticlesWithGemini(liveArticles, import.meta.env.GEMINI_API_KEY);
+// Generate clustered stories dynamically from live articles (Cache-first to protect Gemini quota)
+const cachedClusters = getCachedClusteredStories();
+const dynamicStories = cachedClusters.length > 0 
+  ? cachedClusters 
+  : await clusterArticlesWithGemini(liveArticles, import.meta.env.GEMINI_API_KEY);
 const storiesToDisplay = dynamicStories.length > 0 ? dynamicStories : MOCK_STORIES;
 
 const leadStory = storiesToDisplay[0];
@@ -612,44 +615,109 @@ const liveFeedArticles = liveArticles.slice(0, 20);
     });
   }
 
-  // --- Citizen Voting Interaction ---
-  const voteButtons = document.querySelectorAll<HTMLButtonElement>('.vote-btn');
+  // --- Citizen Voting Interaction (Unbiased: Results hidden until user votes) ---
+  const citizenWidgets = document.querySelectorAll<HTMLElement>('.citizen-audit-widget');
 
-  // Highlight previously voted buttons from localStorage
-  voteButtons.forEach(btn => {
-    const promiseId = btn.getAttribute('data-promise-id');
-    const voteType = btn.getAttribute('data-vote-type');
-    if (!promiseId || !voteType) return;
+  function renderCardPercentages(widget: HTMLElement, votes: { fulfilled: number; inProgress: number; broken: number }, activeVote?: string) {
+    const total = (votes.fulfilled || 0) + (votes.inProgress || 0) + (votes.broken || 0);
+    const fPct = total > 0 ? Math.round((votes.fulfilled / total) * 100) : 0;
+    const ipPct = total > 0 ? Math.round((votes.inProgress / total) * 100) : 0;
+    const bPct = total > 0 ? Math.round((votes.broken / total) * 100) : 0;
+
+    // Show percentages inside buttons
+    const countFulfilled = widget.querySelector<HTMLElement>('.count-fulfilled');
+    const countInProgress = widget.querySelector<HTMLElement>('.count-in-progress');
+    const countBroken = widget.querySelector<HTMLElement>('.count-broken');
+
+    if (countFulfilled) {
+      countFulfilled.textContent = `(${fPct}%)`;
+      countFulfilled.classList.remove('hidden');
+    }
+    if (countInProgress) {
+      countInProgress.textContent = `(${ipPct}%)`;
+      countInProgress.classList.remove('hidden');
+    }
+    if (countBroken) {
+      countBroken.textContent = `(${bPct}%)`;
+      countBroken.classList.remove('hidden');
+    }
+
+    // Hide placeholder and reveal colorful bars
+    const placeholder = widget.querySelector<HTMLElement>('.bar-placeholder');
+    if (placeholder) placeholder.style.opacity = '0';
+
+    const barF = widget.querySelector<HTMLElement>('.bar-fulfilled');
+    const barIP = widget.querySelector<HTMLElement>('.bar-in-progress');
+    const barB = widget.querySelector<HTMLElement>('.bar-broken');
+    if (barF) {
+      barF.style.width = `${fPct}%`;
+      barF.style.opacity = '1';
+    }
+    if (barIP) {
+      barIP.style.width = `${ipPct}%`;
+      barIP.style.opacity = '1';
+    }
+    if (barB) {
+      barB.style.width = `${bPct}%`;
+      barB.style.opacity = '1';
+    }
+
+    // Update labels
+    const title = widget.querySelector<HTMLElement>('.widget-title');
+    const sub = widget.querySelector<HTMLElement>('.widget-sub');
+    if (title) title.textContent = 'Tendencia Ciudadana';
+    if (sub) {
+      sub.textContent = total > 100 ? `${total} votos registrados` : 'Votación comunitaria activa';
+    }
+
+    // Highlight user selection
+    if (activeVote) {
+      const btns = widget.querySelectorAll<HTMLButtonElement>('.vote-btn');
+      btns.forEach(b => {
+        b.classList.remove('ring-2', 'ring-slate-900', 'dark:ring-white', 'font-bold');
+        if (b.getAttribute('data-vote-type') === activeVote) {
+          b.classList.add('ring-2', 'ring-slate-900', 'dark:ring-white', 'font-bold');
+        }
+      });
+    }
+  }
+
+  // Check saved votes on load
+  citizenWidgets.forEach(widget => {
+    const promiseId = widget.getAttribute('data-promise-id');
+    if (!promiseId) return;
 
     const savedVote = localStorage.getItem(`politicheck_vote_${promiseId}`);
-    if (savedVote === voteType) {
-      btn.classList.add('ring-2', 'ring-slate-900', 'dark:ring-white', 'font-bold');
+    if (savedVote) {
+      try {
+        const rawVotes = widget.getAttribute('data-votes');
+        const votes = rawVotes ? JSON.parse(rawVotes) : { fulfilled: 0, inProgress: 0, broken: 0 };
+        renderCardPercentages(widget, votes, savedVote);
+      } catch (e) {
+        // fallback
+      }
     }
   });
 
+  // Handle vote button clicks
+  const voteButtons = document.querySelectorAll<HTMLButtonElement>('.vote-btn');
   voteButtons.forEach(btn => {
     btn.addEventListener('click', async () => {
       const promiseId = btn.getAttribute('data-promise-id');
       const voteType = btn.getAttribute('data-vote-type') as 'fulfilled' | 'inProgress' | 'broken';
       if (!promiseId || !voteType) return;
 
+      const widget = btn.closest<HTMLElement>('.citizen-audit-widget');
+      if (!widget) return;
+
       const previousVote = localStorage.getItem(`politicheck_vote_${promiseId}`);
-      if (previousVote === voteType) {
-        return; // Already voted this option
-      }
+      if (previousVote === voteType) return;
 
-      // Optimistic UI updates
-      const card = btn.closest<HTMLElement>('.promise-card');
-      if (!card) return;
-
-      // Update button styles in this card
-      const cardVoteBtns = card.querySelectorAll<HTMLButtonElement>('.vote-btn');
-      cardVoteBtns.forEach(b => {
-        b.classList.remove('ring-2', 'ring-slate-900', 'dark:ring-white', 'font-bold');
-      });
+      // Optimistic highlight
+      const btns = widget.querySelectorAll<HTMLButtonElement>('.vote-btn');
+      btns.forEach(b => b.classList.remove('ring-2', 'ring-slate-900', 'dark:ring-white', 'font-bold'));
       btn.classList.add('ring-2', 'ring-slate-900', 'dark:ring-white', 'font-bold');
 
-      // Dispatch to API
       try {
         const res = await fetch('/api/promises/vote', {
           method: 'POST',
@@ -661,34 +729,12 @@ const liveFeedArticles = liveArticles.slice(0, 20);
           const data = await res.json();
           if (data.success && data.promise && data.promise.votes) {
             localStorage.setItem(`politicheck_vote_${promiseId}`, voteType);
-            const votes = data.promise.votes;
-
-            // Update DOM counters
-            const countFulfilled = card.querySelector('.count-fulfilled');
-            const countInProgress = card.querySelector('.count-in-progress');
-            const countBroken = card.querySelector('.count-broken');
-            if (countFulfilled) countFulfilled.textContent = `(${votes.fulfilled})`;
-            if (countInProgress) countInProgress.textContent = `(${votes.inProgress})`;
-            if (countBroken) countBroken.textContent = `(${votes.broken})`;
-
-            // Recalculate progress bars
-            const total = votes.fulfilled + votes.inProgress + votes.broken;
-            if (total > 0) {
-              const fPct = Math.round((votes.fulfilled / total) * 100);
-              const ipPct = Math.round((votes.inProgress / total) * 100);
-              const bPct = Math.round((votes.broken / total) * 100);
-
-              const barF = card.querySelector<HTMLElement>('.bar-fulfilled');
-              const barIP = card.querySelector<HTMLElement>('.bar-in-progress');
-              const barB = card.querySelector<HTMLElement>('.bar-broken');
-              if (barF) barF.style.width = `${fPct}%`;
-              if (barIP) barIP.style.width = `${ipPct}%`;
-              if (barB) barB.style.width = `${bPct}%`;
-            }
+            widget.setAttribute('data-votes', JSON.stringify(data.promise.votes));
+            renderCardPercentages(widget, data.promise.votes, voteType);
           }
         }
       } catch (err) {
-        console.error('Error voting:', err);
+        console.error('Error recording vote:', err);
       }
     });
   });

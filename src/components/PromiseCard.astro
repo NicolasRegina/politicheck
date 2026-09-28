@@ -120,57 +120,62 @@ const brokenPct = totalVotes > 0 ? Math.round((votes.broken / totalVotes) * 100)
   </div>
 
   <!-- Interactive Citizen Thermometer Widget -->
-  <div class="space-y-2 pt-2 border-t border-slate-200/70 dark:border-slate-800/70 mt-3">
+  <div 
+    class="space-y-2 pt-2 border-t border-slate-200/70 dark:border-slate-800/70 mt-3 citizen-audit-widget" 
+    data-promise-id={promise.id}
+    data-votes={JSON.stringify(votes)}
+  >
     <div class="flex items-center justify-between text-[11px] font-mono">
-      <span class="text-slate-600 dark:text-slate-400 flex items-center gap-1">
+      <span class="text-slate-600 dark:text-slate-400 flex items-center gap-1.5">
         <svg class="w-3.5 h-3.5 text-slate-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
         </svg>
-        <strong>Termómetro Ciudadano</strong> ({totalVotes} votos)
+        <strong class="widget-title">Auditoría Ciudadana</strong>
       </span>
-      <span class="text-slate-400 dark:text-slate-500 text-[10px]">¿Qué opinás vos?</span>
+      <span class="widget-sub text-slate-400 dark:text-slate-500 text-[10px]">Votá para ver la tendencia</span>
     </div>
 
-    <!-- Consensus Progress Bar -->
-    <div class="h-2 w-full bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden flex" title={`Cumple: ${fulfilledPct}% | En progreso: ${inProgressPct}% | Incumple: ${brokenPct}%`}>
-      <div class="bar-fulfilled bg-emerald-500 transition-all duration-500" style={`width: ${fulfilledPct}%`}></div>
-      <div class="bar-in-progress bg-amber-500 transition-all duration-500" style={`width: ${inProgressPct}%`}></div>
-      <div class="bar-broken bg-rose-500 transition-all duration-500" style={`width: ${brokenPct}%`}></div>
+    <!-- Consensus Progress Bar (Neutral placeholder before voting, revealed on vote) -->
+    <div class="consensus-bar relative h-2 w-full bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden flex transition-all duration-500">
+      <div class="bar-placeholder absolute inset-0 bg-slate-200/50 dark:bg-slate-800/50 flex items-center justify-center transition-opacity duration-300"></div>
+      <div class="bar-fulfilled bg-emerald-500 transition-all duration-700 opacity-0" style="width: 0%"></div>
+      <div class="bar-in-progress bg-amber-500 transition-all duration-700 opacity-0" style="width: 0%"></div>
+      <div class="bar-broken bg-rose-500 transition-all duration-700 opacity-0" style="width: 0%"></div>
     </div>
 
-    <!-- Live Vote Buttons -->
+    <!-- Live Vote Buttons (Clean without biasing numbers) -->
     <div class="grid grid-cols-3 gap-2 pt-1">
       <button 
         type="button"
-        class="vote-btn flex items-center justify-center gap-1.5 py-1.5 px-2 rounded-lg border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/80 hover:bg-emerald-50 dark:hover:bg-emerald-950/40 text-[11px] font-mono text-slate-700 dark:text-slate-300 hover:text-emerald-700 dark:hover:text-emerald-300 transition-colors cursor-pointer"
+        class="vote-btn flex items-center justify-center gap-1.5 py-1.5 px-2 rounded-lg border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/80 hover:bg-emerald-50 dark:hover:bg-emerald-950/40 text-[11px] font-mono text-slate-700 dark:text-slate-300 hover:text-emerald-700 dark:hover:text-emerald-300 transition-all cursor-pointer"
         data-vote-type="fulfilled"
         data-promise-id={promise.id}
       >
         <span>👍</span>
         <span>Cumple</span>
-        <span class="font-bold text-[10px] count-fulfilled">({votes.fulfilled})</span>
+        <span class="vote-pct font-bold text-[10px] hidden count-fulfilled"></span>
       </button>
 
       <button 
         type="button"
-        class="vote-btn flex items-center justify-center gap-1.5 py-1.5 px-2 rounded-lg border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/80 hover:bg-amber-50 dark:hover:bg-amber-950/40 text-[11px] font-mono text-slate-700 dark:text-slate-300 hover:text-amber-700 dark:hover:text-amber-300 transition-colors cursor-pointer"
+        class="vote-btn flex items-center justify-center gap-1.5 py-1.5 px-2 rounded-lg border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/80 hover:bg-amber-50 dark:hover:bg-amber-950/40 text-[11px] font-mono text-slate-700 dark:text-slate-300 hover:text-amber-700 dark:hover:text-amber-300 transition-all cursor-pointer"
         data-vote-type="inProgress"
         data-promise-id={promise.id}
       >
         <span>⏳</span>
         <span>En proceso</span>
-        <span class="font-bold text-[10px] count-in-progress">({votes.inProgress})</span>
+        <span class="vote-pct font-bold text-[10px] hidden count-in-progress"></span>
       </button>
 
       <button 
         type="button"
-        class="vote-btn flex items-center justify-center gap-1.5 py-1.5 px-2 rounded-lg border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/80 hover:bg-rose-50 dark:hover:bg-rose-950/40 text-[11px] font-mono text-slate-700 dark:text-slate-300 hover:text-rose-700 dark:hover:text-rose-300 transition-colors cursor-pointer"
+        class="vote-btn flex items-center justify-center gap-1.5 py-1.5 px-2 rounded-lg border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/80 hover:bg-rose-50 dark:hover:bg-rose-950/40 text-[11px] font-mono text-slate-700 dark:text-slate-300 hover:text-rose-700 dark:hover:text-rose-300 transition-all cursor-pointer"
         data-vote-type="broken"
         data-promise-id={promise.id}
       >
         <span>👎</span>
         <span>Incumple</span>
-        <span class="font-bold text-[10px] count-broken">({votes.broken})</span>
+        <span class="vote-pct font-bold text-[10px] hidden count-broken"></span>
       </button>
     </div>
 
