@@ -9,13 +9,29 @@ export const prerender = false;
 
 const { id } = Astro.params;
 const story = id ? getStoryClusterById(id) : undefined;
+
+const topOutlets = story ? story.articles.slice(0, 4).map(a => a.outletName) : [];
+const outletsText = topOutlets.length > 1
+  ? `${topOutlets.slice(0, -1).join(', ')} y ${topOutlets[topOutlets.length - 1]}`
+  : topOutlets[0] || 'múltiples redacciones';
+const spectrumText = story 
+  ? `Espectro: 🟣 ${story.spectrum.oficialismoPct}% Oficialismo | 🟢 ${story.spectrum.centroDatosPct}% Centro | 🟠 ${story.spectrum.oposicionPct}% Oposición.`
+  : '';
+const metaDesc = story 
+  ? `${story.summary} Cotejo de ${story.articles.length} medios (${outletsText}). ${spectrumText}`
+  : undefined;
+const pageUrl = `https://www.politicheck.com.ar/historia/${id}`;
+const viralShareText = story
+  ? `Mirá cómo ${outletsText} cubrieron esta misma noticia: "${story.neutralHeadline}". ${spectrumText} Comparativa sin sesgo en simultáneo:`
+  : '';
 ---
 
 <Layout 
   title={story ? `${story.neutralHeadline} • Comparativa de Medios | Politicheck` : 'Historia no encontrada | Politicheck'}
-  description={story ? story.summary : undefined}
+  description={metaDesc}
   image={story?.imageUrl}
-  canonicalUrl={`https://www.politicheck.com.ar/historia/${id}`}
+  canonicalUrl={pageUrl}
+  ogType="article"
 >
   {story ? (
     <article class="max-w-4xl mx-auto space-y-8 pb-16">
@@ -57,7 +73,7 @@ const story = id ? getStoryClusterById(id) : undefined;
       </header>
 
       <!-- Viral Contrast Share Bar -->
-      <section class="flex flex-wrap items-center justify-between gap-3 p-4 rounded-xl bg-slate-100/90 dark:bg-slate-900/90 border border-slate-200 dark:border-slate-800">
+      <section class="flex flex-wrap items-center justify-between gap-3 p-4 sm:p-5 rounded-2xl bg-slate-100/90 dark:bg-slate-900/90 border border-slate-200 dark:border-slate-800">
         <div class="flex items-center gap-2">
           <span class="text-base">📣</span>
           <span class="text-xs font-mono font-medium text-slate-800 dark:text-slate-200">
@@ -66,7 +82,7 @@ const story = id ? getStoryClusterById(id) : undefined;
         </div>
         <div class="flex flex-wrap items-center gap-2">
           <a 
-            href={`https://api.whatsapp.com/send?text=${encodeURIComponent(`Mirá cómo cubrieron distintos diarios esta noticia: "${story.neutralHeadline}". Comparativa sin sesgo en Politicheck: https://politicheck.com.ar/historia/${id}`)}`}
+            href={`https://api.whatsapp.com/send?text=${encodeURIComponent(viralShareText + ' ' + pageUrl)}`}
             target="_blank"
             rel="noopener noreferrer"
             class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white font-mono text-xs font-bold shadow-2xs transition-all"
@@ -75,7 +91,7 @@ const story = id ? getStoryClusterById(id) : undefined;
           </a>
 
           <a 
-            href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(`Mirá cómo cubrieron distintos diarios: "${story.neutralHeadline}". Comparativa sin sesgo en @politicheck_ar:`)}&url=${encodeURIComponent(`https://politicheck.com.ar/historia/${id}`)}`}
+            href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(viralShareText)}&url=${encodeURIComponent(pageUrl)}`}
             target="_blank"
             rel="noopener noreferrer"
             class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-black hover:bg-slate-800 dark:bg-white dark:hover:bg-slate-200 text-white dark:text-black font-mono text-xs font-bold shadow-2xs transition-all"
@@ -83,12 +99,22 @@ const story = id ? getStoryClusterById(id) : undefined;
             <span>𝕏 Twitter</span>
           </a>
 
+          <a 
+            href={`https://t.me/share/url?url=${encodeURIComponent(pageUrl)}&text=${encodeURIComponent(viralShareText)}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-sky-500 hover:bg-sky-600 text-white font-mono text-xs font-bold shadow-2xs transition-all"
+          >
+            <span>✈️ Telegram</span>
+          </a>
+
           <button 
             type="button"
-            onclick={`navigator.clipboard.writeText('https://politicheck.com.ar/historia/${id}').then(() => alert('¡Enlace copiado al portapapeles!'))`}
+            id="copy-story-link-btn"
+            data-url={pageUrl}
             class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-700 font-mono text-xs font-semibold transition-all cursor-pointer"
           >
-            <span>🔗 Copiar link</span>
+            <span id="copy-story-btn-text">🔗 Copiar enlace</span>
           </button>
         </div>
       </section>
@@ -172,3 +198,19 @@ const story = id ? getStoryClusterById(id) : undefined;
     </div>
   )}
 </Layout>
+
+<script>
+  const copyBtn = document.getElementById('copy-story-link-btn');
+  const copyBtnText = document.getElementById('copy-story-btn-text');
+  if (copyBtn && copyBtnText) {
+    copyBtn.addEventListener('click', () => {
+      const url = copyBtn.getAttribute('data-url') || window.location.href;
+      navigator.clipboard.writeText(url).then(() => {
+        copyBtnText.textContent = '✅ ¡Enlace copiado!';
+        setTimeout(() => {
+          copyBtnText.textContent = '🔗 Copiar enlace';
+        }, 2500);
+      });
+    });
+  }
+</script>

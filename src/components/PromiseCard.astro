@@ -68,6 +68,13 @@ const getInitials = (name: string) => {
 };
 
 const votes = promise.votes || { fulfilled: 0, inProgress: 0, broken: 0 };
+
+// Persuasive viral copy calculation
+const promiseUrl = `https://politicheck.com.ar/promesa/${promise.id}`;
+const viralPromiseText = `🗳️ ¿Cumplió ${promise.candidate}? "${promise.promiseText}" — Veredicto: ${promise.statusLabel}. Votá en vivo y mirá la auditoría ciudadana en Politicheck:`;
+const waUrl = `https://api.whatsapp.com/send?text=${encodeURIComponent(viralPromiseText + ' ' + promiseUrl)}`;
+const xUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(viralPromiseText)}&url=${encodeURIComponent(promiseUrl)}`;
+const tgUrl = `https://t.me/share/url?url=${encodeURIComponent(promiseUrl)}&text=${encodeURIComponent(viralPromiseText)}`;
 ---
 
 <div 
@@ -222,7 +229,7 @@ const votes = promise.votes || { fulfilled: 0, inProgress: 0, broken: 0 };
     </div>
 
     <!-- Source date & official link footer -->
-    <div class="flex items-center justify-between text-[11px] font-mono text-slate-500 dark:text-slate-400 pt-2 border-t border-slate-200/50 dark:border-slate-800/50">
+    <div class="flex flex-wrap items-center justify-between gap-2.5 text-[11px] font-mono text-slate-500 dark:text-slate-400 pt-2 border-t border-slate-200/50 dark:border-slate-800/50">
       <a 
         href={`/promesa/${promise.id}`}
         class="inline-flex items-center gap-1.5 font-bold text-slate-900 dark:text-slate-100 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors"
@@ -234,19 +241,41 @@ const votes = promise.votes || { fulfilled: 0, inProgress: 0, broken: 0 };
         </svg>
       </a>
 
-      <div class="flex items-center gap-3 shrink-0">
+      <div class="flex items-center gap-2 shrink-0">
+        <!-- Quick 1-Click Social Triggers -->
+        <a 
+          href={waUrl} 
+          target="_blank" 
+          rel="noopener noreferrer" 
+          class="inline-flex items-center justify-center w-6 h-6 rounded-md bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-400 hover:bg-emerald-100 border border-emerald-200 dark:border-emerald-800/80 transition-transform hover:scale-105"
+          title="Compartir directo en WhatsApp"
+        >
+          <span class="text-[10px]">📱</span>
+        </a>
+
+        <a 
+          href={xUrl} 
+          target="_blank" 
+          rel="noopener noreferrer" 
+          class="inline-flex items-center justify-center w-6 h-6 rounded-md bg-slate-100 dark:bg-slate-800 text-slate-800 dark:text-slate-200 hover:bg-slate-200 border border-slate-300 dark:border-slate-700 transition-transform hover:scale-105"
+          title="Compartir en X (Twitter)"
+        >
+          <span class="text-[10px] font-bold font-mono">𝕏</span>
+        </a>
+
         <button 
           type="button"
-          class="share-promise-btn inline-flex items-center gap-1 hover:text-slate-900 dark:hover:text-slate-100 transition-colors cursor-pointer"
+          class="share-promise-btn inline-flex items-center gap-1 px-2 py-0.5 rounded-md border border-slate-200 dark:border-slate-800 hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-slate-900 dark:hover:text-slate-100 transition-colors cursor-pointer text-[11px]"
           data-candidate={promise.candidate}
-          data-text={promise.promiseText}
+          data-text={viralPromiseText}
           data-id={promise.id}
-          title="Compartir promesa y auditoría"
+          data-url={promiseUrl}
+          title="Abrir opciones de difusión"
         >
-          <svg class="w-3.5 h-3.5 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <svg class="w-3 h-3 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" />
           </svg>
-          <span>Compartir</span>
+          <span>Más</span>
         </button>
 
         <a 

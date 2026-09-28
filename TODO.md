@@ -39,17 +39,21 @@
 
 ---
 
-### ⏳ Tarea 3: Botones y Fichas Virales para Redes Sociales (X / WhatsApp) — [SIGUIENTE TAREA]
-- [ ] **Botones de Compartir con 1 Clic:**
-  - Integrar en cada historia de tapa y tarjeta de promesa botones rápidos para compartir en **X (Twitter)**, **WhatsApp**, **Telegram** y copiar enlace al portapapeles.
-- [ ] **Copy persuasivo prediseñado:**
-  - *"Mirá cómo Clarín, La Nación, Página 12 y France 24 cubrieron esta misma noticia en simultáneo 👉 politicheck.com.ar/historia/..."*
-- [ ] **OpenGraph dinámico:**
-  - Generar meta tags específicos con vista previa en tarjetas de Twitter/WhatsApp mostrando los porcentajes del espectro.
+### ✅ Tarea 3: Botones y Fichas Virales para Redes Sociales (X / WhatsApp / Telegram) — [COMPLETADA]
+- [x] **Botones de Compartir con 1 Clic:**
+  - Botones rápidos directos para **WhatsApp**, **X (Twitter)**, **Telegram** y copiar enlace en cada tarjeta de historia (`StoryCard`), tarjeta de promesa (`PromiseCard`), y páginas individuales (`/historia/[id]` y `/promesa/[id]`).
+  - Modal nativo interactivo `ShareModal.astro` con vista previa del copy, atajos directos y compatibilidad con Web Share API para celulares.
+- [x] **Copy persuasivo prediseñado:**
+  - *"Mirá cómo Clarín, La Nación, Página 12 y TN cubrieron esta misma noticia en simultáneo: [...] Comparativa sin sesgo en Politicheck 👉 https://politicheck.com.ar/historia/..."*
+  - *"🗳️ ¿Cumplió [Dirigente]? [...] — Veredicto: [Estado]. Votá en vivo y mirá la auditoría ciudadana en Politicheck 👉 https://politicheck.com.ar/promesa/..."*
+- [x] **OpenGraph y Twitter Cards dinámicos:**
+  - Meta tags específicos en `/historia/[id]` detallando la distribución porcentual fáctica del espectro editorial (`🟣 Oficialismo | 🟢 Centro | 🟠 Oposición`) y los medios contrastados.
+  - Meta tags en `/promesa/[id]` con prueba documental del Boletín Oficial e invitación a la votación ciudadana.
+  - Integración de identificadores oficiales `@politicheck_ar`.
 
 ---
 
-### ⏳ Tarea 4: Detección y Banner de "Alerta / Último Momento" (Breaking News)
+### ⏳ Tarea 4: Detección y Banner de "Alerta / Último Momento" (Breaking News) — [SIGUIENTE TAREA]
 - [ ] **Algoritmo de Breaking News:**
   - Detección de coincidencia temática urgente cuando 3 o más diarios publiquen sobre un mismo hecho en los últimos 20 minutos.
 - [ ] **Cinta visual de alerta en cabecera:**

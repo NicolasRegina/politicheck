@@ -810,9 +810,10 @@ const liveFeedArticles = liveArticles.slice(0, 20);
       e.stopPropagation();
       const title = btn.getAttribute('data-title') || 'Contraste periodístico en Politicheck';
       const url = btn.getAttribute('data-url') || window.location.href;
-      const text = `Mirá cómo cubrieron distintos diarios esta noticia: "${title}". Comparativa sin sesgo en Politicheck:`;
+      const text = btn.getAttribute('data-text') || `Mirá cómo cubrieron distintos diarios esta noticia: "${title}". Comparativa sin sesgo en Politicheck:`;
+      const category = btn.getAttribute('data-category') || 'Contraste Mediático';
       if (typeof (window as any).sharePoliticheckContent === 'function') {
-        (window as any).sharePoliticheckContent(title, text, url);
+        (window as any).sharePoliticheckContent(title, text, url, category);
       }
     });
   });
@@ -821,12 +822,11 @@ const liveFeedArticles = liveArticles.slice(0, 20);
     btn.addEventListener('click', (e) => {
       e.stopPropagation();
       const candidate = btn.getAttribute('data-candidate') || 'Dirigente';
-      const quote = btn.getAttribute('data-text') || '';
+      const text = btn.getAttribute('data-text') || '';
       const promiseId = btn.getAttribute('data-id');
-      const url = promiseId ? `${window.location.origin}/promesa/${promiseId}` : `${window.location.origin}#monitor-promesas`;
-      const text = `Auditoría electoral de ${candidate}: "${quote}". ¿Cumple o no? Votá y mirá la tendencia ciudadana en Politicheck:`;
+      const url = btn.getAttribute('data-url') || (promiseId ? `${window.location.origin}/promesa/${promiseId}` : `${window.location.origin}#monitor-promesas`);
       if (typeof (window as any).sharePoliticheckContent === 'function') {
-        (window as any).sharePoliticheckContent(`Compromiso de ${candidate}`, text, url);
+        (window as any).sharePoliticheckContent(`Compromiso de ${candidate}`, text, url, 'Auditoría Ciudadana');
       }
     });
   });

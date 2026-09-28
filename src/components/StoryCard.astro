@@ -9,6 +9,17 @@ interface Props {
 }
 
 const { story } = Astro.props;
+
+// Persuasive viral copy calculation
+const topOutlets = story.articles.slice(0, 4).map(a => a.outletName);
+const outletsText = topOutlets.length > 1
+  ? `${topOutlets.slice(0, -1).join(', ')} y ${topOutlets[topOutlets.length - 1]}`
+  : topOutlets[0] || 'múltiples redacciones';
+const viralShareText = `Mirá cómo ${outletsText} cubrieron esta misma noticia en simultáneo: "${story.neutralHeadline}". Comparativa sin sesgo en Politicheck:`;
+const storyUrl = `https://politicheck.com.ar/historia/${story.id}`;
+const waUrl = `https://api.whatsapp.com/send?text=${encodeURIComponent(viralShareText + ' ' + storyUrl)}`;
+const xUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(viralShareText)}&url=${encodeURIComponent(storyUrl)}`;
+const tgUrl = `https://t.me/share/url?url=${encodeURIComponent(storyUrl)}&text=${encodeURIComponent(viralShareText)}`;
 ---
 
 <article class={`bg-white dark:bg-[#0F1420] border border-slate-200 dark:border-slate-800/90 rounded-2xl shadow-xs overflow-hidden transition-all duration-300 hover:border-slate-300 dark:hover:border-slate-700 ${story.isLeadStory ? 'p-6 sm:p-8 space-y-6 ring-1 ring-slate-900/5 dark:ring-white/5' : 'p-5 sm:p-6 space-y-5'}`}>
@@ -150,32 +161,65 @@ const { story } = Astro.props;
     <HeadlineComparison articles={story.articles} storyId={story.id} isLeadStory={story.isLeadStory} />
   </div>
 
-    <!-- Dedicated Story Analysis Link & Share -->
-    <div class="pt-3 border-t border-slate-100 dark:border-slate-800/80 flex flex-wrap items-center justify-between gap-2.5">
-      <div class="flex items-center gap-2">
-        <button 
-          type="button"
-          class="share-story-btn inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900/60 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 text-[11px] font-mono font-medium transition-colors cursor-pointer"
-          data-title={story.neutralHeadline}
-          data-url={`https://politicheck.com.ar/historia/${story.id}`}
-          title="Compartir este contraste"
-        >
-          <svg class="w-3.5 h-3.5 text-slate-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" />
-          </svg>
-          <span>Compartir contraste</span>
-        </button>
-      </div>
+  <!-- Dedicated Story Analysis Link & 1-Click Viral Share Bar -->
+  <div class="pt-3.5 border-t border-slate-100 dark:border-slate-800/80 flex flex-wrap items-center justify-between gap-3">
+    <!-- 1-Click Share Icons & Modal Trigger -->
+    <div class="flex items-center gap-1.5 flex-wrap">
+      <button 
+        type="button"
+        class="share-story-btn inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900/60 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 text-xs font-mono font-medium transition-colors cursor-pointer"
+        data-title={story.neutralHeadline}
+        data-url={storyUrl}
+        data-text={viralShareText}
+        data-category={story.category}
+        title="Abrir opciones de difusión"
+      >
+        <svg class="w-3.5 h-3.5 text-slate-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" />
+        </svg>
+        <span>Compartir</span>
+      </button>
+
+      <!-- Quick 1-Click Social Triggers -->
+      <a 
+        href={waUrl} 
+        target="_blank" 
+        rel="noopener noreferrer" 
+        class="inline-flex items-center justify-center w-7 h-7 rounded-lg bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-400 hover:bg-emerald-100 dark:hover:bg-emerald-900/60 border border-emerald-200 dark:border-emerald-800/80 transition-transform hover:scale-105"
+        title="Compartir directo en WhatsApp"
+      >
+        <span class="text-xs">📱</span>
+      </a>
 
       <a 
-        href={`/historia/${story.id}`}
-        class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-900 dark:text-slate-100 text-xs font-mono font-bold transition-colors cursor-pointer"
+        href={xUrl} 
+        target="_blank" 
+        rel="noopener noreferrer" 
+        class="inline-flex items-center justify-center w-7 h-7 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-800 dark:text-slate-200 hover:bg-slate-200 dark:hover:bg-slate-700 border border-slate-300 dark:border-slate-700 transition-transform hover:scale-105"
+        title="Publicar en X (Twitter)"
       >
-        <span>Ver análisis profundo y timeline</span>
-        <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
-        </svg>
+        <span class="text-xs font-bold font-mono">𝕏</span>
+      </a>
+
+      <a 
+        href={tgUrl} 
+        target="_blank" 
+        rel="noopener noreferrer" 
+        class="inline-flex items-center justify-center w-7 h-7 rounded-lg bg-sky-50 dark:bg-sky-950/40 text-sky-700 dark:text-sky-400 hover:bg-sky-100 dark:hover:bg-sky-900/60 border border-sky-200 dark:border-sky-800/80 transition-transform hover:scale-105"
+        title="Compartir en Telegram"
+      >
+        <span class="text-xs">✈️</span>
       </a>
     </div>
+
+    <a 
+      href={`/historia/${story.id}`}
+      class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg bg-slate-900 hover:bg-slate-800 dark:bg-slate-100 dark:hover:bg-white text-white dark:text-slate-900 text-xs font-mono font-bold transition-colors cursor-pointer shadow-xs"
+    >
+      <span>Ver análisis profundo</span>
+      <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+      </svg>
+    </a>
   </div>
 </article>

@@ -2,19 +2,22 @@
 import '../styles/global.css';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
+import ShareModal from '../components/ShareModal.astro';
 
 interface Props {
   title?: string;
   description?: string;
   image?: string;
   canonicalUrl?: string;
+  ogType?: 'website' | 'article';
 }
 
 const { 
   title = "Politicheck • Monitor de Sesgo Mediático y Promesas Electorales | Argentina",
   description = "Plataforma cívica independiente para comparar el sesgo y encuadre entre medios de noticias en Argentina y auditar compromisos electorales.",
   image = "https://www.politicheck.com.ar/images/universidad.jpg",
-  canonicalUrl = "https://www.politicheck.com.ar"
+  canonicalUrl = "https://www.politicheck.com.ar",
+  ogType = "website"
 } = Astro.props;
 
 // Ensure absolute image url for Social Media previews
@@ -51,7 +54,7 @@ const absoluteImageUrl = image.startsWith('http') ? image : `https://www.politic
     <meta name="description" content={description} />
 
     <!-- Open Graph / Facebook / WhatsApp -->
-    <meta property="og:type" content="website" />
+    <meta property="og:type" content={ogType} />
     <meta property="og:url" content={canonicalUrl} />
     <meta property="og:site_name" content="Politicheck Argentina" />
     <meta property="og:title" content={title} />
@@ -60,11 +63,13 @@ const absoluteImageUrl = image.startsWith('http') ? image : `https://www.politic
     <meta property="og:locale" content="es_AR" />
 
     <!-- Twitter / X -->
-    <meta property="twitter:card" content="summary_large_image" />
-    <meta property="twitter:url" content={canonicalUrl} />
-    <meta property="twitter:title" content={title} />
-    <meta property="twitter:description" content={description} />
-    <meta property="twitter:image" content={absoluteImageUrl} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:site" content="@politicheck_ar" />
+    <meta name="twitter:creator" content="@politicheck_ar" />
+    <meta name="twitter:url" content={canonicalUrl} />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={absoluteImageUrl} />
     
     <link rel="canonical" href={canonicalUrl} />
 
@@ -125,6 +130,7 @@ const absoluteImageUrl = image.startsWith('http') ? image : `https://www.politic
       <slot />
     </main>
     <Footer />
+    <ShareModal />
 
     <!-- Global Floating Toast Notification (Viral Share & Feedback) -->
     <div 
@@ -201,28 +207,31 @@ const absoluteImageUrl = image.startsWith('http') ? image : `https://www.politic
       document.getElementById('toast-close-btn')?.addEventListener('click', hidePoliticheckToast);
 
       // Global share function
-      window.sharePoliticheckContent = function(title, text, url) {
-        if (navigator.share && /mobile|android|iphone|ipad/i.test(navigator.userAgent)) {
+      window.sharePoliticheckContent = function(title, text, url, category) {
+        if (typeof window.openShareModal === 'function') {
+          window.openShareModal({ title, text, url, category });
+        } else if (navigator.share && /mobile|android|iphone|ipad/i.test(navigator.userAgent)) {
           navigator.share({ title, text, url }).catch(() => {});
-          return;
+        } else {
+          navigator.clipboard.writeText(url).then(() => {
+            const waUrl = `https://api.whatsapp.com/send?text=${encodeURIComponent(text + ' ' + url)}`;
+            const xUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(url)}`;
+            const tgUrl = `https://t.me/share/url?url=${encodeURIComponent(url)}&text=${encodeURIComponent(text)}`;
+
+            showPoliticheckToast(
+              '¡Enlace copiado al portapapeles!',
+              'Listo para pegar o compartir directamente:',
+              '🔗',
+              [
+                { label: '📱 WhatsApp', url: waUrl, bg: 'bg-emerald-600 text-white' },
+                { label: '𝕏 Twitter', url: xUrl, bg: 'bg-black text-white dark:bg-slate-800' },
+                { label: '✈️ Telegram', url: tgUrl, bg: 'bg-sky-500 text-white' }
+              ]
+            );
+          }).catch(() => {
+            window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(text + ' ' + url)}`, '_blank');
+          });
         }
-
-        navigator.clipboard.writeText(url).then(() => {
-          const waUrl = `https://api.whatsapp.com/send?text=${encodeURIComponent(text + ' ' + url)}`;
-          const xUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(url)}`;
-
-          showPoliticheckToast(
-            '¡Enlace copiado al portapapeles!',
-            'Listo para pegar o compartir directamente:',
-            '🔗',
-            [
-              { label: '📱 WhatsApp', url: waUrl, bg: 'bg-emerald-600 text-white' },
-              { label: '𝕏 Twitter', url: xUrl, bg: 'bg-black text-white dark:bg-slate-800' }
-            ]
-          );
-        }).catch(() => {
-          window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(text + ' ' + url)}`, '_blank');
-        });
       };
     </script>
   </body>

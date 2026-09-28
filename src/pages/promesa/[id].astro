@@ -80,7 +80,7 @@ const pageTitle = promise
   : 'Compromiso no encontrado | Politicheck';
 
 const pageDesc = promise 
-  ? `Dictamen: ${promise.statusLabel}. ${promise.auditNotes}`
+  ? `Dictamen: ${promise.statusLabel}. ${promise.auditNotes} Fuente oficial: ${promise.officialProof || 'Boletín Oficial'}. Votá tu postura en Politicheck.`
   : undefined;
 
 const pageUrl = `https://www.politicheck.com.ar/promesa/${id}`;
@@ -91,6 +91,7 @@ const pageUrl = `https://www.politicheck.com.ar/promesa/${id}`;
   description={pageDesc}
   image={politician?.avatar}
   canonicalUrl={pageUrl}
+  ogType="article"
 >
   {promise && politician && theme ? (
     <article class="max-w-4xl mx-auto space-y-8 pb-16">
