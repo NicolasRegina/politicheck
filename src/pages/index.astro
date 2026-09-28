@@ -522,16 +522,25 @@ const liveFeedArticles = liveArticles.slice(0, 20);
   const resetSearchBtn = document.getElementById('reset-search-btn');
   const newsEmptyState = document.getElementById('news-empty-state');
 
+  function normalizeStr(str: string): string {
+    return (str || '')
+      .toLowerCase()
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .trim();
+  }
+
   function applyNewsSearch() {
     if (!searchInput) return;
-    const query = searchInput.value.toLowerCase().trim();
+    const rawQuery = searchInput.value.trim();
+    const query = normalizeStr(rawQuery);
     const storyItems = document.querySelectorAll<HTMLElement>('.story-item');
     const liveItems = document.querySelectorAll<HTMLElement>('.live-item');
 
     let visibleStoriesCount = 0;
 
     storyItems.forEach(el => {
-      const text = (el.getAttribute('data-text') || '').toLowerCase();
+      const text = normalizeStr(el.getAttribute('data-text') || '');
       if (!query || text.includes(query)) {
         el.style.display = '';
         visibleStoriesCount++;
@@ -541,7 +550,7 @@ const liveFeedArticles = liveArticles.slice(0, 20);
     });
 
     liveItems.forEach(el => {
-      const text = (el.getAttribute('data-text') || '').toLowerCase();
+      const text = normalizeStr(el.getAttribute('data-text') || '');
       if (!query || text.includes(query)) {
         el.style.display = '';
       } else {
@@ -557,7 +566,7 @@ const liveFeedArticles = liveArticles.slice(0, 20);
       } else {
         newsSearchBanner.classList.remove('hidden');
         newsSearchBanner.classList.add('flex');
-        newsSearchText.textContent = `Búsqueda: "${query}" • ${visibleStoriesCount} noticias encontradas`;
+        newsSearchText.textContent = `Búsqueda: "${rawQuery}" • ${visibleStoriesCount} noticias encontradas`;
       }
     }
 
@@ -601,15 +610,16 @@ const liveFeedArticles = liveArticles.slice(0, 20);
 
   function applyPromisesFilters() {
     let visibleCount = 0;
+    const normQuery = normalizeStr(promiseSearchQuery);
 
     promiseCards.forEach(card => {
       const cand = card.getAttribute('data-candidate') || '';
       const stat = card.getAttribute('data-status') || '';
-      const text = card.textContent?.toLowerCase() || '';
+      const text = normalizeStr(card.textContent || '');
 
       const matchesCand = activeCandidate === 'all' || cand === activeCandidate;
       const matchesStat = activeStatus === 'all' || stat === activeStatus;
-      const matchesSearch = !promiseSearchQuery || text.includes(promiseSearchQuery);
+      const matchesSearch = !normQuery || text.includes(normQuery);
 
       if (matchesCand && matchesStat && matchesSearch) {
         card.style.display = '';
