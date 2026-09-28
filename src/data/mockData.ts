@@ -144,6 +144,14 @@ export const OUTLETS: Record<string, Outlet> = {
     category: 'internacional',
     baselineLeaning: 'centro_datos',
     websiteUrl: 'https://www.bbc.com/mundo'
+  },
+  derechadiario: {
+    id: 'derechadiario',
+    name: 'La Derecha Diario',
+    slug: 'derechadiario',
+    category: 'nacional',
+    baselineLeaning: 'oficialismo',
+    websiteUrl: 'https://derechadiario.com.ar'
   }
 };
 

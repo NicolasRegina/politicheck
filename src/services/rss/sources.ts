@@ -192,5 +192,23 @@ export const RSS_FEEDS: RssFeedConfig[] = [
     category: 'internacional',
     defaultTopic: 'Internacional',
     url: 'https://feeds.bbci.co.uk/mundo/rss.xml'
+  },
+
+  // 18. La Derecha Diario
+  {
+    id: 'derechadiario-politica',
+    outletId: 'derechadiario',
+    outletName: 'La Derecha Diario',
+    category: 'nacional',
+    defaultTopic: 'Política',
+    url: 'https://derechadiario.com.ar/rss/cat/politica'
+  },
+  {
+    id: 'derechadiario-economia',
+    outletId: 'derechadiario',
+    outletName: 'La Derecha Diario',
+    category: 'nacional',
+    defaultTopic: 'Economía',
+    url: 'https://derechadiario.com.ar/rss/cat/economia'
   }
 ];

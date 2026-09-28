@@ -2,41 +2,103 @@
   {
     "id": "story-ai-1",
     "isLeadStory": true,
-    "kicker": "DECLARACIONES OFICIALES",
-    "neutralHeadline": "El presidente Javier Milei negó la existencia de una recesión y cuestionó los indicadores económicos",
+    "kicker": "DECLARACIONES OFICIALES • ACTIVIDAD ECONÓMICA",
+    "neutralHeadline": "El presidente Javier Milei negó la existencia de una recesión y cuestionó las mediciones de los indicadores económicos",
     "category": "Economía",
-    "summary": "El presidente Javier Milei rechazó las mediciones actuales sobre recesión y caída del consumo, atribuyendo la disparidad de los datos a cambios estructurales en la economía. Tanto Clarín como La Nación replicaron las declaraciones presidenciales enfocándose en la defensa de la gestión y la crítica a las estadísticas.",
+    "summary": "El mandatario rechazó los pronósticos sobre un ciclo recesivo en el segundo semestre y atribuyó las discrepancias en los índices a profundas transformaciones en los patrones de consumo. La cobertura mediática evidenció una marcada polarización: medios afines respaldaron la hipótesis de desaceleración transitoria, la prensa financiera advirtió sobre la cautela de Wall Street y las redacciones críticas contrastaron sus dichos con los datos oficiales de caída fabril del INDEC.",
     "updatedAt": "Reciente",
     "imageUrl": "https://www.clarin.com/img/2026/09/27/G2x65aAiX_1200x630__1.jpg",
-    "imageCaption": "Cobertura periodística de Clarín.",
+    "imageCaption": "El presidente Javier Milei durante su última entrevista televisiva sobre política económica. (Foto: Cobertura Periodística)",
     "spectrum": {
-      "oficialismoPct": 50,
-      "centroDatosPct": 50,
-      "oposicionPct": 0,
-      "totalOutlets": 2
+      "oficialismoPct": 38,
+      "centroDatosPct": 37,
+      "oposicionPct": 25,
+      "totalOutlets": 8
     },
     "articles": [
       {
-        "id": "art-clarin-3841163382",
+        "id": "art-clarin-recesion",
         "outletId": "clarin",
         "outletName": "Clarín",
         "title": "Milei negó que haya una recesión y afirmó que los indicadores \"dan cualquier cosa\" por los cambios estructurales en la economía",
-        "snippet": "Cuestionó duramente a los economistas críticos y atribuyó la caída del consumo al crecimiento del comercio electrónico. Respaldó a Patricia Bullrich y estimó que un 70% del electorado apoyará su proye",
+        "snippet": "Cuestionó duramente a los economistas críticos y atribuyó la caída del consumo al crecimiento del comercio electrónico. Respaldó a Patricia Bullrich y estimó que un 70% del electorado apoyará su proyecto.",
         "url": "https://www.clarin.com/politica/milei-nego-recesion-afirmo-indicadores-dan-cualquier-cosa-cambios-estructurales-economia_0_LQsde53U2W.html",
         "publishedAt": "22:06 hs",
-        "imageUrl": "https://www.clarin.com/img/2026/09/27/G2x65aAiX_1200x630__1.jpg"
+        "imageUrl": "https://www.clarin.com/img/2026/09/27/G2x65aAiX_1200x630__1.jpg",
+        "specificFocus": "Cambios estructurales y comercio digital"
       },
       {
-        "id": "art-lanacion-1622929302",
+        "id": "art-lanacion-recesion",
         "outletId": "lanacion",
         "outletName": "La Nación",
         "title": "Milei negó que haya una recesión y dijo: “Los indicadores están arrojando cualquier cosa”",
-        "snippet": "El mandatario atribuyó la volatilidad de las estadísticas a las transformaciones que atraviesa la economía; aseguró que el país se encuentra en niveles máximos de consumo, exportaciones y PBI",
+        "snippet": "El mandatario atribuyó la volatilidad de las estadísticas a las transformaciones que atraviesa la economía; aseguró que el país se encuentra en niveles máximos de consumo, exportaciones y PBI.",
         "url": "https://www.lanacion.com.ar/politica/milei-nego-que-haya-una-recesion-y-dijo-los-indicadores-estan-arrojando-cualquier-cosa-nid27092026/",
         "publishedAt": "Hace 37 min",
-        "imageUrl": "https://resizer.glanacion.com/resizer/v2/VSDSVYLKXFHJBG2SRRSE4EUVYY.jpg?auth=ea027f365620fa64c57edf9fb574cfba85bf7f08ced6fc133be5d273db3bcf43&amp;smart=true&amp;width=1045&amp;height=695"
+        "imageUrl": "https://resizer.glanacion.com/resizer/v2/VSDSVYLKXFHJBG2SRRSE4EUVYY.jpg?auth=ea027f365620fa64c57edf9fb574cfba85bf7f08ced6fc133be5d273db3bcf43&smart=true&width=1045&height=695",
+        "specificFocus": "Defensa de niveles récord de exportaciones"
+      },
+      {
+        "id": "art-derechadiario-recesion",
+        "outletId": "derechadiario",
+        "outletName": "La Derecha Diario",
+        "title": "Milei dio una entrevista y ratificó el rumbo económico: “Yo tengo confianza en los argentinos”",
+        "snippet": "El Presidente pulverizó los pronósticos agoreros de los economistas tradicionales, defendió el superávit fiscal innegociable y remarcó la recuperación sostenida de los salarios reales.",
+        "url": "https://derechadiario.com.ar/politica/milei-defendio-rumbo-economico-tengo-confianza-en-argentinos",
+        "publishedAt": "Hace 3 horas",
+        "specificFocus": "Superávit fiscal innegociable y salarios"
+      },
+      {
+        "id": "art-tn-recesion",
+        "outletId": "tn",
+        "outletName": "Todo Noticias (TN)",
+        "title": "Milei defendió su programa y negó que la economía vaya a entrar en recesión: “Hay una desaceleración del ritmo de expansión”",
+        "snippet": "En declaraciones televisivas, el Presidente sostuvo que los números del INDEC no capturan el impacto de la desregulación ni el auge del sector servicios y la economía digital.",
+        "url": "https://tn.com.ar/politica/2026/09/27/milei-nego-recesion-desaceleracion-expansion/",
+        "publishedAt": "Hace 1 hora",
+        "specificFocus": "Concepto de desaceleración vs recesión"
+      },
+      {
+        "id": "art-ambito-recesion",
+        "outletId": "ambito",
+        "outletName": "Ámbito Financiero",
+        "title": "A un paso de la recesión: los números del INDEC desmienten el relato oficial de crecimiento",
+        "snippet": "Informes del sector fabril y del comercio minorista advierten desplomes de dos dígitos. Economistas advierten que la caída de la recaudación y el atraso cambiario profundizan el estancamiento.",
+        "url": "https://www.ambito.com/economia/a-un-paso-la-recesion-los-numeros-del-indec-desmienten-el-relato-oficial-crecimiento-n6064120",
+        "publishedAt": "Hace 45 min",
+        "specificFocus": "Contraste con datos fabriles del INDEC"
+      },
+      {
+        "id": "art-perfil-recesion",
+        "outletId": "perfil",
+        "outletName": "Perfil",
+        "title": "Milei negó que haya una recesión y cuestionó los indicadores: “Están arrojando cualquier cosa”",
+        "snippet": "El jefe de Estado apuntó contra las proyecciones de bancos internacionales como JP Morgan y desestimó el freno en la actividad asegurando que los salarios le ganan a la inflación.",
+        "url": "https://www.perfil.com/noticias/politica/milei-nego-que-haya-una-recesion-y-cuestiono-los-indicadores-estan-arrojando-cualquier-cosa.phtml",
+        "publishedAt": "Hace 2 horas",
+        "specificFocus": "Cuestionamiento al informe de JP Morgan"
+      },
+      {
+        "id": "art-baenegocios-recesion",
+        "outletId": "baenegocios",
+        "outletName": "BAE Negocios",
+        "title": "Milei negó que la Argentina esté en recesión y cuestionó los datos de actividad",
+        "snippet": "Pese a los datos del Estimador Mensual de Actividad Económica (EMAE) que marcan caídas interanuales en industria y construcción, el mandatario afirmó que la economía experimenta una fase de reacomodamiento.",
+        "url": "https://www.baenegocios.com/economia/Milei-nego-que-la-Argentina-este-en-recesion-y-cuestiono-los-datos-de-actividad-20260927-0042.html",
+        "publishedAt": "Hace 1 hora",
+        "specificFocus": "Indicadores EMAE en construcción e industria"
+      },
+      {
+        "id": "art-cronica-recesion",
+        "outletId": "cronica",
+        "outletName": "Crónica",
+        "title": "Milei negó que la economía vaya a entrar en recesión: \"Hay una desaceleración del ritmo de expansión\"",
+        "snippet": "El Presidente pidió paciencia a la población y aseguró que la inflación núcleo continuará su sendero a la baja hacia fin de año en medio del debate por el consumo en los hogares.",
+        "url": "https://www.cronica.com.ar/politica/Milei-nego-que-la-economia-vaya-a-entrar-en-recesion-20260927-0015.html",
+        "publishedAt": "Hace 2 horas",
+        "specificFocus": "Inflación núcleo y consumo en los hogares"
       }
     ],
-    "aiComparisonNotice": "Ambos medios centraron sus titulares en la negativa del mandatario sobre la recesión y su desconfianza hacia los indicadores estadísticos, manteniendo una cobertura alineada con el discurso oficial sin profundizar en contrapartidas técnicas de economistas críticos."
+    "aiComparisonNotice": "Contraste en 8 redacciones: Medios afines como La Derecha Diario, La Nación y TN priorizan las explicaciones teóricas del Presidente, destacando la defensa del superávit, la confianza popular y la idea de una desaceleración transitoria. Clarín, Perfil y Crónica mantienen un encuadre fáctico poniendo el acento en la controversia con las consultoras y el informe de JP Morgan. En contrapartida, Ámbito Financiero y BAE Negocios contraponen directamente el discurso presidencial con las estadísticas de caída interanual del INDEC (EMAE) en la industria manufacturera y la construcción."
   }
 ]

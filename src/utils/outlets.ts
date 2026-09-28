@@ -188,6 +188,16 @@ export const OUTLETS_REGISTRY: Record<string, OutletMeta> = {
     baselineLeaning: 'centro_datos',
     websiteUrl: 'https://www.bbc.com/mundo',
     badgeClass: 'bg-red-100 text-red-950 dark:bg-red-950/70 dark:text-red-200 border-red-300 dark:border-red-800'
+  },
+  // 19. La Derecha Diario
+  derechadiario: {
+    id: 'derechadiario',
+    name: 'La Derecha Diario',
+    code: 'LA DERECHA DIARIO',
+    category: 'nacional',
+    baselineLeaning: 'oficialismo',
+    websiteUrl: 'https://derechadiario.com.ar',
+    badgeClass: 'bg-blue-100 text-blue-950 dark:bg-blue-950/70 dark:text-blue-200 border-blue-400 dark:border-blue-700'
   }
 };
 

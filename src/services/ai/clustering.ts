@@ -74,6 +74,83 @@ function getGeminiKey(explicitKey?: string): string | undefined {
   return undefined;
 }
 
+export function selectCrossOutletCandidates(articles: Article[], maxArticles = 75): Article[] {
+  // 1. Group articles by outlet
+  const byOutlet: Record<string, Article[]> = {};
+  articles.forEach(a => {
+    if (!byOutlet[a.outletId]) byOutlet[a.outletId] = [];
+    byOutlet[a.outletId].push(a);
+  });
+
+  // 2. Extract meaningful tokens from titles and snippets
+  const stopWords = new Set([
+    'para', 'como', 'sobre', 'entre', 'este', 'esta', 'estos', 'estas', 'tras', 'desde',
+    'contra', 'hasta', 'hace', 'pero', 'mas', 'menos', 'segun', 'todo', 'todos', 'toda',
+    'todas', 'porque', 'cuando', 'donde', 'quien', 'cual', 'cuanto', 'dijo', 'afirma',
+    'aseguro', 'afirmo', 'nuevo', 'nueva', 'nuevos', 'nuevas', 'noticia', 'diario', 'prensa',
+    'argentina', 'argentino', 'argentinos', 'gobierno', 'pais', 'este', 'esta', 'ante'
+  ]);
+
+  const wordToOutlets = new Map<string, Set<string>>();
+  articles.forEach(a => {
+    const text = (a.title + ' ' + (a.snippet || '')).toLowerCase();
+    const words = text
+      .replace(/[^a-záéíóúüñ0-9\s]/gi, ' ')
+      .split(/\s+/)
+      .filter(w => w.length >= 4 && !stopWords.has(w));
+
+    const uniqueWordsInArticle = new Set(words);
+    uniqueWordsInArticle.forEach(w => {
+      if (!wordToOutlets.has(w)) wordToOutlets.set(w, new Set());
+      wordToOutlets.get(w)!.add(a.outletId);
+    });
+  });
+
+  // 3. Find hot cross-outlet keywords covered by 3 or more distinct outlets
+  const crossOutletKeywords = new Set<string>();
+  wordToOutlets.forEach((outlets, word) => {
+    if (outlets.size >= 3) {
+      crossOutletKeywords.add(word);
+    }
+  });
+
+  // 4. Score articles based on overlap with cross-outlet keywords
+  const scoredArticles = articles.map(a => {
+    const text = (a.title + ' ' + (a.snippet || '')).toLowerCase();
+    let score = 0;
+    crossOutletKeywords.forEach(kw => {
+      if (text.includes(kw)) {
+        score += wordToOutlets.get(kw)?.size || 1;
+      }
+    });
+    return { article: a, score };
+  });
+
+  scoredArticles.sort((a, b) => b.score - a.score);
+
+  const selected: Article[] = [];
+  const selectedIds = new Set<string>();
+
+  for (const item of scoredArticles) {
+    if (item.score > 0 && selected.length < maxArticles) {
+      selected.push(item.article);
+      selectedIds.add(item.article.id);
+    }
+  }
+
+  // Ensure every monitored outlet has representation in candidate pool
+  Object.values(byOutlet).forEach(outletArticles => {
+    for (const a of outletArticles.slice(0, 2)) {
+      if (!selectedIds.has(a.id) && selected.length < maxArticles + 25) {
+        selected.push(a);
+        selectedIds.add(a.id);
+      }
+    }
+  });
+
+  return selected;
+}
+
 export async function clusterArticlesWithGemini(
   articles: Article[],
   apiKey?: string
@@ -86,16 +163,17 @@ export async function clusterArticlesWithGemini(
   }
 
   try {
-    console.log(`[AI Clustering] Calling Gemini Flash to cluster ${articles.length} articles...`);
+    const candidateArticles = selectCrossOutletCandidates(articles, 80);
+    console.log(`[AI Clustering] Calling Gemini Flash with ${candidateArticles.length} cross-outlet curated articles (from ${articles.length} total)...`);
     const prompt = `
 Eres el motor de análisis editorial y verificación de Politicheck.
-Tu objetivo es analizar las siguientes noticias argentinas de las últimas horas publicadas por distintos medios (Clarín, La Nación, Infobae, Ámbito, El Cronista, Página 12, etc.) y agruparlas en torno al mismo hecho central ("Historia").
+Tu objetivo es analizar las siguientes noticias argentinas publicadas por distintos medios (Clarín, La Nación, Infobae, TN, Ámbito, El Cronista, Página 12, Perfil, elDiarioAR, Crónica, BAE Negocios, Cenital, La Derecha Diario, etc.) y agruparlas en torno a los hechos centrales de gran impacto ("Historias").
 
 Reglas estrictas:
 1. Agrupa solo aquellas noticias que cubren el mismo acontecimiento objetivo.
-2. Cada grupo ("Historia") debe tener preferentemente noticias de 2 o más medios diferentes.
+2. PRIORIDAD MÁXIMA - COBERTURA MULTI-MEDIO: Tu objetivo primordial es agrupar historias de gran envergadura nacional donde la mayor cantidad posible de redacciones (4, 5, 6, 7 o más diarios distintos) estén informando sobre el mismo hecho central. NO te limites a solo 2 diarios: incluye a TODOS los medios del listado que hablen de dicho hecho para que la comparación de titulares y el espectro editorial sea lo más amplio y representativo posible.
 3. Escribe un titular neutral ("neutralHeadline") estrictamente factual, sin adjetivos tendenciosos.
-4. Redacta un dictamen comparativo de encuadres ("aiComparisonNotice") que explique con rigor periodístico: qué priorizó cada medio en su titular y qué omitió.
+4. Redacta un dictamen comparativo de encuadres ("aiComparisonNotice") que explique con rigor periodístico: qué priorizó cada redacción en su titular y qué omitió.
 5. Clasifica la categoría ("Política", "Economía", "Sociedad", "Justicia" o "Internacional").
 6. Estima la distribución del espectro editorial (oficialismoPct, centroDatosPct, oposicionPct) sumando el 100%.
 
@@ -107,20 +185,20 @@ Responde ÚNICAMENTE en formato JSON con la siguiente estructura:
       "neutralHeadline": "Titular neutral y factual",
       "category": "Política",
       "summary": "Resumen objetivo en dos oraciones.",
-      "aiComparisonNotice": "Síntesis del contraste de enfoques entre los medios.",
-      "articleIds": ["id1", "id2"],
+      "aiComparisonNotice": "Síntesis del contraste de enfoques entre las múltiples redacciones.",
+      "articleIds": ["id1", "id2", "id3", "id4", "id5"],
       "spectrum": {
         "oficialismoPct": 40,
         "centroDatosPct": 35,
         "oposicionPct": 25,
-        "totalOutlets": 3
+        "totalOutlets": 5
       }
     }
   ]
 }
 
 Noticias a analizar:
-${JSON.stringify(articles.slice(0, 35).map(a => ({ id: a.id, medio: a.outletName, titulo: a.title, bajada: a.snippet })), null, 2)}
+${JSON.stringify(candidateArticles.map(a => ({ id: a.id, medio: a.outletName, titulo: a.title, bajada: a.snippet })), null, 2)}
 `;
 
     const CANDIDATE_MODELS = [
@@ -290,16 +368,29 @@ function ruleBasedClustering(articles: Article[]): StoryCluster[] {
     if (matchingArticles.length > 0) {
       const leadImg = matchingArticles.find(a => Boolean(a.imageUrl))?.imageUrl || topic.defaultImage;
 
-      // Calculate spectrum dynamically based on monitored outlets
-      const outletsSet = new Set(matchingArticles.map(a => a.outletId));
+      // Select 1 top article per distinct outlet to maximize diversity across newsrooms
+      const uniqueOutletArticles: Article[] = [];
+      const seenOutlet = new Set<string>();
+      matchingArticles.forEach(a => {
+        if (!seenOutlet.has(a.outletId)) {
+          seenOutlet.add(a.outletId);
+          uniqueOutletArticles.push(a);
+        }
+      });
+      const selectedArticles = uniqueOutletArticles.slice(0, 8);
+
+      // Calculate spectrum dynamically based on selected outlets
       let ofi = 0, centro = 0, opo = 0;
-      outletsSet.forEach(id => {
-        const o = OUTLETS[id];
+      selectedArticles.forEach(a => {
+        const o = OUTLETS[a.outletId];
         if (o?.baselineLeaning === 'oficialismo') ofi++;
         else if (o?.baselineLeaning === 'oposicion') opo++;
         else centro++;
       });
-      const total = outletsSet.size || 1;
+      const total = selectedArticles.length || 1;
+      const ofiPct = Math.round((ofi / total) * 100);
+      const centroPct = Math.round((centro / total) * 100);
+      const opoPct = Math.max(0, 100 - ofiPct - centroPct);
 
       stories.push({
         id: `story-cluster-${idx + 1}`,
@@ -308,16 +399,16 @@ function ruleBasedClustering(articles: Article[]): StoryCluster[] {
         neutralHeadline: topic.neutralHeadline,
         category: topic.category,
         summary: topic.summary,
-        updatedAt: matchingArticles[0]?.publishedAt || 'Reciente',
+        updatedAt: selectedArticles[0]?.publishedAt || 'Reciente',
         imageUrl: leadImg,
         imageCaption: topic.defaultCaption,
         spectrum: {
-          oficialismoPct: Math.round((ofi / total) * 100),
-          centroDatosPct: Math.round((centro / total) * 100),
-          oposicionPct: Math.round((opo / total) * 100),
+          oficialismoPct: ofiPct,
+          centroDatosPct: centroPct,
+          oposicionPct: opoPct,
           totalOutlets: total
         },
-        articles: matchingArticles.slice(0, 4),
+        articles: selectedArticles,
         aiComparisonNotice: topic.aiNotice
       });
     }
