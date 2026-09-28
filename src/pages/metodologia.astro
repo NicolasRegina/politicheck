@@ -1,0 +1,1019 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { OUTLETS_REGISTRY } from '../utils/outlets';
+
+// Metadata enriquecida de los 31 medios monitoreados
+export interface OutletDetail {
+  id: string;
+  name: string;
+  code: string;
+  category: 'nacional' | 'internacional';
+  country: string;
+  flag: string;
+  baselineLeaning: 'oficialismo' | 'centro_datos' | 'oposicion';
+  editorialProfile: string;
+  rssFeedUrl: string;
+  websiteUrl: string;
+  badgeClass: string;
+}
+
+const OUTLETS_CATALOG: OutletDetail[] = [
+  // 1. Clarín
+  {
+    id: 'clarin',
+    name: 'Clarín',
+    code: 'CLARÍN',
+    category: 'nacional',
+    country: 'Argentina',
+    flag: '🇦🇷',
+    baselineLeaning: 'centro_datos',
+    editorialProfile: 'Decano de la prensa gráfica argentina, de alcance masivo y perfil generalista. Cobertura centrada en economía, política e impacto tarifario con fuentes plurales de consulta.',
+    rssFeedUrl: 'https://www.clarin.com/rss/politica/',
+    websiteUrl: 'https://www.clarin.com',
+    badgeClass: 'bg-emerald-100 text-emerald-950 dark:bg-emerald-950/70 dark:text-emerald-300 border-emerald-300 dark:border-emerald-800'
+  },
+  // 2. La Nación
+  {
+    id: 'lanacion',
+    name: 'La Nación',
+    code: 'LA NACIÓN',
+    category: 'nacional',
+    country: 'Argentina',
+    flag: '🇦🇷',
+    baselineLeaning: 'oficialismo',
+    editorialProfile: 'Diario histórico de tradición republicana y liberal clásico. Tiende a valorar favorablemente la disciplina fiscal, las reformas desregulatorias y las metas pro-mercado.',
+    rssFeedUrl: 'https://www.lanacion.com.ar/arc/outboundfeeds/rss/?outputType=xml',
+    websiteUrl: 'https://www.lanacion.com.ar',
+    badgeClass: 'bg-purple-100 text-purple-950 dark:bg-purple-950/70 dark:text-purple-300 border-purple-300 dark:border-purple-800'
+  },
+  // 3. Infobae
+  {
+    id: 'infobae',
+    name: 'Infobae',
+    code: 'INFOBAE',
+    category: 'nacional',
+    country: 'Argentina',
+    flag: '🇦🇷',
+    baselineLeaning: 'centro_datos',
+    editorialProfile: 'Medio digital nativo líder en el mundo hispanohablante. Dinámica informativa ágil de última hora y tribuna de opinión que integra a analistas de todo el arco político.',
+    rssFeedUrl: 'https://www.infobae.com/arc/outboundfeeds/rss/?outputType=xml',
+    websiteUrl: 'https://www.infobae.com',
+    badgeClass: 'bg-emerald-100 text-emerald-950 dark:bg-emerald-950/70 dark:text-emerald-300 border-emerald-300 dark:border-emerald-800'
+  },
+  // 4. Todo Noticias (TN)
+  {
+    id: 'tn',
+    name: 'Todo Noticias (TN)',
+    code: 'TN',
+    category: 'nacional',
+    country: 'Argentina',
+    flag: '🇦🇷',
+    baselineLeaning: 'oficialismo',
+    editorialProfile: 'Canal y portal continuo de noticias. Enfoque prioritario en seguridad ciudadana, actividad parlamentaria y avances del plan macroeconómico oficial.',
+    rssFeedUrl: 'https://tn.com.ar/rss.xml',
+    websiteUrl: 'https://tn.com.ar',
+    badgeClass: 'bg-purple-100 text-purple-950 dark:bg-purple-950/70 dark:text-purple-300 border-purple-300 dark:border-purple-800'
+  },
+  // 5. Página 12
+  {
+    id: 'pagina12',
+    name: 'Página 12',
+    code: 'PÁGINA 12',
+    category: 'nacional',
+    country: 'Argentina',
+    flag: '🇦🇷',
+    baselineLeaning: 'oposicion',
+    editorialProfile: 'Periódico insignia de la centro-izquierda y el progresismo nacional. Enfoque crítico y exhaustivo sobre el costo social del ajuste, derechos humanos y medidas laborales.',
+    rssFeedUrl: 'https://www.pagina12.com.ar/rss/portada.xml',
+    websiteUrl: 'https://www.pagina12.com.ar',
+    badgeClass: 'bg-amber-100 text-amber-950 dark:bg-amber-950/70 dark:text-amber-300 border-amber-300 dark:border-amber-800'
+  },
+  // 6. Ámbito Financiero
+  {
+    id: 'ambito',
+    name: 'Ámbito Financiero',
+    code: 'ÁMBITO',
+    category: 'nacional',
+    country: 'Argentina',
+    flag: '🇦🇷',
+    baselineLeaning: 'oposicion',
+    editorialProfile: 'Especializado en finanzas, mercados y macroeconomía. Sigue con agudeza técnica el frente cambiario, la deuda externa, la actividad productiva y los gobernadores del interior.',
+    rssFeedUrl: 'https://www.ambito.com/rss/pages/home.xml',
+    websiteUrl: 'https://www.ambito.com',
+    badgeClass: 'bg-amber-100 text-amber-950 dark:bg-amber-950/70 dark:text-amber-300 border-amber-300 dark:border-amber-800'
+  },
+  // 7. El Cronista
+  {
+    id: 'cronista',
+    name: 'El Cronista',
+    code: 'EL CRONISTA',
+    category: 'nacional',
+    country: 'Argentina',
+    flag: '🇦🇷',
+    baselineLeaning: 'centro_datos',
+    editorialProfile: 'Publicación de negocios y finanzas orientada al sector corporativo y bursátil. Riguroso seguimiento numérico de cotizaciones, balances del BCRA e indicadores de actividad.',
+    rssFeedUrl: 'https://www.cronista.com/files/rss/news.xml',
+    websiteUrl: 'https://www.cronista.com',
+    badgeClass: 'bg-emerald-100 text-emerald-950 dark:bg-emerald-950/70 dark:text-emerald-300 border-emerald-300 dark:border-emerald-800'
+  },
+  // 8. Diario Perfil
+  {
+    id: 'perfil',
+    name: 'Perfil',
+    code: 'PERFIL',
+    category: 'nacional',
+    country: 'Argentina',
+    flag: '🇦🇷',
+    baselineLeaning: 'centro_datos',
+    editorialProfile: 'Fundado por Jorge Fontevecchia. Periodismo de autor, entrevistas de profundidad y análisis equidistante con constante cuestionamiento a las hegemonías de turno.',
+    rssFeedUrl: 'https://www.perfil.com/feed',
+    websiteUrl: 'https://www.perfil.com',
+    badgeClass: 'bg-emerald-100 text-emerald-950 dark:bg-emerald-950/70 dark:text-emerald-300 border-emerald-300 dark:border-emerald-800'
+  },
+  // 9. elDiarioAR
+  {
+    id: 'eldiarioar',
+    name: 'elDiarioAR',
+    code: 'ELDIARIO.AR',
+    category: 'nacional',
+    country: 'Argentina',
+    flag: '🇦🇷',
+    baselineLeaning: 'oposicion',
+    editorialProfile: 'Medio digital independiente asociado a elDiario.es. Foco en investigación de fondo, justicia independiente, impacto ambiental y consecuencias sociales de las políticas públicas.',
+    rssFeedUrl: 'https://www.eldiarioar.com/rss/',
+    websiteUrl: 'https://www.eldiarioar.com',
+    badgeClass: 'bg-amber-100 text-amber-950 dark:bg-amber-950/70 dark:text-amber-300 border-amber-300 dark:border-amber-800'
+  },
+  // 10. Crónica
+  {
+    id: 'cronica',
+    name: 'Crónica',
+    code: 'CRÓNICA',
+    category: 'nacional',
+    country: 'Argentina',
+    flag: '🇦🇷',
+    baselineLeaning: 'centro_datos',
+    editorialProfile: 'Voz histórica del sentir popular argentino. Lenguaje llano y directo sobre precios en la calle, transporte, jubilaciones y reclamos vecinales.',
+    rssFeedUrl: 'https://www.cronica.com.ar/feed/',
+    websiteUrl: 'https://www.cronica.com.ar',
+    badgeClass: 'bg-emerald-100 text-emerald-950 dark:bg-emerald-950/70 dark:text-emerald-300 border-emerald-300 dark:border-emerald-800'
+  },
+  // 11. BAE Negocios
+  {
+    id: 'baenegocios',
+    name: 'BAE Negocios',
+    code: 'BAE NEGOCIOS',
+    category: 'nacional',
+    country: 'Argentina',
+    flag: '🇦🇷',
+    baselineLeaning: 'oposicion',
+    editorialProfile: 'Periódico económico enfocado en la industria nacional, Pymes, comercio interior y el movimiento obrero organizado.',
+    rssFeedUrl: 'https://www.baenegocios.com/feed/',
+    websiteUrl: 'https://www.baenegocios.com',
+    badgeClass: 'bg-amber-100 text-amber-950 dark:bg-amber-950/70 dark:text-amber-300 border-amber-300 dark:border-amber-800'
+  },
+  // 12. La Izquierda Diario
+  {
+    id: 'izquierdadiario',
+    name: 'La Izquierda Diario',
+    code: 'IZQUIERDA DIARIO',
+    category: 'nacional',
+    country: 'Argentina',
+    flag: '🇦🇷',
+    baselineLeaning: 'oposicion',
+    editorialProfile: 'Medio de difusión de la izquierda socialista y de los trabajadores. Crítica frontal al pago de la deuda al FMI, a la flexibilización laboral y al orden capitalista.',
+    rssFeedUrl: 'https://www.laizquierdadiario.com/spip.php?page=backend',
+    websiteUrl: 'https://www.laizquierdadiario.com',
+    badgeClass: 'bg-amber-100 text-amber-950 dark:bg-amber-950/70 dark:text-amber-300 border-amber-300 dark:border-amber-800'
+  },
+  // 13. Cenital
+  {
+    id: 'cenital',
+    name: 'Cenital',
+    code: 'CENITAL',
+    category: 'nacional',
+    country: 'Argentina',
+    flag: '🇦🇷',
+    baselineLeaning: 'centro_datos',
+    editorialProfile: 'Medio digital con newsletters temáticos y ensayos analíticos. Aborda los debates estructurales del país con profundidad contextual y solvencia académica.',
+    rssFeedUrl: 'https://cenital.com/feed/',
+    websiteUrl: 'https://cenital.com',
+    badgeClass: 'bg-emerald-100 text-emerald-950 dark:bg-emerald-950/70 dark:text-emerald-300 border-emerald-300 dark:border-emerald-800'
+  },
+  // 14. El Economista
+  {
+    id: 'eleconomista',
+    name: 'El Economista',
+    code: 'EL ECONOMISTA',
+    category: 'nacional',
+    country: 'Argentina',
+    flag: '🇦🇷',
+    baselineLeaning: 'centro_datos',
+    editorialProfile: 'Periódico técnico que releva balances de coyuntura macroeconómica, comercio exterior, metas con organismos y expectativas del sector privado.',
+    rssFeedUrl: 'https://eleconomista.com.ar/feed/',
+    websiteUrl: 'https://eleconomista.com.ar',
+    badgeClass: 'bg-emerald-100 text-emerald-950 dark:bg-emerald-950/70 dark:text-emerald-300 border-emerald-300 dark:border-emerald-800'
+  },
+  // 15. La Derecha Diario
+  {
+    id: 'derechadiario',
+    name: 'La Derecha Diario',
+    code: 'LA DERECHA DIARIO',
+    category: 'nacional',
+    country: 'Argentina',
+    flag: '🇦🇷',
+    baselineLeaning: 'oficialismo',
+    editorialProfile: 'Portal digital de ideario libertario afín al gobierno nacional. Promueve activamente el achicamiento estatal, las reformas de libre mercado y la desregulación total.',
+    rssFeedUrl: 'https://derechadiario.com.ar/rss/cat/politica',
+    websiteUrl: 'https://derechadiario.com.ar',
+    badgeClass: 'bg-purple-100 text-purple-950 dark:bg-purple-950/70 dark:text-purple-300 border-purple-300 dark:border-purple-800'
+  },
+  // 16. Financial Times
+  {
+    id: 'ft',
+    name: 'Financial Times',
+    code: 'FINANCIAL TIMES',
+    category: 'internacional',
+    country: 'Reino Unido',
+    flag: '🇬🇧',
+    baselineLeaning: 'centro_datos',
+    editorialProfile: 'Referente financiero internacional de la City de Londres. Analiza con precisión la solvencia de las reservas, el plan cambiario y la confianza de los bonistas externos.',
+    rssFeedUrl: 'https://www.ft.com',
+    websiteUrl: 'https://www.ft.com',
+    badgeClass: 'bg-emerald-100 text-emerald-950 dark:bg-emerald-950/70 dark:text-emerald-300 border-emerald-300 dark:border-emerald-800'
+  },
+  // 17. El País
+  {
+    id: 'elpais',
+    name: 'El País',
+    code: 'EL PAÍS',
+    category: 'internacional',
+    country: 'España',
+    flag: '🇪🇸',
+    baselineLeaning: 'oposicion',
+    editorialProfile: 'Diario global de centro-izquierda en español. Posee redacción en Buenos Aires y suele enfatizar los debates sobre derechos sociales y polarización política.',
+    rssFeedUrl: 'https://feeds.elpais.com/mrss-s/pages/ep/site/elpais.com/section/argentina/portada',
+    websiteUrl: 'https://elpais.com',
+    badgeClass: 'bg-amber-100 text-amber-950 dark:bg-amber-950/70 dark:text-amber-300 border-amber-300 dark:border-amber-800'
+  },
+  // 18. CNN en Español
+  {
+    id: 'cnn',
+    name: 'CNN en Español',
+    code: 'CNN',
+    category: 'internacional',
+    country: 'Estados Unidos',
+    flag: '🇺🇸',
+    baselineLeaning: 'centro_datos',
+    editorialProfile: 'Cadena de alcance continental. Reportes en vivo y cobertura balanceada de sucesos políticos, conferencias de prensa y resoluciones gubernamentales.',
+    rssFeedUrl: 'https://cnnespanol.cnn.com',
+    websiteUrl: 'https://cnnespanol.cnn.com',
+    badgeClass: 'bg-emerald-100 text-emerald-950 dark:bg-emerald-950/70 dark:text-emerald-300 border-emerald-300 dark:border-emerald-800'
+  },
+  // 19. BBC News Mundo
+  {
+    id: 'bbcmundo',
+    name: 'BBC News Mundo',
+    code: 'BBC MUNDO',
+    category: 'internacional',
+    country: 'Reino Unido',
+    flag: '🇬🇧',
+    baselineLeaning: 'centro_datos',
+    editorialProfile: 'Servicio público británico. Reportajes de contexto, verificación de hechos y crónicas humanas sobre la economía familiar y la realidad social en Argentina.',
+    rssFeedUrl: 'https://feeds.bbci.co.uk/mundo/rss.xml',
+    websiteUrl: 'https://www.bbc.com/mundo',
+    badgeClass: 'bg-emerald-100 text-emerald-950 dark:bg-emerald-950/70 dark:text-emerald-300 border-emerald-300 dark:border-emerald-800'
+  },
+  // 20. France 24 en Español
+  {
+    id: 'france24',
+    name: 'France 24',
+    code: 'FRANCE 24',
+    category: 'internacional',
+    country: 'Francia',
+    flag: '🇫🇷',
+    baselineLeaning: 'centro_datos',
+    editorialProfile: 'Medio público internacional de Francia. Sigue las relaciones bilaterales, el comercio del Mercosur con la Unión Europea y el impacto regional del Cono Sur.',
+    rssFeedUrl: 'https://www.france24.com/es/am%C3%A9rica-latina/rss',
+    websiteUrl: 'https://www.france24.com/es/',
+    badgeClass: 'bg-emerald-100 text-emerald-950 dark:bg-emerald-950/70 dark:text-emerald-300 border-emerald-300 dark:border-emerald-800'
+  },
+  // 21. Le Monde
+  {
+    id: 'lemonde',
+    name: 'Le Monde',
+    code: 'LE MONDE',
+    category: 'internacional',
+    country: 'Francia',
+    flag: '🇫🇷',
+    baselineLeaning: 'oposicion',
+    editorialProfile: 'Voz referente del pensamiento europeo de centro-izquierda. Cobertura crítica de los cambios sociopolíticos y la polarización institucional en Argentina.',
+    rssFeedUrl: 'https://www.lemonde.fr/international/rss_full.xml',
+    websiteUrl: 'https://www.lemonde.fr',
+    badgeClass: 'bg-amber-100 text-amber-950 dark:bg-amber-950/70 dark:text-amber-300 border-amber-300 dark:border-amber-800'
+  },
+  // 22. Le Figaro
+  {
+    id: 'lefigaro',
+    name: 'Le Figaro',
+    code: 'LE FIGARO',
+    category: 'internacional',
+    country: 'Francia',
+    flag: '🇫🇷',
+    baselineLeaning: 'centro_datos',
+    editorialProfile: 'Diario francés de línea conservadora y liberal. Sigue de cerca las transformaciones de mercado y las inversiones energéticas en Argentina.',
+    rssFeedUrl: 'https://www.lefigaro.fr/rss/figaro_international.xml',
+    websiteUrl: 'https://www.lefigaro.fr',
+    badgeClass: 'bg-emerald-100 text-emerald-950 dark:bg-emerald-950/70 dark:text-emerald-300 border-emerald-300 dark:border-emerald-800'
+  },
+  // 23. El Mundo (España)
+  {
+    id: 'elmundo',
+    name: 'El Mundo',
+    code: 'EL MUNDO',
+    category: 'internacional',
+    country: 'España',
+    flag: '🇪🇸',
+    baselineLeaning: 'oficialismo',
+    editorialProfile: 'Periódico español de centro-derecha liberal. Tiende a destacar con tono positivo los avances en superávit fiscal y reformas liberales del Ejecutivo argentino.',
+    rssFeedUrl: 'https://e00-elmundo.uecdn.es/elmundo/rss/internacional.xml',
+    websiteUrl: 'https://www.elmundo.es',
+    badgeClass: 'bg-purple-100 text-purple-950 dark:bg-purple-950/70 dark:text-purple-300 border-purple-300 dark:border-purple-800'
+  },
+  // 24. La Vanguardia
+  {
+    id: 'lavanguardia',
+    name: 'La Vanguardia',
+    code: 'LA VANGUARDIA',
+    category: 'internacional',
+    country: 'España',
+    flag: '🇪🇸',
+    baselineLeaning: 'centro_datos',
+    editorialProfile: 'Diario centrista de Barcelona. Enfoque medido y ponderado de la política iberoamericana y los lazos culturales y comerciales de España con el país.',
+    rssFeedUrl: 'https://www.lavanguardia.com/rss/internacional.xml',
+    websiteUrl: 'https://www.lavanguardia.com',
+    badgeClass: 'bg-emerald-100 text-emerald-950 dark:bg-emerald-950/70 dark:text-emerald-300 border-emerald-300 dark:border-emerald-800'
+  },
+  // 25. Expansión
+  {
+    id: 'expansion',
+    name: 'Expansión',
+    code: 'EXPANSIÓN',
+    category: 'internacional',
+    country: 'España',
+    flag: '🇪🇸',
+    baselineLeaning: 'centro_datos',
+    editorialProfile: 'Diario de economía y negocios de España. Monitoreo constante del desempeño de empresas cotizantes y el clima de negocios en el Cono Sur.',
+    rssFeedUrl: 'https://e00-expansion.uecdn.es/rss/latinoamerica.xml',
+    websiteUrl: 'https://www.expansion.com',
+    badgeClass: 'bg-emerald-100 text-emerald-950 dark:bg-emerald-950/70 dark:text-emerald-300 border-emerald-300 dark:border-emerald-800'
+  },
+  // 26. The Guardian
+  {
+    id: 'theguardian',
+    name: 'The Guardian',
+    code: 'THE GUARDIAN',
+    category: 'internacional',
+    country: 'Reino Unido',
+    flag: '🇬🇧',
+    baselineLeaning: 'oposicion',
+    editorialProfile: 'Prensa británica de raíz progresista. Cobertura crítica de recortes en salud, ciencia, educación y reclamos de movimientos sociales en Argentina.',
+    rssFeedUrl: 'https://www.theguardian.com/world/americas/rss',
+    websiteUrl: 'https://www.theguardian.com',
+    badgeClass: 'bg-amber-100 text-amber-950 dark:bg-amber-950/70 dark:text-amber-300 border-amber-300 dark:border-amber-800'
+  },
+  // 27. The New York Times
+  {
+    id: 'nyt',
+    name: 'The New York Times',
+    code: 'NY TIMES',
+    category: 'internacional',
+    country: 'Estados Unidos',
+    flag: '🇺🇸',
+    baselineLeaning: 'centro_datos',
+    editorialProfile: 'Periódico estadounidense de alcance global. Ensayos en profundidad sobre la política exterior, el alineamiento estratégico y la situación monetaria del país.',
+    rssFeedUrl: 'https://rss.nytimes.com/services/xml/rss/nyt/Americas.xml',
+    websiteUrl: 'https://www.nytimes.com',
+    badgeClass: 'bg-emerald-100 text-emerald-950 dark:bg-emerald-950/70 dark:text-emerald-300 border-emerald-300 dark:border-emerald-800'
+  },
+  // 28. DW Español
+  {
+    id: 'dw',
+    name: 'DW Español',
+    code: 'DEUTSCHE WELLE',
+    category: 'internacional',
+    country: 'Alemania',
+    flag: '🇩🇪',
+    baselineLeaning: 'centro_datos',
+    editorialProfile: 'Radiotelevisión pública federal alemana. Fact-checking estricto, ecología, transición energética y potencial del gas y litio argentino.',
+    rssFeedUrl: 'https://rss.dw.com/xml/rss-sp-all',
+    websiteUrl: 'https://www.dw.com/es',
+    badgeClass: 'bg-emerald-100 text-emerald-950 dark:bg-emerald-950/70 dark:text-emerald-300 border-emerald-300 dark:border-emerald-800'
+  },
+  // 29. Nikkei Asia
+  {
+    id: 'nikkeiasia',
+    name: 'Nikkei Asia',
+    code: 'NIKKEI ASIA',
+    category: 'internacional',
+    country: 'Japón',
+    flag: '🇯🇵',
+    baselineLeaning: 'centro_datos',
+    editorialProfile: 'Publicación económica líder de Tokio. Monitoreo de cadenas globales de valor, demanda de commodities y comercio del Asia-Pacífico con Sudamérica.',
+    rssFeedUrl: 'https://asia.nikkei.com/rss/feed/nar',
+    websiteUrl: 'https://asia.nikkei.com',
+    badgeClass: 'bg-emerald-100 text-emerald-950 dark:bg-emerald-950/70 dark:text-emerald-300 border-emerald-300 dark:border-emerald-800'
+  },
+  // 30. The Japan Times
+  {
+    id: 'japantimes',
+    name: 'The Japan Times',
+    code: 'JAPAN TIMES',
+    category: 'internacional',
+    country: 'Japón',
+    flag: '🇯🇵',
+    baselineLeaning: 'centro_datos',
+    editorialProfile: 'Diario en inglés de Tokio. Análisis geopolítico del G20, relaciones bilaterales y estabilidad financiera de economías emergentes.',
+    rssFeedUrl: 'https://www.japantimes.co.jp/feed/',
+    websiteUrl: 'https://www.japantimes.co.jp',
+    badgeClass: 'bg-emerald-100 text-emerald-950 dark:bg-emerald-950/70 dark:text-emerald-300 border-emerald-300 dark:border-emerald-800'
+  },
+  // 31. Xinhua News
+  {
+    id: 'xinhua',
+    name: 'Xinhua News',
+    code: 'XINHUA',
+    category: 'internacional',
+    country: 'China',
+    flag: '🇨🇳',
+    baselineLeaning: 'centro_datos',
+    editorialProfile: 'Agencia oficial de noticias de Pekín. Seguimiento continuo de la relación bilateral comercial, exportaciones de soja y carne, y swaps financieros con el BCRA.',
+    rssFeedUrl: 'http://www.xinhuanet.com/english/rss/worldrss.xml',
+    websiteUrl: 'http://www.xinhuanet.com',
+    badgeClass: 'bg-emerald-100 text-emerald-950 dark:bg-emerald-950/70 dark:text-emerald-300 border-emerald-300 dark:border-emerald-800'
+  }
+];
+
+const totalOutlets = OUTLETS_CATALOG.length;
+const nationalCount = OUTLETS_CATALOG.filter(o => o.category === 'nacional').length;
+const foreignCount = OUTLETS_CATALOG.filter(o => o.category === 'internacional').length;
+---
+
+<Layout 
+  title="Metodología Científica, Fórmula Editorial y Catálogo de 31 Medios • Politicheck"
+  description="Conocé en detalle la fórmula matemática del espectro editorial, la auditoría documental con el Boletín Oficial y el catálogo público de los 31 medios monitoreados sin pauta oficial."
+>
+  <main class="max-w-6xl mx-auto px-4 sm:px-6 py-10 space-y-16">
+    
+    <!-- Top Breadcrumb Navigation -->
+    <nav class="flex items-center justify-between border-b border-slate-200 dark:border-slate-800 pb-4 text-xs font-mono">
+      <a href="/" class="inline-flex items-center gap-1.5 text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white transition-colors">
+        <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+        </svg>
+        <span>Volver a la Portada del Observatorio</span>
+      </a>
+      <div class="flex items-center gap-2 text-slate-400 dark:text-slate-500">
+        <span>Documento Metodológico v2.5</span>
+        <span>•</span>
+        <span>Revisión Septiembre 2026</span>
+      </div>
+    </nav>
+
+    <!-- Hero Header: Institutional Manifesto -->
+    <header class="space-y-6 max-w-4xl">
+      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-slate-900 text-white dark:bg-slate-100 dark:text-slate-900 text-[11px] font-mono uppercase tracking-widest font-semibold shadow-sm">
+        <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+        Transparencia Cívica & Neutralidad Algorítmica
+      </div>
+      
+      <h1 class="font-editorial text-3xl sm:text-5xl lg:text-6xl font-black text-slate-950 dark:text-white leading-[1.1] tracking-tight">
+        Cómo Funciona Politicheck
+      </h1>
+
+      <p class="text-lg sm:text-xl text-slate-700 dark:text-slate-300 font-editorial leading-relaxed">
+        Un observatorio cívico automatizado para contrastar el sesgo de la prensa, desarmar cámaras de eco partidarias y auditar los compromisos de campaña con prueba documental primaria verificable.
+      </p>
+
+      <!-- Key Metrics Strip -->
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-4">
+        <div class="p-4 rounded-xl bg-slate-50 dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800">
+          <div class="font-mono text-2xl sm:text-3xl font-bold text-slate-950 dark:text-white">{totalOutlets}</div>
+          <div class="text-[11px] font-mono text-slate-500 dark:text-slate-400 uppercase mt-0.5">Medios en Simultáneo</div>
+          <div class="text-[10px] text-slate-400 dark:text-slate-500 mt-1">15 Nac. / 16 Internacionales</div>
+        </div>
+        <div class="p-4 rounded-xl bg-slate-50 dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800">
+          <div class="font-mono text-2xl sm:text-3xl font-bold text-emerald-600 dark:text-emerald-400">$0</div>
+          <div class="text-[11px] font-mono text-slate-500 dark:text-slate-400 uppercase mt-0.5">Pauta Oficial</div>
+          <div class="text-[10px] text-slate-400 dark:text-slate-500 mt-1">100% Independencia Financiera</div>
+        </div>
+        <div class="p-4 rounded-xl bg-slate-50 dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800">
+          <div class="font-mono text-2xl sm:text-3xl font-bold text-blue-600 dark:text-blue-400">100%</div>
+          <div class="text-[11px] font-mono text-slate-500 dark:text-slate-400 uppercase mt-0.5">Fuentes Primarias</div>
+          <div class="text-[10px] text-slate-400 dark:text-slate-500 mt-1">Boletín Oficial e INDEC</div>
+        </div>
+        <div class="p-4 rounded-xl bg-slate-50 dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800">
+          <div class="font-mono text-2xl sm:text-3xl font-bold text-purple-600 dark:text-purple-400">SHA-256</div>
+          <div class="text-[11px] font-mono text-slate-500 dark:text-slate-400 uppercase mt-0.5">Voto Anti-Fraude</div>
+          <div class="text-[10px] text-slate-400 dark:text-slate-500 mt-1">Anonimato Criptográfico</div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Quick Navigation Index / Jump Anchors -->
+    <div class="sticky top-2 z-20 p-2.5 rounded-2xl bg-white/90 dark:bg-slate-900/90 backdrop-blur border border-slate-200 dark:border-slate-800 shadow-sm overflow-x-auto">
+      <div class="flex items-center gap-2 text-xs font-mono whitespace-nowrap px-1">
+        <span class="text-slate-400 uppercase text-[10px] font-bold mr-1">Índice:</span>
+        <a href="#manifiesto" class="px-2.5 py-1 rounded-lg bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-200 transition-colors">1. Manifiesto Cívico</a>
+        <a href="#espectro" class="px-2.5 py-1 rounded-lg bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-200 transition-colors">2. Fórmula del Espectro</a>
+        <a href="#catalogo" class="px-2.5 py-1 rounded-lg bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-200 transition-colors">3. Catálogo de 31 Medios</a>
+        <a href="#promesas" class="px-2.5 py-1 rounded-lg bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-200 transition-colors">4. Monitor de Promesas</a>
+        <a href="#antifraude" class="px-2.5 py-1 rounded-lg bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-200 transition-colors">5. Voto Anti-Fraude</a>
+      </div>
+    </div>
+
+    <!-- SECTION 1: MANIFIESTO CÍVICO -->
+    <section id="manifiesto" class="scroll-mt-20 p-6 sm:p-8 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 space-y-6">
+      <div class="flex items-center gap-3">
+        <span class="flex items-center justify-center w-8 h-8 rounded-lg bg-slate-900 text-white dark:bg-white dark:text-slate-950 font-mono text-sm font-bold">
+          01
+        </span>
+        <div>
+          <h2 class="font-editorial text-2xl sm:text-3xl font-bold text-slate-950 dark:text-white">
+            Manifiesto de Independencia Cívica
+          </h2>
+          <p class="text-xs font-mono text-slate-500 dark:text-slate-400">Principios rectores de neutralidad, legalidad y financiamiento cero</p>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-sm leading-relaxed text-slate-600 dark:text-slate-300">
+        <div class="space-y-2 p-4 rounded-xl bg-slate-50 dark:bg-slate-950/60 border border-slate-200 dark:border-slate-800/80">
+          <div class="flex items-center gap-2 font-mono font-bold text-slate-900 dark:text-slate-100 text-xs uppercase">
+            <span class="text-emerald-500 font-bold">✓</span> 0% Pauta Oficial o Partidaria
+          </div>
+          <p class="text-xs">
+            Politicheck <strong>no recibe ni aceptará pauta publicitaria</strong> ni transferencias de fondos provenientes de ningún nivel estatal (Nación, Provincias o Municipios) ni de fundaciones ligadas a partidos políticos. El proyecto opera bajo infraestructura austera y donaciones cívicas individuales transparentes.
+          </p>
+        </div>
+
+        <div class="space-y-2 p-4 rounded-xl bg-slate-50 dark:bg-slate-950/60 border border-slate-200 dark:border-slate-800/80">
+          <div class="flex items-center gap-2 font-mono font-bold text-slate-900 dark:text-slate-100 text-xs uppercase">
+            <span class="text-blue-500 font-bold">✓</span> Derecho de Cita (Ley 11.723)
+          </div>
+          <p class="text-xs">
+            Respetamos estrictamente la propiedad intelectual de las redacciones. No realizamos web scraping invasivo ni eludimos barreras de pago (paywalls). Consumimos únicamente los <strong>feeds RSS públicos y oficiales</strong> emitidos por los medios, enmarcado en el artículo 10 de la Ley 11.723 de la República Argentina, vinculando siempre con enlace saliente directo a la nota original.
+          </p>
+        </div>
+
+        <div class="space-y-2 p-4 rounded-xl bg-slate-50 dark:bg-slate-950/60 border border-slate-200 dark:border-slate-800/80">
+          <div class="flex items-center gap-2 font-mono font-bold text-slate-900 dark:text-slate-100 text-xs uppercase">
+            <span class="text-purple-500 font-bold">✓</span> Neutralidad Algorítmica
+          </div>
+          <p class="text-xs">
+            El sistema de clusterización y asignación de espectro opera bajo modelos de lenguaje de última generación (Google Gemini) mediante prompts determinísticos con temperatura reducida. Las reglas de ponderación son públicas, inalterables por presiones de coyuntura y auditables por cualquier ciudadano.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 2: FÓRMULA MATEMÁTICA DEL ESPECTRO -->
+    <section id="espectro" class="scroll-mt-20 p-6 sm:p-8 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 space-y-8">
+      <div class="flex items-center gap-3">
+        <span class="flex items-center justify-center w-8 h-8 rounded-lg bg-slate-900 text-white dark:bg-white dark:text-slate-950 font-mono text-sm font-bold">
+          02
+        </span>
+        <div>
+          <h2 class="font-editorial text-2xl sm:text-3xl font-bold text-slate-950 dark:text-white">
+            Fórmula Matemática del Espectro Editorial
+          </h2>
+          <p class="text-xs font-mono text-slate-500 dark:text-slate-400">Cómo calculamos la distribución de Oficialismo, Centro-Datos y Oposición</p>
+        </div>
+      </div>
+
+      <!-- Definition of the 3 Leanings -->
+      <div class="space-y-3">
+        <h3 class="text-xs font-mono uppercase font-bold tracking-wider text-slate-700 dark:text-slate-300">
+          Definición Fáctica de los Tres Polos
+        </h3>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div class="p-4 rounded-xl border border-purple-200 dark:border-purple-900/60 bg-purple-50/50 dark:bg-purple-950/20 space-y-2">
+            <div class="flex items-center gap-2">
+              <span class="w-3 h-3 rounded-full bg-purple-600"></span>
+              <span class="font-bold text-purple-950 dark:text-purple-300 font-mono text-sm">🟣 Oficialismo</span>
+            </div>
+            <p class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
+              Titulares y notas con encuadre prioritario en los logros del Gobierno Nacional, defensa de medidas del Poder Ejecutivo, citas extensas y preeminentes a voceros oficiales, o énfasis en beneficios macroeconómicos y reformas pro-mercado.
+            </p>
+          </div>
+
+          <div class="p-4 rounded-xl border border-emerald-200 dark:border-emerald-900/60 bg-emerald-50/50 dark:bg-emerald-950/20 space-y-2">
+            <div class="flex items-center gap-2">
+              <span class="w-3 h-3 rounded-full bg-emerald-600"></span>
+              <span class="font-bold text-emerald-950 dark:text-emerald-300 font-mono text-sm">🟢 Centro / Fáctico / Datos</span>
+            </div>
+            <p class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
+              Cobertura ceñida estrictamente a datos duros verificables (cotizaciones cambiarias, índices de inflación INDEC, balances del BCRA, cables de agencia) con citas equilibradas a todas las partes involucradas y ausencia de adjetivación editorial valorativa.
+            </p>
+          </div>
+
+          <div class="p-4 rounded-xl border border-amber-200 dark:border-amber-900/60 bg-amber-50/50 dark:bg-amber-950/20 space-y-2">
+            <div class="flex items-center gap-2">
+              <span class="w-3 h-3 rounded-full bg-amber-600"></span>
+              <span class="font-bold text-amber-950 dark:text-amber-300 font-mono text-sm">🟠 Oposición</span>
+            </div>
+            <p class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
+              Titulares y notas que enfatizan el costo social del ajuste, pérdida del poder adquisitivo, reclamos sindicales, amparos judiciales contra decretos o críticas expresas de dirigentes y bloques parlamentarios no oficialistas.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- The Mathematical Equation Box -->
+      <div class="p-6 rounded-2xl bg-slate-900 text-white dark:bg-slate-950 border border-slate-800 space-y-4 font-mono">
+        <div class="flex items-center justify-between text-xs text-slate-400 border-b border-slate-800 pb-3">
+          <span class="uppercase tracking-widest font-semibold text-slate-300">Algoritmo de Ponderación Normalizada Base 100</span>
+          <span class="text-emerald-400">Σ (P_ofi + P_cen + P_opo) ≡ 100%</span>
+        </div>
+
+        <div class="text-center py-4 bg-slate-800/50 rounded-xl border border-slate-700/60 text-lg sm:text-xl font-bold tracking-wider text-slate-100 overflow-x-auto">
+          P<sub>k</sub> = ( ∑ [ w<sub>i,k</sub> × α<sub>i</sub> ] / ∑<sub>m</sub> ∑ [ w<sub>i,m</sub> × α<sub>i</sub> ] ) × 100%
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs text-slate-300 pt-2">
+          <div>
+            <span class="text-purple-400 font-bold">α<sub>i</sub> (Factor de Prominencia):</span>
+            <ul class="list-disc list-inside mt-1 space-y-0.5 text-slate-400">
+              <li><strong>1.5</strong> — Gran Apertura / Tapa Principal</li>
+              <li><strong>1.2</strong> — Portada sección Política o Economía</li>
+              <li><strong>1.0</strong> — Cable general o sección secundaria</li>
+            </ul>
+          </div>
+          <div>
+            <span class="text-emerald-400 font-bold">w<sub>i,k</sub> (Vector de Encuadre Semántico):</span>
+            <ul class="list-disc list-inside mt-1 space-y-0.5 text-slate-400">
+              <li>Peso probabilístico [0.0 a 1.0] extraído del análisis de titular, bajada y adjetivación.</li>
+              <li>Ponderado con el sesgo editorial histórico de base de la redacción emisora.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- Real Example Walkthrough -->
+      <div class="p-5 rounded-xl bg-slate-50 dark:bg-slate-950/50 border border-slate-200 dark:border-slate-800 text-xs space-y-2">
+        <span class="font-mono font-bold text-slate-900 dark:text-slate-100 uppercase tracking-wider">Ejemplo Práctico de Cálculo:</span>
+        <p class="text-slate-600 dark:text-slate-400 leading-relaxed">
+          Si en una jornada caliente sobre la <em>"Ley de Presupuesto"</em>, 4 redacciones publican con foco en superávit (Oficialismo), 6 presentan cifras cuantitativas de coparticipación sin juicios (Centro) y 5 destacan reclamos de gobernadores por fondos (Oposición), el algoritmo pondera cada artículo según su ubicación en portada y arroja exactamente: <strong>🟣 27% Oficialismo • 🟢 40% Centro • 🟠 33% Oposición</strong>.
+        </p>
+      </div>
+    </section>
+
+    <!-- SECTION 3: CATÁLOGO DE LOS 31 MEDIOS -->
+    <section id="catalogo" class="scroll-mt-20 p-6 sm:p-8 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 space-y-8">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div class="flex items-center gap-3">
+          <span class="flex items-center justify-center w-8 h-8 rounded-lg bg-slate-900 text-white dark:bg-white dark:text-slate-950 font-mono text-sm font-bold">
+            03
+          </span>
+          <div>
+            <h2 class="font-editorial text-2xl sm:text-3xl font-bold text-slate-950 dark:text-white">
+              Catálogo de Medios Monitoreados ({totalOutlets})
+            </h2>
+            <p class="text-xs font-mono text-slate-500 dark:text-slate-400">
+              {nationalCount} redacciones nacionales y {foreignCount} periódicos internacionales de referencia
+            </p>
+          </div>
+        </div>
+
+        <!-- Live Search Box for Outlets -->
+        <div class="relative w-full sm:w-72">
+          <input 
+            type="search" 
+            id="outlet-search-input" 
+            placeholder="Buscar por diario, país o sesgo..."
+            class="w-full text-xs font-mono px-3 py-2 pl-8 rounded-xl bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-slate-900 dark:focus:ring-white transition"
+          />
+          <svg class="w-4 h-4 text-slate-400 absolute left-2.5 top-2.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+          </svg>
+        </div>
+      </div>
+
+      <!-- Filter Tabs -->
+      <div class="flex flex-wrap items-center gap-2 border-b border-slate-200 dark:border-slate-800 pb-3 text-xs font-mono">
+        <button 
+          class="outlet-tab-btn active px-3 py-1.5 rounded-lg bg-slate-900 text-white dark:bg-white dark:text-slate-950 font-semibold transition"
+          data-filter="all"
+        >
+          Todos ({totalOutlets})
+        </button>
+        <button 
+          class="outlet-tab-btn px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 transition"
+          data-filter="nacional"
+        >
+          🇦🇷 Nacionales ({nationalCount})
+        </button>
+        <button 
+          class="outlet-tab-btn px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 transition"
+          data-filter="internacional"
+        >
+          🌐 Mirada Exterior ({foreignCount})
+        </button>
+      </div>
+
+      <!-- Outlets Grid -->
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4" id="outlets-grid">
+        {OUTLETS_CATALOG.map((outlet) => {
+          const leaningLabel = 
+            outlet.baselineLeaning === 'oficialismo' ? '🟣 Oficialismo' :
+            outlet.baselineLeaning === 'oposicion' ? '🟠 Oposición' : '🟢 Centro - Datos';
+          
+          return (
+            <article 
+              class="outlet-card p-4 rounded-xl bg-slate-50 dark:bg-slate-950/70 border border-slate-200 dark:border-slate-800 flex flex-col justify-between space-y-3 transition-all hover:border-slate-400 dark:hover:border-slate-600"
+              data-name={outlet.name.toLowerCase()}
+              data-code={outlet.code.toLowerCase()}
+              data-country={outlet.country.toLowerCase()}
+              data-category={outlet.category}
+              data-leaning={outlet.baselineLeaning}
+            >
+              <div class="space-y-2">
+                <div class="flex items-center justify-between gap-2">
+                  <div class="flex items-center gap-1.5">
+                    <span class="text-base" title={outlet.country}>{outlet.flag}</span>
+                    <h4 class="font-bold text-slate-950 dark:text-white font-mono text-sm tracking-tight">
+                      {outlet.name}
+                    </h4>
+                  </div>
+                  <span class={`text-[10px] font-mono font-semibold px-2 py-0.5 rounded border ${outlet.badgeClass}`}>
+                    {leaningLabel}
+                  </span>
+                </div>
+
+                <p class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
+                  {outlet.editorialProfile}
+                </p>
+              </div>
+
+              <!-- RSS & Web Links -->
+              <div class="pt-2 border-t border-slate-200/80 dark:border-slate-800/80 flex items-center justify-between text-[11px] font-mono">
+                <a 
+                  href={outlet.rssFeedUrl} 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  class="inline-flex items-center gap-1 text-amber-600 dark:text-amber-400 hover:underline"
+                  title="Ver canal RSS sindicado oficial"
+                >
+                  <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M6.18 15.64a2.18 2.18 0 0 1 2.18 2.18C8.36 19 7.38 20 6.18 20C5 20 4 19 4 17.82a2.18 2.18 0 0 1 2.18-2.18M4 4.44A15.56 15.56 0 0 1 19.56 20h-2.83A12.73 12.73 0 0 0 4 7.27V4.44m0 5.66a9.9 9.9 0 0 1 9.9 9.9h-2.83A7.07 7.07 0 0 0 4 12.93V10.1z"/>
+                  </svg>
+                  <span>Feed RSS</span>
+                </a>
+
+                <a 
+                  href={outlet.websiteUrl} 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  class="text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white hover:underline inline-flex items-center gap-1"
+                >
+                  <span>Visitar Portal</span>
+                  <svg class="w-2.5 h-2.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                  </svg>
+                </a>
+              </div>
+            </article>
+          );
+        })}
+      </div>
+
+      <!-- No Results Message -->
+      <div id="no-outlets-found" class="hidden p-8 text-center text-slate-500 dark:text-slate-400 font-mono text-xs">
+        No se encontraron medios que coincidan con la búsqueda.
+      </div>
+    </section>
+
+    <!-- SECTION 4: METODOLOGÍA DEL MONITOR DE PROMESAS -->
+    <section id="promesas" class="scroll-mt-20 p-6 sm:p-8 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 space-y-8">
+      <div class="flex items-center gap-3">
+        <span class="flex items-center justify-center w-8 h-8 rounded-lg bg-slate-900 text-white dark:bg-white dark:text-slate-950 font-mono text-sm font-bold">
+          04
+        </span>
+        <div>
+          <h2 class="font-editorial text-2xl sm:text-3xl font-bold text-slate-950 dark:text-white">
+            Metodología del Monitor de Promesas 2027
+          </h2>
+          <p class="text-xs font-mono text-slate-500 dark:text-slate-400">
+            Escala inspirada en PolitiFact y exigencia estricta de prueba documental primaria
+          </p>
+        </div>
+      </div>
+
+      <!-- The 4 Status Tiers -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <!-- 1. Cumplida -->
+        <div class="p-4 rounded-xl border border-emerald-300 dark:border-emerald-800 bg-emerald-50/60 dark:bg-emerald-950/20 space-y-2">
+          <div class="flex items-center gap-2">
+            <span class="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-emerald-600 text-white uppercase">
+              Cumplida
+            </span>
+          </div>
+          <h4 class="font-bold text-slate-900 dark:text-white text-xs font-mono">Boletín Oficial / Meta Lograda</h4>
+          <p class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
+            El compromiso fue reglamentado y promulgado de manera efectiva mediante decreto, ley sancionada en el Congreso o cumplimiento estricto del indicador oficial anunciado (ej: meta de superávit o baja mensual de inflación).
+          </p>
+        </div>
+
+        <!-- 2. En Progreso -->
+        <div class="p-4 rounded-xl border border-blue-300 dark:border-blue-800 bg-blue-50/60 dark:bg-blue-950/20 space-y-2">
+          <div class="flex items-center gap-2">
+            <span class="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-blue-600 text-white uppercase">
+              En Progreso
+            </span>
+          </div>
+          <h4 class="font-bold text-slate-900 dark:text-white text-xs font-mono">En Trámite Formal</h4>
+          <p class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
+            El poder público inició actos administrativos formales: envío de proyecto de ley con estado parlamentario, apertura de licitación pública o aplicación de protocolos con mediciones intermedias activas.
+          </p>
+        </div>
+
+        <!-- 3. En Pausa / Trabada -->
+        <div class="p-4 rounded-xl border border-amber-300 dark:border-amber-800 bg-amber-50/60 dark:bg-amber-950/20 space-y-2">
+          <div class="flex items-center gap-2">
+            <span class="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-amber-600 text-white uppercase">
+              En Pausa
+            </span>
+          </div>
+          <h4 class="font-bold text-slate-900 dark:text-white text-xs font-mono">Freno Judicial o Legislativo</h4>
+          <p class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
+            La medida se encuentra suspendida por medidas cautelares de la Justicia, rechazo de pliegos parlamentarios, vetos presidenciales o falta de financiamiento presupuestario acreditado.
+          </p>
+        </div>
+
+        <!-- 4. Incumplida -->
+        <div class="p-4 rounded-xl border border-rose-300 dark:border-rose-800 bg-rose-50/60 dark:bg-rose-950/20 space-y-2">
+          <div class="flex items-center gap-2">
+            <span class="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-rose-600 text-white uppercase">
+              Incumplida
+            </span>
+          </div>
+          <h4 class="font-bold text-slate-900 dark:text-white text-xs font-mono">Plazo Fenecido / Acción Contraria</h4>
+          <p class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
+            El plazo temporal comprometido venció sin avances verificables, o el funcionario adoptó por decreto o voto parlamentario una política directamente contraria a su promesa pública explícita.
+          </p>
+        </div>
+      </div>
+
+      <!-- Requirement of Primary Evidence -->
+      <div class="p-5 rounded-xl bg-slate-50 dark:bg-slate-950/50 border border-slate-200 dark:border-slate-800 text-xs space-y-3">
+        <h4 class="font-mono font-bold text-slate-900 dark:text-slate-100 uppercase tracking-wider flex items-center gap-2">
+          <span class="text-blue-500">📜</span> Regla de Oro: Prueba Documental Primaria Inviolable
+        </h4>
+        <p class="text-slate-600 dark:text-slate-400 leading-relaxed">
+          Ninguna promesa electoral se califica en Politicheck con meras declaraciones de prensa o trascendidos en off. Cada ficha individual incorpora obligatoriamente:
+        </p>
+        <ul class="list-disc list-inside space-y-1 text-slate-600 dark:text-slate-400 font-mono text-[11px]">
+          <li><strong>Cita Original Verificada:</strong> Fecha, hora y medio audiovisual o escrito donde se enunció el compromiso.</li>
+          <li><strong>Documento Público de Respaldo:</strong> Enlace al <em>Boletín Oficial de la República Argentina (boletinoficial.gob.ar)</em>, actas de votación nominal del Congreso o informes técnicos del <em>INDEC</em> y <em>BCRA</em>.</li>
+          <li><strong>Termómetro Cívico Abierto:</strong> Espacio de votación ciudadana para contrastar la percepción de los votantes con el veredicto técnico documental.</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- SECTION 5: PROTOCOLO ANTI-FRAUDE EN EL VOTO -->
+    <section id="antifraude" class="scroll-mt-20 p-6 sm:p-8 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 space-y-6">
+      <div class="flex items-center gap-3">
+        <span class="flex items-center justify-center w-8 h-8 rounded-lg bg-slate-900 text-white dark:bg-white dark:text-slate-950 font-mono text-sm font-bold">
+          05
+        </span>
+        <div>
+          <h2 class="font-editorial text-2xl sm:text-3xl font-bold text-slate-950 dark:text-white">
+            Protocolo Cívico Anti-Fraude en el Voto
+          </h2>
+          <p class="text-xs font-mono text-slate-500 dark:text-slate-400">
+            Anonimato garantizado sin registro invasivo y con unicidad criptográfica idempotente
+          </p>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-sm leading-relaxed text-slate-600 dark:text-slate-300">
+        <div class="p-5 rounded-xl bg-slate-50 dark:bg-slate-950/60 border border-slate-200 dark:border-slate-800 space-y-3">
+          <h4 class="font-mono font-bold text-slate-900 dark:text-slate-100 text-xs uppercase flex items-center gap-2">
+            <span class="text-purple-500">🔒</span> Anonimato Absoluto (Cero Datos Personales)
+          </h4>
+          <p class="text-xs">
+            Politicheck <strong>no solicita correo electrónico, redes sociales ni creación forzada de cuentas</strong> para emitir opinión en el Promesómetro. Consideramos que la participación democrática debe ser universal, ágil y libre de rastreo publicitario.
+          </p>
+        </div>
+
+        <div class="p-5 rounded-xl bg-slate-50 dark:bg-slate-950/60 border border-slate-200 dark:border-slate-800 space-y-3">
+          <h4 class="font-mono font-bold text-slate-900 dark:text-slate-100 text-xs uppercase flex items-center gap-2">
+            <span class="text-emerald-500">🛡️</span> Hashing Criptográfico SHA-256 Idempotente
+          </h4>
+          <p class="text-xs">
+            Para evitar que bots o granjas de clics alteren los resultados, el servidor genera una firma criptográfica única combinando la dirección IP y la firma técnica del dispositivo con un salt rotativo de seguridad:
+          </p>
+          <div class="p-2 rounded bg-slate-900 text-emerald-400 font-mono text-[10px] break-all">
+            voter_hash = HMAC_SHA256(ip + user_agent, server_salt)
+          </div>
+          <p class="text-xs">
+            La base de datos (PostgreSQL / Supabase) restringe cada promesa a la clave compuesta <code>(promise_id, voter_hash)</code>. Si el usuario vota nuevamente, su elección anterior se actualiza de forma idempotente, impidiendo la duplicación artificial de votos.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Bottom Call to Action -->
+    <div class="p-8 rounded-2xl bg-slate-900 text-white dark:bg-slate-950 border border-slate-800 text-center space-y-4">
+      <h3 class="font-editorial text-2xl sm:text-3xl font-bold">
+        Un observatorio abierto al escrutinio ciudadano
+      </h3>
+      <p class="text-slate-300 max-w-2xl mx-auto text-sm">
+        Si detectás una discrepancia documental en una promesa o un error en la sincronización de un feed RSS oficial, podés auditar el código o enviar una corrección documentada.
+      </p>
+      <div class="flex flex-wrap items-center justify-center gap-3 pt-2">
+        <a 
+          href="/" 
+          class="px-5 py-2.5 rounded-xl bg-white text-slate-950 hover:bg-slate-100 font-mono text-xs font-bold transition shadow-sm"
+        >
+          Explorar Titulares de Hoy
+        </a>
+        <a 
+          href="/terminos" 
+          class="px-5 py-2.5 rounded-xl bg-slate-800 text-white hover:bg-slate-700 font-mono text-xs font-bold transition border border-slate-700"
+        >
+          Descargo Legal & Ley 11.723
+        </a>
+      </div>
+    </div>
+
+  </main>
+</Layout>
+
+<!-- Client-side script for Outlet Catalog live filtering & search -->
+<script is:inline>
+  document.addEventListener('DOMContentLoaded', () => {
+    const searchInput = document.getElementById('outlet-search-input');
+    const tabButtons = document.querySelectorAll('.outlet-tab-btn');
+    const outletCards = document.querySelectorAll('.outlet-card');
+    const noResultsMsg = document.getElementById('no-outlets-found');
+
+    let currentCategory = 'all';
+    let searchQuery = '';
+
+    function filterOutlets() {
+      let visibleCount = 0;
+
+      outletCards.forEach(card => {
+        const name = card.getAttribute('data-name') || '';
+        const code = card.getAttribute('data-code') || '';
+        const country = card.getAttribute('data-country') || '';
+        const category = card.getAttribute('data-category') || '';
+        const leaning = card.getAttribute('data-leaning') || '';
+
+        const matchesCategory = currentCategory === 'all' || category === currentCategory;
+        const matchesSearch = !searchQuery || 
+          name.includes(searchQuery) || 
+          code.includes(searchQuery) || 
+          country.includes(searchQuery) ||
+          leaning.includes(searchQuery);
+
+        if (matchesCategory && matchesSearch) {
+          card.classList.remove('hidden');
+          visibleCount++;
+        } else {
+          card.classList.add('hidden');
+        }
+      });
+
+      if (noResultsMsg) {
+        if (visibleCount === 0) {
+          noResultsMsg.classList.remove('hidden');
+        } else {
+          noResultsMsg.classList.add('hidden');
+        }
+      }
+    }
+
+    if (searchInput) {
+      searchInput.addEventListener('input', (e) => {
+        searchQuery = (e.target.value || '').trim().toLowerCase();
+        filterOutlets();
+      });
+    }
+
+    tabButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        tabButtons.forEach(b => {
+          b.classList.remove('active', 'bg-slate-900', 'text-white', 'dark:bg-white', 'dark:text-slate-950');
+          b.classList.add('bg-slate-100', 'text-slate-700', 'dark:bg-slate-800', 'dark:text-slate-300');
+        });
+
+        btn.classList.add('active', 'bg-slate-900', 'text-white', 'dark:bg-white', 'dark:text-slate-950');
+        btn.classList.remove('bg-slate-100', 'text-slate-700', 'dark:bg-slate-800', 'dark:text-slate-300');
+
+        currentCategory = btn.getAttribute('data-filter') || 'all';
+        filterOutlets();
+      });
+    });
+  });
+</script>

@@ -63,15 +63,18 @@
 
 ---
 
-### ⏳ Tarea 5: Página Institucional de Metodología y Transparencia (`/metodologia`) — [SIGUIENTE TAREA]
-- [ ] **Creación de `src/pages/metodologia.astro`:**
-  - Transformar el enlace de cabecera en una página institucional completa.
-  - Explicación de la fórmula matemática del espectro de sesgo.
-  - Catálogo público de los 31 medios monitoreados con su orientación de base y enlaces a sus feeds oficiales.
-  - Declaración de neutralidad algorítmica y código abierto cívico.
+### ✅ Tarea 5: Página Institucional de Metodología y Transparencia (`/metodologia`) — [COMPLETADA]
+- [x] **Creación de `src/pages/metodologia.astro`:**
+  - Nueva ruta institucional completa accesible desde la cabecera y pie de página en todo el sitio.
+  - **Manifiesto de Independencia Cívica:** Ausencia estricta de pauta oficial ($0), apego al Art. 10 de la Ley 11.723 de Propiedad Intelectual y neutralidad algorítmica.
+  - **Fórmula Matemática del Espectro Editorial:** Desglose formal de la ecuación de distribución $P_k$ con normalización base 100, factor de prominencia editorial $\alpha_i$ (1.5 portada, 1.2 sección, 1.0 cable) y vector de encuadre $w_{i,k}$.
+  - **Catálogo Interactivo de los 31 Medios Monitoreados:** Buscador en vivo y filtros por categoría (Nacionales vs Mirada Exterior) detallando los 15 medios nacionales y 16 internacionales con perfil editorial, sesgo de referencia y enlaces directos a sus feeds RSS oficiales públicos.
+  - **Metodología del Monitor de Promesas 2027:** Escala cuádruple PolitiFact (Cumplida, En progreso, En pausa, Incumplida) con exigencia inviolable de prueba documental primaria (Boletín Oficial, INDEC, BCRA).
+  - **Protocolo Cívico Anti-Fraude en el Voto:** Firma criptográfica SHA-256 HMAC unidireccional de IP + UserAgent con unicidad idempotente, garantizando 1 voto por ciudadano sin recopilar datos personales.
 
 ---
 
-### ⏳ Tarea 6: Optimización de Rendimiento y Experiencia PWA
-- [ ] Cacheado service worker para carga instantánea en conexiones móviles.
-- [ ] Notificaciones opcionales de resumen matutino para lectores recurrentes.
+### ⏳ Tarea 6: Optimización de Rendimiento y Experiencia PWA — [SIGUIENTE TAREA]
+- [ ] **Service Worker y Caché Offline:** Carga instantánea de la portada e interfaz para conexiones móviles lentas.
+- [ ] **Web App Manifest:** Configuración de `manifest.json` e íconos para instalación en pantalla de inicio de smartphones.
+- [ ] **Notificaciones o Resumen Matutino:** Soporte para suscripción voluntaria a resúmenes electorales.
