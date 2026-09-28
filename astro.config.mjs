@@ -8,6 +8,7 @@ const isVercel = Boolean(process.env.VERCEL);
 
 // https://astro.build/config
 export default defineConfig({
+  site: 'https://www.politicheck.com.ar',
   output: 'static',
   adapter: isVercel
     ? vercel({

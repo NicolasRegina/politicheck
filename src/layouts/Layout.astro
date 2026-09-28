@@ -13,12 +13,12 @@ interface Props {
 const { 
   title = "Politicheck • Monitor de Sesgo Mediático y Promesas Electorales | Argentina",
   description = "Plataforma cívica independiente para comparar el sesgo y encuadre entre medios de noticias en Argentina y auditar compromisos electorales.",
-  image = "https://politicheck.ar/images/universidad.jpg",
-  canonicalUrl = "https://politicheck.ar"
+  image = "https://www.politicheck.com.ar/images/universidad.jpg",
+  canonicalUrl = "https://www.politicheck.com.ar"
 } = Astro.props;
 
 // Ensure absolute image url for Social Media previews
-const absoluteImageUrl = image.startsWith('http') ? image : `https://politicheck.ar${image}`;
+const absoluteImageUrl = image.startsWith('http') ? image : `https://www.politicheck.com.ar${image}`;
 ---
 
 <!doctype html>
@@ -85,22 +85,22 @@ const absoluteImageUrl = image.startsWith('http') ? image : `https://politicheck
         "@graph": [
           {
             "@type": "NewsMediaOrganization",
-            "@id": "https://politicheck.ar/#organization",
+            "@id": "https://www.politicheck.com.ar/#organization",
             "name": "Politicheck",
-            "url": "https://politicheck.ar",
+            "url": "https://www.politicheck.com.ar",
             "logo": {
               "@type": "ImageObject",
-              "url": "https://politicheck.ar/favicon.svg"
+              "url": "https://www.politicheck.com.ar/favicon.svg"
             },
             "description": "Plataforma cívica independiente para comparar el sesgo y encuadre entre medios de noticias en Argentina y auditar compromisos electorales."
           },
           {
             "@type": "WebSite",
-            "@id": "https://politicheck.ar/#website",
-            "url": "https://politicheck.ar",
+            "@id": "https://www.politicheck.com.ar/#website",
+            "url": "https://www.politicheck.com.ar",
             "name": "Politicheck",
             "publisher": {
-              "@id": "https://politicheck.ar/#organization"
+              "@id": "https://www.politicheck.com.ar/#organization"
             },
             "inLanguage": "es-AR"
           }
