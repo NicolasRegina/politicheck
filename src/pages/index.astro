@@ -291,6 +291,36 @@ const liveFeedArticles = liveArticles.slice(0, 20);
         ))}
       </div>
 
+      <!-- Promises Pagination Toolbar (Paginado de a 4 promesas) -->
+      <div id="promises-pagination" class="flex flex-col sm:flex-row items-center justify-between gap-3 pt-5 border-t border-slate-200 dark:border-slate-800 text-xs font-mono">
+        <div id="promises-pagination-label" class="text-slate-500 dark:text-slate-400 text-[11px]">
+          Mostrando 1-4 de {allPromises.length} promesas auditadas
+        </div>
+
+        <div class="flex items-center gap-1.5">
+          <button
+            type="button"
+            id="promises-prev-btn"
+            class="px-3 py-1.5 rounded-lg border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 font-medium text-xs transition-colors cursor-pointer disabled:opacity-30 disabled:pointer-events-none"
+            disabled
+          >
+            ← Anterior
+          </button>
+
+          <div id="promises-page-indicators" class="flex items-center gap-1 px-1">
+            <!-- Rendered by JS -->
+          </div>
+
+          <button
+            type="button"
+            id="promises-next-btn"
+            class="px-3 py-1.5 rounded-lg border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 font-medium text-xs transition-colors cursor-pointer disabled:opacity-30 disabled:pointer-events-none"
+          >
+            Siguiente →
+          </button>
+        </div>
+      </div>
+
       <!-- Empty state if no promise matches filter -->
       <div id="promises-empty-state" class="hidden text-center py-12 px-4 rounded-2xl border border-dashed border-slate-300 dark:border-slate-800 bg-slate-50 dark:bg-slate-900/40 space-y-3">
         <div class="text-3xl">🔍</div>
@@ -559,25 +589,36 @@ const liveFeedArticles = liveArticles.slice(0, 20);
     if (matchingNavBtn) matchingNavBtn.click();
   }
 
-  // --- Client-side Campaign Promises Filtering ---
+  // --- Client-side Campaign Promises Filtering & 4-Item Pagination ---
   let activeCandidate = 'all';
   let activeStatus = 'all';
   let promiseSearchQuery = '';
+  let currentPromisesPage = 1;
+  const PROMISES_PER_PAGE = 4;
 
   const candFilterButtons = document.querySelectorAll<HTMLButtonElement>('.cand-filter-btn');
   const statFilterButtons = document.querySelectorAll<HTMLButtonElement>('.stat-filter-btn');
-  const promiseCards = document.querySelectorAll<HTMLElement>('.promise-card');
+  const promiseCards = Array.from(document.querySelectorAll<HTMLElement>('.promise-card'));
   const promiseSearchInput = document.getElementById('promise-search-input') as HTMLInputElement | null;
   const promisesFilterBanner = document.getElementById('promises-filter-banner');
   const promisesFilterText = document.getElementById('promises-filter-text');
   const clearPromisesFilterBtn = document.getElementById('clear-promises-filter-btn');
   const promisesEmptyState = document.getElementById('promises-empty-state');
+  const promisesPagination = document.getElementById('promises-pagination');
+  const promisesPaginationLabel = document.getElementById('promises-pagination-label');
+  const promisesPrevBtn = document.getElementById('promises-prev-btn') as HTMLButtonElement | null;
+  const promisesNextBtn = document.getElementById('promises-next-btn') as HTMLButtonElement | null;
+  const promisesPageIndicators = document.getElementById('promises-page-indicators');
 
-  function applyPromisesFilters() {
-    let visibleCount = 0;
+  function applyPromisesFilters(resetPage = false) {
+    if (resetPage) {
+      currentPromisesPage = 1;
+    }
+
     const normQuery = normalizeStr(promiseSearchQuery);
 
-    promiseCards.forEach(card => {
+    // 1. Identify all cards matching filters
+    const matchingCards = promiseCards.filter(card => {
       const cand = card.getAttribute('data-candidate') || '';
       const stat = card.getAttribute('data-status') || '';
       const text = normalizeStr(card.textContent || '');
@@ -586,15 +627,29 @@ const liveFeedArticles = liveArticles.slice(0, 20);
       const matchesStat = activeStatus === 'all' || stat === activeStatus;
       const matchesSearch = !normQuery || text.includes(normQuery);
 
-      if (matchesCand && matchesStat && matchesSearch) {
-        card.style.display = '';
-        visibleCount++;
-      } else {
-        card.style.display = 'none';
-      }
+      return matchesCand && matchesStat && matchesSearch;
     });
 
-    // Update banner
+    const totalMatching = matchingCards.length;
+    const totalPages = Math.max(1, Math.ceil(totalMatching / PROMISES_PER_PAGE));
+
+    // Clamp page
+    if (currentPromisesPage > totalPages) currentPromisesPage = totalPages;
+    if (currentPromisesPage < 1) currentPromisesPage = 1;
+
+    const startIndex = (currentPromisesPage - 1) * PROMISES_PER_PAGE;
+    const endIndex = Math.min(startIndex + PROMISES_PER_PAGE, totalMatching);
+
+    // 2. Hide all cards, then show only the 4 cards on the active page
+    promiseCards.forEach(card => {
+      card.style.display = 'none';
+    });
+
+    matchingCards.slice(startIndex, endIndex).forEach(card => {
+      card.style.display = '';
+    });
+
+    // 3. Update filter indicator banner
     if (promisesFilterBanner && promisesFilterText) {
       if (activeCandidate === 'all' && activeStatus === 'all' && !promiseSearchQuery) {
         promisesFilterBanner.classList.add('hidden');
@@ -606,18 +661,87 @@ const liveFeedArticles = liveArticles.slice(0, 20);
         if (activeCandidate !== 'all') filterDescriptions.push(`Dirigente: ${activeCandidate}`);
         if (activeStatus !== 'all') filterDescriptions.push(`Estado: ${activeStatus}`);
         if (promiseSearchQuery) filterDescriptions.push(`Búsqueda: "${promiseSearchQuery}"`);
-        promisesFilterText.textContent = `${filterDescriptions.join(' • ')} (${visibleCount} promesas encontradas)`;
+        promisesFilterText.textContent = `${filterDescriptions.join(' • ')} (${totalMatching} promesas encontradas)`;
       }
     }
 
-    // Empty state
-    if (promisesEmptyState) {
-      if (visibleCount === 0) {
-        promisesEmptyState.classList.remove('hidden');
-      } else {
-        promisesEmptyState.classList.add('hidden');
+    // 4. Update empty state vs pagination visibility
+    if (totalMatching === 0) {
+      if (promisesEmptyState) promisesEmptyState.classList.remove('hidden');
+      if (promisesPagination) promisesPagination.classList.add('hidden');
+    } else {
+      if (promisesEmptyState) promisesEmptyState.classList.add('hidden');
+      if (promisesPagination) {
+        promisesPagination.classList.remove('hidden');
+
+        // Update range label
+        if (promisesPaginationLabel) {
+          promisesPaginationLabel.textContent = `Mostrando ${startIndex + 1}-${endIndex} de ${totalMatching} promesas auditadas`;
+        }
+
+        // Update Prev & Next buttons
+        if (promisesPrevBtn) {
+          promisesPrevBtn.disabled = currentPromisesPage <= 1;
+        }
+        if (promisesNextBtn) {
+          promisesNextBtn.disabled = currentPromisesPage >= totalPages;
+        }
+
+        // Render page numeric indicators
+        if (promisesPageIndicators) {
+          promisesPageIndicators.innerHTML = '';
+          if (totalPages > 1) {
+            for (let p = 1; p <= totalPages; p++) {
+              const pageBtn = document.createElement('button');
+              pageBtn.type = 'button';
+              pageBtn.textContent = p.toString();
+              const isActive = p === currentPromisesPage;
+              pageBtn.className = isActive
+                ? 'w-7 h-7 rounded-lg bg-slate-900 text-white dark:bg-white dark:text-slate-900 font-bold text-xs flex items-center justify-center transition-colors'
+                : 'w-7 h-7 rounded-lg border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 text-xs flex items-center justify-center transition-colors cursor-pointer';
+              pageBtn.addEventListener('click', () => {
+                currentPromisesPage = p;
+                applyPromisesFilters(false);
+                document.getElementById('promesas')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+              });
+              promisesPageIndicators.appendChild(pageBtn);
+            }
+          }
+        }
       }
     }
+  }
+
+  // Connect Prev & Next Buttons
+  if (promisesPrevBtn) {
+    promisesPrevBtn.addEventListener('click', () => {
+      if (currentPromisesPage > 1) {
+        currentPromisesPage--;
+        applyPromisesFilters(false);
+        document.getElementById('promesas')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    });
+  }
+
+  if (promisesNextBtn) {
+    promisesNextBtn.addEventListener('click', () => {
+      const normQuery = normalizeStr(promiseSearchQuery);
+      const matchingCount = promiseCards.filter(card => {
+        const cand = card.getAttribute('data-candidate') || '';
+        const stat = card.getAttribute('data-status') || '';
+        const text = normalizeStr(card.textContent || '');
+        return (activeCandidate === 'all' || cand === activeCandidate) &&
+               (activeStatus === 'all' || stat === activeStatus) &&
+               (!normQuery || text.includes(normQuery));
+      }).length;
+      const totalPages = Math.ceil(matchingCount / PROMISES_PER_PAGE);
+
+      if (currentPromisesPage < totalPages) {
+        currentPromisesPage++;
+        applyPromisesFilters(false);
+        document.getElementById('promesas')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    });
   }
 
   // Candidate buttons
@@ -631,7 +755,7 @@ const liveFeedArticles = liveArticles.slice(0, 20);
       btn.classList.remove('bg-white', 'dark:bg-slate-900', 'text-slate-700', 'dark:text-slate-300');
 
       activeCandidate = btn.getAttribute('data-candidate') || 'all';
-      applyPromisesFilters();
+      applyPromisesFilters(true);
     });
   });
 
@@ -646,7 +770,7 @@ const liveFeedArticles = liveArticles.slice(0, 20);
       btn.classList.remove('bg-white', 'dark:bg-slate-900', 'text-slate-700', 'dark:text-slate-300');
 
       activeStatus = btn.getAttribute('data-status') || 'all';
-      applyPromisesFilters();
+      applyPromisesFilters(true);
     });
   });
 
@@ -654,7 +778,7 @@ const liveFeedArticles = liveArticles.slice(0, 20);
   if (promiseSearchInput) {
     promiseSearchInput.addEventListener('input', () => {
       promiseSearchQuery = promiseSearchInput.value.toLowerCase().trim();
-      applyPromisesFilters();
+      applyPromisesFilters(true);
     });
   }
 
@@ -669,9 +793,12 @@ const liveFeedArticles = liveArticles.slice(0, 20);
         promiseSearchInput.value = '';
         promiseSearchQuery = '';
       }
-      applyPromisesFilters();
+      applyPromisesFilters(true);
     });
   }
+
+  // Initial execution: display exactly 4 promises on page 1
+  applyPromisesFilters(true);
 
   // --- Citizen Voting Interaction (Unbiased: Results hidden until user votes) ---
   const citizenWidgets = document.querySelectorAll<HTMLElement>('.citizen-audit-widget');

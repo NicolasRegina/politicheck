@@ -1,1 +1,8 @@
-[]
+[
+  {
+    "promiseId": "prom-2",
+    "voterHash": "168e803632cffa55f92495764df3c604de92f3fede76f97446c8fe93384f56d8",
+    "voteType": "inProgress",
+    "votedAt": "2026-09-28T18:38:40.256Z"
+  }
+]

@@ -33,7 +33,7 @@
     "auditNotes": "El Banco Central sigue operativo bajo la conducción de Santiago Bausili, abocado al saneamiento de pasivos remunerados. La dolarización formal se encuentra pospuesta en favor de un esquema de bimonetarismo transaccional.",
     "votes": {
       "fulfilled": 0,
-      "inProgress": 0,
+      "inProgress": 1,
       "broken": 0
     }
   },
@@ -127,7 +127,7 @@
     "officialProof": "Resolución 943/2023 del Ministerio de Seguridad (Protocolo Antipiquetes) y causas judiciales de cobro de costas a organizaciones convocantes.",
     "auditNotes": "El Protocolo para el Mantenimiento del Orden Público se aplicó de manera sistemática en accesos a la Capital Federal (Puente Pueyrredón, Panamericana, Av. 9 de Julio) con despliegue de Fuerzas Federales e imputación civil de costos a los convocantes.",
     "votes": {
-      "fulfilled": 1,
+      "fulfilled": 0,
       "inProgress": 0,
       "broken": 0
     }
