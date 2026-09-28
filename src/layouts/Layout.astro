@@ -16,7 +16,7 @@ interface Props {
 const { 
   title = "Politicheck • Monitor de Sesgo Mediático y Promesas Electorales | Argentina",
   description = "Plataforma cívica independiente para comparar el sesgo y encuadre entre medios de noticias en Argentina y auditar compromisos electorales.",
-  image = "https://www.politicheck.com.ar/images/universidad.jpg",
+  image = "/images/social/twitter_banner.jpg",
   canonicalUrl = "https://www.politicheck.com.ar",
   ogType = "website"
 } = Astro.props;
@@ -65,8 +65,8 @@ const absoluteImageUrl = image.startsWith('http') ? image : `https://www.politic
 
     <!-- Twitter / X -->
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:site" content="@politicheck_ar" />
-    <meta name="twitter:creator" content="@politicheck_ar" />
+    <meta name="twitter:site" content="@politicheck_ok" />
+    <meta name="twitter:creator" content="@politicheck_ok" />
     <meta name="twitter:url" content={canonicalUrl} />
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />
