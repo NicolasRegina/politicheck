@@ -1,6 +1,11 @@
 import type { APIRoute } from 'astro';
 import { syncAllRssFeeds, getCachedArticles } from '../../../services/rss/sync';
-import { clusterArticlesWithGemini, getCachedClusteredStories } from '../../../services/ai/clustering';
+import { 
+  clusterArticlesWithGemini, 
+  getCachedClusteredStories,
+  clusterForeignArticlesWithGemini,
+  getCachedForeignClusters 
+} from '../../../services/ai/clustering';
 import { getNewsClustersFromSupabase } from '../../../services/supabase';
 
 export const prerender = false;
@@ -28,47 +33,50 @@ export const GET: APIRoute = async ({ request }) => {
   const isCron = url.searchParams.get('cron') === 'true';
 
   try {
-    // 1. Fetch RSS Feeds
+    // 1. Fetch RSS Feeds (both national and international filtered for Argentina)
     const syncResult = await syncAllRssFeeds();
     const articles = syncResult.articles || [];
+    const foreignArticles = syncResult.foreignArticles || [];
     const newArticlesCount = syncResult.newArticlesCount || 0;
 
     const timeSinceLastCluster = now - lastClusterTimestamp;
     const isCooldownActive = timeSinceLastCluster < COOLDOWN_MS;
 
     // Check if we should call Gemini AI:
-    // Check if clusters exist in database or cache
     const existingClusters = (await getNewsClustersFromSupabase(1)) || getCachedClusteredStories();
     const hasClusters = existingClusters.length > 0;
+    const existingForeignClusters = getCachedForeignClusters();
+    const hasForeignClusters = existingForeignClusters.length > 0;
 
-    // Only call Gemini if:
-    // a) Admin explicitly requested with key, OR
-    // b) No clusters exist yet, OR
-    // c) Cooldown has elapsed AND there are genuinely new articles
-    const shouldCluster = isAuthorizedAdmin || !hasClusters || (!isCooldownActive && newArticlesCount > 0);
+    const shouldCluster = isAuthorizedAdmin || !hasClusters || !hasForeignClusters || (!isCooldownActive && newArticlesCount > 0);
 
     let clustersCount = 0;
+    let foreignClustersCount = 0;
     let geminiInvoked = false;
 
     if (shouldCluster) {
-      console.log(`[Sync API] Re-clustering triggered (New articles: ${newArticlesCount}, Admin: ${isAuthorizedAdmin}, HasClusters: ${hasClusters})`);
+      console.log(`[Sync API] Re-clustering triggered (New articles: ${newArticlesCount}, Foreign on Arg: ${foreignArticles.length}, Admin: ${isAuthorizedAdmin})`);
       const clusters = await clusterArticlesWithGemini(articles);
+      const foreignClusters = await clusterForeignArticlesWithGemini(foreignArticles);
       clustersCount = clusters.length;
+      foreignClustersCount = foreignClusters.length;
       lastClusterTimestamp = now;
       geminiInvoked = true;
     } else {
-      console.log(`[Sync API] Cooldown active or no new articles. Returning cached clusters to save Gemini quota.`);
-      // Read existing clusters from Supabase or local cache
+      console.log(`[Sync API] Cooldown active or no new articles. Returning cached clusters.`);
       const cached = (await getNewsClustersFromSupabase(120)) || getCachedClusteredStories();
       clustersCount = cached.length;
+      foreignClustersCount = existingForeignClusters.length;
     }
 
     return new Response(
       JSON.stringify({
         success: true,
         articlesCount: articles.length,
+        foreignArticlesCount: foreignArticles.length,
         newArticlesCount,
         clustersCount,
+        foreignClustersCount,
         geminiInvoked,
         nextClusterAvailableInMinutes: Math.max(0, Math.round((COOLDOWN_MS - (Date.now() - lastClusterTimestamp)) / 60000)),
         timestamp: new Date().toISOString()

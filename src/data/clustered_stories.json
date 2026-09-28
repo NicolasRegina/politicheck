@@ -2,103 +2,151 @@
   {
     "id": "story-ai-1",
     "isLeadStory": true,
-    "kicker": "DECLARACIONES OFICIALES • ACTIVIDAD ECONÓMICA",
-    "neutralHeadline": "El presidente Javier Milei negó la existencia de una recesión y cuestionó las mediciones de los indicadores económicos",
+    "kicker": "DEBATE ECONÓMICO",
+    "neutralHeadline": "Javier Milei negó que la economía esté en recesión y atribuyó la caída de la actividad a cambios estructurales",
     "category": "Economía",
-    "summary": "El mandatario rechazó los pronósticos sobre un ciclo recesivo en el segundo semestre y atribuyó las discrepancias en los índices a profundas transformaciones en los patrones de consumo. La cobertura mediática evidenció una marcada polarización: medios afines respaldaron la hipótesis de desaceleración transitoria, la prensa financiera advirtió sobre la cautela de Wall Street y las redacciones críticas contrastaron sus dichos con los datos oficiales de caída fabril del INDEC.",
+    "summary": "El presidente Javier Milei rechazó las proyecciones adversas y afirmó que los indicadores oficiales reflejan una desaceleración temporal vinculada a reformas estructurales. Sus declaraciones contrastan con el recorte en las previsiones de crecimiento realizado por entidades financieras internacionales como el JP Morgan.",
     "updatedAt": "Reciente",
-    "imageUrl": "https://www.clarin.com/img/2026/09/27/G2x65aAiX_1200x630__1.jpg",
-    "imageCaption": "El presidente Javier Milei durante su última entrevista televisiva sobre política económica. (Foto: Cobertura Periodística)",
+    "imageUrl": "https://tn.com.ar/resizer/v2/BJCKGA2DCJBXZOQOOZHRIPIBSM.jpg?auth=a6fc699da3deedbb8a4cd24e1a8b807e75ca4b76fdd9dac6093449e254df0a08",
+    "imageCaption": "Cobertura periodística de Todo Noticias (TN).",
     "spectrum": {
-      "oficialismoPct": 38,
-      "centroDatosPct": 37,
-      "oposicionPct": 25,
-      "totalOutlets": 8
+      "oficialismoPct": 15,
+      "centroDatosPct": 54,
+      "oposicionPct": 31,
+      "totalOutlets": 13
     },
     "articles": [
       {
-        "id": "art-clarin-recesion",
-        "outletId": "clarin",
-        "outletName": "Clarín",
-        "title": "Milei negó que haya una recesión y afirmó que los indicadores \"dan cualquier cosa\" por los cambios estructurales en la economía",
-        "snippet": "Cuestionó duramente a los economistas críticos y atribuyó la caída del consumo al crecimiento del comercio electrónico. Respaldó a Patricia Bullrich y estimó que un 70% del electorado apoyará su proyecto.",
-        "url": "https://www.clarin.com/politica/milei-nego-recesion-afirmo-indicadores-dan-cualquier-cosa-cambios-estructurales-economia_0_LQsde53U2W.html",
-        "publishedAt": "22:06 hs",
-        "imageUrl": "https://www.clarin.com/img/2026/09/27/G2x65aAiX_1200x630__1.jpg",
-        "specificFocus": "Cambios estructurales y comercio digital"
-      },
-      {
-        "id": "art-lanacion-recesion",
-        "outletId": "lanacion",
-        "outletName": "La Nación",
-        "title": "Milei negó que haya una recesión y dijo: “Los indicadores están arrojando cualquier cosa”",
-        "snippet": "El mandatario atribuyó la volatilidad de las estadísticas a las transformaciones que atraviesa la economía; aseguró que el país se encuentra en niveles máximos de consumo, exportaciones y PBI.",
-        "url": "https://www.lanacion.com.ar/politica/milei-nego-que-haya-una-recesion-y-dijo-los-indicadores-estan-arrojando-cualquier-cosa-nid27092026/",
-        "publishedAt": "Hace 37 min",
-        "imageUrl": "https://resizer.glanacion.com/resizer/v2/VSDSVYLKXFHJBG2SRRSE4EUVYY.jpg?auth=ea027f365620fa64c57edf9fb574cfba85bf7f08ced6fc133be5d273db3bcf43&smart=true&width=1045&height=695",
-        "specificFocus": "Defensa de niveles récord de exportaciones"
-      },
-      {
-        "id": "art-derechadiario-recesion",
-        "outletId": "derechadiario",
-        "outletName": "La Derecha Diario",
-        "title": "Milei dio una entrevista y ratificó el rumbo económico: “Yo tengo confianza en los argentinos”",
-        "snippet": "El Presidente pulverizó los pronósticos agoreros de los economistas tradicionales, defendió el superávit fiscal innegociable y remarcó la recuperación sostenida de los salarios reales.",
-        "url": "https://derechadiario.com.ar/politica/milei-defendio-rumbo-economico-tengo-confianza-en-argentinos",
-        "publishedAt": "Hace 3 horas",
-        "specificFocus": "Superávit fiscal innegociable y salarios"
-      },
-      {
-        "id": "art-tn-recesion",
+        "id": "art-tn-17537090348",
         "outletId": "tn",
         "outletName": "Todo Noticias (TN)",
         "title": "Milei defendió su programa y negó que la economía vaya a entrar en recesión: “Hay una desaceleración del ritmo de expansión”",
-        "snippet": "En declaraciones televisivas, el Presidente sostuvo que los números del INDEC no capturan el impacto de la desregulación ni el auge del sector servicios y la economía digital.",
-        "url": "https://tn.com.ar/politica/2026/09/27/milei-nego-recesion-desaceleracion-expansion/",
-        "publishedAt": "Hace 1 hora",
-        "specificFocus": "Concepto de desaceleración vs recesión"
+        "snippet": "El Presidente relativizó la caída del 2,9% de la actividad durante julio. Aseguró que la Argentina atraviesa cambios estructurales y que, por eso, hay sectores que crecerán y otros que sufrirán una co",
+        "url": "https://tn.com.ar/politica/2026/09/27/milei-defendio-su-programa-y-nego-que-la-economia-vaya-a-entrar-en-recesion-hay-una-desaceleracion-del-ritmo-de-expansion/",
+        "publishedAt": "21:07 hs",
+        "imageUrl": "https://tn.com.ar/resizer/v2/BJCKGA2DCJBXZOQOOZHRIPIBSM.jpg?auth=a6fc699da3deedbb8a4cd24e1a8b807e75ca4b76fdd9dac6093449e254df0a08"
       },
       {
-        "id": "art-ambito-recesion",
-        "outletId": "ambito",
-        "outletName": "Ámbito Financiero",
-        "title": "A un paso de la recesión: los números del INDEC desmienten el relato oficial de crecimiento",
-        "snippet": "Informes del sector fabril y del comercio minorista advierten desplomes de dos dígitos. Economistas advierten que la caída de la recaudación y el atraso cambiario profundizan el estancamiento.",
-        "url": "https://www.ambito.com/economia/a-un-paso-la-recesion-los-numeros-del-indec-desmienten-el-relato-oficial-crecimiento-n6064120",
-        "publishedAt": "Hace 45 min",
-        "specificFocus": "Contraste con datos fabriles del INDEC"
-      },
-      {
-        "id": "art-perfil-recesion",
+        "id": "art-perfil-7383378517",
         "outletId": "perfil",
         "outletName": "Perfil",
         "title": "Milei negó que haya una recesión y cuestionó los indicadores: “Están arrojando cualquier cosa”",
-        "snippet": "El jefe de Estado apuntó contra las proyecciones de bancos internacionales como JP Morgan y desestimó el freno en la actividad asegurando que los salarios le ganan a la inflación.",
-        "url": "https://www.perfil.com/noticias/politica/milei-nego-que-haya-una-recesion-y-cuestiono-los-indicadores-estan-arrojando-cualquier-cosa.phtml",
-        "publishedAt": "Hace 2 horas",
-        "specificFocus": "Cuestionamiento al informe de JP Morgan"
+        "snippet": "El Presidente defendió el rumbo económico durante una entrevista televisiva y sostuvo que la caída de la actividad responde a cambios estructurales. Sus declaraciones se conocieron después de que JP M",
+        "url": "https://www.perfil.com/noticias/economia/milei-nego-que-haya-una-recesion-y-cuestiono-los-indicadores-estan-arrojando-cualquier-cosa.phtml",
+        "publishedAt": "21:58 hs",
+        "imageUrl": "https://fotos.perfil.com/2026/09/24/trim/540/304/javier-milei-2333297.jpg"
       },
       {
-        "id": "art-baenegocios-recesion",
-        "outletId": "baenegocios",
-        "outletName": "BAE Negocios",
-        "title": "Milei negó que la Argentina esté en recesión y cuestionó los datos de actividad",
-        "snippet": "Pese a los datos del Estimador Mensual de Actividad Económica (EMAE) que marcan caídas interanuales en industria y construcción, el mandatario afirmó que la economía experimenta una fase de reacomodamiento.",
-        "url": "https://www.baenegocios.com/economia/Milei-nego-que-la-Argentina-este-en-recesion-y-cuestiono-los-datos-de-actividad-20260927-0042.html",
-        "publishedAt": "Hace 1 hora",
-        "specificFocus": "Indicadores EMAE en construcción e industria"
+        "id": "art-ambito-3225002735",
+        "outletId": "ambito",
+        "outletName": "Ámbito Financiero",
+        "title": "Las definiciones de Javier Milei: del riesgo país, el dólar y la pobreza a Patricia Bullrich, León XIV y Axel Kicillof",
+        "snippet": "El Presidente brindó una entrevista televisiva en la que habló sobre la realidad económica del país. Además de negar el riesgo de recesión, también se refirió a su relación con la senadora y, sin menc",
+        "url": "https://www.ambito.com/politica/las-definiciones-javier-milei-del-riesgo-pais-el-dolar-y-la-pobreza-patricia-bullrich-leon-xiv-y-axel-kicillof-n6327297",
+        "publishedAt": "23:09 hs",
+        "imageUrl": "https://media.ambito.com/p/7ecd760250ff220cd3ec83e6dd10a626/adjuntos/239/imagenes/043/668/0043668156/1200x675/smart/javier-milei-captura-ln.jpg"
       },
       {
-        "id": "art-cronica-recesion",
+        "id": "art-ambito-7066150822",
+        "outletId": "ambito",
+        "outletName": "Ámbito Financiero",
+        "title": "Javier Milei negó el riesgo de recesión, habló de una \"desaceleración\" y garantizó el financiamiento hasta fines del 2027",
+        "snippet": "El Presidente cuestionó las mediciones que muestran una caída de la actividad y sostuvo que los cambios estructurales de la economía distorsionan esos indicadores.",
+        "url": "https://www.ambito.com/economia/javier-milei-nego-el-riesgo-recesion-los-indicadores-desestacionalizados-estan-arrojando-cualquier-cosa-n6327281",
+        "publishedAt": "21:55 hs",
+        "imageUrl": "https://media.ambito.com/p/c893226b74374f6b94d5c86183d3e897/adjuntos/239/imagenes/043/668/0043668069/1200x675/smart/javier-milei.jpg"
+      },
+      {
+        "id": "art-infobae-1707952319",
+        "outletId": "infobae",
+        "outletName": "Infobae",
+        "title": "¿De “recesión técnica” a recesión a secas?: Economía espera un repunte de actividad, pero los privados ven difícil revertir la fuerte caída de julio",
+        "snippet": "Tras los recientes datos del Indec, estiman necesario un crecimiento cercano a 3% mensual para que el tercer trimestre arroje un saldo positivo. Según la Secretaría de Finanzas, están dadas todas las ",
+        "url": "https://www.infobae.com/economia/2026/09/28/de-recesion-tecnica-a-recesion-a-secas-economia-espera-un-repunte-de-actividad-pero-los-privados-ven-dificil-revertir-la-fuerte-caida-de-julio/",
+        "publishedAt": "Hace 22 min",
+        "imageUrl": "https://www.infobae.com/resizer/v2/T4QN2O3K2RCBVNJ6MZVBZVNOMA.jpg?auth=fd62a9688442650de2a7ed2d064262995d5edd96f2c77211a51ee0c8916bc2d1&amp;smart=true&amp;width=4452&amp;height=2968"
+      },
+      {
+        "id": "art-perfil-7600890934",
+        "outletId": "perfil",
+        "outletName": "Perfil",
+        "title": "JP Morgan cambió su pronóstico para la Argentina en apenas cuatro días y ahora anticipa una recesión",
+        "snippet": "El banco de inversión había proyectado un crecimiento de 2,7% para 2026. Tras el dato de actividad de julio, recortó su estimación al 1,5% y prevé una contracción anualizada de 4% en el tercer trimest",
+        "url": "https://www.perfil.com/noticias/economia/jp-morgan-cambio-su-pronostico-para-la-argentina-en-apenas-cuatro-dias-y-ahora-anticipa-una-recesion.phtml",
+        "publishedAt": "17:37 hs",
+        "imageUrl": "https://fotos.perfil.com/2025/10/22/trim/540/304/jp-morgan-y-eeuu-negocian-un-credito-de-usd-20000-millones-para-argentina-2123587.jpg"
+      },
+      {
+        "id": "art-clarin-3841163382",
+        "outletId": "clarin",
+        "outletName": "Clarín",
+        "title": "Milei negó que haya una recesión y afirmó que los indicadores \"dan cualquier cosa\" por los cambios estructurales en la economía",
+        "snippet": "Cuestionó duramente a los economistas críticos y atribuyó la caída del consumo al crecimiento del comercio electrónico. Respaldó a Patricia Bullrich y estimó que un 70% del electorado apoyará su proye",
+        "url": "https://www.clarin.com/politica/milei-nego-recesion-afirmo-indicadores-dan-cualquier-cosa-cambios-estructurales-economia_0_LQsde53U2W.html",
+        "publishedAt": "22:06 hs",
+        "imageUrl": "https://www.clarin.com/img/2026/09/27/G2x65aAiX_1200x630__1.jpg"
+      },
+      {
+        "id": "art-cronica-9634645069",
         "outletId": "cronica",
         "outletName": "Crónica",
         "title": "Milei negó que la economía vaya a entrar en recesión: \"Hay una desaceleración del ritmo de expansión\"",
-        "snippet": "El Presidente pidió paciencia a la población y aseguró que la inflación núcleo continuará su sendero a la baja hacia fin de año en medio del debate por el consumo en los hogares.",
-        "url": "https://www.cronica.com.ar/politica/Milei-nego-que-la-economia-vaya-a-entrar-en-recesion-20260927-0015.html",
-        "publishedAt": "Hace 2 horas",
-        "specificFocus": "Inflación núcleo y consumo en los hogares"
+        "snippet": "El Presidente relativizó el último dato de caída de la actividad. \"Los ponderadores de los desestacionalizados están arrojando cualquier cosa\", expresó.",
+        "url": "https://www.cronica.com.ar/politica/milei-nego-que-la-economia-vaya-a-entrar-en-recesion-hay-una-desaceleracion-del-ritmo-de-expansion/",
+        "publishedAt": "Reciente",
+        "imageUrl": "https://www.cronica.com.ar/files/image/1696/1696701/6a806ba1bd795_800_!.jpg?s=ed1319c771e269da454b5abbf0d61c67&amp;d="
+      },
+      {
+        "id": "art-baenegocios-24404096327",
+        "outletId": "baenegocios",
+        "outletName": "BAE Negocios",
+        "title": "Milei negó que la Argentina esté en recesión y cuestionó los datos de actividad",
+        "snippet": "El Presidente rechazó el diagnóstico tras el recorte de JP Morgan y sostuvo que los indicadores desestacionalizados no reflejan los cambios estructurales.",
+        "url": "https://www.baenegocios.com/economia/milei-nego-que-la-argentina-este-en-recesion-y-cuestiono-los-datos-de-actividad/",
+        "publishedAt": "Reciente",
+        "imageUrl": "https://www.baenegocios.com/files/image/355/355183/6ab549c884f37_800_!.jpg?s=cc1cf90227e1293d83731c3a6174e44d&amp;d="
+      },
+      {
+        "id": "art-ambito-5657052607",
+        "outletId": "ambito",
+        "outletName": "Ámbito Financiero",
+        "title": "A un paso de la recesión: los números del INDEC desmienten el relato oficial de crecimiento",
+        "snippet": "Aunque el discurso oficial celebre meses de expansión, los últimos datos oficiales confirman que la actividad productiva ya está cayendo.",
+        "url": "https://www.ambito.com/economia/a-un-paso-la-recesion-los-numeros-del-indec-desmienten-el-relato-oficial-crecimiento-n6327240",
+        "publishedAt": "18:27 hs",
+        "imageUrl": "https://media.ambito.com/p/bb1733448ac5cc5502ed4d978de30c7a/adjuntos/239/imagenes/042/751/0042751795/foto-centro-industrial.jpg"
+      },
+      {
+        "id": "art-eleconomista-12081562621",
+        "outletId": "eleconomista",
+        "outletName": "El Economista",
+        "title": "\"La actividad enfrenta vientos en contra\": JP Morgan pulverizó la proyección de crecimiento para Argentina a 1,5%",
+        "snippet": "JP Morgan recortó fuerte su proyección para Argentina: espera que el PBI crezca apenas 1,5% en 2026, con debilidad en consumo, empleo, industria y construcción.",
+        "url": "https://eleconomista.com.ar/economia/la-actividad-enfrenta-vientos-contra-jp-morgan-pulverizo-proyeccion-crecimiento-argentina-15-n98444",
+        "publishedAt": "13:44 hs",
+        "imageUrl": "https://statics.eleconomista.com.ar/2026/03/69b03e4eaacb8.jpg"
+      },
+      {
+        "id": "art-derechadiario-6369938923",
+        "outletId": "derechadiario",
+        "outletName": "La Derecha Diario",
+        "title": "Milei dio una entrevista y ratificó el rumbo económico: “Yo tengo confianza en los argentinos”",
+        "snippet": "El Presidente aseguró que la economía atraviesa cambios estructurales y proyectó cuatro años consecutivos de crecimiento.",
+        "url": "https://derechadiario.com.ar/politica/milei-defendio-rumbo-economico-tengo-confianza-en-argentinos",
+        "publishedAt": "21:04 hs",
+        "imageUrl": "https://d59jb5sy46ag5.cloudfront.net/imagenes_notas/PORTADAWEB-Milei-Majul-Entrevistajpg_0357f347cbda.webp"
+      },
+      {
+        "id": "art-cronista-2613659471",
+        "outletId": "cronista",
+        "outletName": "El Cronista",
+        "title": "Milei apuntó contra quienes piden un dólar más caro: “Quieren gente pobre y menos empleo”",
+        "snippet": "",
+        "url": "https://www.cronista.com/economia-politica/milei-apunto-contra-quienes-piden-un-dolar-mas-caro-quieren-gente-pobre-y-menos-empleo/",
+        "publishedAt": "21:48 hs",
+        "imageUrl": "https://www.cronista.com/resizer/v2/DWKTTBGPE5GBNLIOC5VMVG6KYI.jpg?auth=353acbe3aaeae7a13e7bbd3411cd363fe2b2e0602c273c2773f5c19c4d02dcd9&amp;smart=true&amp;width=1200&amp;height=675"
       }
     ],
-    "aiComparisonNotice": "Contraste en 8 redacciones: Medios afines como La Derecha Diario, La Nación y TN priorizan las explicaciones teóricas del Presidente, destacando la defensa del superávit, la confianza popular y la idea de una desaceleración transitoria. Clarín, Perfil y Crónica mantienen un encuadre fáctico poniendo el acento en la controversia con las consultoras y el informe de JP Morgan. En contrapartida, Ámbito Financiero y BAE Negocios contraponen directamente el discurso presidencial con las estadísticas de caída interanual del INDEC (EMAE) en la industria manufacturera y la construcción."
+    "aiComparisonNotice": "Los medios oficialistas y afines (como TN, La Derecha Diario y Perfil) se centraron en la defensa presidencial del rumbo económico y sus cuestionamientos a los indicadores tradicionales. Por el contrario, los portales de perfil opositor u orientados al análisis económico (como Ámbito, El Economista y elDiarioAR) enfatizaron el recorte del JP Morgan y alertaron sobre la desaceleración de la actividad y su impacto social."
   }
 ]

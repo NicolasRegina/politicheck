@@ -5,6 +5,7 @@ import { OUTLETS, MOCK_STORIES } from '../../data/mockData';
 import { saveNewsClustersToSupabase, getNewsClustersFromSupabase } from '../supabase';
 
 const CLUSTERED_STORIES_FILE = path.resolve(process.cwd(), 'src/data/clustered_stories.json');
+const FOREIGN_CLUSTERED_STORIES_FILE = path.resolve(process.cwd(), 'src/data/foreign_clusters.json');
 
 export function saveClusteredStories(stories: StoryCluster[]) {
   try {
@@ -14,6 +15,14 @@ export function saveClusteredStories(stories: StoryCluster[]) {
     });
   } catch (err) {
     console.error('[AI Clustering] Error saving clustered stories:', err);
+  }
+}
+
+export function saveForeignClusteredStories(stories: StoryCluster[]) {
+  try {
+    fs.writeFileSync(FOREIGN_CLUSTERED_STORIES_FILE, JSON.stringify(stories, null, 2), 'utf-8');
+  } catch (err) {
+    console.error('[AI Clustering] Error saving foreign clustered stories:', err);
   }
 }
 
@@ -32,10 +41,29 @@ export function getCachedClusteredStories(): StoryCluster[] {
   return [];
 }
 
+export function getCachedForeignClusters(): StoryCluster[] {
+  try {
+    if (fs.existsSync(FOREIGN_CLUSTERED_STORIES_FILE)) {
+      const data = fs.readFileSync(FOREIGN_CLUSTERED_STORIES_FILE, 'utf-8');
+      const parsed = JSON.parse(data) as StoryCluster[];
+      if (Array.isArray(parsed) && parsed.length > 0) {
+        return parsed;
+      }
+    }
+  } catch (err) {
+    console.error('[AI Clustering] Error reading cached foreign clustered stories:', err);
+  }
+  return [];
+}
+
 export function getStoryClusterById(id: string): StoryCluster | undefined {
   const cached = getCachedClusteredStories();
   const foundInCached = cached.find(s => s.id === id);
   if (foundInCached) return foundInCached;
+
+  const cachedForeign = getCachedForeignClusters();
+  const foundInForeign = cachedForeign.find(s => s.id === id);
+  if (foundInForeign) return foundInForeign;
 
   return MOCK_STORIES.find(s => s.id === id);
 }
@@ -394,6 +422,258 @@ function ruleBasedClustering(articles: Article[]): StoryCluster[] {
 
       stories.push({
         id: `story-cluster-${idx + 1}`,
+        isLeadStory: idx === 0,
+        kicker: topic.kicker,
+        neutralHeadline: topic.neutralHeadline,
+        category: topic.category,
+        summary: topic.summary,
+        updatedAt: selectedArticles[0]?.publishedAt || 'Reciente',
+        imageUrl: leadImg,
+        imageCaption: topic.defaultCaption,
+        spectrum: {
+          oficialismoPct: ofiPct,
+          centroDatosPct: centroPct,
+          oposicionPct: opoPct,
+          totalOutlets: total
+        },
+        articles: selectedArticles,
+        aiComparisonNotice: topic.aiNotice
+      });
+    }
+  });
+
+  return stories;
+}
+
+export async function clusterForeignArticlesWithGemini(
+  foreignArticles: Article[],
+  explicitKey?: string
+): Promise<StoryCluster[]> {
+  if (!foreignArticles || foreignArticles.length === 0) {
+    return getCachedForeignClusters();
+  }
+
+  const apiKey = getGeminiKey(explicitKey);
+  if (!apiKey) {
+    console.warn('[AI Clustering] No Gemini API key found for foreign clustering. Using rule-based fallback.');
+    const fallback = ruleBasedForeignClustering(foreignArticles);
+    if (fallback.length > 0) saveForeignClusteredStories(fallback);
+    return fallback;
+  }
+
+  console.log(`[AI Clustering] Invoking Gemini 2.5 to cluster ${foreignArticles.length} international articles about Argentina...`);
+
+  const articlesPromptPayload = foreignArticles.map(a => ({
+    id: a.id,
+    outletId: a.outletId,
+    outletName: a.outletName,
+    title: a.title,
+    snippet: a.snippet
+  }));
+
+  const systemPrompt = `Eres el Editor de Política Internacional de POLITICHECK (Argentina).
+Tu misión es analizar la cobertura que realiza la PRENSA INTERNACIONAL (medios de España, Francia, Reino Unido, Estados Unidos, Alemania, Japón, China, etc.) sobre ARGENTINA.
+
+Los artículos proporcionados ya han sido filtrados para tratar exclusivamente sobre la República Argentina (gobierno de Javier Milei, Cristina Kirchner, Kicillof, reformas fiscales, inflación, Malvinas, política exterior o conflictividad).
+
+Instrucciones:
+1. Agrupa estos artículos internacionales en entre 1 y 3 historias coherentes (clusters).
+2. Para cada historia genera:
+   - "kicker": Prefijo "MIRADA EXTERIOR • " seguido del tema en mayúsculas (ej: "MIRADA EXTERIOR • DIPLOMACIA & MALVINAS", "MIRADA EXTERIOR • REFORMAS ECONÓMICAS").
+   - "neutralHeadline": Titular neutral en español de alto rigor periodístico que sintetice el debate en la prensa extranjera.
+   - "category": Siempre "Internacional".
+   - "summary": Resumen explicativo de 2 a 3 oraciones en español analizando cómo ven la situación desde afuera.
+   - "aiComparisonNotice": Párrafo de contraste específico comparando la cobertura de los distintos medios internacionales (ej: "The Guardian (Reino Unido) y France 24 ponen el foco en las advertencias diplomáticas y el tono del discurso en la ONU, mientras Expansión (España) subraya las sanciones a petroleras y La Vanguardia analiza el impacto interno.").
+   - "articleIds": Lista de IDs de artículos incluidos.
+   - "spectrum": Estima el desglose porcentual según la afinidad o crítica del enfoque frente a las medidas del gobierno argentino:
+     * "oficialismoPct": Coberturas que ponderan positivamente las reformas o el rumbo oficial.
+     * "centroDatosPct": Reportes fácticos, institucionales o bursátiles neutros.
+     * "oposicionPct": Críticas sobre el impacto social, tensión política o advertencias adversas.
+     * La suma debe ser exactamente 100.
+
+Devuelve EXCLUSIVAMENTE un objeto JSON válido con esta estructura:
+{
+  "clusters": [
+    {
+      "kicker": "MIRADA EXTERIOR • ...",
+      "neutralHeadline": "...",
+      "category": "Internacional",
+      "summary": "...",
+      "aiComparisonNotice": "...",
+      "articleIds": ["id1", "id2"],
+      "spectrum": {
+        "oficialismoPct": 30,
+        "centroDatosPct": 45,
+        "oposicionPct": 25,
+        "totalOutlets": 2
+      }
+    }
+  ]
+}`;
+
+  try {
+    const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`;
+    const res = await fetch(geminiUrl, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        contents: [
+          {
+            parts: [
+              { text: systemPrompt },
+              { text: `Artículos internacionales sobre Argentina para analizar:\n${JSON.stringify(articlesPromptPayload, null, 2)}` }
+            ]
+          }
+        ],
+        generationConfig: {
+          temperature: 0.2,
+          responseMimeType: 'application/json'
+        }
+      })
+    });
+
+    if (!res.ok) {
+      const errText = await res.text();
+      throw new Error(`Gemini API HTTP ${res.status}: ${errText}`);
+    }
+
+    const data = await res.json();
+    const rawJson = data.candidates?.[0]?.content?.parts?.[0]?.text;
+    if (!rawJson) {
+      throw new Error('Empty response from Gemini API');
+    }
+
+    const parsed: GeminiClusterResponse = JSON.parse(rawJson);
+    const articleMap = new Map(foreignArticles.map(a => [a.id, a]));
+
+    const stories: StoryCluster[] = parsed.clusters.map((c, idx) => {
+      const clusterArticles = c.articleIds
+        .map(id => articleMap.get(id))
+        .filter((a): a is Article => Boolean(a));
+
+      const leadImgArticle = clusterArticles.find(a => Boolean(a.imageUrl));
+      const imageUrl = leadImgArticle?.imageUrl || '/images/macri-milei.jpg';
+
+      let ofi = 0, centro = 0, opo = 0;
+      clusterArticles.forEach(a => {
+        const o = OUTLETS[a.outletId];
+        const leaning = o?.baselineLeaning || 'centro_datos';
+        if (leaning === 'oficialismo') ofi++;
+        else if (leaning === 'oposicion') opo++;
+        else centro++;
+      });
+      const total = clusterArticles.length || 1;
+      const ofiPct = Math.round((ofi / total) * 100);
+      const centroPct = Math.round((centro / total) * 100);
+      const opoPct = Math.max(0, 100 - ofiPct - centroPct);
+
+      return {
+        id: `foreign-ai-${idx + 1}`,
+        isLeadStory: idx === 0,
+        kicker: c.kicker,
+        neutralHeadline: c.neutralHeadline,
+        category: 'Internacional',
+        summary: c.summary,
+        updatedAt: 'Reciente',
+        imageUrl,
+        imageCaption: `Cobertura internacional de ${leadImgArticle?.outletName || 'prensa extranjera'}.`,
+        spectrum: {
+          oficialismoPct: ofiPct,
+          centroDatosPct: centroPct,
+          oposicionPct: opoPct,
+          totalOutlets: total
+        },
+        articles: clusterArticles,
+        aiComparisonNotice: c.aiComparisonNotice
+      };
+    });
+
+    if (stories.length > 0) {
+      saveForeignClusteredStories(stories);
+    }
+    console.log(`[AI Clustering] Gemini successfully generated ${stories.length} foreign story clusters!`);
+    return stories;
+  } catch (err) {
+    console.warn('[AI Clustering] Gemini foreign call failed, falling back to rule-based foreign clustering:', (err as Error).message);
+    const fallbackStories = ruleBasedForeignClustering(foreignArticles);
+    if (fallbackStories.length > 0) {
+      saveForeignClusteredStories(fallbackStories);
+    }
+    return fallbackStories;
+  }
+}
+
+// Rule-based fallback for foreign articles
+function ruleBasedForeignClustering(articles: Article[]): StoryCluster[] {
+  const topics = [
+    {
+      kicker: 'MIRADA EXTERIOR • DIPLOMACIA & MALVINAS',
+      keywords: ['malvinas', 'onu', 'falkland', 'cancilleria', 'reino unido', 'diplomacia', 'belicismo'],
+      category: 'Internacional',
+      neutralHeadline: 'La diplomacia argentina y el reclamo por Malvinas bajo la lupa de los corresponsales en Europa',
+      summary: 'Cadenas y periódicos internacionales de Francia, Reino Unido y España analizan el impacto del discurso oficial en la Asamblea de la ONU y las advertencias sobre licencias petroleras en el Atlántico Sur.',
+      aiNotice: 'The Guardian (Reino Unido) subraya la advertencia de que Argentina "tomará cartas en el asunto"; France 24 destaca la tensión con Gran Bretaña por proyectos petroleros; La Vanguardia califica el posicionamiento de causa nacional indeclinable.',
+      defaultImage: '/images/malvinas.jpg',
+      defaultCaption: 'Debate en foros internacionales sobre la soberanía del Atlántico Sur y licencias energéticas.'
+    },
+    {
+      kicker: 'MIRADA EXTERIOR • MACROECONOMÍA & REFORMAS',
+      keywords: ['pobreza', 'industria', 'actividad', 'inflacion', 'recesion', 'ajuste', 'pib', 'contraccion', 'contratajo'],
+      category: 'Internacional',
+      neutralHeadline: 'Prensa económica internacional evalúa la contracción industrial y los indicadores sociales del programa de estabilización',
+      summary: 'Publicaciones especializadas como Expansión y France 24 examinan la divergencia entre la desaceleración de los precios y el costo sobre la actividad fabril y los índices de vulnerabilidad social.',
+      aiNotice: 'Expansión enfatiza la contracción del 2,9% en el nivel de actividad y los reclamos del sector privado; France 24 pone el acento en el incremento de la pobreza urbana durante el primer semestre.',
+      defaultImage: '/images/mercados.jpg',
+      defaultCaption: 'Evolución de los indicadores de actividad económica y producción monitoreados desde el exterior.'
+    },
+    {
+      kicker: 'MIRADA EXTERIOR • ENERGÍA & INVERSIONES',
+      keywords: ['petroleo', 'vista', 'ypf', 'vaca muerta', 'thiel', 'inversion', 'inversores', 'bonos'],
+      category: 'Internacional',
+      neutralHeadline: 'Inversores globales ponderan las oportunidades en el sector energético y las barreras cambiarias',
+      summary: 'Medios financieros europeos y asiáticos destacan el apetito de fondos de capital de riesgo por activos estratégicos en Vaca Muerta a la espera de la unificación del mercado cambiario.',
+      aiNotice: 'Expansión reporta la entrada de fondos tecnológicos internacionales en petroleras argentinas; la prensa anglosajona mantiene cautela ante los plazos de salida del cepo.',
+      defaultImage: '/images/macri-milei.jpg',
+      defaultCaption: 'Inversiones internacionales y proyecciones de exportación en la cuenca hidrocarburífera argentina.'
+    }
+  ];
+
+  const stories: StoryCluster[] = [];
+
+  topics.forEach((topic, idx) => {
+    const matchingArticles = articles.filter(a => {
+      const text = `${a.title} ${a.snippet}`.toLowerCase();
+      return topic.keywords.some(k => text.includes(k));
+    });
+
+    if (matchingArticles.length > 0) {
+      const leadImg = matchingArticles.find(a => Boolean(a.imageUrl))?.imageUrl || topic.defaultImage;
+
+      // Select up to 1 article per distinct outlet
+      const uniqueOutletArticles: Article[] = [];
+      const seenOutlet = new Set<string>();
+      matchingArticles.forEach(a => {
+        if (!seenOutlet.has(a.outletId)) {
+          seenOutlet.add(a.outletId);
+          uniqueOutletArticles.push(a);
+        }
+      });
+      const selectedArticles = uniqueOutletArticles.slice(0, 8);
+
+      let ofi = 0, centro = 0, opo = 0;
+      selectedArticles.forEach(a => {
+        const o = OUTLETS[a.outletId];
+        if (o?.baselineLeaning === 'oficialismo') ofi++;
+        else if (o?.baselineLeaning === 'oposicion') opo++;
+        else centro++;
+      });
+      const total = selectedArticles.length || 1;
+      const ofiPct = Math.round((ofi / total) * 100);
+      const centroPct = Math.round((centro / total) * 100);
+      const opoPct = Math.max(0, 100 - ofiPct - centroPct);
+
+      stories.push({
+        id: `foreign-cluster-${idx + 1}`,
         isLeadStory: idx === 0,
         kicker: topic.kicker,
         neutralHeadline: topic.neutralHeadline,

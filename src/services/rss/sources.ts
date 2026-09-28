@@ -164,27 +164,53 @@ export const RSS_FEEDS: RssFeedConfig[] = [
     url: 'https://eleconomista.com.ar/feed/'
   },
 
-  // 15. El País (Mirada Exterior)
+  // 15. El País (España - Mirada Exterior)
   {
-    id: 'elpais-argentina',
+    id: 'elpais-portada',
     outletId: 'elpais',
     outletName: 'El País',
     category: 'internacional',
     defaultTopic: 'Internacional',
     url: 'https://feeds.elpais.com/mrss-s/pages/ep/site/elpais.com/section/america/portada'
   },
-
-  // 16. CNN en Español (Mirada Exterior)
   {
-    id: 'cnn-espanol',
-    outletId: 'cnn',
-    outletName: 'CNN en Español',
+    id: 'elpais-argentina',
+    outletId: 'elpais',
+    outletName: 'El País',
     category: 'internacional',
     defaultTopic: 'Internacional',
-    url: 'https://cnnespanol.cnn.com/feed/'
+    url: 'https://feeds.elpais.com/mrss-s/pages/ep/site/elpais.com/section/argentina/portada'
   },
 
-  // 17. BBC News Mundo (Mirada Exterior)
+  // 16. Expansión (España - Economía y Negocios Globales)
+  {
+    id: 'expansion-latam',
+    outletId: 'expansion',
+    outletName: 'Expansión',
+    category: 'internacional',
+    defaultTopic: 'Economía',
+    url: 'https://e00-expansion.uecdn.es/rss/latinoamerica.xml'
+  },
+
+  // 17. France 24 en Español (Francia - Mirada Exterior)
+  {
+    id: 'france24-latam',
+    outletId: 'france24',
+    outletName: 'France 24',
+    category: 'internacional',
+    defaultTopic: 'Internacional',
+    url: 'https://www.france24.com/es/am%C3%A9rica-latina/rss'
+  },
+  {
+    id: 'france24-general',
+    outletId: 'france24',
+    outletName: 'France 24',
+    category: 'internacional',
+    defaultTopic: 'Internacional',
+    url: 'https://www.france24.com/es/rss'
+  },
+
+  // 18. BBC News Mundo (Reino Unido - Mirada Exterior)
   {
     id: 'bbcmundo-general',
     outletId: 'bbcmundo',
@@ -194,7 +220,107 @@ export const RSS_FEEDS: RssFeedConfig[] = [
     url: 'https://feeds.bbci.co.uk/mundo/rss.xml'
   },
 
-  // 18. La Derecha Diario
+  // 19. El Mundo (España - Mirada Exterior)
+  {
+    id: 'elmundo-internacional',
+    outletId: 'elmundo',
+    outletName: 'El Mundo',
+    category: 'internacional',
+    defaultTopic: 'Internacional',
+    url: 'https://e00-elmundo.uecdn.es/elmundo/rss/internacional.xml'
+  },
+
+  // 20. La Vanguardia (España - Mirada Exterior)
+  {
+    id: 'lavanguardia-internacional',
+    outletId: 'lavanguardia',
+    outletName: 'La Vanguardia',
+    category: 'internacional',
+    defaultTopic: 'Internacional',
+    url: 'https://www.lavanguardia.com/rss/internacional.xml'
+  },
+
+  // 21. Le Monde (Francia - Mirada Exterior)
+  {
+    id: 'lemonde-international',
+    outletId: 'lemonde',
+    outletName: 'Le Monde',
+    category: 'internacional',
+    defaultTopic: 'Internacional',
+    url: 'https://www.lemonde.fr/international/rss_full.xml'
+  },
+
+  // 22. Le Figaro (Francia - Mirada Exterior)
+  {
+    id: 'lefigaro-international',
+    outletId: 'lefigaro',
+    outletName: 'Le Figaro',
+    category: 'internacional',
+    defaultTopic: 'Internacional',
+    url: 'https://www.lefigaro.fr/rss/figaro_international.xml'
+  },
+
+  // 23. The Guardian (Reino Unido - Mirada Exterior)
+  {
+    id: 'theguardian-americas',
+    outletId: 'theguardian',
+    outletName: 'The Guardian',
+    category: 'internacional',
+    defaultTopic: 'Internacional',
+    url: 'https://www.theguardian.com/world/americas/rss'
+  },
+
+  // 24. The New York Times (EE.UU. - Mirada Exterior)
+  {
+    id: 'nyt-americas',
+    outletId: 'nyt',
+    outletName: 'The New York Times',
+    category: 'internacional',
+    defaultTopic: 'Internacional',
+    url: 'https://rss.nytimes.com/services/xml/rss/nyt/Americas.xml'
+  },
+
+  // 25. DW Español (Alemania - Mirada Exterior)
+  {
+    id: 'dw-espanol',
+    outletId: 'dw',
+    outletName: 'DW Español',
+    category: 'internacional',
+    defaultTopic: 'Internacional',
+    url: 'https://rss.dw.com/xml/rss-sp-all'
+  },
+
+  // 26. Nikkei Asia (Japón - Mirada Exterior)
+  {
+    id: 'nikkeiasia-world',
+    outletId: 'nikkeiasia',
+    outletName: 'Nikkei Asia',
+    category: 'internacional',
+    defaultTopic: 'Economía',
+    url: 'https://asia.nikkei.com/rss/feed/nar'
+  },
+
+  // 27. The Japan Times (Japón - Mirada Exterior)
+  {
+    id: 'japantimes-news',
+    outletId: 'japantimes',
+    outletName: 'The Japan Times',
+    category: 'internacional',
+    defaultTopic: 'Internacional',
+    url: 'https://www.japantimes.co.jp/feed/'
+  },
+
+  // 28. Xinhua News (China - Mirada Exterior)
+  {
+    id: 'xinhua-world',
+    outletId: 'xinhua',
+    outletName: 'Xinhua News',
+    category: 'internacional',
+    defaultTopic: 'Internacional',
+    url: 'http://www.xinhuanet.com/english/rss/worldrss.xml'
+  },
+
+  // 29. La Derecha Diario (Nacional)
   {
     id: 'derechadiario-politica',
     outletId: 'derechadiario',

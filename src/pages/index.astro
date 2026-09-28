@@ -4,8 +4,13 @@ import StoryCard from '../components/StoryCard.astro';
 import LiveFeedItem from '../components/LiveFeedItem.astro';
 import PromiseCard from '../components/PromiseCard.astro';
 import { MOCK_STORIES, MOCK_LIVE_FEED, MOCK_FOREIGN_STORIES } from '../data/mockData';
-import { getCachedArticles } from '../services/rss/sync';
-import { clusterArticlesWithGemini, getCachedClusteredStories } from '../services/ai/clustering';
+import { getCachedArticles, getCachedForeignArticles } from '../services/rss/sync';
+import { 
+  clusterArticlesWithGemini, 
+  getCachedClusteredStories,
+  clusterForeignArticlesWithGemini,
+  getCachedForeignClusters 
+} from '../services/ai/clustering';
 import { getPromises, getPromisesStats } from '../services/promises';
 
 // Fetch live dynamic campaign promises
@@ -22,6 +27,19 @@ const dynamicStories = cachedClusters.length > 0
   ? cachedClusters 
   : await clusterArticlesWithGemini(liveArticles, import.meta.env.GEMINI_API_KEY);
 const storiesToDisplay = dynamicStories.length > 0 ? dynamicStories : MOCK_STORIES;
+
+// Dynamic Foreign Stories for "La Mirada Exterior"
+const cachedForeignArticles = getCachedForeignArticles();
+const cachedForeignClusters = getCachedForeignClusters();
+const dynamicForeignStories = cachedForeignClusters.length > 0
+  ? cachedForeignClusters
+  : cachedForeignArticles.length > 0
+    ? await clusterForeignArticlesWithGemini(cachedForeignArticles, import.meta.env.GEMINI_API_KEY)
+    : [];
+
+const foreignStoriesToDisplay = dynamicForeignStories.length > 0 
+  ? dynamicForeignStories 
+  : MOCK_FOREIGN_STORIES;
 
 const leadStory = storiesToDisplay[0];
 const secondaryStories = storiesToDisplay.slice(1);
@@ -360,11 +378,14 @@ const liveFeedArticles = liveArticles.slice(0, 20);
           La Mirada de Afuera: Argentina en los Medios del Mundo
         </h2>
       </div>
-      <span class="text-xs font-mono text-slate-500 dark:text-slate-400">Financial Times • El País • CNN</span>
+      <div class="flex flex-col sm:items-end text-xs font-mono text-slate-500 dark:text-slate-400">
+        <span class="text-emerald-600 dark:text-emerald-400 font-bold">● Cobertura internacional en tiempo real</span>
+        <span>El País • BBC Mundo • France 24 • The Guardian • Expansión • Le Monde • Nikkei</span>
+      </div>
     </div>
 
     <div class="grid grid-cols-1 gap-6" id="foreign-grid">
-      {MOCK_FOREIGN_STORIES.map((story) => (
+      {foreignStoriesToDisplay.map((story) => (
         <div class="story-item" data-category="Internacional" data-text={`${story.neutralHeadline} ${story.summary} ${story.articles.map(a => a.title + ' ' + a.outletName).join(' ')}`}>
           <StoryCard story={story} />
         </div>

@@ -198,6 +198,126 @@ export const OUTLETS_REGISTRY: Record<string, OutletMeta> = {
     baselineLeaning: 'oficialismo',
     websiteUrl: 'https://derechadiario.com.ar',
     badgeClass: 'bg-blue-100 text-blue-950 dark:bg-blue-950/70 dark:text-blue-200 border-blue-400 dark:border-blue-700'
+  },
+  // 20. France 24 (Francia)
+  france24: {
+    id: 'france24',
+    name: 'France 24',
+    code: 'FRANCE 24',
+    category: 'internacional',
+    baselineLeaning: 'centro_datos',
+    websiteUrl: 'https://www.france24.com/es/',
+    badgeClass: 'bg-sky-100 text-sky-950 dark:bg-sky-950/70 dark:text-sky-200 border-sky-300 dark:border-sky-800'
+  },
+  // 21. Le Monde (Francia)
+  lemonde: {
+    id: 'lemonde',
+    name: 'Le Monde',
+    code: 'LE MONDE',
+    category: 'internacional',
+    baselineLeaning: 'oposicion',
+    websiteUrl: 'https://www.lemonde.fr',
+    badgeClass: 'bg-amber-100 text-amber-950 dark:bg-amber-950/70 dark:text-amber-200 border-amber-300 dark:border-amber-800'
+  },
+  // 22. Le Figaro (Francia)
+  lefigaro: {
+    id: 'lefigaro',
+    name: 'Le Figaro',
+    code: 'LE FIGARO',
+    category: 'internacional',
+    baselineLeaning: 'centro_datos',
+    websiteUrl: 'https://www.lefigaro.fr',
+    badgeClass: 'bg-blue-100 text-blue-950 dark:bg-blue-950/70 dark:text-blue-200 border-blue-300 dark:border-blue-800'
+  },
+  // 23. El Mundo (España)
+  elmundo: {
+    id: 'elmundo',
+    name: 'El Mundo',
+    code: 'EL MUNDO',
+    category: 'internacional',
+    baselineLeaning: 'oficialismo',
+    websiteUrl: 'https://www.elmundo.es',
+    badgeClass: 'bg-emerald-100 text-emerald-950 dark:bg-emerald-950/70 dark:text-emerald-200 border-emerald-300 dark:border-emerald-800'
+  },
+  // 24. La Vanguardia (España)
+  lavanguardia: {
+    id: 'lavanguardia',
+    name: 'La Vanguardia',
+    code: 'LA VANGUARDIA',
+    category: 'internacional',
+    baselineLeaning: 'centro_datos',
+    websiteUrl: 'https://www.lavanguardia.com',
+    badgeClass: 'bg-indigo-100 text-indigo-950 dark:bg-indigo-950/70 dark:text-indigo-200 border-indigo-300 dark:border-indigo-800'
+  },
+  // 25. Expansión (España)
+  expansion: {
+    id: 'expansion',
+    name: 'Expansión',
+    code: 'EXPANSIÓN',
+    category: 'internacional',
+    baselineLeaning: 'centro_datos',
+    websiteUrl: 'https://www.expansion.com',
+    badgeClass: 'bg-orange-100 text-orange-950 dark:bg-orange-950/70 dark:text-orange-200 border-orange-300 dark:border-orange-800'
+  },
+  // 26. The Guardian (Reino Unido)
+  theguardian: {
+    id: 'theguardian',
+    name: 'The Guardian',
+    code: 'THE GUARDIAN',
+    category: 'internacional',
+    baselineLeaning: 'oposicion',
+    websiteUrl: 'https://www.theguardian.com',
+    badgeClass: 'bg-blue-100 text-blue-950 dark:bg-blue-950/70 dark:text-blue-200 border-blue-400 dark:border-blue-700'
+  },
+  // 27. The New York Times (EE.UU.)
+  nyt: {
+    id: 'nyt',
+    name: 'The New York Times',
+    code: 'NY TIMES',
+    category: 'internacional',
+    baselineLeaning: 'centro_datos',
+    websiteUrl: 'https://www.nytimes.com',
+    badgeClass: 'bg-slate-200 text-slate-950 dark:bg-slate-800 dark:text-slate-100 border-slate-300 dark:border-slate-700'
+  },
+  // 28. DW Español (Alemania)
+  dw: {
+    id: 'dw',
+    name: 'DW Español',
+    code: 'DEUTSCHE WELLE',
+    category: 'internacional',
+    baselineLeaning: 'centro_datos',
+    websiteUrl: 'https://www.dw.com/es',
+    badgeClass: 'bg-teal-100 text-teal-950 dark:bg-teal-950/70 dark:text-teal-200 border-teal-300 dark:border-teal-800'
+  },
+  // 29. Nikkei Asia (Japón)
+  nikkeiasia: {
+    id: 'nikkeiasia',
+    name: 'Nikkei Asia',
+    code: 'NIKKEI ASIA',
+    category: 'internacional',
+    baselineLeaning: 'centro_datos',
+    websiteUrl: 'https://asia.nikkei.com',
+    badgeClass: 'bg-red-100 text-red-950 dark:bg-red-950/70 dark:text-red-200 border-red-300 dark:border-red-800'
+  },
+  // 30. The Japan Times (Japón)
+  japantimes: {
+    id: 'japantimes',
+    name: 'The Japan Times',
+    code: 'JAPAN TIMES',
+    category: 'internacional',
+    baselineLeaning: 'centro_datos',
+    websiteUrl: 'https://www.japantimes.co.jp',
+    badgeClass: 'bg-rose-100 text-rose-950 dark:bg-rose-950/70 dark:text-rose-200 border-rose-300 dark:border-rose-800'
+  },
+  // 31. Xinhua News (China)
+  xinhua: {
+    id: 'xinhua',
+    name: 'Xinhua News',
+    code: 'XINHUA',
+    category: 'internacional',
+    baselineLeaning: 'centro_datos',
+    websiteUrl: 'http://www.xinhuanet.com',
+    badgeClass: 'bg-red-100 text-red-950 dark:bg-red-950/70 dark:text-red-200 border-red-400 dark:border-red-700'
   }
 };
 
