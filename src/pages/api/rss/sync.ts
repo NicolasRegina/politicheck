@@ -7,6 +7,7 @@ import {
   getCachedForeignClusters 
 } from '../../../services/ai/clustering';
 import { getNewsClustersFromSupabase } from '../../../services/supabase';
+import { autoTweetLatestStory } from '../../../services/twitter';
 
 export const prerender = false;
 
@@ -21,6 +22,9 @@ export const GET: APIRoute = async ({ request }) => {
   const forceRefresh = url.searchParams.get('refresh') === 'true';
   const isCron = url.searchParams.get('cron') === 'true';
   const isVercelCron = request.headers.get('x-vercel-cron') === '1' || isCron;
+  const authHeader = request.headers.get('Authorization') || '';
+  const expectedSecret = process.env.CRON_SECRET || 'politicheck_cron_dev_secret';
+  const adminQueryKey = url.searchParams.get('key') || '';
 
   const isAuthorizedAdmin = 
     authHeader === `Bearer ${expectedSecret}` || 
@@ -66,6 +70,14 @@ export const GET: APIRoute = async ({ request }) => {
       foreignClustersCount = existingForeignClusters.length;
     }
 
+    // 3. Automated Social Media Syndication (X / Twitter Bot @politicheck_ok)
+    let twitterResult = null;
+    try {
+      twitterResult = await autoTweetLatestStory({ baseUrl: url.origin });
+    } catch (twErr) {
+      console.warn('[Sync API] Twitter auto-post non-fatal error:', twErr);
+    }
+
     return new Response(
       JSON.stringify({
         success: true,
@@ -75,6 +87,7 @@ export const GET: APIRoute = async ({ request }) => {
         clustersCount,
         foreignClustersCount,
         geminiInvoked,
+        twitterResult,
         nextClusterAvailableInMinutes: Math.max(0, Math.round((COOLDOWN_MS - (Date.now() - lastClusterTimestamp)) / 60000)),
         timestamp: new Date().toISOString()
       }),

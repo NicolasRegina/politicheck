@@ -85,3 +85,16 @@
 - [x] **Componente `PwaBanner.astro` e Instalación de App:**
   - Captura del evento `beforeinstallprompt` para mostrar banner no intrusivo de instalación en teléfonos y computadoras.
   - Soporte de suscripción voluntaria al **Resumen Matutino (8:00 AM)** en el pie de página con integración nativa a la Web Notification API.
+
+---
+
+### ✅ Tarea 7: Automatización y Sindicación de Noticias a X / Twitter (@politicheck_ok) — [COMPLETADA]
+- [x] **Bot Oficial para X API v2 (`src/services/twitter.ts`):**
+  - Formato viral de alta tracción para 280 caracteres con apertura de portada, distribución de espectro (`🟣 % | 🟢 % | 🟠 %`), medios contrastados y enlace directo a la historia.
+  - Priorización inteligente de alertas de último momento (*breaking news*) sobre historias regulares.
+  - Sistema de deduplicación y anti-spam (`src/data/last_tweeted.json`) para nunca repetir un titular ya publicado.
+- [x] **Integración con el Cron de Sincronización (`/api/rss/sync`):**
+  - Publicación automatizada periódica coordinada con Vercel Cron.
+- [x] **Endpoint de Control y Previsualización (`/api/social/tweet-latest`):**
+  - Parámetro `?preview=true` para auditar el copy generado antes de tuitear.
+  - Modo simulación en caso de que falten credenciales de entorno.
