@@ -1,18 +1,45 @@
 {
   "name": "Politicheck Argentina • Monitor de Sesgo y Promesas",
   "short_name": "Politicheck",
-  "description": "Plataforma cívica independiente para comparar el sesgo mediático y auditar promesas electorales en Argentina.",
+  "description": "Plataforma cívica independiente para comparar el sesgo mediático de 31 redacciones y auditar promesas electorales en Argentina.",
   "start_url": "/",
+  "id": "/?source=pwa",
+  "scope": "/",
   "display": "standalone",
   "background_color": "#090D16",
   "theme_color": "#090D16",
   "orientation": "portrait-primary",
+  "lang": "es-AR",
+  "categories": ["news", "politics", "education"],
   "icons": [
     {
       "src": "/favicon.svg",
       "sizes": "any",
       "type": "image/svg+xml",
       "purpose": "any maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Gran Apertura de Tapa",
+      "short_name": "Tapa del Día",
+      "description": "Contraste de encuadre en el tema central del día",
+      "url": "/#tapa-principal",
+      "icons": [{ "src": "/favicon.svg", "sizes": "any" }]
+    },
+    {
+      "name": "Monitor de Promesas 2027",
+      "short_name": "Promesas",
+      "description": "Auditoría ciudadana y termómetro de cumplimiento",
+      "url": "/#promesas",
+      "icons": [{ "src": "/favicon.svg", "sizes": "any" }]
+    },
+    {
+      "name": "Metodología y Fuentes",
+      "short_name": "Metodología",
+      "description": "Catálogo de 31 medios y fórmula del espectro",
+      "url": "/metodologia",
+      "icons": [{ "src": "/favicon.svg", "sizes": "any" }]
     }
   ]
 }

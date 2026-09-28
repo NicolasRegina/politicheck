@@ -65,7 +65,17 @@ const outletsList = Object.values(OUTLETS_REGISTRY);
       <div>
         © 2026 Politicheck Argentina. Todos los derechos reservados.
       </div>
-      <div class="flex items-center gap-4">
+      <div class="flex flex-wrap items-center gap-4">
+        <button 
+          type="button" 
+          onclick="window.subscribeToMorningDigest?.()" 
+          class="hover:text-slate-900 dark:hover:text-white transition-colors flex items-center gap-1 cursor-pointer"
+          title="Recibir alerta matutina con el resumen de tapas a las 8:00 AM"
+        >
+          <span>📬</span>
+          <span class="underline">Resumen Matutino (8 AM)</span>
+        </button>
+        <span>•</span>
         <a href="/metodologia" class="underline hover:text-slate-900 dark:hover:text-white transition-colors">Metodología & Transparencia</a>
         <span>•</span>
         <a href="/terminos" class="underline hover:text-slate-900 dark:hover:text-white transition-colors">Términos y Descargo Legal</a>

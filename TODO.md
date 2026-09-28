@@ -74,7 +74,14 @@
 
 ---
 
-### ⏳ Tarea 6: Optimización de Rendimiento y Experiencia PWA — [SIGUIENTE TAREA]
-- [ ] **Service Worker y Caché Offline:** Carga instantánea de la portada e interfaz para conexiones móviles lentas.
-- [ ] **Web App Manifest:** Configuración de `manifest.json` e íconos para instalación en pantalla de inicio de smartphones.
-- [ ] **Notificaciones o Resumen Matutino:** Soporte para suscripción voluntaria a resúmenes electorales.
+### ✅ Tarea 6: Optimización de Rendimiento y Experiencia PWA — [COMPLETADA]
+- [x] **Service Worker y Caché Offline (`public/sw.js`):**
+  - Versión de caché `politicheck-v1.0` con pre-cacheado de shell básica (`/`, `/metodologia`, `/terminos`, `/manifest.json`, `/favicon.svg`).
+  - Estrategia *Network-First* con fallback offline para documentos HTML y *Stale-While-Revalidate* para assets estáticos (fuentes, imágenes, CSS, JS).
+  - Banner reactivo en tiempo real que notifica al usuario cuando se encuentra en "Modo Sin Conexión".
+- [x] **Web App Manifest (`public/manifest.json`):**
+  - Configuración PWA completa (`standalone`, `portrait-primary`, colores institucionales `#090D16`, categorías de noticias y educación).
+  - Shortcuts de acceso rápido a "Gran Apertura de Tapa", "Monitor de Promesas" y "Metodología y Fuentes".
+- [x] **Componente `PwaBanner.astro` e Instalación de App:**
+  - Captura del evento `beforeinstallprompt` para mostrar banner no intrusivo de instalación en teléfonos y computadoras.
+  - Soporte de suscripción voluntaria al **Resumen Matutino (8:00 AM)** en el pie de página con integración nativa a la Web Notification API.
