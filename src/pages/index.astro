@@ -857,6 +857,11 @@ const liveFeedArticles = liveArticles.slice(0, 20);
         const data = await res.json();
         if (!data.success) return;
 
+        // Dynamic Breaking News Update
+        if (data.breakingAlert && typeof (window as any).updateBreakingNewsBanner === 'function') {
+          (window as any).updateBreakingNewsBanner(data.breakingAlert);
+        }
+
         // Check if new articles arrived
         if (lastArticleCount > 0 && data.totalArticles > lastArticleCount) {
           const newCount = data.totalArticles - lastArticleCount;

@@ -2,6 +2,7 @@ import type { APIRoute } from 'astro';
 import { getCachedArticles } from '../../../services/rss/sync';
 import { getCachedClusteredStories } from '../../../services/ai/clustering';
 import { MOCK_STORIES } from '../../../data/mockData';
+import { detectBreakingNews } from '../../../services/breaking';
 
 export const prerender = false;
 
@@ -13,6 +14,8 @@ export const GET: APIRoute = async () => {
       stories = MOCK_STORIES;
     }
 
+    const breakingAlert = detectBreakingNews(stories, articles);
+
     return new Response(
       JSON.stringify({
         success: true,
@@ -20,7 +23,8 @@ export const GET: APIRoute = async () => {
         totalArticles: articles.length,
         latestArticles: articles.slice(0, 15),
         storiesCount: stories.length,
-        leadStoryId: stories[0]?.id
+        leadStoryId: stories[0]?.id,
+        breakingAlert
       }),
       {
         status: 200,

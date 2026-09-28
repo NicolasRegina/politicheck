@@ -1,0 +1,130 @@
+---
+import type { BreakingAlert } from '../services/breaking';
+
+interface Props {
+  alert?: BreakingAlert | null;
+}
+
+const { alert = null } = Astro.props;
+---
+
+<aside 
+  id="breaking-news-banner" 
+  class={`w-full bg-linear-to-r from-rose-950 via-red-950 to-slate-950 text-white border-b border-rose-700/60 shadow-md transition-all duration-300 overflow-hidden ${alert ? 'block' : 'hidden'}`}
+  data-alert-id={alert?.id || ''}
+  aria-label="Alerta de último momento"
+>
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 py-2.5 flex flex-wrap items-center justify-between gap-3 text-xs">
+    <!-- Urgent Pill & Outlets & Headline -->
+    <div class="flex items-center gap-2.5 flex-1 min-w-0">
+      <!-- Pulsing Badge -->
+      <div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-rose-600 text-white font-mono text-[10px] font-extrabold uppercase tracking-wider shadow-xs shrink-0">
+        <span class="relative flex h-2 w-2">
+          <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-white opacity-75"></span>
+          <span class="relative inline-flex rounded-full h-2 w-2 bg-white"></span>
+        </span>
+        <span>ÚLTIMO MOMENTO</span>
+      </div>
+
+      <!-- Outlets reporting (Desktop) -->
+      <div class="hidden md:inline-flex items-center gap-1 font-mono text-[11px] text-rose-200/90 shrink-0">
+        <span id="breaking-outlets-count" class="font-bold text-white">
+          {alert ? alert.outletsCount : 0} redacciones
+        </span>
+        <span>en simultáneo:</span>
+        <span id="breaking-outlets-list" class="text-rose-100 font-semibold truncate max-w-[220px] lg:max-w-none">
+          {alert ? alert.outlets.join(' • ') : ''}
+        </span>
+        <span class="text-rose-400 mx-1">•</span>
+      </div>
+
+      <!-- Live Headline -->
+      <a 
+        id="breaking-headline-link"
+        href={alert?.url || '#'} 
+        class="font-editorial text-sm sm:text-base font-bold text-white hover:text-rose-200 transition-colors truncate flex-1 underline underline-offset-2 decoration-rose-400/80"
+        title="Ver cobertura comparada"
+      >
+        <span id="breaking-headline-text">{alert ? alert.headline : ''}</span>
+      </a>
+    </div>
+
+    <!-- Action & Dismiss Buttons -->
+    <div class="flex items-center gap-2 shrink-0">
+      <a 
+        id="breaking-action-btn"
+        href={alert?.url || '#'} 
+        class="inline-flex items-center gap-1 px-3 py-1 rounded-lg bg-white text-rose-950 hover:bg-rose-100 font-mono text-[11px] font-extrabold transition-all shadow-xs shrink-0"
+      >
+        <span>Ver contraste en vivo</span>
+        <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+        </svg>
+      </a>
+
+      <button 
+        type="button" 
+        id="dismiss-breaking-banner-btn"
+        class="w-6 h-6 rounded-md hover:bg-rose-800/60 flex items-center justify-center text-rose-300 hover:text-white transition-colors cursor-pointer text-xs"
+        title="Ocultar alerta"
+        aria-label="Cerrar alerta"
+      >
+        ✕
+      </button>
+    </div>
+  </div>
+</aside>
+
+<script is:inline>
+  (() => {
+    const banner = document.getElementById('breaking-news-banner');
+    const dismissBtn = document.getElementById('dismiss-breaking-banner-btn');
+    const headlineLink = document.getElementById('breaking-headline-link');
+    const headlineText = document.getElementById('breaking-headline-text');
+    const actionBtn = document.getElementById('breaking-action-btn');
+    const outletsCount = document.getElementById('breaking-outlets-count');
+    const outletsList = document.getElementById('breaking-outlets-list');
+
+    if (!banner) return;
+
+    const alertId = banner.getAttribute('data-alert-id');
+    if (alertId && sessionStorage.getItem(`dismissed_breaking_${alertId}`) === 'true') {
+      banner.classList.add('hidden');
+      banner.classList.remove('block');
+    }
+
+    if (dismissBtn) {
+      dismissBtn.addEventListener('click', () => {
+        const currentId = banner.getAttribute('data-alert-id');
+        if (currentId) {
+          sessionStorage.setItem(`dismissed_breaking_${currentId}`, 'true');
+        }
+        banner.classList.add('hidden');
+        banner.classList.remove('block');
+      });
+    }
+
+    // Expose update function for client-side auto-refresh
+    window.updateBreakingNewsBanner = function(alertData) {
+      if (!alertData) {
+        banner.classList.add('hidden');
+        banner.classList.remove('block');
+        return;
+      }
+
+      if (sessionStorage.getItem(`dismissed_breaking_${alertData.id}`) === 'true') {
+        return;
+      }
+
+      banner.setAttribute('data-alert-id', alertData.id);
+      if (headlineText) headlineText.textContent = alertData.headline;
+      if (headlineLink) headlineLink.href = alertData.url;
+      if (actionBtn) actionBtn.href = alertData.url;
+      if (outletsCount) outletsCount.textContent = `${alertData.outletsCount} redacciones`;
+      if (outletsList) outletsList.textContent = alertData.outlets.join(' • ');
+
+      banner.classList.remove('hidden');
+      banner.classList.add('block');
+    };
+  })();
+</script>

@@ -1,5 +1,9 @@
 ---
 import { fetchLiveFinancialData, fetchLiveWeather } from '../services/finance';
+import BreakingBanner from './BreakingBanner.astro';
+import { detectBreakingNews } from '../services/breaking';
+import { getCachedClusteredStories } from '../services/ai/clustering';
+import { MOCK_STORIES } from '../data/mockData';
 
 interface Props {
   activeTab?: string;
@@ -15,6 +19,11 @@ const initialBlue = finance ? finance.blue : 1340;
 const initialOficial = finance ? finance.oficial : 1020;
 const initialMep = finance ? finance.mep : 1285;
 const initialTemp = weather ? weather.temperature : 19;
+
+// Detect active breaking news
+const cachedStories = getCachedClusteredStories();
+const storiesForAlert = cachedStories.length > 0 ? cachedStories : MOCK_STORIES;
+const breakingAlert = detectBreakingNews(storiesForAlert);
 ---
 
 <header class="sticky top-0 z-50 bg-white/95 dark:bg-[#0A0E17]/95 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 transition-colors duration-200 shadow-xs">
@@ -89,6 +98,9 @@ const initialTemp = weather ? weather.temperature : 19;
       </div>
     </div>
   </div>
+
+  <!-- Breaking News Banner (Alerta / Último Momento) -->
+  <BreakingBanner alert={breakingAlert} />
 
   <!-- The Editorial Masthead (The New York Times / La Nación format) -->
   <div class="max-w-7xl mx-auto px-4 sm:px-6 py-4">

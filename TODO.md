@@ -53,15 +53,17 @@
 
 ---
 
-### ⏳ Tarea 4: Detección y Banner de "Alerta / Último Momento" (Breaking News) — [SIGUIENTE TAREA]
-- [ ] **Algoritmo de Breaking News:**
-  - Detección de coincidencia temática urgente cuando 3 o más diarios publiquen sobre un mismo hecho en los últimos 20 minutos.
-- [ ] **Cinta visual de alerta en cabecera:**
-  - Banner dinámico pulsante en la parte superior con enlace directo al contraste de redacciones en vivo.
+### ✅ Tarea 4: Detección y Banner de "Alerta / Último Momento" (Breaking News) — [COMPLETADA]
+- [x] **Algoritmo de Breaking News (`src/services/breaking.ts`):**
+  - Detección de coincidencia temática urgente cuando 3 o más diarios publiquen sobre un mismo hecho en simultáneo o ventana reciente (score ponderado de términos urgentes, volumen de redacciones y статус de apertura).
+- [x] **Cinta visual de alerta en cabecera (`BreakingBanner.astro`):**
+  - Banner dinámico pulsante en la parte superior con badge `🚨 ÚLTIMO MOMENTO`, mención de redacciones involucradas, enlace directo al contraste en vivo y botón de descarte por sesión (`sessionStorage`).
+- [x] **Auto-actualización reactiva en tiempo real:**
+  - Endpoint `/api/news/latest` con detección de breaking news y cliente web que actualiza dinámicamente el banner cada 60s sin recargar la página.
 
 ---
 
-### ⏳ Tarea 5: Página Institucional de Metodología y Transparencia (`/metodologia`)
+### ⏳ Tarea 5: Página Institucional de Metodología y Transparencia (`/metodologia`) — [SIGUIENTE TAREA]
 - [ ] **Creación de `src/pages/metodologia.astro`:**
   - Transformar el enlace de cabecera en una página institucional completa.
   - Explicación de la fórmula matemática del espectro de sesgo.
