@@ -13,4 +13,4 @@ jobs:
       - name: Ping al endpoint de sincronización
         run: |
           echo "Disparando actualización periódica de noticias y caché en Politicheck..."
-          curl -s -f "https://politicheck.ar/api/rss/sync?cron=true" || curl -s "https://politicheck.vercel.app/api/rss/sync?cron=true" || true
+          curl -s -f "https://www.politicheck.com.ar/api/rss/sync?cron=true" || curl -s -f "https://politicheck-five.vercel.app/api/rss/sync?cron=true" || true
