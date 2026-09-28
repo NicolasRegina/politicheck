@@ -46,7 +46,7 @@ export const POST: APIRoute = async ({ request }) => {
     const clientIp = rawIp.split(',')[0].trim().slice(0, 45); // Sanitize IP length (IPv6 max 45 chars)
     const userAgent = (request.headers.get('user-agent') || 'unknown').slice(0, 255);
 
-    const result = votePromise(promiseId, voteType, clientIp, userAgent);
+    const result = await votePromise(promiseId, voteType, clientIp, userAgent);
 
     if (!result.success) {
       return new Response(

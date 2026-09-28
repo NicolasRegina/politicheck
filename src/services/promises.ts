@@ -62,19 +62,19 @@ export function getPromises(): CampaignPromise[] {
   return MOCK_PROMISES;
 }
 
-export function votePromise(
+export async function votePromise(
   promiseId: string,
   voteType: 'fulfilled' | 'inProgress' | 'broken',
   clientIp = '127.0.0.1',
   userAgent = 'unknown'
-): { 
+): Promise<{ 
   success: boolean; 
   promise?: CampaignPromise; 
   error?: string; 
   message?: string;
   isNewVote?: boolean;
   switched?: boolean;
-} {
+}> {
   try {
     const promises = getPromises();
     const index = promises.findIndex((p) => p.id === promiseId);
@@ -131,14 +131,22 @@ export function votePromise(
       isNewVote = true;
     }
 
-    // Persist changes locally
-    saveCitizenVotes(votesLog);
-    fs.writeFileSync(PROMISES_FILE, JSON.stringify(promises, null, 2), 'utf-8');
+    // Persist changes locally if writable (ignore EROFS in serverless environments)
+    try {
+      saveCitizenVotes(votesLog);
+      fs.writeFileSync(PROMISES_FILE, JSON.stringify(promises, null, 2), 'utf-8');
+    } catch (fsErr: any) {
+      if (fsErr?.code !== 'EROFS') {
+        console.warn('[Promises] Local file persist notice:', fsErr?.message);
+      }
+    }
 
     // Sync to Supabase cloud database
-    recordSupabaseVote(promiseId, voterHash, voteType).catch(err => {
-      console.warn('[Promises] Background Supabase vote sync error:', err);
-    });
+    try {
+      await recordSupabaseVote(promiseId, voterHash, voteType);
+    } catch (err: any) {
+      console.warn('[Promises] Supabase vote sync error:', err?.message);
+    }
 
     return { 
       success: true, 
@@ -149,7 +157,7 @@ export function votePromise(
     };
   } catch (error: any) {
     console.error('[Promises Service] Error recording vote:', error);
-    return { success: false, error: error.message };
+    return { success: false, error: 'Error al registrar el voto.' };
   }
 }
 
