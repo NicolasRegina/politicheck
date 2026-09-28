@@ -18,19 +18,16 @@ export const GET: APIRoute = async ({ request }) => {
   const url = new URL(request.url);
   const now = Date.now();
 
-  // Authentication check for admin bypass or Vercel cron
-  const authHeader = request.headers.get('authorization') || '';
-  const adminQueryKey = url.searchParams.get('key') || url.searchParams.get('adminKey') || '';
-  const expectedSecret = process.env.ADMIN_SECRET || process.env.CRON_SECRET || 'politicheck-admin-2027';
+  const forceRefresh = url.searchParams.get('refresh') === 'true';
+  const isCron = url.searchParams.get('cron') === 'true';
+  const isVercelCron = request.headers.get('x-vercel-cron') === '1' || isCron;
 
   const isAuthorizedAdmin = 
     authHeader === `Bearer ${expectedSecret}` || 
     adminQueryKey === expectedSecret ||
+    isVercelCron ||
     url.hostname === 'localhost' || 
     url.hostname === '127.0.0.1';
-
-  const forceRefresh = url.searchParams.get('refresh') === 'true';
-  const isCron = url.searchParams.get('cron') === 'true';
 
   try {
     // 1. Fetch RSS Feeds (both national and international filtered for Argentina)

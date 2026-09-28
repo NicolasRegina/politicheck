@@ -1,5 +1,11 @@
 {
   "framework": "astro",
+  "crons": [
+    {
+      "path": "/api/rss/sync?cron=true&refresh=true",
+      "schedule": "0 * * * *"
+    }
+  ],
   "headers": [
     {
       "source": "/(.*)",
