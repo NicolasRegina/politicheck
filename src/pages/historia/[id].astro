@@ -1,6 +1,7 @@
 ---
 import Layout from '../../layouts/Layout.astro';
 import SpectrumBar from '../../components/SpectrumBar.astro';
+import HeadlineComparison from '../../components/HeadlineComparison.astro';
 import { getStoryClusterById } from '../../services/ai/clustering';
 import { getOutletMeta } from '../../utils/outlets';
 
@@ -141,7 +142,7 @@ const story = id ? getStoryClusterById(id) : undefined;
         </section>
       )}
 
-      <!-- Side-by-side Outlet Headlines Matrix -->
+      <!-- Side-by-side Outlet Headlines Matrix with Leaning Filter & Pagination -->
       <section class="space-y-4">
         <div class="flex items-center justify-between border-b border-slate-200 dark:border-slate-800 pb-3">
           <h2 class="font-editorial text-2xl font-bold text-slate-950 dark:text-white">
@@ -150,52 +151,7 @@ const story = id ? getStoryClusterById(id) : undefined;
           <span class="font-mono text-xs text-slate-500">{story.articles.length} artículos cotejados</span>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {story.articles.map((art) => {
-            const outlet = getOutletMeta(art.outletId);
-            return (
-              <a
-                href={art.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                class="group bg-white dark:bg-[#0F1420] border border-slate-200 dark:border-slate-800/90 rounded-2xl p-5 hover:border-slate-400 dark:hover:border-slate-600 transition-all flex flex-col justify-between space-y-4 shadow-2xs hover:shadow-xs"
-              >
-                <div class="space-y-3">
-                  <div class="flex items-center justify-between gap-2 border-b border-slate-100 dark:border-slate-800/60 pb-2.5">
-                    <span class={`font-mono text-[10px] font-bold tracking-wider px-2 py-0.5 rounded border ${outlet.badgeClass}`}>
-                      {outlet.code}
-                    </span>
-                    {art.specificFocus && (
-                      <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 truncate max-w-[200px]">
-                        Foco: {art.specificFocus}
-                      </span>
-                    )}
-                  </div>
-
-                  <h3 class="font-editorial text-base sm:text-lg font-bold text-slate-900 group-hover:text-blue-900 dark:text-slate-100 dark:group-hover:text-blue-300 leading-snug transition-colors">
-                    "{art.title}"
-                  </h3>
-
-                  {art.snippet && (
-                    <p class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed font-sans line-clamp-3">
-                      {art.snippet}
-                    </p>
-                  )}
-                </div>
-
-                <div class="flex items-center justify-between text-[11px] font-mono text-slate-400 pt-3 border-t border-slate-100 dark:border-slate-800/60">
-                  <span>{art.publishedAt}</span>
-                  <span class="inline-flex items-center gap-1 text-slate-700 dark:text-slate-300 font-bold group-hover:translate-x-0.5 transition-transform">
-                    <span>Leer en {art.outletName}</span>
-                    <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                    </svg>
-                  </span>
-                </div>
-              </a>
-            );
-          })}
-        </div>
+        <HeadlineComparison articles={story.articles} storyId={story.id} isLeadStory={true} />
       </section>
     </article>
   ) : (

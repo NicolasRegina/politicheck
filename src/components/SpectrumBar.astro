@@ -45,45 +45,63 @@ if (!spectrum) {
 ---
 
 <div class="space-y-2">
-  <!-- Legend with real percentages derived from participating outlets -->
+  <!-- Legend with real percentages derived from participating outlets (Clickable to filter) -->
   <div class="flex flex-wrap items-center justify-between gap-2 text-xs font-mono">
-    <span class={`flex items-center gap-1.5 ${spectrum.oficialismoPct > 0 ? 'text-violet-700 dark:text-violet-300 font-semibold' : 'text-slate-400 dark:text-slate-600'}`}>
+    <button 
+      type="button"
+      class={`spectrum-filter-trigger flex items-center gap-1.5 transition-all hover:scale-105 cursor-pointer text-left ${spectrum.oficialismoPct > 0 ? 'text-violet-700 dark:text-violet-300 font-semibold' : 'text-slate-400 dark:text-slate-600 opacity-60'}`}
+      data-trigger-leaning="oficialismo"
+      title="Clic para filtrar por medios de línea oficialista"
+    >
       <span class={`w-2.5 h-2.5 rounded-full ${spectrum.oficialismoPct > 0 ? 'bg-violet-600 dark:bg-violet-500 shadow-xs' : 'bg-slate-300 dark:bg-slate-700'}`}></span>
       <span>Oficialismo:</span> <strong class="font-bold">{spectrum.oficialismoPct}%</strong>
-    </span>
+    </button>
 
-    <span class={`flex items-center gap-1.5 ${spectrum.centroDatosPct > 0 ? 'text-emerald-700 dark:text-emerald-300 font-semibold' : 'text-slate-400 dark:text-slate-600'}`}>
+    <button 
+      type="button"
+      class={`spectrum-filter-trigger flex items-center gap-1.5 transition-all hover:scale-105 cursor-pointer text-left ${spectrum.centroDatosPct > 0 ? 'text-emerald-700 dark:text-emerald-300 font-semibold' : 'text-slate-400 dark:text-slate-600'}`}
+      data-trigger-leaning="centro_datos"
+      title="Clic para filtrar por medios de centro y datos factuales"
+    >
       <span class={`w-2.5 h-2.5 rounded-full ${spectrum.centroDatosPct > 0 ? 'bg-emerald-500 dark:bg-emerald-400 shadow-xs' : 'bg-slate-300 dark:bg-slate-700'}`}></span>
       <span>Centro / Datos:</span> <strong class="font-bold">{spectrum.centroDatosPct}%</strong>
-    </span>
+    </button>
 
-    <span class={`flex items-center gap-1.5 ${spectrum.oposicionPct > 0 ? 'text-amber-700 dark:text-amber-300 font-semibold' : 'text-slate-400 dark:text-slate-600'}`}>
+    <button 
+      type="button"
+      class={`spectrum-filter-trigger flex items-center gap-1.5 transition-all hover:scale-105 cursor-pointer text-left ${spectrum.oposicionPct > 0 ? 'text-amber-700 dark:text-amber-300 font-semibold' : 'text-slate-400 dark:text-slate-600'}`}
+      data-trigger-leaning="oposicion"
+      title="Clic para filtrar por medios de línea crítica / opositora"
+    >
       <span class={`w-2.5 h-2.5 rounded-full ${spectrum.oposicionPct > 0 ? 'bg-amber-500 dark:bg-amber-400 shadow-xs' : 'bg-slate-300 dark:bg-slate-700'}`}></span>
       <span>Oposición:</span> <strong class="font-bold">{spectrum.oposicionPct}%</strong>
-    </span>
+    </button>
   </div>
 
   <!-- Spectrum Bar: only renders segments with actual percentage > 0 -->
   <div class="w-full h-3 rounded-full bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-0.5 flex overflow-hidden gap-0.5 shadow-inner">
     {spectrum.oficialismoPct > 0 && (
       <div 
-        class="h-full bg-violet-600 dark:bg-violet-500 rounded-l-full transition-all duration-500 hover:opacity-90 cursor-help" 
+        class="spectrum-filter-trigger h-full bg-violet-600 dark:bg-violet-500 rounded-l-full transition-all duration-500 hover:opacity-90 cursor-pointer" 
         style={`width: ${spectrum.oficialismoPct}%`}
-        title={`Enfoque Oficialista: ${spectrum.oficialismoPct}%`}
+        data-trigger-leaning="oficialismo"
+        title={`Enfoque Oficialista: ${spectrum.oficialismoPct}% (Clic para filtrar)`}
       ></div>
     )}
     {spectrum.centroDatosPct > 0 && (
       <div 
-        class={`h-full bg-emerald-500 dark:bg-emerald-400 transition-all duration-500 hover:opacity-90 cursor-help ${spectrum.oficialismoPct === 0 ? 'rounded-l-full' : ''} ${spectrum.oposicionPct === 0 ? 'rounded-r-full' : ''}`} 
+        class={`spectrum-filter-trigger h-full bg-emerald-500 dark:bg-emerald-400 transition-all duration-500 hover:opacity-90 cursor-pointer ${spectrum.oficialismoPct === 0 ? 'rounded-l-full' : ''} ${spectrum.oposicionPct === 0 ? 'rounded-r-full' : ''}`} 
         style={`width: ${spectrum.centroDatosPct}%`}
-        title={`Centro / Datos Factuales: ${spectrum.centroDatosPct}%`}
+        data-trigger-leaning="centro_datos"
+        title={`Centro / Datos Factuales: ${spectrum.centroDatosPct}% (Clic para filtrar)`}
       ></div>
     )}
     {spectrum.oposicionPct > 0 && (
       <div 
-        class="h-full bg-amber-500 dark:bg-amber-400 rounded-r-full transition-all duration-500 hover:opacity-90 cursor-help" 
+        class="spectrum-filter-trigger h-full bg-amber-500 dark:bg-amber-400 rounded-r-full transition-all duration-500 hover:opacity-90 cursor-pointer" 
         style={`width: ${spectrum.oposicionPct}%`}
-        title={`Enfoque Opositor: ${spectrum.oposicionPct}%`}
+        data-trigger-leaning="oposicion"
+        title={`Enfoque Opositor: ${spectrum.oposicionPct}% (Clic para filtrar)`}
       ></div>
     )}
   </div>

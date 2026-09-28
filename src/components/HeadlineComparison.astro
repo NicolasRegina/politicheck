@@ -1,0 +1,296 @@
+---
+import type { Article } from '../types';
+import { getOutletMeta } from '../utils/outlets';
+
+interface Props {
+  articles: Article[];
+  storyId: string;
+  isLeadStory?: boolean;
+}
+
+const { articles, storyId, isLeadStory = false } = Astro.props;
+
+// Compute counts by baseline leaning
+const leaningCounts = {
+  all: articles.length,
+  oficialismo: articles.filter(a => getOutletMeta(a.outletId).baselineLeaning === 'oficialismo').length,
+  centro_datos: articles.filter(a => getOutletMeta(a.outletId).baselineLeaning === 'centro_datos').length,
+  oposicion: articles.filter(a => getOutletMeta(a.outletId).baselineLeaning === 'oposicion').length,
+};
+---
+
+<div class="headline-comparison-container space-y-3" data-story-id={storyId}>
+  <!-- Filter & Controls Toolbar -->
+  <div class="flex flex-wrap items-center justify-between gap-2 border-b border-slate-200/80 dark:border-slate-800/80 pb-2.5">
+    <!-- Leaning filter buttons -->
+    <div class="flex items-center gap-1.5 overflow-x-auto text-[11px] font-mono py-0.5 filter-buttons-row">
+      <button
+        type="button"
+        class="filter-pill-btn active px-3 py-1 rounded-lg bg-slate-900 text-white dark:bg-white dark:text-slate-950 font-bold transition-all shadow-2xs cursor-pointer border border-transparent"
+        data-filter="all"
+      >
+        Todos ({leaningCounts.all})
+      </button>
+
+      {leaningCounts.oficialismo > 0 && (
+        <button
+          type="button"
+          class="filter-pill-btn px-2.5 py-1 rounded-lg bg-slate-100 hover:bg-violet-100/80 text-slate-700 dark:bg-slate-900/80 dark:hover:bg-violet-950/60 dark:text-slate-300 hover:text-violet-900 dark:hover:text-violet-200 border border-slate-200 dark:border-slate-800 transition-all cursor-pointer inline-flex items-center gap-1.5"
+          data-filter="oficialismo"
+        >
+          <span class="w-2 h-2 rounded-full bg-violet-600 dark:bg-violet-500"></span>
+          <span>Oficialismo ({leaningCounts.oficialismo})</span>
+        </button>
+      )}
+
+      {leaningCounts.centro_datos > 0 && (
+        <button
+          type="button"
+          class="filter-pill-btn px-2.5 py-1 rounded-lg bg-slate-100 hover:bg-emerald-100/80 text-slate-700 dark:bg-slate-900/80 dark:hover:bg-emerald-950/60 dark:text-slate-300 hover:text-emerald-900 dark:hover:text-emerald-200 border border-slate-200 dark:border-slate-800 transition-all cursor-pointer inline-flex items-center gap-1.5"
+          data-filter="centro_datos"
+        >
+          <span class="w-2 h-2 rounded-full bg-emerald-500 dark:bg-emerald-400"></span>
+          <span>Centro / Datos ({leaningCounts.centro_datos})</span>
+        </button>
+      )}
+
+      {leaningCounts.oposicion > 0 && (
+        <button
+          type="button"
+          class="filter-pill-btn px-2.5 py-1 rounded-lg bg-slate-100 hover:bg-amber-100/80 text-slate-700 dark:bg-slate-900/80 dark:hover:bg-amber-950/60 dark:text-slate-300 hover:text-amber-900 dark:hover:text-amber-200 border border-slate-200 dark:border-slate-800 transition-all cursor-pointer inline-flex items-center gap-1.5"
+          data-filter="oposicion"
+        >
+          <span class="w-2 h-2 rounded-full bg-amber-500 dark:bg-amber-400"></span>
+          <span>Oposición ({leaningCounts.oposicion})</span>
+        </button>
+      )}
+    </div>
+
+    <!-- Live filter status indicator -->
+    <span class="filter-status-badge text-[11px] font-mono text-slate-500 dark:text-slate-400 hidden sm:inline">
+      {articles.length} medios
+    </span>
+  </div>
+
+  <!-- Cards Grid -->
+  <div class={`articles-grid grid gap-3 ${isLeadStory ? 'grid-cols-1 md:grid-cols-2' : 'grid-cols-1'}`}>
+    {articles.map((art) => {
+      const outlet = getOutletMeta(art.outletId);
+      return (
+        <a 
+          href={art.url} 
+          target="_blank" 
+          rel="noopener noreferrer"
+          class="article-comparison-card group block p-3.5 rounded-xl bg-slate-50/70 hover:bg-slate-100 dark:bg-slate-950/40 dark:hover:bg-slate-900 border border-slate-200/80 hover:border-slate-300 dark:border-slate-800/80 dark:hover:border-slate-700 transition-all duration-200 shadow-2xs"
+          data-leaning={outlet.baselineLeaning}
+        >
+          <!-- Outlet badge + Specific focus pill -->
+          <div class="flex flex-wrap items-center justify-between gap-1.5 mb-2">
+            <span class={`px-2 py-0.5 rounded text-[10px] font-mono font-bold tracking-wider border ${outlet.badgeClass}`}>
+              {outlet.code}
+            </span>
+            {art.specificFocus && (
+              <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700 truncate max-w-[220px]">
+                Foco: {art.specificFocus}
+              </span>
+            )}
+          </div>
+
+          <!-- Headline -->
+          <h4 class="font-editorial text-sm sm:text-base font-bold text-slate-900 group-hover:text-blue-900 dark:text-slate-200 dark:group-hover:text-blue-300 leading-snug transition-colors mb-1.5">
+            "{art.title}"
+          </h4>
+
+          <!-- Snippet -->
+          {art.snippet && (
+            <p class="text-xs text-slate-600 dark:text-slate-400 line-clamp-2 leading-relaxed mb-2 font-sans">
+              {art.snippet}
+            </p>
+          )}
+
+          <!-- Footer: timestamp and read link -->
+          <div class="flex items-center justify-between text-[11px] font-mono text-slate-500 dark:text-slate-400 pt-1.5 border-t border-slate-200/50 dark:border-slate-800/50">
+            <span>{art.publishedAt}</span>
+            <span class="inline-flex items-center gap-1 text-slate-600 group-hover:text-slate-950 dark:text-slate-400 dark:group-hover:text-slate-100 font-semibold transition-colors">
+              Ir a {art.outletName}
+              <svg class="w-3 h-3 group-hover:translate-x-0.5 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+              </svg>
+            </span>
+          </div>
+        </a>
+      );
+    })}
+  </div>
+
+  <!-- Pagination Toolbar -->
+  <div class="pagination-footer flex items-center justify-between pt-2.5 border-t border-slate-200/80 dark:border-slate-800/80 text-xs font-mono">
+    <div class="text-[11px] text-slate-500 dark:text-slate-400 pagination-label">
+      Mostrando 1-4 de {articles.length} redacciones
+    </div>
+
+    <div class="flex items-center gap-1.5">
+      <button
+        type="button"
+        class="prev-btn px-2.5 py-1 rounded-lg border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 font-medium text-xs transition-colors cursor-pointer disabled:opacity-30 disabled:pointer-events-none"
+        disabled
+      >
+        ← Anterior
+      </button>
+
+      <div class="page-indicators flex items-center gap-1 px-1">
+        <!-- Rendered by JS -->
+      </div>
+
+      <button
+        type="button"
+        class="next-btn px-2.5 py-1 rounded-lg border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 font-medium text-xs transition-colors cursor-pointer disabled:opacity-30 disabled:pointer-events-none"
+      >
+        Siguiente →
+      </button>
+    </div>
+  </div>
+</div>
+
+<script>
+  function initHeadlineComparators() {
+    const containers = document.querySelectorAll('.headline-comparison-container');
+    containers.forEach(container => {
+      if (container.hasAttribute('data-initialized')) return;
+      container.setAttribute('data-initialized', 'true');
+
+      const cards = Array.from(container.querySelectorAll('.article-comparison-card'));
+      const filterBtns = Array.from(container.querySelectorAll('.filter-pill-btn'));
+      const prevBtn = container.querySelector('.prev-btn') as HTMLButtonElement | null;
+      const nextBtn = container.querySelector('.next-btn') as HTMLButtonElement | null;
+      const pageIndicators = container.querySelector('.page-indicators');
+      const paginationFooter = container.querySelector('.pagination-footer');
+      const paginationLabel = container.querySelector('.pagination-label');
+      const filterStatusBadge = container.querySelector('.filter-status-badge');
+
+      let currentFilter = 'all';
+      let currentPage = 1;
+      const pageSize = 4; // 4 cards per page (2x2 grid) eliminates scroll fatigue
+
+      function render() {
+        const filtered = cards.filter(card => {
+          if (currentFilter === 'all') return true;
+          return card.getAttribute('data-leaning') === currentFilter;
+        });
+
+        const totalItems = filtered.length;
+        const totalPages = Math.max(1, Math.ceil(totalItems / pageSize));
+        if (currentPage > totalPages) currentPage = 1;
+
+        // Hide all cards
+        cards.forEach(card => card.classList.add('hidden'));
+
+        // Show cards for current page
+        const startIdx = (currentPage - 1) * pageSize;
+        const endIdx = startIdx + pageSize;
+        const currentSlice = filtered.slice(startIdx, endIdx);
+        currentSlice.forEach(card => card.classList.remove('hidden'));
+
+        // Update range labels
+        const startNum = totalItems > 0 ? startIdx + 1 : 0;
+        const endNum = Math.min(totalItems, endIdx);
+        const labelText = `Mostrando ${startNum}-${endNum} de ${totalItems} redacciones`;
+        if (paginationLabel) paginationLabel.textContent = labelText;
+        if (filterStatusBadge) {
+          filterStatusBadge.textContent = totalPages > 1 ? `Página ${currentPage} de ${totalPages}` : `${totalItems} medios`;
+        }
+
+        // Toggle pagination visibility
+        if (paginationFooter) {
+          if (totalPages <= 1) {
+            paginationFooter.classList.add('hidden');
+          } else {
+            paginationFooter.classList.remove('hidden');
+          }
+        }
+
+        // Update Prev / Next button states
+        if (prevBtn) prevBtn.disabled = currentPage <= 1;
+        if (nextBtn) nextBtn.disabled = currentPage >= totalPages;
+
+        // Render page indicator buttons
+        if (pageIndicators) {
+          pageIndicators.innerHTML = '';
+          for (let p = 1; p <= totalPages; p++) {
+            const pageBtn = document.createElement('button');
+            pageBtn.type = 'button';
+            pageBtn.className = `w-6 h-6 rounded-md font-mono text-[11px] font-bold transition-all cursor-pointer ${
+              p === currentPage 
+                ? 'bg-slate-900 text-white dark:bg-white dark:text-slate-900 shadow-2xs' 
+                : 'text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-800'
+            }`;
+            pageBtn.textContent = String(p);
+            pageBtn.addEventListener('click', () => {
+              currentPage = p;
+              render();
+            });
+            pageIndicators.appendChild(pageBtn);
+          }
+        }
+      }
+
+      // Filter click listeners
+      filterBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+          const filter = btn.getAttribute('data-filter') || 'all';
+          currentFilter = filter;
+          currentPage = 1;
+
+          filterBtns.forEach(b => {
+            b.classList.remove('active', 'bg-slate-900', 'text-white', 'dark:bg-white', 'dark:text-slate-950', 'shadow-2xs', 'border-transparent');
+            b.classList.add('bg-slate-100', 'text-slate-700', 'dark:bg-slate-900/80', 'dark:text-slate-300', 'border-slate-200', 'dark:border-slate-800');
+          });
+
+          btn.classList.add('active', 'bg-slate-900', 'text-white', 'dark:bg-white', 'dark:text-slate-950', 'shadow-2xs', 'border-transparent');
+          btn.classList.remove('bg-slate-100', 'text-slate-700', 'dark:bg-slate-900/80', 'dark:text-slate-300', 'border-slate-200', 'dark:border-slate-800');
+
+          render();
+        });
+      });
+
+      // Pagination button listeners
+      if (prevBtn) {
+        prevBtn.addEventListener('click', () => {
+          if (currentPage > 1) {
+            currentPage--;
+            render();
+          }
+        });
+      }
+      if (nextBtn) {
+        nextBtn.addEventListener('click', () => {
+          currentPage++;
+          render();
+        });
+      }
+
+      // Initial render
+      render();
+    });
+
+    // Wire clicks on SpectrumBar triggers to activate the corresponding filter pill
+    document.querySelectorAll('.spectrum-filter-trigger').forEach(trigger => {
+      trigger.addEventListener('click', () => {
+        const leaning = trigger.getAttribute('data-trigger-leaning');
+        if (!leaning) return;
+        const parentCard = trigger.closest('article, .story-item, #view-temas-del-dia, main');
+        if (parentCard) {
+          const targetBtn = parentCard.querySelector(`.filter-pill-btn[data-filter="${leaning}"]`) as HTMLButtonElement | null;
+          if (targetBtn) {
+            targetBtn.click();
+            targetBtn.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+          }
+        }
+      });
+    });
+  }
+
+  // Run on initial load and on Astro view transitions
+  initHeadlineComparators();
+  document.addEventListener('astro:page-load', initHeadlineComparators);
+</script>
