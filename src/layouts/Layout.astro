@@ -108,10 +108,11 @@ const absoluteImageUrl = image.startsWith('http') ? image : `https://www.politic
       }
     </script>
 
-    <!-- Theme Initialization Script (Prevents FOUC) -->
+    <!-- Theme Initialization Script (Default to White/Light Theme) -->
     <script is:inline>
       const savedTheme = localStorage.getItem('politicheck-theme');
-      if (savedTheme === 'dark' || (!savedTheme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+      // Default to Light Mode as explicitly requested
+      if (savedTheme === 'dark') {
         document.documentElement.classList.add('dark');
       } else {
         document.documentElement.classList.remove('dark');

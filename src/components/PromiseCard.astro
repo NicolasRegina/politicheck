@@ -1,43 +1,62 @@
 ---
 import type { CampaignPromise } from '../types';
+import { getPolitician } from '../data/politicians';
+import Promesometro from './Promesometro.astro';
 
 interface Props {
   promise: CampaignPromise;
 }
 
 const { promise } = Astro.props;
+const politician = getPolitician(promise.candidate);
 
-const getStatusBadge = (status: string) => {
+// Status color tokens (PolitiFact-style)
+const getStatusTheme = (status: string) => {
   switch (status) {
     case 'cumplida':
       return {
         label: 'Cumplida',
-        class: 'bg-emerald-50 text-emerald-900 dark:bg-emerald-950/60 dark:text-emerald-300 border-emerald-300 dark:border-emerald-800'
+        borderAccent: 'border-l-emerald-500',
+        badgeClass: 'bg-emerald-50 text-emerald-950 dark:bg-emerald-950/80 dark:text-emerald-200 border-emerald-300 dark:border-emerald-800',
+        quoteBorder: 'border-l-emerald-500',
+        bgSubtle: 'bg-emerald-50/20'
       };
     case 'en_progreso':
       return {
         label: 'En progreso',
-        class: 'bg-sky-50 text-sky-900 dark:bg-sky-950/60 dark:text-sky-300 border-sky-300 dark:border-sky-800'
+        borderAccent: 'border-l-amber-500',
+        badgeClass: 'bg-amber-50 text-amber-950 dark:bg-amber-950/80 dark:text-amber-200 border-amber-300 dark:border-amber-800',
+        quoteBorder: 'border-l-amber-500',
+        bgSubtle: 'bg-amber-50/20'
       };
     case 'en_pausa':
       return {
         label: 'En pausa',
-        class: 'bg-amber-50 text-amber-900 dark:bg-amber-950/60 dark:text-amber-300 border-amber-300 dark:border-amber-800'
+        borderAccent: 'border-l-orange-500',
+        badgeClass: 'bg-orange-50 text-orange-950 dark:bg-orange-950/80 dark:text-orange-200 border-orange-300 dark:border-orange-800',
+        quoteBorder: 'border-l-orange-500',
+        bgSubtle: 'bg-orange-50/20'
       };
     case 'incumplida':
       return {
         label: 'Incumplida',
-        class: 'bg-rose-50 text-rose-900 dark:bg-rose-950/60 dark:text-rose-300 border-rose-300 dark:border-rose-800'
+        borderAccent: 'border-l-rose-500',
+        badgeClass: 'bg-rose-50 text-rose-950 dark:bg-rose-950/80 dark:text-rose-200 border-rose-300 dark:border-rose-800',
+        quoteBorder: 'border-l-rose-500',
+        bgSubtle: 'bg-rose-50/20'
       };
     default:
       return {
         label: 'En evaluación',
-        class: 'bg-slate-50 text-slate-900 dark:bg-slate-900 dark:text-slate-300 border-slate-300 dark:border-slate-700'
+        borderAccent: 'border-l-slate-400',
+        badgeClass: 'bg-slate-50 text-slate-900 dark:bg-slate-900 dark:text-slate-300 border-slate-300 dark:border-slate-700',
+        quoteBorder: 'border-l-slate-400',
+        bgSubtle: ''
       };
   }
 };
 
-const badge = getStatusBadge(promise.status);
+const theme = getStatusTheme(promise.status);
 
 const getInitials = (name: string) => {
   return name
@@ -49,14 +68,10 @@ const getInitials = (name: string) => {
 };
 
 const votes = promise.votes || { fulfilled: 0, inProgress: 0, broken: 0 };
-const totalVotes = (votes.fulfilled || 0) + (votes.inProgress || 0) + (votes.broken || 0);
-const fulfilledPct = totalVotes > 0 ? Math.round((votes.fulfilled / totalVotes) * 100) : 0;
-const inProgressPct = totalVotes > 0 ? Math.round((votes.inProgress / totalVotes) * 100) : 0;
-const brokenPct = totalVotes > 0 ? Math.round((votes.broken / totalVotes) * 100) : 0;
 ---
 
 <div 
-  class="promise-card bg-white dark:bg-[#0F1420] border border-slate-200 dark:border-slate-800/90 rounded-2xl p-5 sm:p-6 space-y-4 shadow-xs hover:border-slate-300 dark:hover:border-slate-700 transition-all flex flex-col justify-between"
+  class={`promise-card bg-white dark:bg-[#0F1420] border border-slate-200 dark:border-slate-800/90 rounded-2xl p-5 sm:p-6 space-y-4 shadow-sm hover:shadow-md hover:border-slate-300 dark:hover:border-slate-700 transition-all flex flex-col justify-between border-l-4 ${theme.borderAccent}`}
   data-candidate={promise.candidate}
   data-status={promise.status}
   data-coalition={promise.coalition}
@@ -64,41 +79,68 @@ const brokenPct = totalVotes > 0 ? Math.round((votes.broken / totalVotes) * 100)
   data-id={promise.id}
 >
   <div class="space-y-4">
-    <!-- Candidate header and status -->
-    <div class="flex flex-wrap items-center justify-between gap-2.5 border-b border-slate-200 dark:border-slate-800 pb-3">
-      <div class="flex items-center gap-3">
-        <!-- Initials Avatar -->
-        <div class="w-10 h-10 rounded-xl bg-slate-900 dark:bg-slate-100 text-white dark:text-slate-900 font-mono text-xs font-bold flex items-center justify-center shrink-0 shadow-xs">
+    <!-- PolitiFact Header: Politician circular photo, quote mark, name pill & stated context -->
+    <div class="flex items-start gap-3.5 border-b border-slate-100 dark:border-slate-800/80 pb-3.5">
+      <!-- Politician Avatar Headshot (with quote mark) -->
+      <div class="relative shrink-0">
+        {politician.avatar ? (
+          <img 
+            src={politician.avatar} 
+            alt={promise.candidate} 
+            class="w-13 h-13 rounded-full object-cover ring-2 ring-white dark:ring-slate-800 shadow-md border border-slate-200 dark:border-slate-700"
+            loading="lazy"
+            onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
+          />
+        ) : null}
+        
+        <!-- Fallback initials if image missing or broken -->
+        <div 
+          class={`w-13 h-13 rounded-full font-mono text-xs font-bold items-center justify-center shadow-md border ${politician.partyColor.badgeBg} ${politician.avatar ? 'hidden' : 'flex'}`}
+        >
           {getInitials(promise.candidate)}
         </div>
 
-        <div>
-          <div class="flex items-center gap-2">
-            <h4 class="font-editorial text-lg font-bold text-slate-950 dark:text-white leading-tight">
-              {promise.candidate}
-            </h4>
-            <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700">
-              {promise.coalition}
-            </span>
-          </div>
-          <p class="text-xs text-slate-500 dark:text-slate-400 font-mono mt-0.5">
-            {promise.role} • <span class="text-slate-700 dark:text-slate-300 font-medium">{promise.category}</span>
-          </p>
+        <!-- Quotation icon badge -->
+        <div class="absolute -bottom-1 -right-1 w-5 h-5 rounded-full bg-slate-900 dark:bg-white text-white dark:text-slate-900 flex items-center justify-center text-[11px] font-serif shadow-xs">
+          “
         </div>
       </div>
 
-      <!-- Status badge pill -->
-      <span class={`px-2.5 py-1 rounded-full text-[11px] font-mono font-bold tracking-wider border ${badge.class}`}>
-        {promise.statusLabel}
-      </span>
+      <!-- Candidate name & context -->
+      <div class="flex-1 min-w-0">
+        <div class="flex flex-wrap items-center gap-2">
+          <!-- Candidate Name Badge with party background -->
+          <span class={`inline-flex items-center px-2.5 py-0.5 rounded-md font-sans text-sm font-extrabold border shadow-2xs ${politician.partyColor.badgeBg}`}>
+            {promise.candidate}
+          </span>
+
+          <!-- Coalition Pill -->
+          <span class="text-[11px] font-mono px-2 py-0.5 rounded-full bg-slate-100 dark:bg-slate-800/90 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700">
+            {promise.coalition}
+          </span>
+        </div>
+
+        <!-- Role & Stated Context (PolitiFact style) -->
+        <p class="text-xs text-slate-500 dark:text-slate-400 font-sans mt-1 leading-snug">
+          declaró en: <span class="font-medium text-slate-700 dark:text-slate-300">{promise.statedAt}</span>
+        </p>
+      </div>
     </div>
 
-    <!-- Verbatim promise quote -->
-    <blockquote class="font-editorial text-base sm:text-lg italic text-slate-900 dark:text-slate-100 border-l-2 border-slate-900 dark:border-slate-400 pl-4 py-1 leading-relaxed">
-      {promise.promiseText}
-    </blockquote>
+    <!-- Quote & Meter Section (PolitiFact Visual Dual Layout) -->
+    <div class="grid grid-cols-1 md:grid-cols-[1fr_auto] gap-4 items-center">
+      <!-- Verbatim Promise Quote with colored left bar -->
+      <blockquote class={`font-editorial text-base sm:text-lg italic font-medium text-slate-900 dark:text-slate-100 border-l-4 ${theme.quoteBorder} pl-4 py-1 leading-relaxed bg-slate-50/50 dark:bg-slate-900/40 rounded-r-xl`}>
+        {promise.promiseText}
+      </blockquote>
 
-    <!-- Factual Observatory Audit Notes -->
+      <!-- Visual Truth-O-Meter / Promesómetro -->
+      <div class="flex justify-center md:justify-end shrink-0">
+        <Promesometro status={promise.status} />
+      </div>
+    </div>
+
+    <!-- Factual Observatory Audit Notes & Proof -->
     <div class="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-950/60 border border-slate-200/80 dark:border-slate-800 space-y-1.5 text-xs">
       <div class="font-mono text-[10px] font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300 flex items-center gap-1.5">
         <svg class="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -127,16 +169,16 @@ const brokenPct = totalVotes > 0 ? Math.round((votes.broken / totalVotes) * 100)
   >
     <div class="flex items-center justify-between text-[11px] font-mono">
       <span class="text-slate-600 dark:text-slate-400 flex items-center gap-1.5">
-        <svg class="w-3.5 h-3.5 text-slate-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <svg class="w-3.5 h-3.5 text-indigo-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
         </svg>
         <strong class="widget-title">Auditoría Ciudadana</strong>
       </span>
-      <span class="widget-sub text-slate-400 dark:text-slate-500 text-[10px]">Votá para ver la tendencia</span>
+      <span class="widget-sub text-slate-500 dark:text-slate-400 text-[10px]">Votá para ver la tendencia comunitaria</span>
     </div>
 
     <!-- Consensus Progress Bar (Neutral placeholder before voting, revealed on vote) -->
-    <div class="consensus-bar relative h-2 w-full bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden flex transition-all duration-500">
+    <div class="consensus-bar relative h-2.5 w-full bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden flex transition-all duration-500">
       <div class="bar-placeholder absolute inset-0 bg-slate-200/50 dark:bg-slate-800/50 flex items-center justify-center transition-opacity duration-300"></div>
       <div class="bar-fulfilled bg-emerald-500 transition-all duration-700 opacity-0" style="width: 0%"></div>
       <div class="bar-in-progress bg-amber-500 transition-all duration-700 opacity-0" style="width: 0%"></div>
@@ -147,7 +189,7 @@ const brokenPct = totalVotes > 0 ? Math.round((votes.broken / totalVotes) * 100)
     <div class="grid grid-cols-3 gap-2 pt-1">
       <button 
         type="button"
-        class="vote-btn flex items-center justify-center gap-1.5 py-1.5 px-2 rounded-lg border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/80 hover:bg-emerald-50 dark:hover:bg-emerald-950/40 text-[11px] font-mono text-slate-700 dark:text-slate-300 hover:text-emerald-700 dark:hover:text-emerald-300 transition-all cursor-pointer"
+        class="vote-btn flex items-center justify-center gap-1.5 py-1.5 px-2 rounded-lg border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/80 hover:bg-emerald-50 dark:hover:bg-emerald-950/40 text-[11px] font-mono text-slate-700 dark:text-slate-300 hover:text-emerald-700 dark:hover:text-emerald-300 hover:border-emerald-300 transition-all cursor-pointer shadow-2xs"
         data-vote-type="fulfilled"
         data-promise-id={promise.id}
       >
@@ -158,7 +200,7 @@ const brokenPct = totalVotes > 0 ? Math.round((votes.broken / totalVotes) * 100)
 
       <button 
         type="button"
-        class="vote-btn flex items-center justify-center gap-1.5 py-1.5 px-2 rounded-lg border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/80 hover:bg-amber-50 dark:hover:bg-amber-950/40 text-[11px] font-mono text-slate-700 dark:text-slate-300 hover:text-amber-700 dark:hover:text-amber-300 transition-all cursor-pointer"
+        class="vote-btn flex items-center justify-center gap-1.5 py-1.5 px-2 rounded-lg border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/80 hover:bg-amber-50 dark:hover:bg-amber-950/40 text-[11px] font-mono text-slate-700 dark:text-slate-300 hover:text-amber-700 dark:hover:text-amber-300 hover:border-amber-300 transition-all cursor-pointer shadow-2xs"
         data-vote-type="inProgress"
         data-promise-id={promise.id}
       >
@@ -169,7 +211,7 @@ const brokenPct = totalVotes > 0 ? Math.round((votes.broken / totalVotes) * 100)
 
       <button 
         type="button"
-        class="vote-btn flex items-center justify-center gap-1.5 py-1.5 px-2 rounded-lg border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/80 hover:bg-rose-50 dark:hover:bg-rose-950/40 text-[11px] font-mono text-slate-700 dark:text-slate-300 hover:text-rose-700 dark:hover:text-rose-300 transition-all cursor-pointer"
+        class="vote-btn flex items-center justify-center gap-1.5 py-1.5 px-2 rounded-lg border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/80 hover:bg-rose-50 dark:hover:bg-rose-950/40 text-[11px] font-mono text-slate-700 dark:text-slate-300 hover:text-rose-700 dark:hover:text-rose-300 hover:border-rose-300 transition-all cursor-pointer shadow-2xs"
         data-vote-type="broken"
         data-promise-id={promise.id}
       >
@@ -181,8 +223,8 @@ const brokenPct = totalVotes > 0 ? Math.round((votes.broken / totalVotes) * 100)
 
     <!-- Source date & official link footer -->
     <div class="flex items-center justify-between text-[11px] font-mono text-slate-500 dark:text-slate-400 pt-2 border-t border-slate-200/50 dark:border-slate-800/50">
-      <span class="truncate max-w-[160px] sm:max-w-[220px]" title={promise.statedAt}>
-        Declarado en: {promise.statedAt}
+      <span class="text-[10px] text-slate-600 dark:text-slate-400">
+        Auditoría independiente
       </span>
       <div class="flex items-center gap-3 shrink-0">
         <button 
@@ -203,7 +245,7 @@ const brokenPct = totalVotes > 0 ? Math.round((votes.broken / totalVotes) * 100)
           href={promise.sourceUrl} 
           target="_blank" 
           rel="noopener noreferrer"
-          class="inline-flex items-center gap-1 hover:text-slate-900 dark:hover:text-slate-100 font-semibold underline underline-offset-2 transition-colors"
+          class="inline-flex items-center gap-1 text-sky-700 dark:text-sky-400 hover:text-sky-900 dark:hover:text-sky-300 font-semibold underline underline-offset-2 transition-colors"
         >
           <span>Documento oficial</span>
           <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">

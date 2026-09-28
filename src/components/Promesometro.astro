@@ -1,0 +1,126 @@
+---
+interface Props {
+  status: 'cumplida' | 'en_progreso' | 'en_pausa' | 'incumplida' | string;
+  size?: 'sm' | 'md';
+}
+
+const { status, size = 'md' } = Astro.props;
+
+// Meter angle & configuration
+// -65 deg = Cumplida (Green)
+// -20 deg = En Progreso (Sky/Amber)
+// +25 deg = En Pausa (Orange)
+// +65 deg = Incumplida (Red)
+const getMeterData = (st: string) => {
+  switch (st) {
+    case 'cumplida':
+      return {
+        angle: -60,
+        label: 'CUMPLIDA',
+        color: 'text-emerald-600 dark:text-emerald-400',
+        ledBg: 'bg-emerald-500 shadow-[0_0_10px_rgba(16,185,129,0.8)]',
+        cardBg: 'bg-emerald-50/50 dark:bg-emerald-950/20 border-emerald-200 dark:border-emerald-800/60'
+      };
+    case 'en_progreso':
+      return {
+        angle: -15,
+        label: 'EN PROGRESO',
+        color: 'text-amber-600 dark:text-amber-400',
+        ledBg: 'bg-amber-500 shadow-[0_0_10px_rgba(245,158,11,0.8)]',
+        cardBg: 'bg-amber-50/50 dark:bg-amber-950/20 border-amber-200 dark:border-amber-800/60'
+      };
+    case 'en_pausa':
+      return {
+        angle: 25,
+        label: 'EN PAUSA',
+        color: 'text-orange-600 dark:text-orange-400',
+        ledBg: 'bg-orange-500 shadow-[0_0_10px_rgba(249,115,22,0.8)]',
+        cardBg: 'bg-orange-50/50 dark:bg-orange-950/20 border-orange-200 dark:border-orange-800/60'
+      };
+    case 'incumplida':
+      return {
+        angle: 65,
+        label: 'INCUMPLIDA',
+        color: 'text-rose-600 dark:text-rose-400',
+        ledBg: 'bg-rose-500 shadow-[0_0_10px_rgba(244,63,94,0.8)]',
+        cardBg: 'bg-rose-50/50 dark:bg-rose-950/20 border-rose-200 dark:border-rose-800/60'
+      };
+    default:
+      return {
+        angle: 0,
+        label: 'EN EVALUACIÓN',
+        color: 'text-slate-600 dark:text-slate-400',
+        ledBg: 'bg-slate-400',
+        cardBg: 'bg-slate-50 dark:bg-slate-900 border-slate-200 dark:border-slate-800'
+      };
+  }
+};
+
+const meter = getMeterData(status);
+const isSmall = size === 'sm';
+---
+
+<div class={`inline-flex flex-col items-center justify-between p-3 rounded-xl border ${meter.cardBg} select-none transition-all shadow-xs`}>
+  <!-- Meter Dial Graphic -->
+  <div class="relative w-36 h-20 flex items-center justify-center overflow-hidden">
+    <svg viewBox="0 0 140 85" class="w-full h-full drop-shadow-xs">
+      <defs>
+        <!-- Arcs gradients -->
+        <linearGradient id="meter-gradient" x1="0%" y1="0%" x2="100%" y2="0%">
+          <stop offset="0%" stop-color="#10B981" />
+          <stop offset="35%" stop-color="#F59E0B" />
+          <stop offset="70%" stop-color="#F97316" />
+          <stop offset="100%" stop-color="#EF4444" />
+        </linearGradient>
+      </defs>
+
+      <!-- Meter Outer Bezel Arc -->
+      <path 
+        d="M 15 75 A 55 55 0 0 1 125 75" 
+        fill="none" 
+        stroke="currentColor" 
+        class="text-slate-200 dark:text-slate-800" 
+        stroke-width="12" 
+        stroke-linecap="round"
+      />
+
+      <!-- Color Rainbow Meter Arc -->
+      <path 
+        d="M 15 75 A 55 55 0 0 1 125 75" 
+        fill="none" 
+        stroke="url(#meter-gradient)" 
+        stroke-width="8" 
+        stroke-linecap="round"
+      />
+
+      <!-- Dial Tick Marks -->
+      <line x1="20" y1="75" x2="28" y2="75" stroke="#10B981" stroke-width="2" />
+      <line x1="38" y1="38" x2="44" y2="43" stroke="#F59E0B" stroke-width="2" />
+      <line x1="70" y1="20" x2="70" y2="28" stroke="#F59E0B" stroke-width="2" />
+      <line x1="102" y1="38" x2="96" y2="43" stroke="#F97316" stroke-width="2" />
+      <line x1="120" y1="75" x2="112" y2="75" stroke="#EF4444" stroke-width="2" />
+
+      <!-- Center Pivot Dial -->
+      <circle cx="70" cy="75" r="7" class="fill-slate-800 dark:fill-slate-100" />
+      <circle cx="70" cy="75" r="3" class="fill-white dark:fill-slate-900" />
+
+      <!-- Needle with dynamic rotation -->
+      <g transform={`rotate(${meter.angle}, 70, 75)`} class="transition-transform duration-700 ease-out">
+        <polygon points="68,75 72,75 70,22" class="fill-slate-900 dark:fill-white" />
+        <circle cx="70" cy="24" r="2.5" class="fill-rose-600 dark:fill-rose-400" />
+      </g>
+    </svg>
+  </div>
+
+  <!-- PolitiFact-style Meter Badge & Glowing LED Diode -->
+  <div class="mt-1 flex items-center gap-2">
+    <span class={`w-2 h-2 rounded-full ${meter.ledBg} animate-pulse shrink-0`}></span>
+    <span class={`font-mono text-[11px] font-black tracking-wider uppercase ${meter.color}`}>
+      {meter.label}
+    </span>
+  </div>
+
+  <span class="text-[9px] font-mono tracking-tight text-slate-600 dark:text-slate-400 mt-0.5">
+    AUDITORÍA OFICIAL
+  </span>
+</div>

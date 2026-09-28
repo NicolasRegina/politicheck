@@ -8,19 +8,19 @@ interface Props {
 
 const { story } = Astro.props;
 
-// Outlet monogram / badge helper (editorial newspaper style)
+// Outlet monogram / badge helper (editorial newspaper style with signature colors)
 const getOutletBadge = (id: string) => {
   switch (id) {
-    case 'clarin': return { code: 'CLARÍN', color: 'bg-red-50 text-red-900 dark:bg-red-950/50 dark:text-red-300 border-red-200 dark:border-red-900/60' };
-    case 'lanacion': return { code: 'LA NACIÓN', color: 'bg-sky-50 text-sky-950 dark:bg-sky-950/50 dark:text-sky-300 border-sky-200 dark:border-sky-900/60' };
-    case 'pagina12': return { code: 'PÁGINA 12', color: 'bg-amber-50 text-amber-950 dark:bg-amber-950/50 dark:text-amber-300 border-amber-200 dark:border-amber-900/60' };
-    case 'infobae': return { code: 'INFOBAE', color: 'bg-orange-50 text-orange-950 dark:bg-orange-950/50 dark:text-orange-300 border-orange-200 dark:border-orange-900/60' };
-    case 'ambito': return { code: 'ÁMBITO', color: 'bg-indigo-50 text-indigo-950 dark:bg-indigo-950/50 dark:text-indigo-300 border-indigo-200 dark:border-indigo-900/60' };
-    case 'cronista': return { code: 'EL CRONISTA', color: 'bg-blue-50 text-blue-950 dark:bg-blue-950/50 dark:text-blue-300 border-blue-200 dark:border-blue-900/60' };
-    case 'ft': return { code: 'FINANCIAL TIMES', color: 'bg-rose-50 text-rose-950 dark:bg-rose-950/50 dark:text-rose-300 border-rose-200 dark:border-rose-900/60' };
-    case 'elpais': return { code: 'EL PAÍS', color: 'bg-slate-100 text-slate-900 dark:bg-slate-900 dark:text-slate-200 border-slate-300 dark:border-slate-700' };
-    case 'cnn': return { code: 'CNN', color: 'bg-red-50 text-red-900 dark:bg-red-950/50 dark:text-red-300 border-red-200 dark:border-red-900/60' };
-    default: return { code: 'RSS', color: 'bg-slate-100 text-slate-800 dark:bg-slate-900 dark:text-slate-300 border-slate-300 dark:border-slate-700' };
+    case 'clarin': return { code: 'CLARÍN', color: 'bg-rose-100 text-rose-950 dark:bg-rose-950/70 dark:text-rose-200 border-rose-300 dark:border-rose-800' };
+    case 'lanacion': return { code: 'LA NACIÓN', color: 'bg-sky-100 text-sky-950 dark:bg-sky-950/70 dark:text-sky-200 border-sky-300 dark:border-sky-800' };
+    case 'pagina12': return { code: 'PÁGINA 12', color: 'bg-amber-100 text-amber-950 dark:bg-amber-950/70 dark:text-amber-200 border-amber-300 dark:border-amber-800' };
+    case 'infobae': return { code: 'INFOBAE', color: 'bg-orange-100 text-orange-950 dark:bg-orange-950/70 dark:text-orange-200 border-orange-300 dark:border-orange-800' };
+    case 'ambito': return { code: 'ÁMBITO', color: 'bg-indigo-100 text-indigo-950 dark:bg-indigo-950/70 dark:text-indigo-200 border-indigo-300 dark:border-indigo-800' };
+    case 'cronista': return { code: 'EL CRONISTA', color: 'bg-blue-100 text-blue-950 dark:bg-blue-950/70 dark:text-blue-200 border-blue-300 dark:border-blue-800' };
+    case 'ft': return { code: 'FINANCIAL TIMES', color: 'bg-pink-100 text-pink-950 dark:bg-pink-950/70 dark:text-pink-200 border-pink-300 dark:border-pink-800' };
+    case 'elpais': return { code: 'EL PAÍS', color: 'bg-emerald-100 text-emerald-950 dark:bg-emerald-950/70 dark:text-emerald-200 border-emerald-300 dark:border-emerald-800' };
+    case 'cnn': return { code: 'CNN', color: 'bg-red-100 text-red-950 dark:bg-red-950/70 dark:text-red-200 border-red-300 dark:border-red-800' };
+    default: return { code: 'RSS OFICIAL', color: 'bg-slate-100 text-slate-900 dark:bg-slate-800 dark:text-slate-200 border-slate-300 dark:border-slate-700' };
   }
 };
 ---
