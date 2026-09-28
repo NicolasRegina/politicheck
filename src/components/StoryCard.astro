@@ -210,11 +210,23 @@ const getOutletBadge = (id: string) => {
       })}
     </div>
 
-    <!-- Dedicated Story Analysis Link -->
-    <div class="pt-3 border-t border-slate-100 dark:border-slate-800/80 flex items-center justify-between">
-      <span class="text-[11px] font-mono text-slate-400">
-        Algoritmo de sesgo periodístico Politicheck
-      </span>
+    <!-- Dedicated Story Analysis Link & Share -->
+    <div class="pt-3 border-t border-slate-100 dark:border-slate-800/80 flex flex-wrap items-center justify-between gap-2.5">
+      <div class="flex items-center gap-2">
+        <button 
+          type="button"
+          class="share-story-btn inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900/60 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 text-[11px] font-mono font-medium transition-colors cursor-pointer"
+          data-title={story.neutralHeadline}
+          data-url={`https://politicheck.com.ar/historia/${story.id}`}
+          title="Compartir este contraste"
+        >
+          <svg class="w-3.5 h-3.5 text-slate-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" />
+          </svg>
+          <span>Compartir contraste</span>
+        </button>
+      </div>
+
       <a 
         href={`/historia/${story.id}`}
         class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-900 dark:text-slate-100 text-xs font-mono font-bold transition-colors cursor-pointer"

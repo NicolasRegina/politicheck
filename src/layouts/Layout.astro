@@ -6,12 +6,19 @@ import Footer from '../components/Footer.astro';
 interface Props {
   title?: string;
   description?: string;
+  image?: string;
+  canonicalUrl?: string;
 }
 
 const { 
   title = "Politicheck • Monitor de Sesgo Mediático y Promesas Electorales | Argentina",
-  description = "Plataforma cívica independiente para comparar el sesgo y encuadre entre medios de noticias en Argentina y auditar compromisos electorales."
+  description = "Plataforma cívica independiente para comparar el sesgo y encuadre entre medios de noticias en Argentina y auditar compromisos electorales.",
+  image = "https://politicheck.ar/images/universidad.jpg",
+  canonicalUrl = "https://politicheck.ar"
 } = Astro.props;
+
+// Ensure absolute image url for Social Media previews
+const absoluteImageUrl = image.startsWith('http') ? image : `https://politicheck.ar${image}`;
 ---
 
 <!doctype html>
@@ -20,6 +27,11 @@ const {
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="manifest" href="/manifest.json" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="Politicheck" />
     <meta name="generator" content={Astro.generator} />
     
     <!-- Editorial Web Fonts (Preconnected for instant performance) -->
@@ -35,23 +47,23 @@ const {
     <meta name="title" content={title} />
     <meta name="description" content={description} />
 
-    <!-- Open Graph / Facebook -->
+    <!-- Open Graph / Facebook / WhatsApp -->
     <meta property="og:type" content="website" />
-    <meta property="og:url" content="https://politicheck.ar" />
+    <meta property="og:url" content={canonicalUrl} />
     <meta property="og:site_name" content="Politicheck Argentina" />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
-    <meta property="og:image" content="https://politicheck.ar/images/universidad.jpg" />
+    <meta property="og:image" content={absoluteImageUrl} />
     <meta property="og:locale" content="es_AR" />
 
     <!-- Twitter / X -->
     <meta property="twitter:card" content="summary_large_image" />
-    <meta property="twitter:url" content="https://politicheck.ar" />
+    <meta property="twitter:url" content={canonicalUrl} />
     <meta property="twitter:title" content={title} />
     <meta property="twitter:description" content={description} />
-    <meta property="twitter:image" content="https://politicheck.ar/images/universidad.jpg" />
+    <meta property="twitter:image" content={absoluteImageUrl} />
     
-    <link rel="canonical" href="https://politicheck.ar" />
+    <link rel="canonical" href={canonicalUrl} />
 
     <!-- Search Engine Indexing & Bot Directives -->
     <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
@@ -109,5 +121,105 @@ const {
       <slot />
     </main>
     <Footer />
+
+    <!-- Global Floating Toast Notification (Viral Share & Feedback) -->
+    <div 
+      id="politicheck-toast" 
+      class="fixed bottom-6 right-6 z-50 transform translate-y-20 opacity-0 pointer-events-none transition-all duration-300 max-w-sm w-full p-4 rounded-2xl bg-slate-950 dark:bg-white text-white dark:text-slate-950 shadow-2xl border border-slate-800 dark:border-slate-200 flex items-start gap-3"
+      role="alert"
+    >
+      <div id="toast-icon" class="text-xl shrink-0">✅</div>
+      <div class="flex-1 space-y-1">
+        <p id="toast-title" class="text-xs font-mono font-bold tracking-tight"></p>
+        <p id="toast-message" class="text-[11px] font-sans text-slate-300 dark:text-slate-700 leading-snug"></p>
+        <div id="toast-actions" class="hidden pt-1.5 flex items-center gap-2"></div>
+      </div>
+      <button 
+        type="button" 
+        id="toast-close-btn"
+        class="text-slate-400 hover:text-white dark:hover:text-black cursor-pointer text-sm font-bold shrink-0 ml-1"
+        aria-label="Cerrar notificación"
+      >
+        ✕
+      </button>
+    </div>
+
+    <script is:inline>
+      let toastTimeout = null;
+
+      function hidePoliticheckToast() {
+        const toast = document.getElementById('politicheck-toast');
+        if (toast) {
+          toast.classList.add('translate-y-20', 'opacity-0', 'pointer-events-none');
+        }
+        if (toastTimeout) clearTimeout(toastTimeout);
+      }
+
+      function showPoliticheckToast(title, message, icon = '✅', actions = []) {
+        const toast = document.getElementById('politicheck-toast');
+        const titleEl = document.getElementById('toast-title');
+        const msgEl = document.getElementById('toast-message');
+        const iconEl = document.getElementById('toast-icon');
+        const actionsEl = document.getElementById('toast-actions');
+
+        if (!toast || !titleEl || !msgEl) return;
+
+        titleEl.textContent = title;
+        msgEl.textContent = message;
+        if (iconEl) iconEl.textContent = icon;
+
+        if (actionsEl) {
+          if (actions && actions.length > 0) {
+            actionsEl.innerHTML = '';
+            actionsEl.classList.remove('hidden');
+            actions.forEach(a => {
+              const link = document.createElement('a');
+              link.href = a.url;
+              link.target = '_blank';
+              link.rel = 'noopener noreferrer';
+              link.className = `px-2.5 py-1 rounded-md text-[10px] font-mono font-bold transition-transform hover:scale-105 ${a.bg || 'bg-slate-800 text-white'}`;
+              link.textContent = a.label;
+              actionsEl.appendChild(link);
+            });
+          } else {
+            actionsEl.classList.add('hidden');
+          }
+        }
+
+        toast.classList.remove('translate-y-20', 'opacity-0', 'pointer-events-none');
+
+        if (toastTimeout) clearTimeout(toastTimeout);
+        toastTimeout = setTimeout(() => {
+          hidePoliticheckToast();
+        }, 6000);
+      }
+
+      document.getElementById('toast-close-btn')?.addEventListener('click', hidePoliticheckToast);
+
+      // Global share function
+      window.sharePoliticheckContent = function(title, text, url) {
+        if (navigator.share && /mobile|android|iphone|ipad/i.test(navigator.userAgent)) {
+          navigator.share({ title, text, url }).catch(() => {});
+          return;
+        }
+
+        navigator.clipboard.writeText(url).then(() => {
+          const waUrl = `https://api.whatsapp.com/send?text=${encodeURIComponent(text + ' ' + url)}`;
+          const xUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(url)}`;
+
+          showPoliticheckToast(
+            '¡Enlace copiado al portapapeles!',
+            'Listo para pegar o compartir directamente:',
+            '🔗',
+            [
+              { label: '📱 WhatsApp', url: waUrl, bg: 'bg-emerald-600 text-white' },
+              { label: '𝕏 Twitter', url: xUrl, bg: 'bg-black text-white dark:bg-slate-800' }
+            ]
+          );
+        }).catch(() => {
+          window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(text + ' ' + url)}`, '_blank');
+        });
+      };
+    </script>
   </body>
 </html>

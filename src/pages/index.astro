@@ -91,6 +91,36 @@ const liveFeedArticles = liveArticles.slice(0, 20);
           </button>
         </div>
 
+        <!-- News Search Feedback Banner -->
+        <div id="news-search-banner" class="hidden p-3.5 rounded-xl bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-xs font-mono text-slate-700 dark:text-slate-300 items-center justify-between">
+          <div class="flex items-center gap-2">
+            <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+            <span id="news-search-text"></span>
+          </div>
+          <button type="button" id="clear-search-btn" class="text-slate-500 hover:text-slate-900 dark:hover:text-white underline underline-offset-2 cursor-pointer font-bold">
+            Limpiar búsqueda
+          </button>
+        </div>
+
+        <!-- News Empty State -->
+        <div id="news-empty-state" class="hidden p-8 text-center rounded-2xl bg-white dark:bg-slate-900/60 border border-dashed border-slate-300 dark:border-slate-800 space-y-3">
+          <p class="font-editorial text-lg font-bold text-slate-950 dark:text-white">
+            No se encontraron noticias que coincidan con tu búsqueda.
+          </p>
+          <p class="text-xs font-mono text-slate-500 dark:text-slate-400 max-w-md mx-auto">
+            Probá buscando términos clave como "dólar", "inflación", "Milei", "Kicillof", "justicia" o "universidad".
+          </p>
+          <div class="pt-2 flex flex-wrap items-center justify-center gap-2">
+            <button 
+              type="button" 
+              id="reset-search-btn"
+              class="px-3.5 py-1.5 rounded-lg bg-slate-900 dark:bg-slate-100 text-white dark:text-slate-900 font-mono text-xs font-bold transition-all cursor-pointer hover:opacity-90"
+            >
+              Ver todas las noticias
+            </button>
+          </div>
+        </div>
+
         <div class="story-item" data-category={leadStory.category} data-text={`${leadStory.neutralHeadline} ${leadStory.summary} ${leadStory.articles.map(a => a.title + ' ' + a.outletName).join(' ')}`}>
           <StoryCard story={leadStory} />
         </div>
@@ -486,21 +516,74 @@ const liveFeedArticles = liveArticles.slice(0, 20);
 
   // Client-side Quick Search Filter
   const searchInput = document.getElementById('search-input') as HTMLInputElement | null;
-  if (searchInput) {
-    searchInput.addEventListener('input', () => {
-      const query = searchInput.value.toLowerCase().trim();
-      const allFilterable = document.querySelectorAll<HTMLElement>('.story-item, .live-item');
+  const newsSearchBanner = document.getElementById('news-search-banner');
+  const newsSearchText = document.getElementById('news-search-text');
+  const clearSearchBtn = document.getElementById('clear-search-btn');
+  const resetSearchBtn = document.getElementById('reset-search-btn');
+  const newsEmptyState = document.getElementById('news-empty-state');
 
-      allFilterable.forEach(el => {
-        const text = (el.getAttribute('data-text') || '').toLowerCase();
-        if (!query || text.includes(query)) {
-          el.style.display = '';
-        } else {
-          el.style.display = 'none';
-        }
-      });
+  function applyNewsSearch() {
+    if (!searchInput) return;
+    const query = searchInput.value.toLowerCase().trim();
+    const storyItems = document.querySelectorAll<HTMLElement>('.story-item');
+    const liveItems = document.querySelectorAll<HTMLElement>('.live-item');
+
+    let visibleStoriesCount = 0;
+
+    storyItems.forEach(el => {
+      const text = (el.getAttribute('data-text') || '').toLowerCase();
+      if (!query || text.includes(query)) {
+        el.style.display = '';
+        visibleStoriesCount++;
+      } else {
+        el.style.display = 'none';
+      }
     });
+
+    liveItems.forEach(el => {
+      const text = (el.getAttribute('data-text') || '').toLowerCase();
+      if (!query || text.includes(query)) {
+        el.style.display = '';
+      } else {
+        el.style.display = 'none';
+      }
+    });
+
+    // Update Banner
+    if (newsSearchBanner && newsSearchText) {
+      if (!query) {
+        newsSearchBanner.classList.add('hidden');
+        newsSearchBanner.classList.remove('flex');
+      } else {
+        newsSearchBanner.classList.remove('hidden');
+        newsSearchBanner.classList.add('flex');
+        newsSearchText.textContent = `Búsqueda: "${query}" • ${visibleStoriesCount} noticias encontradas`;
+      }
+    }
+
+    // Empty state
+    if (newsEmptyState) {
+      if (query && visibleStoriesCount === 0) {
+        newsEmptyState.classList.remove('hidden');
+      } else {
+        newsEmptyState.classList.add('hidden');
+      }
+    }
   }
+
+  if (searchInput) {
+    searchInput.addEventListener('input', applyNewsSearch);
+  }
+
+  const clearSearchHandler = () => {
+    if (searchInput) {
+      searchInput.value = '';
+      applyNewsSearch();
+    }
+  };
+
+  if (clearSearchBtn) clearSearchBtn.addEventListener('click', clearSearchHandler);
+  if (resetSearchBtn) resetSearchBtn.addEventListener('click', clearSearchHandler);
 
   // --- Client-side Campaign Promises Filtering ---
   let activeCandidate = 'all';
@@ -731,10 +814,54 @@ const liveFeedArticles = liveArticles.slice(0, 20);
             localStorage.setItem(`politicheck_vote_${promiseId}`, voteType);
             widget.setAttribute('data-votes', JSON.stringify(data.promise.votes));
             renderCardPercentages(widget, data.promise.votes, voteType);
+
+            // Viral Loop: Post-vote invitation toast (Aha moment)
+            const cand = widget.closest('.promise-card')?.getAttribute('data-candidate') || 'este dirigente';
+            const shareUrl = `${window.location.origin}#monitor-promesas`;
+            const waUrl = `https://api.whatsapp.com/send?text=${encodeURIComponent(`🗳️ Acabo de auditar el cumplimiento de campaña de ${cand} en Politicheck. ¿Vos qué opinás? Votá acá: ${shareUrl}`)}`;
+            const xUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(`🗳️ Audité las promesas de campaña de ${cand} en @politicheck_ar. Sumá tu voto ciudadano sin sesgo:`)}&url=${encodeURIComponent(shareUrl)}`;
+
+            if (typeof (window as any).showPoliticheckToast === 'function') {
+              (window as any).showPoliticheckToast(
+                '🎉 ¡Tu voto ciudadano fue registrado!',
+                `Sumá más voces a la auditoría de ${cand}:`,
+                '🗳️',
+                [
+                  { label: '📱 WhatsApp', url: waUrl, bg: 'bg-emerald-600 text-white' },
+                  { label: '𝕏 Twitter', url: xUrl, bg: 'bg-black text-white dark:bg-slate-800' }
+                ]
+              );
+            }
           }
         }
       } catch (err) {
         console.error('Error recording vote:', err);
+      }
+    });
+  });
+
+  // --- Viral Share Buttons Event Listeners ---
+  document.querySelectorAll<HTMLElement>('.share-story-btn').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const title = btn.getAttribute('data-title') || 'Contraste periodístico en Politicheck';
+      const url = btn.getAttribute('data-url') || window.location.href;
+      const text = `Mirá cómo cubrieron distintos diarios esta noticia: "${title}". Comparativa sin sesgo en Politicheck:`;
+      if (typeof (window as any).sharePoliticheckContent === 'function') {
+        (window as any).sharePoliticheckContent(title, text, url);
+      }
+    });
+  });
+
+  document.querySelectorAll<HTMLElement>('.share-promise-btn').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const candidate = btn.getAttribute('data-candidate') || 'Dirigente';
+      const quote = btn.getAttribute('data-text') || '';
+      const url = `${window.location.origin}#monitor-promesas`;
+      const text = `Auditoría electoral de ${candidate}: "${quote}". ¿Cumple o no? Votá y mirá la tendencia ciudadana en Politicheck:`;
+      if (typeof (window as any).sharePoliticheckContent === 'function') {
+        (window as any).sharePoliticheckContent(`Compromiso de ${candidate}`, text, url);
       }
     });
   });
