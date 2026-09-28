@@ -29,43 +29,6 @@ const liveFeedArticles = liveArticles.slice(0, 20);
 ---
 
 <Layout>
-  <!-- News Search & Category Filter Toolbar -->
-  <section class="mb-6 space-y-3">
-    <div class="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 border-b border-slate-200 dark:border-slate-800 pb-3">
-      <!-- Category Filter Pills -->
-      <div class="flex items-center gap-1.5 overflow-x-auto text-xs font-mono py-1" id="category-filters">
-        <button class="cat-btn active px-3 py-1.5 rounded-lg bg-slate-900 dark:bg-slate-100 text-white dark:text-slate-950 font-bold transition-colors cursor-pointer" data-cat="all">
-          Todos los Temas
-        </button>
-        <button class="cat-btn px-3 py-1.5 rounded-lg bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 border border-slate-200 dark:border-slate-800 transition-colors cursor-pointer" data-cat="Política">
-          Política
-        </button>
-        <button class="cat-btn px-3 py-1.5 rounded-lg bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 border border-slate-200 dark:border-slate-800 transition-colors cursor-pointer" data-cat="Economía">
-          Economía
-        </button>
-        <button class="cat-btn px-3 py-1.5 rounded-lg bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 border border-slate-200 dark:border-slate-800 transition-colors cursor-pointer" data-cat="Sociedad">
-          Sociedad
-        </button>
-        <button class="cat-btn px-3 py-1.5 rounded-lg bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 border border-slate-200 dark:border-slate-800 transition-colors cursor-pointer" data-cat="Internacional">
-          Mirada Exterior
-        </button>
-      </div>
-
-      <!-- Quick Search input -->
-      <div class="relative w-full sm:w-80">
-        <input 
-          type="text" 
-          id="search-input"
-          placeholder="Buscar tema, titular, funcionario o medio..." 
-          class="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl px-3.5 py-1.5 text-xs text-slate-900 dark:text-slate-200 placeholder-slate-400 focus:outline-none focus:border-slate-400 dark:focus:border-slate-500 shadow-xs transition-colors font-sans"
-        />
-        <svg class="w-3.5 h-3.5 text-slate-400 absolute right-3.5 top-1/2 -translate-y-1/2 pointer-events-none" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-        </svg>
-      </div>
-    </div>
-  </section>
-
   <!-- VIEW 1: Tapa del Periódico (Lead story + live rail + secondary bento grid) -->
   <div id="view-temas-del-dia" class="view-content space-y-10">
     <!-- SECTION 1: Grand Apertura & Wire Rail (8 cols / 4 cols) -->
@@ -452,73 +415,12 @@ const liveFeedArticles = liveArticles.slice(0, 20);
     });
   });
 
-  // Client-side Category Filter
-  const catButtons = document.querySelectorAll<HTMLButtonElement>('.cat-btn');
-  const storyItems = document.querySelectorAll<HTMLElement>('.story-item');
-
-  catButtons.forEach(btn => {
-    btn.addEventListener('click', () => {
-      const selectedCat = btn.getAttribute('data-cat');
-      if (!selectedCat) return;
-
-      catButtons.forEach(b => {
-        b.classList.remove('bg-slate-900', 'dark:bg-slate-100', 'text-white', 'dark:text-slate-950', 'font-bold');
-        b.classList.add('bg-white', 'dark:bg-slate-900', 'text-slate-700', 'dark:text-slate-300');
-      });
-      btn.classList.add('bg-slate-900', 'dark:bg-slate-100', 'text-white', 'dark:text-slate-950', 'font-bold');
-      btn.classList.remove('bg-white', 'dark:bg-slate-900', 'text-slate-700', 'dark:text-slate-300');
-
-      // Sync Header nav buttons
-      const navButtons = document.querySelectorAll<HTMLButtonElement>('.nav-section-btn');
-      navButtons.forEach(nb => {
-        const sec = nb.getAttribute('data-nav-section');
-        if (sec === selectedCat || (selectedCat === 'all' && sec === 'all')) {
-          nb.classList.add('text-slate-950', 'dark:text-white', 'font-bold');
-          nb.classList.remove('text-slate-700', 'dark:text-slate-300');
-        } else {
-          nb.classList.remove('text-slate-950', 'dark:text-white', 'font-bold');
-          nb.classList.add('text-slate-700', 'dark:text-slate-300');
-        }
-      });
-
-      // Filter banner management
-      const filterBanner = document.getElementById('filter-status-banner');
-      const filterText = document.getElementById('filter-status-text');
-      if (filterBanner && filterText) {
-        if (selectedCat === 'all') {
-          filterBanner.classList.add('hidden');
-          filterBanner.classList.remove('flex');
-        } else {
-          filterBanner.classList.remove('hidden');
-          filterBanner.classList.add('flex');
-          filterText.textContent = selectedCat;
-        }
-      }
-
-      let firstVisibleMatch: HTMLElement | null = null;
-      storyItems.forEach(item => {
-        const itemCat = item.getAttribute('data-category');
-        if (selectedCat === 'all' || itemCat === selectedCat) {
-          item.style.display = '';
-          if (!firstVisibleMatch) firstVisibleMatch = item;
-        } else {
-          item.style.display = 'none';
-        }
-      });
-
-      // If user filtered by a category and the lead story is hidden, scroll to the matching stories
-      if (selectedCat !== 'all' && firstVisibleMatch) {
-        firstVisibleMatch.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-      }
-    });
-  });
-
-  // Clear filter button logic
+  // Clear filter button logic (connected to Header nav sections)
   const clearFilterBtn = document.getElementById('clear-filter-btn');
   if (clearFilterBtn) {
     clearFilterBtn.addEventListener('click', () => {
-      const allCatBtn = document.querySelector<HTMLButtonElement>('.cat-btn[data-cat="all"]');
-      if (allCatBtn) allCatBtn.click();
+      const allNavBtn = document.querySelector<HTMLButtonElement>('.nav-section-btn[data-nav-section="all"]');
+      if (allNavBtn) allNavBtn.click();
     });
   }
 
@@ -544,6 +446,15 @@ const liveFeedArticles = liveArticles.slice(0, 20);
     const query = normalizeStr(rawQuery);
     const storyItems = document.querySelectorAll<HTMLElement>('.story-item');
     const liveItems = document.querySelectorAll<HTMLElement>('.live-item');
+
+    if (query) {
+      // Ensure main news view is displayed when searching
+      const mainTab = document.querySelector<HTMLButtonElement>('[data-tab="temas-del-dia"]');
+      const mainView = document.getElementById('view-temas-del-dia');
+      if (mainView && mainView.classList.contains('hidden') && mainTab) {
+        mainTab.click();
+      }
+    }
 
     let visibleStoriesCount = 0;
 
@@ -601,6 +512,19 @@ const liveFeedArticles = liveArticles.slice(0, 20);
 
   if (clearSearchBtn) clearSearchBtn.addEventListener('click', clearSearchHandler);
   if (resetSearchBtn) resetSearchBtn.addEventListener('click', clearSearchHandler);
+
+  // Check URL params (?q=... or ?sec=...) on load
+  const urlParams = new URLSearchParams(window.location.search);
+  const qParam = urlParams.get('q');
+  const secParam = urlParams.get('sec');
+
+  if (qParam && searchInput) {
+    searchInput.value = qParam;
+    applyNewsSearch();
+  } else if (secParam) {
+    const matchingNavBtn = document.querySelector<HTMLButtonElement>(`.nav-section-btn[data-nav-section="${secParam}"]`);
+    if (matchingNavBtn) matchingNavBtn.click();
+  }
 
   // --- Client-side Campaign Promises Filtering ---
   let activeCandidate = 'all';
