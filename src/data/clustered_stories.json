@@ -2,12 +2,12 @@
   {
     "id": "story-ai-1",
     "isLeadStory": true,
-    "kicker": "SENTENCIA EN ESTADOS UNIDOS",
-    "neutralHeadline": "Una jueza de Estados Unidos habilitó a un fondo a solicitar embargos por US$390 millones por la expropiación de Aerolíneas Argentinas",
+    "kicker": "DECLARACIONES OFICIALES",
+    "neutralHeadline": "El presidente Javier Milei negó la existencia de una recesión y cuestionó los indicadores económicos",
     "category": "Economía",
-    "summary": "La magistrada federal Jia Cobb autorizó a Titan Consortium a iniciar pedidos de embargo de activos argentinos en el exterior. La medida responde a reclamos derivados del proceso de expropiación de la aerolínea de bandera.",
+    "summary": "El presidente Javier Milei rechazó las mediciones actuales sobre recesión y caída del consumo, atribuyendo la disparidad de los datos a cambios estructurales en la economía. Tanto Clarín como La Nación replicaron las declaraciones presidenciales enfocándose en la defensa de la gestión y la crítica a las estadísticas.",
     "updatedAt": "Reciente",
-    "imageUrl": "https://www.clarin.com/img/2026/08/06/Of7XDw3DA_1200x630__1.jpg",
+    "imageUrl": "https://www.clarin.com/img/2026/09/27/G2x65aAiX_1200x630__1.jpg",
     "imageCaption": "Cobertura periodística de Clarín.",
     "spectrum": {
       "oficialismoPct": 50,
@@ -17,26 +17,26 @@
     },
     "articles": [
       {
-        "id": "art-clarin-213862042",
+        "id": "art-clarin-3841163382",
         "outletId": "clarin",
         "outletName": "Clarín",
-        "title": "Una jueza de Estados Unidos habilitó a un fondo buitre a pedir embargos de activos argentinos por la expropiación de Aerolíneas Argentinas",
-        "snippet": "La jueza Jia Cobb autorizó a Titan Consortium a iniciar el pedido de embargos por un monto de 390 millones de dólares. \"En los veintiún meses transcurridos desde la sentencia, Argentina aparentemente ",
-        "url": "https://www.clarin.com/economia/jueza-estados-unidos-habilito-fondo-buitre-pedir-embargos-activos-argentinos-expropiacion-aerolineas-argentinas_0_HmsXxGzxMu.html",
-        "publishedAt": "12:23 hs",
-        "imageUrl": "https://www.clarin.com/img/2026/08/06/Of7XDw3DA_1200x630__1.jpg"
+        "title": "Milei negó que haya una recesión y afirmó que los indicadores \"dan cualquier cosa\" por los cambios estructurales en la economía",
+        "snippet": "Cuestionó duramente a los economistas críticos y atribuyó la caída del consumo al crecimiento del comercio electrónico. Respaldó a Patricia Bullrich y estimó que un 70% del electorado apoyará su proye",
+        "url": "https://www.clarin.com/politica/milei-nego-recesion-afirmo-indicadores-dan-cualquier-cosa-cambios-estructurales-economia_0_LQsde53U2W.html",
+        "publishedAt": "22:06 hs",
+        "imageUrl": "https://www.clarin.com/img/2026/09/27/G2x65aAiX_1200x630__1.jpg"
       },
       {
-        "id": "art-lanacion-6169085798",
+        "id": "art-lanacion-1622929302",
         "outletId": "lanacion",
         "outletName": "La Nación",
-        "title": "Autorizaron a un fondo a pedir embargos por US$390 millones por la expropiación de Aerolíneas Argentinas",
-        "snippet": "La jueza federal de Estados Unidos Jia Cobb habilitó a Titan Consortium a empezar el proceso para buscar y pedir la retención de activos argentinos en ese país",
-        "url": "https://www.lanacion.com.ar/economia/autorizaron-a-un-fondo-a-pedir-embargos-por-us390-millones-por-la-expropiacion-de-aerolineas-nid27092026/",
-        "publishedAt": "Hace 39 min",
-        "imageUrl": "https://resizer.glanacion.com/resizer/v2/7563RYJASRGRDAAEBN373YKBL4.jpg?auth=77ded3a928413ff3b0a7568d57187fb3da35122e10ccf25f34a06dc704e31077&amp;smart=true&amp;width=2000&amp;height=1334"
+        "title": "Milei negó que haya una recesión y dijo: “Los indicadores están arrojando cualquier cosa”",
+        "snippet": "El mandatario atribuyó la volatilidad de las estadísticas a las transformaciones que atraviesa la economía; aseguró que el país se encuentra en niveles máximos de consumo, exportaciones y PBI",
+        "url": "https://www.lanacion.com.ar/politica/milei-nego-que-haya-una-recesion-y-dijo-los-indicadores-estan-arrojando-cualquier-cosa-nid27092026/",
+        "publishedAt": "Hace 37 min",
+        "imageUrl": "https://resizer.glanacion.com/resizer/v2/VSDSVYLKXFHJBG2SRRSE4EUVYY.jpg?auth=ea027f365620fa64c57edf9fb574cfba85bf7f08ced6fc133be5d273db3bcf43&amp;smart=true&amp;width=1045&amp;height=695"
       }
     ],
-    "aiComparisonNotice": "Ambos medios cubrieron el fallo de manera similar enfocándose en los aspectos técnicos y el monto de 390 millones de dólares otorgado a Titan Consortium, manteniendo una línea informativa directa sin sesgos partidarios marcados."
+    "aiComparisonNotice": "Ambos medios centraron sus titulares en la negativa del mandatario sobre la recesión y su desconfianza hacia los indicadores estadísticos, manteniendo una cobertura alineada con el discurso oficial sin profundizar en contrapartidas técnicas de economistas críticos."
   }
 ]

@@ -33,6 +33,14 @@ export const OUTLETS: Record<string, Outlet> = {
     baselineLeaning: 'centro_datos',
     websiteUrl: 'https://www.infobae.com'
   },
+  tn: {
+    id: 'tn',
+    name: 'Todo Noticias (TN)',
+    slug: 'tn',
+    category: 'nacional',
+    baselineLeaning: 'oficialismo',
+    websiteUrl: 'https://tn.com.ar'
+  },
   ambito: {
     id: 'ambito',
     name: 'Ámbito Financiero',
@@ -48,6 +56,62 @@ export const OUTLETS: Record<string, Outlet> = {
     category: 'nacional',
     baselineLeaning: 'centro_datos',
     websiteUrl: 'https://www.cronista.com'
+  },
+  perfil: {
+    id: 'perfil',
+    name: 'Perfil',
+    slug: 'perfil',
+    category: 'nacional',
+    baselineLeaning: 'centro_datos',
+    websiteUrl: 'https://www.perfil.com'
+  },
+  eldiarioar: {
+    id: 'eldiarioar',
+    name: 'elDiarioAR',
+    slug: 'eldiarioar',
+    category: 'nacional',
+    baselineLeaning: 'oposicion',
+    websiteUrl: 'https://www.eldiarioar.com'
+  },
+  cronica: {
+    id: 'cronica',
+    name: 'Crónica',
+    slug: 'cronica',
+    category: 'nacional',
+    baselineLeaning: 'centro_datos',
+    websiteUrl: 'https://www.cronica.com.ar'
+  },
+  baenegocios: {
+    id: 'baenegocios',
+    name: 'BAE Negocios',
+    slug: 'baenegocios',
+    category: 'nacional',
+    baselineLeaning: 'oposicion',
+    websiteUrl: 'https://www.baenegocios.com'
+  },
+  izquierdadiario: {
+    id: 'izquierdadiario',
+    name: 'La Izquierda Diario',
+    slug: 'izquierdadiario',
+    category: 'nacional',
+    baselineLeaning: 'oposicion',
+    websiteUrl: 'https://www.laizquierdadiario.com'
+  },
+  cenital: {
+    id: 'cenital',
+    name: 'Cenital',
+    slug: 'cenital',
+    category: 'nacional',
+    baselineLeaning: 'centro_datos',
+    websiteUrl: 'https://cenital.com'
+  },
+  eleconomista: {
+    id: 'eleconomista',
+    name: 'El Economista',
+    slug: 'eleconomista',
+    category: 'nacional',
+    baselineLeaning: 'centro_datos',
+    websiteUrl: 'https://eleconomista.com.ar'
   },
   ft: {
     id: 'ft',
@@ -72,6 +136,14 @@ export const OUTLETS: Record<string, Outlet> = {
     category: 'internacional',
     baselineLeaning: 'centro_datos',
     websiteUrl: 'https://cnnespanol.cnn.com'
+  },
+  bbcmundo: {
+    id: 'bbcmundo',
+    name: 'BBC News Mundo',
+    slug: 'bbcmundo',
+    category: 'internacional',
+    baselineLeaning: 'centro_datos',
+    websiteUrl: 'https://www.bbc.com/mundo'
   }
 };
 

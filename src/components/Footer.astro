@@ -1,4 +1,6 @@
 ---
+import { OUTLETS_REGISTRY } from '../utils/outlets';
+const outletsList = Object.values(OUTLETS_REGISTRY);
 ---
 
 <footer class="mt-20 border-t border-slate-200 dark:border-slate-800 bg-slate-100/90 dark:bg-slate-950/80 py-12 text-slate-600 dark:text-slate-400 text-xs transition-colors duration-200" id="metodologia">
@@ -16,7 +18,7 @@
           Plataforma cívica independiente para el monitoreo y contraste de cobertura mediática y auditoría de compromisos electorales en Argentina.
         </p>
         <div class="text-[11px] font-mono text-slate-500 dark:text-slate-400">
-          Neutralidad visual basada en ADR-0003.
+          Neutralidad metodológica y contraste de encuadres periodísticos.
         </div>
       </div>
 
@@ -26,25 +28,29 @@
           Metodología & Fuentes Oficiales
         </h3>
         <p class="text-slate-600 dark:text-slate-400 leading-relaxed">
-          Politicheck no reproduce notas completas ni elude muros de pago. Agregamos únicamente titulares, metadatos y resúmenes oficiales provistos por los feeds RSS públicos sindicados de cada medio, redirigiendo siempre al lector a la fuente periodística original.
+          Politicheck no reproduce notas completas ni elude muros de pago. Agregamos únicamente titulares, metadatos y resúmenes oficiales provistos por los feeds RSS públicos sindicados de 18 redacciones periodísticas, redirigiendo siempre al lector a la fuente original.
         </p>
       </div>
 
       <!-- Col 3: Media Sources Tracked -->
       <div class="space-y-3">
-        <h3 class="font-semibold text-slate-900 dark:text-slate-200 uppercase tracking-wider text-[11px] font-mono">
-          Medios Monitoreados
-        </h3>
-        <div class="flex flex-wrap gap-1.5 text-[11px] font-mono">
-          <span class="px-2 py-0.5 rounded bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300">Clarín</span>
-          <span class="px-2 py-0.5 rounded bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300">La Nación</span>
-          <span class="px-2 py-0.5 rounded bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300">Infobae</span>
-          <span class="px-2 py-0.5 rounded bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300">Página 12</span>
-          <span class="px-2 py-0.5 rounded bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300">Ámbito</span>
-          <span class="px-2 py-0.5 rounded bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300">El Cronista</span>
-          <span class="px-2 py-0.5 rounded bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300">Financial Times</span>
-          <span class="px-2 py-0.5 rounded bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300">El País</span>
-          <span class="px-2 py-0.5 rounded bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300">CNN</span>
+        <div class="flex items-center justify-between">
+          <h3 class="font-semibold text-slate-900 dark:text-slate-200 uppercase tracking-wider text-[11px] font-mono">
+            18 Medios Monitoreados
+          </h3>
+          <span class="text-[10px] font-mono text-slate-400">RSS Públicos</span>
+        </div>
+        <div class="flex flex-wrap gap-1.5 text-[10px] font-mono max-h-48 overflow-y-auto pr-1">
+          {outletsList.map((outlet) => (
+            <a 
+              href={outlet.websiteUrl} 
+              target="_blank" 
+              rel="noopener noreferrer" 
+              class={`px-2 py-0.5 rounded border transition-colors hover:opacity-80 ${outlet.badgeClass}`}
+            >
+              {outlet.name}
+            </a>
+          ))}
         </div>
       </div>
     </div>

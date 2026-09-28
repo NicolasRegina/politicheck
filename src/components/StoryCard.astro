@@ -1,28 +1,13 @@
 ---
 import type { StoryCluster } from '../types';
 import SpectrumBar from './SpectrumBar.astro';
+import { getOutletMeta } from '../utils/outlets';
 
 interface Props {
   story: StoryCluster;
 }
 
 const { story } = Astro.props;
-
-// Outlet monogram / badge helper (editorial newspaper style with signature colors)
-const getOutletBadge = (id: string) => {
-  switch (id) {
-    case 'clarin': return { code: 'CLARÍN', color: 'bg-rose-100 text-rose-950 dark:bg-rose-950/70 dark:text-rose-200 border-rose-300 dark:border-rose-800' };
-    case 'lanacion': return { code: 'LA NACIÓN', color: 'bg-sky-100 text-sky-950 dark:bg-sky-950/70 dark:text-sky-200 border-sky-300 dark:border-sky-800' };
-    case 'pagina12': return { code: 'PÁGINA 12', color: 'bg-amber-100 text-amber-950 dark:bg-amber-950/70 dark:text-amber-200 border-amber-300 dark:border-amber-800' };
-    case 'infobae': return { code: 'INFOBAE', color: 'bg-orange-100 text-orange-950 dark:bg-orange-950/70 dark:text-orange-200 border-orange-300 dark:border-orange-800' };
-    case 'ambito': return { code: 'ÁMBITO', color: 'bg-indigo-100 text-indigo-950 dark:bg-indigo-950/70 dark:text-indigo-200 border-indigo-300 dark:border-indigo-800' };
-    case 'cronista': return { code: 'EL CRONISTA', color: 'bg-blue-100 text-blue-950 dark:bg-blue-950/70 dark:text-blue-200 border-blue-300 dark:border-blue-800' };
-    case 'ft': return { code: 'FINANCIAL TIMES', color: 'bg-pink-100 text-pink-950 dark:bg-pink-950/70 dark:text-pink-200 border-pink-300 dark:border-pink-800' };
-    case 'elpais': return { code: 'EL PAÍS', color: 'bg-emerald-100 text-emerald-950 dark:bg-emerald-950/70 dark:text-emerald-200 border-emerald-300 dark:border-emerald-800' };
-    case 'cnn': return { code: 'CNN', color: 'bg-red-100 text-red-950 dark:bg-red-950/70 dark:text-red-200 border-red-300 dark:border-red-800' };
-    default: return { code: 'RSS OFICIAL', color: 'bg-slate-100 text-slate-900 dark:bg-slate-800 dark:text-slate-200 border-slate-300 dark:border-slate-700' };
-  }
-};
 ---
 
 <article class={`bg-white dark:bg-[#0F1420] border border-slate-200 dark:border-slate-800/90 rounded-2xl shadow-xs overflow-hidden transition-all duration-300 hover:border-slate-300 dark:hover:border-slate-700 ${story.isLeadStory ? 'p-6 sm:p-8 space-y-6 ring-1 ring-slate-900/5 dark:ring-white/5' : 'p-5 sm:p-6 space-y-5'}`}>
@@ -163,7 +148,7 @@ const getOutletBadge = (id: string) => {
 
     <div class={`grid gap-3 ${story.isLeadStory ? 'grid-cols-1 md:grid-cols-2' : 'grid-cols-1'}`}>
       {story.articles.map((art) => {
-        const badge = getOutletBadge(art.outletId);
+        const outlet = getOutletMeta(art.outletId);
         return (
           <a 
             href={art.url} 
@@ -173,8 +158,8 @@ const getOutletBadge = (id: string) => {
           >
             <!-- Outlet badge + Specific focus pill -->
             <div class="flex flex-wrap items-center justify-between gap-1.5 mb-2">
-              <span class={`px-2 py-0.5 rounded text-[10px] font-mono font-bold tracking-wider border ${badge.color}`}>
-                {badge.code}
+              <span class={`px-2 py-0.5 rounded text-[10px] font-mono font-bold tracking-wider border ${outlet.badgeClass}`}>
+                {outlet.code}
               </span>
               {art.specificFocus && (
                 <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700 truncate max-w-[240px]">
