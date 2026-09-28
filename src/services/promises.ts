@@ -62,6 +62,12 @@ export function getPromises(): CampaignPromise[] {
   return MOCK_PROMISES;
 }
 
+export function getPromiseById(id: string): CampaignPromise | undefined {
+  const promises = getPromises();
+  return promises.find((p) => p.id === id);
+}
+
+
 export async function votePromise(
   promiseId: string,
   voteType: 'fulfilled' | 'inProgress' | 'broken',

@@ -48,6 +48,30 @@ export const POLITICIANS: Record<string, PoliticianConfig> = {
       lightRing: 'ring-amber-400'
     }
   },
+  'Victoria Villarruel': {
+    name: 'Victoria Villarruel',
+    avatar: '/images/politicians/victoria-villarruel.jpg',
+    coalition: 'La Libertad Avanza',
+    role: 'Vicepresidenta de la Nación',
+    partyColor: {
+      badgeBg: 'bg-indigo-100 text-indigo-900 border-indigo-300 dark:bg-indigo-950/80 dark:text-indigo-200 dark:border-indigo-800',
+      border: 'border-indigo-500',
+      accentBar: 'border-l-indigo-600',
+      lightRing: 'ring-indigo-400'
+    }
+  },
+  'Patricia Bullrich': {
+    name: 'Patricia Bullrich',
+    avatar: '/images/politicians/patricia-bullrich.jpg',
+    coalition: 'La Libertad Avanza / PRO',
+    role: 'Ministra de Seguridad Nacional',
+    partyColor: {
+      badgeBg: 'bg-rose-100 text-rose-900 border-rose-300 dark:bg-rose-950/80 dark:text-rose-200 dark:border-rose-800',
+      border: 'border-rose-500',
+      accentBar: 'border-l-rose-600',
+      lightRing: 'ring-rose-400'
+    }
+  },
   'Jorge Macri': {
     name: 'Jorge Macri',
     avatar: '/images/politicians/jorge-macri.jpg',
@@ -60,16 +84,40 @@ export const POLITICIANS: Record<string, PoliticianConfig> = {
       lightRing: 'ring-yellow-400'
     }
   },
-  'Victoria Villarruel': {
-    name: 'Victoria Villarruel',
-    avatar: '/images/politicians/victoria-villarruel.jpg',
-    coalition: 'La Libertad Avanza',
-    role: 'Vicepresidenta de la Nación',
+  'Juan Schiaretti': {
+    name: 'Juan Schiaretti',
+    avatar: '/images/politicians/juan-schiaretti.jpg',
+    coalition: 'Hacemos por Nuestro País',
+    role: 'Referente Federal',
     partyColor: {
-      badgeBg: 'bg-indigo-100 text-indigo-900 border-indigo-300 dark:bg-indigo-950/80 dark:text-indigo-200 dark:border-indigo-800',
-      border: 'border-indigo-500',
-      accentBar: 'border-l-indigo-600',
-      lightRing: 'ring-indigo-400'
+      badgeBg: 'bg-teal-100 text-teal-900 border-teal-300 dark:bg-teal-950/80 dark:text-teal-200 dark:border-teal-800',
+      border: 'border-teal-500',
+      accentBar: 'border-l-teal-600',
+      lightRing: 'ring-teal-400'
+    }
+  },
+  'Horacio Rodríguez Larreta': {
+    name: 'Horacio Rodríguez Larreta',
+    avatar: '/images/politicians/horacio-rodriguez-larreta.jpg',
+    coalition: 'Movimiento al Desarrollo (MAD)',
+    role: 'Referente de Centro',
+    partyColor: {
+      badgeBg: 'bg-emerald-100 text-emerald-900 border-emerald-300 dark:bg-emerald-950/80 dark:text-emerald-200 dark:border-emerald-800',
+      border: 'border-emerald-500',
+      accentBar: 'border-l-emerald-600',
+      lightRing: 'ring-emerald-400'
+    }
+  },
+  'Leandro Santoro': {
+    name: 'Leandro Santoro',
+    avatar: '/images/politicians/leandro-santoro.jpg',
+    coalition: 'Unión por la Patria',
+    role: 'Diputado Nacional',
+    partyColor: {
+      badgeBg: 'bg-red-100 text-red-900 border-red-300 dark:bg-red-950/80 dark:text-red-200 dark:border-red-800',
+      border: 'border-red-500',
+      accentBar: 'border-l-red-600',
+      lightRing: 'ring-red-400'
     }
   },
   'Sergio Massa': {

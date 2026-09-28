@@ -12,10 +12,12 @@ import {
   getCachedForeignClusters 
 } from '../services/ai/clustering';
 import { getPromises, getPromisesStats } from '../services/promises';
+import { getPolitician } from '../data/politicians';
 
 // Fetch live dynamic campaign promises
 const allPromises = getPromises();
 const promisesStats = getPromisesStats(allPromises);
+const uniqueCandidates = Array.from(new Set(allPromises.map(p => p.candidate)));
 
 // Fetch live articles cached from official RSS feeds
 const cachedArticles = getCachedArticles();
@@ -211,26 +213,25 @@ const liveFeedArticles = liveArticles.slice(0, 20);
         <!-- Top row: Candidate filter buttons & search -->
         <div class="flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3">
           <!-- Candidate Filter Pills -->
-          <div class="flex items-center gap-1.5 overflow-x-auto text-xs font-mono py-1" id="candidate-filters">
-            <button class="cand-filter-btn active px-3 py-1.5 rounded-lg bg-slate-900 dark:bg-slate-100 text-white dark:text-slate-950 font-bold transition-colors cursor-pointer" data-candidate="all">
-              Todos los Dirigentes
+          <div class="flex items-center gap-1.5 overflow-x-auto text-xs font-mono py-1 max-w-full" id="candidate-filters">
+            <button class="cand-filter-btn active px-3 py-1.5 rounded-lg bg-slate-900 dark:bg-slate-100 text-white dark:text-slate-950 font-bold transition-colors cursor-pointer shrink-0" data-candidate="all">
+              Todos ({allPromises.length})
             </button>
-            <button class="cand-filter-btn inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-50 dark:bg-slate-900 text-slate-700 dark:text-slate-300 hover:bg-violet-50 hover:text-violet-800 dark:hover:bg-violet-950/40 dark:hover:text-violet-200 border border-slate-200 dark:border-slate-800 transition-colors cursor-pointer" data-candidate="Javier Milei">
-              <span class="w-2 h-2 rounded-full bg-violet-600 shrink-0"></span>
-              <span>Javier Milei</span>
-            </button>
-            <button class="cand-filter-btn inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-50 dark:bg-slate-900 text-slate-700 dark:text-slate-300 hover:bg-sky-50 hover:text-sky-800 dark:hover:bg-sky-950/40 dark:hover:text-sky-200 border border-slate-200 dark:border-slate-800 transition-colors cursor-pointer" data-candidate="Axel Kicillof">
-              <span class="w-2 h-2 rounded-full bg-sky-500 shrink-0"></span>
-              <span>Axel Kicillof</span>
-            </button>
-            <button class="cand-filter-btn inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-50 dark:bg-slate-900 text-slate-700 dark:text-slate-300 hover:bg-amber-50 hover:text-amber-800 dark:hover:bg-amber-950/40 dark:hover:text-amber-200 border border-slate-200 dark:border-slate-800 transition-colors cursor-pointer" data-candidate="Mauricio Macri">
-              <span class="w-2 h-2 rounded-full bg-amber-500 shrink-0"></span>
-              <span>Mauricio Macri</span>
-            </button>
-            <button class="cand-filter-btn inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-50 dark:bg-slate-900 text-slate-700 dark:text-slate-300 hover:bg-yellow-50 hover:text-yellow-800 dark:hover:bg-yellow-950/40 dark:hover:text-yellow-200 border border-slate-200 dark:border-slate-800 transition-colors cursor-pointer" data-candidate="Jorge Macri">
-              <span class="w-2 h-2 rounded-full bg-yellow-500 shrink-0"></span>
-              <span>Jorge Macri</span>
-            </button>
+            {uniqueCandidates.map((candidateName) => {
+              const pol = getPolitician(candidateName);
+              const count = allPromises.filter(p => p.candidate === candidateName).length;
+              const dotColor = pol.partyColor?.border ? pol.partyColor.border.replace('border-', 'bg-') : 'bg-slate-500';
+              return (
+                <button 
+                  class="cand-filter-btn inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-50 dark:bg-slate-900 text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 border border-slate-200 dark:border-slate-800 transition-colors cursor-pointer shrink-0" 
+                  data-candidate={candidateName}
+                >
+                  <span class={`w-2 h-2 rounded-full ${dotColor} shrink-0`}></span>
+                  <span>{candidateName}</span>
+                  <span class="text-[10px] text-slate-400 font-mono">({count})</span>
+                </button>
+              );
+            })}
           </div>
 
           <!-- Promise Keyword Search -->
@@ -780,7 +781,7 @@ const liveFeedArticles = liveArticles.slice(0, 20);
 
             // Viral Loop: Post-vote invitation toast (Aha moment)
             const cand = widget.closest('.promise-card')?.getAttribute('data-candidate') || 'este dirigente';
-            const shareUrl = `${window.location.origin}#monitor-promesas`;
+            const shareUrl = `${window.location.origin}/promesa/${promiseId}`;
             const waUrl = `https://api.whatsapp.com/send?text=${encodeURIComponent(`🗳️ Acabo de auditar el cumplimiento de campaña de ${cand} en Politicheck. ¿Vos qué opinás? Votá acá: ${shareUrl}`)}`;
             const xUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(`🗳️ Audité las promesas de campaña de ${cand} en @politicheck_ar. Sumá tu voto ciudadano sin sesgo:`)}&url=${encodeURIComponent(shareUrl)}`;
 
@@ -821,7 +822,8 @@ const liveFeedArticles = liveArticles.slice(0, 20);
       e.stopPropagation();
       const candidate = btn.getAttribute('data-candidate') || 'Dirigente';
       const quote = btn.getAttribute('data-text') || '';
-      const url = `${window.location.origin}#monitor-promesas`;
+      const promiseId = btn.getAttribute('data-id');
+      const url = promiseId ? `${window.location.origin}/promesa/${promiseId}` : `${window.location.origin}#monitor-promesas`;
       const text = `Auditoría electoral de ${candidate}: "${quote}". ¿Cumple o no? Votá y mirá la tendencia ciudadana en Politicheck:`;
       if (typeof (window as any).sharePoliticheckContent === 'function') {
         (window as any).sharePoliticheckContent(`Compromiso de ${candidate}`, text, url);

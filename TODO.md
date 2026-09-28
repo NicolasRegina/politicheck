@@ -24,19 +24,22 @@
 
 ---
 
-### ⏳ Tarea 2: Ampliación del Monitor de Promesas 2027 — [SIGUIENTE TAREA]
-- [ ] **Incorporar nuevas figuras y promesas verificables:**
-  - *Victoria Villarruel* (Seguridad, Defensa y Malvinas).
-  - *Patricia Bullrich* (Seguridad Interior, protocolo antipiquetes y control del narcotráfico).
-  - *Jorge Macri* (Ciudad de Buenos Aires, infraestructura y orden público).
-  - *Juan Schiaretti* (Federalismo, producción del interior y equilibrio fiscal).
-  - *Leandro Santoro / Horacio Rodríguez Larreta* (Alternativas de centro / oposición).
-- [ ] **Fotografías y ficha editorial:** Fotos de archivo de alta calidad y enlaces directos al Boletín Oficial, INDEC o documentos de campaña.
-- [ ] **Fichas individuales compartibles:** Rutas `/promesa/[id]` para permitir enlazar y viralizar promesas individuales con su termómetro de cumplimiento.
+### ✅ Tarea 2: Ampliación del Monitor de Promesas 2027 — [COMPLETADA]
+- [x] **Incorporar nuevas figuras y promesas verificables:**
+  - *Victoria Villarruel* (Defensa, Malvinas y recomposición salarial militar).
+  - *Patricia Bullrich* (Seguridad Interior, protocolo antipiquetes y Plan Bandera en Rosario).
+  - *Jorge Macri* (Orden del espacio público e infraestructura del Ferrocarril Sarmiento).
+  - *Juan Schiaretti* (Federalismo, producción del interior y coparticipación de combustibles).
+  - *Horacio Rodríguez Larreta* (Consenso institucional y reforma de 190 días de clase).
+  - *Leandro Santoro* (Alquileres accesibles e incentivos a la vivienda permanente).
+  - *Javier Milei / Axel Kicillof / Mauricio Macri* (Compromisos troncales ampliados a 16 promesas totales).
+- [x] **Fotografías y ficha editorial:** Retratos oficiales en alta calidad de todos los dirigentes y enlaces directos al Boletín Oficial, INDEC, DGCyE y proyectos legislativos.
+- [x] **Fichas individuales compartibles:** Nuevas rutas `/promesa/[id]` con meta-tags OpenGraph para viralización, termómetro de cumplimiento interactivo, prueba documental oficial y compromisos relacionados del dirigente.
+- [x] **Filtros dinámicos en tiempo real:** Selector automático de dirigentes con conteo de promesas auditadas y paleta de color partidario.
 
 ---
 
-### ⏳ Tarea 3: Botones y Fichas Virales para Redes Sociales (X / WhatsApp)
+### ⏳ Tarea 3: Botones y Fichas Virales para Redes Sociales (X / WhatsApp) — [SIGUIENTE TAREA]
 - [ ] **Botones de Compartir con 1 Clic:**
   - Integrar en cada historia de tapa y tarjeta de promesa botones rápidos para compartir en **X (Twitter)**, **WhatsApp**, **Telegram** y copiar enlace al portapapeles.
 - [ ] **Copy persuasivo prediseñado:**

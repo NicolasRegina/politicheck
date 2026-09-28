@@ -1,0 +1,511 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Promesometro from '../../components/Promesometro.astro';
+import PromiseCard from '../../components/PromiseCard.astro';
+import { getPromiseById, getPromises } from '../../services/promises';
+import { getPolitician } from '../../data/politicians';
+
+export const prerender = false;
+
+const { id } = Astro.params;
+const promise = id ? getPromiseById(id) : undefined;
+
+const allPromises = getPromises();
+const relatedPromises = promise 
+  ? allPromises.filter(p => p.candidate === promise.candidate && p.id !== promise.id)
+  : [];
+
+const politician = promise ? getPolitician(promise.candidate) : null;
+
+// Status styling tokens
+const getStatusTheme = (status: string) => {
+  switch (status) {
+    case 'cumplida':
+      return {
+        label: 'Cumplida',
+        borderAccent: 'border-l-emerald-500',
+        badgeClass: 'bg-emerald-50 text-emerald-950 dark:bg-emerald-950/80 dark:text-emerald-200 border-emerald-300 dark:border-emerald-800',
+        quoteBorder: 'border-l-emerald-500',
+        bgSubtle: 'bg-emerald-500/10'
+      };
+    case 'en_progreso':
+      return {
+        label: 'En progreso',
+        borderAccent: 'border-l-amber-500',
+        badgeClass: 'bg-amber-50 text-amber-950 dark:bg-amber-950/80 dark:text-amber-200 border-amber-300 dark:border-amber-800',
+        quoteBorder: 'border-l-amber-500',
+        bgSubtle: 'bg-amber-500/10'
+      };
+    case 'en_pausa':
+      return {
+        label: 'En pausa',
+        borderAccent: 'border-l-orange-500',
+        badgeClass: 'bg-orange-50 text-orange-950 dark:bg-orange-950/80 dark:text-orange-200 border-orange-300 dark:border-orange-800',
+        quoteBorder: 'border-l-orange-500',
+        bgSubtle: 'bg-orange-500/10'
+      };
+    case 'incumplida':
+      return {
+        label: 'Incumplida',
+        borderAccent: 'border-l-rose-500',
+        badgeClass: 'bg-rose-50 text-rose-950 dark:bg-rose-950/80 dark:text-rose-200 border-rose-300 dark:border-rose-800',
+        quoteBorder: 'border-l-rose-500',
+        bgSubtle: 'bg-rose-500/10'
+      };
+    default:
+      return {
+        label: 'En evaluación',
+        borderAccent: 'border-l-slate-400',
+        badgeClass: 'bg-slate-50 text-slate-900 dark:bg-slate-900 dark:text-slate-300 border-slate-300 dark:border-slate-700',
+        quoteBorder: 'border-l-slate-400',
+        bgSubtle: ''
+      };
+  }
+};
+
+const theme = promise ? getStatusTheme(promise.status) : null;
+const votes = promise?.votes || { fulfilled: 0, inProgress: 0, broken: 0 };
+
+const getInitials = (name: string) => {
+  return name
+    .split(' ')
+    .map(p => p[0])
+    .slice(0, 2)
+    .join('')
+    .toUpperCase();
+};
+
+const pageTitle = promise 
+  ? `${promise.candidate}: "${promise.promiseText.slice(0, 70)}..." • Auditoría | Politicheck`
+  : 'Compromiso no encontrado | Politicheck';
+
+const pageDesc = promise 
+  ? `Dictamen: ${promise.statusLabel}. ${promise.auditNotes}`
+  : undefined;
+
+const pageUrl = `https://www.politicheck.com.ar/promesa/${id}`;
+---
+
+<Layout 
+  title={pageTitle}
+  description={pageDesc}
+  image={politician?.avatar}
+  canonicalUrl={pageUrl}
+>
+  {promise && politician && theme ? (
+    <article class="max-w-4xl mx-auto space-y-8 pb-16">
+      <!-- Top Navigation & Breadcrumbs -->
+      <nav class="flex flex-wrap items-center justify-between gap-3 text-xs font-mono border-b border-slate-200 dark:border-slate-800 pb-3">
+        <a 
+          href="/#monitor-promesas" 
+          class="inline-flex items-center gap-1.5 text-slate-600 dark:text-slate-400 hover:text-slate-950 dark:hover:text-white font-bold transition-colors"
+        >
+          <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+          </svg>
+          <span>Volver al Monitor de Promesas</span>
+        </a>
+
+        <div class="flex items-center gap-2 text-slate-500 dark:text-slate-400">
+          <span class="px-2 py-0.5 rounded-md bg-slate-100 dark:bg-slate-800 font-semibold">{promise.category}</span>
+          <span>•</span>
+          <span>Auditoría Elecciones 2025/2027</span>
+        </div>
+      </nav>
+
+      <!-- Hero Header & Politician Card (PolitiFact Style) -->
+      <header class="bg-white dark:bg-[#0F1420] border border-slate-200 dark:border-slate-800/90 rounded-3xl p-6 sm:p-8 space-y-6 shadow-sm border-l-8 ${theme.borderAccent}">
+        <!-- Politician Profile Row -->
+        <div class="flex items-center gap-4 sm:gap-5 border-b border-slate-100 dark:border-slate-800/80 pb-5">
+          <div class="relative shrink-0">
+            {politician.avatar ? (
+              <img 
+                src={politician.avatar} 
+                alt={promise.candidate} 
+                class="w-18 h-18 sm:w-20 sm:h-20 rounded-full object-cover ring-4 ring-white dark:ring-slate-800 shadow-md border border-slate-200 dark:border-slate-700"
+                loading="eager"
+              />
+            ) : (
+              <div class={`w-18 h-18 sm:w-20 sm:h-20 rounded-full font-mono text-base font-bold flex items-center justify-center shadow-md border ${politician.partyColor.badgeBg}`}>
+                {getInitials(promise.candidate)}
+              </div>
+            )}
+
+            <div class="absolute -bottom-1 -right-1 w-6 h-6 rounded-full bg-slate-900 dark:bg-white text-white dark:text-slate-900 flex items-center justify-center text-xs font-serif shadow-xs">
+              “
+            </div>
+          </div>
+
+          <div class="flex-1 min-w-0 space-y-1.5">
+            <div class="flex flex-wrap items-center gap-2">
+              <span class={`inline-flex items-center px-3 py-1 rounded-lg font-sans text-base sm:text-lg font-extrabold border shadow-2xs ${politician.partyColor.badgeBg}`}>
+                {promise.candidate}
+              </span>
+              <span class="text-xs font-mono px-2.5 py-0.5 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700">
+                {promise.coalition}
+              </span>
+            </div>
+
+            <p class="text-xs sm:text-sm font-sans text-slate-600 dark:text-slate-400">
+              {promise.role} • declarado en: <strong class="text-slate-900 dark:text-slate-200">{promise.statedAt}</strong>
+            </p>
+          </div>
+        </div>
+
+        <!-- Promise Quote & Visual Promesómetro -->
+        <div class="grid grid-cols-1 lg:grid-cols-[1fr_auto] gap-6 items-center">
+          <blockquote class={`font-editorial text-xl sm:text-2xl md:text-3xl italic font-semibold text-slate-950 dark:text-slate-50 border-l-4 ${theme.quoteBorder} pl-5 py-2 leading-relaxed bg-slate-50/60 dark:bg-slate-900/40 rounded-r-2xl`}>
+            {promise.promiseText}
+          </blockquote>
+
+          <div class="flex flex-col items-center justify-center p-4 rounded-2xl bg-slate-50 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 shrink-0">
+            <span class="text-[10px] font-mono uppercase tracking-widest text-slate-500 dark:text-slate-400 mb-2">Termómetro de Cumplimiento</span>
+            <Promesometro status={promise.status} />
+            <span class={`mt-3 px-3 py-1 rounded-full text-xs font-mono font-bold border ${theme.badgeClass}`}>
+              {promise.statusLabel}
+            </span>
+          </div>
+        </div>
+      </header>
+
+      <!-- Viral Social Share Bar -->
+      <section class="flex flex-wrap items-center justify-between gap-3 p-4 rounded-2xl bg-slate-100/90 dark:bg-slate-900/90 border border-slate-200 dark:border-slate-800">
+        <div class="flex items-center gap-2">
+          <span class="text-base">📣</span>
+          <span class="text-xs font-mono font-medium text-slate-800 dark:text-slate-200">
+            ¿Querés debatir este compromiso con tu comunidad?
+          </span>
+        </div>
+        <div class="flex flex-wrap items-center gap-2">
+          <a 
+            href={`https://api.whatsapp.com/send?text=${encodeURIComponent(`🗳️ Mirá la auditoría de Politicheck a ${promise.candidate}: ${promise.promiseText} — Veredicto: ${promise.statusLabel}. ¿Cumplió o no? Votá acá 👉 ${pageUrl}`)}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white font-mono text-xs font-bold shadow-2xs transition-all"
+          >
+            <span>📱 WhatsApp</span>
+          </a>
+
+          <a 
+            href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(`🗳️ Mirá la auditoría de @politicheck_ar a ${promise.candidate}: ${promise.promiseText.slice(0, 100)}... Veredicto: ${promise.statusLabel}. Votá acá:`)}&url=${encodeURIComponent(pageUrl)}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-black hover:bg-slate-800 dark:bg-white dark:hover:bg-slate-200 text-white dark:text-black font-mono text-xs font-bold shadow-2xs transition-all"
+          >
+            <span>𝕏 Twitter</span>
+          </a>
+
+          <a 
+            href={`https://t.me/share/url?url=${encodeURIComponent(pageUrl)}&text=${encodeURIComponent(`🗳️ Auditoría ciudadana a ${promise.candidate}: "${promise.promiseText}". Veredicto: ${promise.statusLabel}`)}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-sky-600 hover:bg-sky-700 text-white font-mono text-xs font-bold shadow-2xs transition-all"
+          >
+            <span>✈️ Telegram</span>
+          </a>
+
+          <button 
+            type="button"
+            id="copy-promise-link-btn"
+            data-url={pageUrl}
+            class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-700 font-mono text-xs font-semibold transition-all cursor-pointer"
+          >
+            <span id="copy-btn-text">🔗 Copiar enlace</span>
+          </button>
+        </div>
+      </section>
+
+      <!-- Factual Observatory Audit Notes & Proof -->
+      <section class="bg-white dark:bg-[#0F1420] border border-slate-200 dark:border-slate-800/90 rounded-3xl p-6 sm:p-8 space-y-6 shadow-sm">
+        <div class="border-b border-slate-100 dark:border-slate-800 pb-4 flex items-center justify-between">
+          <div class="flex items-center gap-2 font-mono text-xs font-bold uppercase tracking-wider text-slate-800 dark:text-slate-200">
+            <svg class="w-4 h-4 text-emerald-600 dark:text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            <span>Dictamen de Auditoría Periodística Factual</span>
+          </div>
+          <span class="text-[11px] font-mono text-slate-400">Metodología Cívica</span>
+        </div>
+
+        <div class="space-y-4">
+          <p class="text-base sm:text-lg text-slate-700 dark:text-slate-300 leading-relaxed font-sans">
+            {promise.auditNotes}
+          </p>
+
+          <!-- Primary Document Proof Box -->
+          {promise.officialProof && (
+            <div class="p-4 rounded-2xl bg-slate-50 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 space-y-2">
+              <div class="text-[11px] font-mono font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 flex items-center gap-2">
+                <span>📑</span>
+                <span>Documento Institucional Cotejado</span>
+              </div>
+              <p class="text-sm font-sans font-medium text-slate-900 dark:text-slate-200">
+                {promise.officialProof}
+              </p>
+              <div class="pt-2">
+                <a 
+                  href={promise.sourceUrl} 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  class="inline-flex items-center gap-1.5 text-xs font-mono font-bold text-sky-700 dark:text-sky-400 hover:text-sky-900 dark:hover:text-sky-300 underline underline-offset-2 transition-colors"
+                >
+                  <span>Abrir fuente original en organismo emisor</span>
+                  <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                  </svg>
+                </a>
+              </div>
+            </div>
+          )}
+        </div>
+      </section>
+
+      <!-- Live Citizen Audit & Voting Station -->
+      <section class="bg-white dark:bg-[#0F1420] border border-slate-200 dark:border-slate-800/90 rounded-3xl p-6 sm:p-8 space-y-6 shadow-sm">
+        <div class="border-b border-slate-100 dark:border-slate-800 pb-4 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+          <div>
+            <div class="flex items-center gap-2 font-mono text-xs font-bold uppercase tracking-wider text-indigo-600 dark:text-indigo-400">
+              <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+              </svg>
+              <span>Votación Ciudadana en Tiempo Real</span>
+            </div>
+            <h3 class="font-editorial text-xl sm:text-2xl font-bold text-slate-950 dark:text-white mt-1">
+              ¿Considerás que esta promesa se está cumpliendo?
+            </h3>
+          </div>
+          <span class="text-xs font-mono text-slate-400">Voto anónimo y seguro</span>
+        </div>
+
+        <div 
+          class="citizen-audit-widget space-y-4"
+          data-promise-id={promise.id}
+          data-votes={JSON.stringify(votes)}
+        >
+          <!-- Consensus Bar -->
+          <div class="space-y-1.5">
+            <div class="flex items-center justify-between text-xs font-mono">
+              <span class="widget-title text-slate-700 dark:text-slate-300 font-semibold">Tendencia de la comunidad:</span>
+              <span class="widget-sub text-slate-500 text-[11px]">Votá para revelar los porcentajes</span>
+            </div>
+            <div class="consensus-bar relative h-3.5 w-full bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden flex transition-all duration-500">
+              <div class="bar-placeholder absolute inset-0 bg-slate-200/50 dark:bg-slate-800/50 flex items-center justify-center transition-opacity duration-300"></div>
+              <div class="bar-fulfilled bg-emerald-500 transition-all duration-700 opacity-0" style="width: 0%"></div>
+              <div class="bar-in-progress bg-amber-500 transition-all duration-700 opacity-0" style="width: 0%"></div>
+              <div class="bar-broken bg-rose-500 transition-all duration-700 opacity-0" style="width: 0%"></div>
+            </div>
+          </div>
+
+          <!-- Live Vote Action Buttons -->
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-2">
+            <button 
+              type="button"
+              class="vote-btn flex items-center justify-center gap-2 py-3 px-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/80 hover:bg-emerald-50 dark:hover:bg-emerald-950/40 text-xs sm:text-sm font-mono text-slate-700 dark:text-slate-300 hover:text-emerald-700 dark:hover:text-emerald-300 hover:border-emerald-300 transition-all cursor-pointer shadow-xs"
+              data-vote-type="fulfilled"
+              data-promise-id={promise.id}
+            >
+              <span class="text-base">👍</span>
+              <span class="font-bold">Cumple</span>
+              <span class="vote-pct font-bold text-xs hidden count-fulfilled"></span>
+            </button>
+
+            <button 
+              type="button"
+              class="vote-btn flex items-center justify-center gap-2 py-3 px-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/80 hover:bg-amber-50 dark:hover:bg-amber-950/40 text-xs sm:text-sm font-mono text-slate-700 dark:text-slate-300 hover:text-amber-700 dark:hover:text-amber-300 hover:border-amber-300 transition-all cursor-pointer shadow-xs"
+              data-vote-type="inProgress"
+              data-promise-id={promise.id}
+            >
+              <span class="text-base">⏳</span>
+              <span class="font-bold">En proceso</span>
+              <span class="vote-pct font-bold text-xs hidden count-in-progress"></span>
+            </button>
+
+            <button 
+              type="button"
+              class="vote-btn flex items-center justify-center gap-2 py-3 px-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/80 hover:bg-rose-50 dark:hover:bg-rose-950/40 text-xs sm:text-sm font-mono text-slate-700 dark:text-slate-300 hover:text-rose-700 dark:hover:text-rose-300 hover:border-rose-300 transition-all cursor-pointer shadow-xs"
+              data-vote-type="broken"
+              data-promise-id={promise.id}
+            >
+              <span class="text-base">👎</span>
+              <span class="font-bold">Incumple</span>
+              <span class="vote-pct font-bold text-xs hidden count-broken"></span>
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- Related Promises from the same Politician -->
+      {relatedPromises.length > 0 && (
+        <section class="space-y-4 pt-4 border-t border-slate-200 dark:border-slate-800">
+          <div class="flex items-center justify-between">
+            <h3 class="font-editorial text-xl sm:text-2xl font-bold text-slate-950 dark:text-white">
+              Más compromisos auditados de {promise.candidate}
+            </h3>
+            <a 
+              href="/#monitor-promesas" 
+              class="text-xs font-mono text-indigo-600 dark:text-indigo-400 hover:underline"
+            >
+              Ver todas las promesas →
+            </a>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {relatedPromises.map((rel) => (
+              <PromiseCard promise={rel} />
+            ))}
+          </div>
+        </section>
+      )}
+    </article>
+  ) : (
+    <div class="max-w-xl mx-auto text-center py-24 space-y-4">
+      <div class="text-4xl">📋</div>
+      <h1 class="font-editorial text-2xl font-bold text-slate-950 dark:text-white">
+        Compromiso no encontrado
+      </h1>
+      <p class="text-xs text-slate-500 dark:text-slate-400 font-sans">
+        El identificador solicitado no coincide con los compromisos auditados del observatorio.
+      </p>
+      <a 
+        href="/#monitor-promesas" 
+        class="inline-block px-4 py-2 rounded-xl bg-slate-900 dark:bg-white text-white dark:text-slate-900 font-mono text-xs font-bold"
+      >
+        Volver al Monitor de Promesas
+      </a>
+    </div>
+  )}
+</Layout>
+
+<script>
+  // Copy link handler
+  const copyBtn = document.getElementById('copy-promise-link-btn');
+  const copyBtnText = document.getElementById('copy-btn-text');
+  if (copyBtn && copyBtnText) {
+    copyBtn.addEventListener('click', () => {
+      const url = copyBtn.getAttribute('data-url') || window.location.href;
+      navigator.clipboard.writeText(url).then(() => {
+        copyBtnText.textContent = '✅ ¡Enlace copiado!';
+        setTimeout(() => {
+          copyBtnText.textContent = '🔗 Copiar enlace';
+        }, 2500);
+      });
+    });
+  }
+
+  // Citizen Voting Interaction
+  const citizenWidgets = document.querySelectorAll<HTMLElement>('.citizen-audit-widget');
+
+  function renderPercentages(widget: HTMLElement, votes: { fulfilled: number; inProgress: number; broken: number }, activeVote?: string) {
+    const total = (votes.fulfilled || 0) + (votes.inProgress || 0) + (votes.broken || 0);
+    const fPct = total > 0 ? Math.round((votes.fulfilled / total) * 100) : 0;
+    const ipPct = total > 0 ? Math.round((votes.inProgress / total) * 100) : 0;
+    const bPct = total > 0 ? Math.round((votes.broken / total) * 100) : 0;
+
+    const countFulfilled = widget.querySelector<HTMLElement>('.count-fulfilled');
+    const countInProgress = widget.querySelector<HTMLElement>('.count-in-progress');
+    const countBroken = widget.querySelector<HTMLElement>('.count-broken');
+
+    if (countFulfilled) {
+      countFulfilled.textContent = `(${fPct}%)`;
+      countFulfilled.classList.remove('hidden');
+    }
+    if (countInProgress) {
+      countInProgress.textContent = `(${ipPct}%)`;
+      countInProgress.classList.remove('hidden');
+    }
+    if (countBroken) {
+      countBroken.textContent = `(${bPct}%)`;
+      countBroken.classList.remove('hidden');
+    }
+
+    const placeholder = widget.querySelector<HTMLElement>('.bar-placeholder');
+    if (placeholder) placeholder.style.opacity = '0';
+
+    const barF = widget.querySelector<HTMLElement>('.bar-fulfilled');
+    const barIP = widget.querySelector<HTMLElement>('.bar-in-progress');
+    const barB = widget.querySelector<HTMLElement>('.bar-broken');
+    if (barF) {
+      barF.style.width = `${fPct}%`;
+      barF.style.opacity = '1';
+    }
+    if (barIP) {
+      barIP.style.width = `${ipPct}%`;
+      barIP.style.opacity = '1';
+    }
+    if (barB) {
+      barB.style.width = `${bPct}%`;
+      barB.style.opacity = '1';
+    }
+
+    const title = widget.querySelector<HTMLElement>('.widget-title');
+    const sub = widget.querySelector<HTMLElement>('.widget-sub');
+    if (title) title.textContent = 'Tendencia Ciudadana';
+    if (sub) {
+      sub.textContent = `${total} votos auditados`;
+    }
+
+    if (activeVote) {
+      const btns = widget.querySelectorAll<HTMLButtonElement>('.vote-btn');
+      btns.forEach(b => {
+        b.classList.remove('ring-2', 'ring-slate-900', 'dark:ring-white', 'font-bold');
+        if (b.getAttribute('data-vote-type') === activeVote) {
+          b.classList.add('ring-2', 'ring-slate-900', 'dark:ring-white', 'font-bold');
+        }
+      });
+    }
+  }
+
+  citizenWidgets.forEach(widget => {
+    const promiseId = widget.getAttribute('data-promise-id');
+    if (!promiseId) return;
+
+    const savedVote = localStorage.getItem(`politicheck_vote_${promiseId}`);
+    if (savedVote) {
+      try {
+        const rawVotes = widget.getAttribute('data-votes');
+        const votes = rawVotes ? JSON.parse(rawVotes) : { fulfilled: 0, inProgress: 0, broken: 0 };
+        renderPercentages(widget, votes, savedVote);
+      } catch (e) {
+        // fallback
+      }
+    }
+  });
+
+  const voteButtons = document.querySelectorAll<HTMLButtonElement>('.vote-btn');
+  voteButtons.forEach(btn => {
+    btn.addEventListener('click', async () => {
+      const promiseId = btn.getAttribute('data-promise-id');
+      const voteType = btn.getAttribute('data-vote-type') as 'fulfilled' | 'inProgress' | 'broken';
+      if (!promiseId || !voteType) return;
+
+      const widget = btn.closest<HTMLElement>('.citizen-audit-widget');
+      if (!widget) return;
+
+      const previousVote = localStorage.getItem(`politicheck_vote_${promiseId}`);
+      if (previousVote === voteType) return;
+
+      const btns = widget.querySelectorAll<HTMLButtonElement>('.vote-btn');
+      btns.forEach(b => b.classList.remove('ring-2', 'ring-slate-900', 'dark:ring-white', 'font-bold'));
+      btn.classList.add('ring-2', 'ring-slate-900', 'dark:ring-white', 'font-bold');
+
+      try {
+        const res = await fetch('/api/promises/vote', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ promiseId, voteType })
+        });
+
+        if (res.ok) {
+          const data = await res.json();
+          if (data.success && data.promise && data.promise.votes) {
+            localStorage.setItem(`politicheck_vote_${promiseId}`, voteType);
+            widget.setAttribute('data-votes', JSON.stringify(data.promise.votes));
+            renderPercentages(widget, data.promise.votes, voteType);
+          }
+        }
+      } catch (err) {
+        console.error('Error voting on promise:', err);
+      }
+    });
+  });
+</script>
