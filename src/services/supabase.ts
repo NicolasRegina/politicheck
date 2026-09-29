@@ -332,3 +332,252 @@ export async function getLiveForeignArticlesFromSupabase(): Promise<{ articles: 
   }
 }
 
+// ==========================================
+// 🛡️ RBAC & Civic Banners Management System
+// ==========================================
+
+export type UserRole = 'superadmin' | 'admin' | 'moderator' | 'user';
+
+export interface UserProfile {
+  id: string;
+  email: string;
+  full_name?: string;
+  role: UserRole;
+  created_at?: string;
+  updated_at?: string;
+}
+
+export interface CivicBanner {
+  id: string;
+  title: string;
+  image_url: string;
+  destination_url: string;
+  position: string;
+  is_active: boolean;
+  created_by?: string | null;
+  created_at?: string;
+  updated_at?: string;
+}
+
+/**
+ * Superadmin emails that are automatically promoted to 'superadmin'
+ */
+export const SUPERADMIN_EMAILS = ['contacto@politicheck.com.ar'];
+
+/**
+ * Helper to create a scoped Supabase client with a user's JWT access token
+ */
+export function createScopedClient(accessToken?: string) {
+  if (!supabaseUrl || !supabaseKey) return null;
+  if (!accessToken) return supabase;
+  return createClient(supabaseUrl, supabaseKey, {
+    global: {
+      headers: {
+        Authorization: `Bearer ${accessToken}`
+      }
+    }
+  });
+}
+
+/**
+ * Get active banner for public rendering (e.g. on homepage)
+ */
+export async function getActiveCivicBanner(position = 'home_top'): Promise<CivicBanner | null> {
+  if (!supabase) return null;
+
+  try {
+    const { data, error } = await supabase
+      .from('banners')
+      .select('*')
+      .eq('position', position)
+      .eq('is_active', true)
+      .order('updated_at', { ascending: false })
+      .limit(1)
+      .maybeSingle();
+
+    if (error) {
+      console.warn('[Supabase] Warning fetching active banner:', error.message);
+      return null;
+    }
+    return data as CivicBanner | null;
+  } catch (err: any) {
+    console.error('[Supabase] Exception fetching active banner:', err.message);
+    return null;
+  }
+}
+
+/**
+ * Get all banners for admin dashboard
+ */
+export async function getAllBanners(client = supabase): Promise<CivicBanner[]> {
+  if (!client) return [];
+
+  try {
+    const { data, error } = await client
+      .from('banners')
+      .select('*')
+      .order('created_at', { ascending: false });
+
+    if (error) {
+      console.warn('[Supabase] Warning fetching all banners:', error.message);
+      return [];
+    }
+    return (data || []) as CivicBanner[];
+  } catch (err: any) {
+    console.error('[Supabase] Exception fetching all banners:', err.message);
+    return [];
+  }
+}
+
+/**
+ * Upsert banner (create or edit)
+ */
+export async function upsertCivicBanner(
+  banner: Partial<CivicBanner>,
+  client = supabase
+): Promise<{ success: boolean; data?: CivicBanner; error?: string }> {
+  if (!client) return { success: false, error: 'Supabase no está configurado.' };
+
+  try {
+    const payload = {
+      ...banner,
+      updated_at: new Date().toISOString()
+    };
+
+    const { data, error } = await client
+      .from('banners')
+      .upsert(payload)
+      .select()
+      .single();
+
+    if (error) {
+      return { success: false, error: error.message };
+    }
+    return { success: true, data: data as CivicBanner };
+  } catch (err: any) {
+    return { success: false, error: err.message };
+  }
+}
+
+/**
+ * Toggle banner active state
+ */
+export async function toggleBannerActive(
+  bannerId: string,
+  isActive: boolean,
+  client = supabase
+): Promise<{ success: boolean; error?: string }> {
+  if (!client) return { success: false, error: 'Supabase no está configurado.' };
+
+  try {
+    const { error } = await client
+      .from('banners')
+      .update({ is_active: isActive, updated_at: new Date().toISOString() })
+      .eq('id', bannerId);
+
+    if (error) return { success: false, error: error.message };
+    return { success: true };
+  } catch (err: any) {
+    return { success: false, error: err.message };
+  }
+}
+
+/**
+ * Delete a banner
+ */
+export async function deleteCivicBanner(
+  bannerId: string,
+  client = supabase
+): Promise<{ success: boolean; error?: string }> {
+  if (!client) return { success: false, error: 'Supabase no está configurado.' };
+
+  try {
+    const { error } = await client
+      .from('banners')
+      .delete()
+      .eq('id', bannerId);
+
+    if (error) return { success: false, error: error.message };
+    return { success: true };
+  } catch (err: any) {
+    return { success: false, error: err.message };
+  }
+}
+
+/**
+ * Get profile for a specific user ID
+ */
+export async function getUserProfile(userId: string, client = supabase): Promise<UserProfile | null> {
+  if (!client) return null;
+
+  try {
+    const { data, error } = await client
+      .from('profiles')
+      .select('*')
+      .eq('id', userId)
+      .maybeSingle();
+
+    if (error) {
+      console.warn('[Supabase] Warning fetching profile:', error.message);
+      return null;
+    }
+
+    if (data && SUPERADMIN_EMAILS.includes(data.email?.toLowerCase()) && data.role !== 'superadmin') {
+      // Auto-elevate superadmin if needed
+      await client.from('profiles').update({ role: 'superadmin' }).eq('id', userId);
+      data.role = 'superadmin';
+    }
+
+    return data as UserProfile | null;
+  } catch (err: any) {
+    console.error('[Supabase] Exception fetching profile:', err.message);
+    return null;
+  }
+}
+
+/**
+ * Get all profiles for Superadmin user management
+ */
+export async function getAllProfiles(client = supabase): Promise<UserProfile[]> {
+  if (!client) return [];
+
+  try {
+    const { data, error } = await client
+      .from('profiles')
+      .select('*')
+      .order('created_at', { ascending: false });
+
+    if (error) {
+      console.warn('[Supabase] Warning fetching profiles:', error.message);
+      return [];
+    }
+    return (data || []) as UserProfile[];
+  } catch (err: any) {
+    console.error('[Supabase] Exception fetching profiles:', err.message);
+    return [];
+  }
+}
+
+/**
+ * Update user role (only superadmins can call this securely)
+ */
+export async function updateUserRole(
+  userId: string,
+  newRole: UserRole,
+  client = supabase
+): Promise<{ success: boolean; error?: string }> {
+  if (!client) return { success: false, error: 'Supabase no está configurado.' };
+
+  try {
+    const { error } = await client
+      .from('profiles')
+      .update({ role: newRole, updated_at: new Date().toISOString() })
+      .eq('id', userId);
+
+    if (error) return { success: false, error: error.message };
+    return { success: true };
+  } catch (err: any) {
+    return { success: false, error: err.message };
+  }
+}
+

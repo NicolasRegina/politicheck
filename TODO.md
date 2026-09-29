@@ -101,34 +101,35 @@
 
 ---
 
-### ⏳ Tarea 8: Modo Administrador / Superadmin & Centro de Control Editorial (Supabase RBAC) — [PENDIENTE]
-- [ ] **Arquitectura de Autenticación y Roles con Supabase (`profiles` + RLS):**
+### ✅ Tarea 8: Modo Administrador / Superadmin & Centro de Control Editorial (Supabase RBAC) — [COMPLETADA]
+- [x] **Arquitectura de Autenticación y Roles con Supabase (`profiles` + RLS):**
   - Tabla de perfiles (`profiles`) vinculada a `auth.users` con roles: `'superadmin'`, `'admin'`, `'moderator'`, `'user'`.
-  - Políticas de seguridad a nivel de fila (Row Level Security - RLS).
+  - Migración SQL `supabase/migrations/20260928_admin_roles_and_banners.sql` con RLS, triggers y auto-asignación de `'superadmin'` para `contacto@politicheck.com.ar`.
   - **Permisos del Superadmin:**
-    - Panel de gestión ABM de usuarios: crear, editar, asignar roles o revocar permisos de otros administradores y superadmins.
-    - Borrado o edición forzada de cualquier historia, cluster o banner.
-    - Acceso a métricas globales de tráfico, llaves API y configuraciones críticas.
-    - Moderación suprema de futuros canales de comunidad (Chat y Foro).
+    - Panel de gestión de usuarios en `/admin`: auditar nómina, asignar roles (`admin`, `moderator`, `user`) y protección permanente de inmutabilidad para `contacto@politicheck.com.ar`.
+    - Eliminación, edición y control forzado de banners y contenidos.
+    - Acceso a métricas de salud de los 31 medios monitoreados y consola de sincronización forzada.
   - **Permisos del Administrador (Admin):**
-    - Gestión del Gestor de Banners (activar/desactivar, subir imagen a Supabase Storage, link de destino).
-    - Centro de RRSS (previsualizar copies, editar texto, botón de 1 clic para copiar a X y publicación directa).
-    - Disparo de sincronización forzada de los 31 feeds RSS y re-clustering.
-    - Moderación de reportes de noticias.
-    - *Restricción de seguridad:* Un admin NO puede crear, editar ni modificar roles de otros admins ni superadmins.
-- [ ] **Ruta Protegida `/admin` con UI Moderna:**
-  - Login formal con Supabase Auth (email y contraseña).
-  - Dashboard editorial con métricas de salud de los 31 feeds RSS y botones de acción rápida.
-- [ ] **Gestor de Banners Publicitarios / Patrocinios Cívicos:**
-  - Toggle de estado (Activo / Oculto).
-  - Subida de banner a Supabase Storage (500 MB libres) o enlace directo a imagen.
-  - Enlace de destino (`href`) y texto alternativo.
-  - Bloque `<AdBanner />` en la portada del usuario que solo se renderiza si el banner está en `ON`.
-- [ ] **Centro de Redacción y Copiado RRSS para X / Redes:**
-  - Tarjetas de previsualización para cada noticia de portada del día.
-  - Campo de texto editable para retocar el copy al instante.
-  - Botón de **Copiado al Portapapeles con 1 Clic** (para pegar manualmente en X.com en 2 segundos sin costo de API).
-  - Botón de **Publicar Directo en X** (vía `/api/social/tweet-latest`) para cuando se activen créditos.
+    - Gestión de banners de patrocinio cívico (activar/pausar, compresión WebP, URL de destino).
+    - Centro de Sindicación RRSS (previsualizar tarjetas X, editor de copy en vivo, 1-Click Copy al portapapeles y publicación directa).
+    - Disparo de sincronización forzada de los 31 feeds RSS y re-clustering de Gemini.
+    - *Restricción de seguridad inviolable:* Un admin NO puede visualizar ni modificar la pestaña de Gobernanza ni alterar roles de otros usuarios.
+- [x] **Ruta Protegida `/admin` con UI Moderna:**
+  - Login formal en `/admin/login` con Supabase Auth (email y contraseña), validación de RBAC en servidor y almacenamiento seguro de token.
+  - Dashboard editorial `/admin` modular con 4 pestañas: Salud & Sync, Gestor de Banners Cívicos, Sindicación RRSS y Gobernanza & Roles.
+  - Enlace discreto de acceso en el pie de página institucional (`Footer.astro`).
+- [x] **Gestor de Banners Publicitarios / Patrocinios Cívicos:**
+  - Switch de activación inmediata (Activo / En pausa).
+  - Selector de imagen con **compresión automática a WebP en el navegador** (`src/utils/imageCompressor.ts`) vía Canvas API, reduciendo el peso de archivos hasta un 85% para proteger la cuota gratuita de 500 MB de Supabase Storage.
+  - Soporte para pegado de URL de imagen externa y previsualización en vivo.
+  - Componente `<AdBanner />` integrado en la portada (`index.astro`) entre la Gran Apertura y el Bento Grid secundario; se oculta sin dejar espacios vacíos si no hay banner activo.
+- [x] **Centro de Redacción y Copiado RRSS para X / Redes:**
+  - Selector lateral de historias del día clusterizadas con desglose fáctico (`🟣 % | 🟢 % | 🟠 %`).
+  - Generador automático de copy persuasivo de 280 caracteres con contador en tiempo real y alerta de desbordamiento.
+  - Botón de **Copiado al Portapapeles con 1 Clic** con confirmación visual interactiva (ideal para publicar en X sin costo de API).
+  - Botón de **Publicar Directo en X** (vía `/api/social/tweet-latest`) con soporte para textos personalizados (`customText`).
+- [x] **Consola de Sincronización Forzada:**
+  - Disparador manual para administradores que saltea cooldowns, re-raspa los 31 feeds y fuerza el re-clustering de Gemini 2.5 con logs en vivo y métricas de tiempo.
 
 ---
 

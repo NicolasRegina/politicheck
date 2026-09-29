@@ -1,5 +1,5 @@
 import type { APIRoute } from 'astro';
-import { autoTweetLatestStory, formatViralStoryTweet } from '../../../services/twitter';
+import { autoTweetLatestStory, formatViralStoryTweet, postCustomTweet } from '../../../services/twitter';
 import { getCachedClusteredStories } from '../../../services/ai/clustering';
 
 export const prerender = false;
@@ -11,6 +11,21 @@ export const ALL: APIRoute = async ({ request }) => {
   const origin = url.origin;
 
   try {
+    // 1. Check if customText was provided via POST body
+    if (request.method === 'POST') {
+      const body = await request.json().catch(() => ({}));
+      if (body.customText && typeof body.customText === 'string') {
+        const result = await postCustomTweet(body.customText.trim());
+        return new Response(
+          JSON.stringify(result),
+          {
+            status: result.success ? 200 : 400,
+            headers: { 'Content-Type': 'application/json' }
+          }
+        );
+      }
+    }
+
     if (isPreview) {
       const stories = getCachedClusteredStories();
       if (!stories || stories.length === 0) {
@@ -39,7 +54,7 @@ export const ALL: APIRoute = async ({ request }) => {
       );
     }
 
-    // Attempt to publish
+    // Attempt to publish automatic latest story
     const result = await autoTweetLatestStory({ force, baseUrl: origin });
 
     return new Response(

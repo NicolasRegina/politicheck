@@ -1,0 +1,1164 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import BrandLogo from '../../components/BrandLogo.astro';
+import { getNewsClustersFromSupabase } from '../../services/supabase';
+import { getLastSyncTimestampAsync, getCachedArticlesAsync } from '../../services/rss/sync';
+import { getCachedClusteredStories } from '../../services/ai/clustering';
+
+export const prerender = false;
+
+// Initial SSR data loading
+const lastSyncTimestamp = await getLastSyncTimestampAsync();
+const cachedClusters = (await getNewsClustersFromSupabase(1440)) || getCachedClusteredStories();
+const liveArticles = await getCachedArticlesAsync();
+---
+
+<Layout 
+  title="Centro de Control Editorial & Superadmin • Politicheck"
+  description="Panel de administración y gobernanza editorial de Politicheck Argentina."
+>
+  <div class="min-h-screen bg-slate-50 dark:bg-[#070A0F] text-slate-900 dark:text-slate-100 py-6 sm:py-8">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      
+      <!-- Top Bar: Institutional Identity & User Status -->
+      <header class="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 pb-6 mb-8 border-b border-slate-200 dark:border-slate-800">
+        <div class="flex items-center gap-3.5">
+          <BrandLogo size="md" />
+          <div>
+            <div class="flex items-center gap-2">
+              <h1 class="font-editorial text-2xl font-bold tracking-tight text-slate-950 dark:text-white">
+                Centro de Control Editorial
+              </h1>
+              <span id="user-role-badge" class="px-2 py-0.5 rounded text-[10px] font-mono font-bold uppercase tracking-wider bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300">
+                Verificando...
+              </span>
+            </div>
+            <p class="text-xs font-mono text-slate-500 dark:text-slate-400">
+              Observatorio de Cobertura Periodística & Auditoría Electoral
+            </p>
+          </div>
+        </div>
+
+        <!-- User Controls -->
+        <div class="flex flex-wrap items-center gap-2 sm:gap-3 w-full md:w-auto justify-between md:justify-end">
+          <div class="flex items-center gap-2 text-xs font-mono bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 px-3 py-1.5 rounded-xl shadow-2xs">
+            <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+            <span id="current-user-email" class="text-slate-700 dark:text-slate-300 font-medium">Cargando sesión...</span>
+          </div>
+
+          <a 
+            href="/" 
+            target="_blank" 
+            class="px-3 py-1.5 rounded-xl bg-white hover:bg-slate-100 dark:bg-slate-900 dark:hover:bg-slate-800 border border-slate-200 dark:border-slate-800 text-xs font-mono font-semibold text-slate-700 dark:text-slate-300 transition-colors flex items-center gap-1.5 shadow-2xs"
+          >
+            <span>Ver Sitio Público</span>
+            <span class="text-slate-400">↗</span>
+          </a>
+
+          <button 
+            type="button" 
+            id="logout-btn"
+            class="px-3 py-1.5 rounded-xl bg-rose-50 hover:bg-rose-100 dark:bg-rose-950/40 dark:hover:bg-rose-900/60 text-rose-700 dark:text-rose-300 border border-rose-200 dark:border-rose-900/40 text-xs font-mono font-semibold transition-colors cursor-pointer shadow-2xs"
+          >
+            Cerrar Sesión
+          </button>
+        </div>
+      </header>
+
+      <!-- Navigation Tabs -->
+      <nav class="flex border-b border-slate-200 dark:border-slate-800 mb-8 overflow-x-auto no-scrollbar gap-2">
+        <button 
+          type="button" 
+          class="tab-btn active px-4 py-2.5 text-xs font-mono font-bold uppercase tracking-wider border-b-2 border-[#0B111A] dark:border-white text-slate-950 dark:text-white transition-all cursor-pointer whitespace-nowrap flex items-center gap-2"
+          data-tab="sync"
+        >
+          <span>📊</span>
+          <span>Salud & Sincronización</span>
+        </button>
+
+        <button 
+          type="button" 
+          class="tab-btn px-4 py-2.5 text-xs font-mono font-bold uppercase tracking-wider border-b-2 border-transparent text-slate-500 hover:text-slate-900 dark:hover:text-slate-300 transition-all cursor-pointer whitespace-nowrap flex items-center gap-2"
+          data-tab="banners"
+        >
+          <span>📢</span>
+          <span>Gestor de Banners Cívicos</span>
+        </button>
+
+        <button 
+          type="button" 
+          class="tab-btn px-4 py-2.5 text-xs font-mono font-bold uppercase tracking-wider border-b-2 border-transparent text-slate-500 hover:text-slate-900 dark:hover:text-slate-300 transition-all cursor-pointer whitespace-nowrap flex items-center gap-2"
+          data-tab="rrss"
+        >
+          <span>🕊️</span>
+          <span>Sindicación RRSS (X / Redes)</span>
+        </button>
+
+        <button 
+          type="button" 
+          id="tab-btn-users"
+          class="tab-btn hidden px-4 py-2.5 text-xs font-mono font-bold uppercase tracking-wider border-b-2 border-transparent text-slate-500 hover:text-slate-900 dark:hover:text-slate-300 transition-all cursor-pointer whitespace-nowrap flex items-center gap-2"
+          data-tab="users"
+        >
+          <span>👥</span>
+          <span>Gobernanza & Roles (Superadmin)</span>
+        </button>
+      </nav>
+
+      <!-- ========================================================= -->
+      <!-- TAB 1: SYSTEM HEALTH & FORCE SYNC                         -->
+      <!-- ========================================================= -->
+      <section id="tab-content-sync" class="tab-pane space-y-6">
+        <!-- Overview Stats Grid -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-5 shadow-2xs">
+            <div class="text-[11px] font-mono uppercase text-slate-500 dark:text-slate-400 font-semibold mb-1">Medios Monitoreados</div>
+            <div class="text-3xl font-extrabold text-slate-950 dark:text-white font-mono">31</div>
+            <div class="text-[10px] font-mono text-emerald-600 dark:text-emerald-400 mt-2 flex items-center gap-1">
+              <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+              19 nacionales + 12 internacionales
+            </div>
+          </div>
+
+          <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-5 shadow-2xs">
+            <div class="text-[11px] font-mono uppercase text-slate-500 dark:text-slate-400 font-semibold mb-1">Historias en Portada</div>
+            <div class="text-3xl font-extrabold text-slate-950 dark:text-white font-mono">{cachedClusters.length}</div>
+            <div class="text-[10px] font-mono text-slate-500 dark:text-slate-400 mt-2">
+              Clustering IA Gemini 2.5
+            </div>
+          </div>
+
+          <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-5 shadow-2xs">
+            <div class="text-[11px] font-mono uppercase text-slate-500 dark:text-slate-400 font-semibold mb-1">Noticias en Cable Vivo</div>
+            <div class="text-3xl font-extrabold text-slate-950 dark:text-white font-mono">{liveArticles.length}</div>
+            <div class="text-[10px] font-mono text-slate-500 dark:text-slate-400 mt-2">
+              Flujo cronológico continuo
+            </div>
+          </div>
+
+          <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-5 shadow-2xs">
+            <div class="text-[11px] font-mono uppercase text-slate-500 dark:text-slate-400 font-semibold mb-1">Última Sincronización</div>
+            <div class="text-sm font-bold text-slate-900 dark:text-white font-mono truncate" id="stat-last-sync-time">
+              {lastSyncTimestamp ? new Date(lastSyncTimestamp).toLocaleTimeString('es-AR', { hour: '2-digit', minute: '2-digit', second: '2-digit' }) : 'Pendiente'}
+            </div>
+            <div class="text-[10px] font-mono text-slate-400 mt-2 truncate">
+              {lastSyncTimestamp ? new Date(lastSyncTimestamp).toLocaleDateString('es-AR') : 'Sin registro'}
+            </div>
+          </div>
+        </div>
+
+        <!-- Force Sync Action Card -->
+        <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 sm:p-8 shadow-sm">
+          <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pb-6 border-b border-slate-200 dark:border-slate-800">
+            <div>
+              <h2 class="font-editorial text-xl font-bold text-slate-950 dark:text-white">
+                Sincronización Forzada de Redacciones
+              </h2>
+              <p class="text-xs font-mono text-slate-500 dark:text-slate-400 mt-1 max-w-2xl leading-relaxed">
+                Dispara el raspado inmediato de los 31 feeds RSS oficiales y fuerza a Google Gemini a re-clusterizar las noticias de portada ignorando el temporizador de cooldown.
+              </p>
+            </div>
+
+            <button 
+              type="button" 
+              id="force-sync-btn"
+              class="px-5 py-2.5 rounded-xl bg-[#0B111A] hover:bg-slate-800 dark:bg-white dark:hover:bg-slate-100 text-white dark:text-slate-950 font-bold text-xs uppercase tracking-wider transition-all flex items-center gap-2 cursor-pointer font-mono shrink-0 shadow-sm"
+            >
+              <span id="sync-btn-icon">⚡</span>
+              <span id="sync-btn-text">Forzar Sincronización Ahora</span>
+            </button>
+          </div>
+
+          <!-- Live Progress / Output Terminal -->
+          <div class="mt-6">
+            <div class="flex items-center justify-between mb-2">
+              <span class="text-xs font-mono font-semibold uppercase text-slate-700 dark:text-slate-300">
+                Consola de Sincronización en Vivo
+              </span>
+              <span id="sync-status-indicator" class="text-[11px] font-mono text-slate-500">
+                En reposo
+              </span>
+            </div>
+            <div 
+              id="sync-terminal" 
+              class="bg-slate-950 text-slate-300 font-mono text-xs p-4 rounded-xl h-44 overflow-y-auto border border-slate-800 space-y-1.5 select-text"
+            >
+              <div class="text-slate-500">> Sistema de agregación listo. Presioná 'Forzar Sincronización Ahora' para disparar el pipeline.</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ========================================================= -->
+      <!-- TAB 2: CIVIC BANNERS MANAGEMENT                          -->
+      <!-- ========================================================= -->
+      <section id="tab-content-banners" class="tab-pane hidden space-y-6">
+        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <div>
+            <h2 class="font-editorial text-2xl font-bold text-slate-950 dark:text-white">
+              Gestor de Banners y Patrocinios Cívicos
+            </h2>
+            <p class="text-xs font-mono text-slate-500 dark:text-slate-400 mt-1">
+              Administrá los espacios de patrocinio en la portada con compresión WebP para proteger la cuota de Supabase Storage.
+            </p>
+          </div>
+
+          <button 
+            type="button" 
+            id="open-banner-modal-btn"
+            class="px-4 py-2 rounded-xl bg-[#0B111A] hover:bg-slate-800 dark:bg-white dark:hover:bg-slate-100 text-white dark:text-slate-950 font-semibold text-xs font-mono transition-all flex items-center gap-1.5 cursor-pointer shadow-sm"
+          >
+            <span>+ Crear Nuevo Banner</span>
+          </button>
+        </div>
+
+        <!-- Banners List Container -->
+        <div id="banners-list" class="space-y-4">
+          <!-- Populated dynamically via JS -->
+          <div class="p-8 text-center bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl text-xs font-mono text-slate-500">
+            Cargando banners...
+          </div>
+        </div>
+
+        <!-- Create / Edit Banner Modal -->
+        <div id="banner-modal" class="fixed inset-0 z-50 hidden bg-black/60 backdrop-blur-xs flex items-center justify-center p-4">
+          <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl max-w-lg w-full p-6 shadow-xl relative max-h-[90vh] overflow-y-auto">
+            <div class="flex items-center justify-between pb-4 border-b border-slate-200 dark:border-slate-800 mb-5">
+              <h3 id="modal-banner-title" class="font-editorial text-lg font-bold text-slate-950 dark:text-white">
+                Nuevo Banner de Patrocinio
+              </h3>
+              <button type="button" id="close-banner-modal-btn" class="text-slate-400 hover:text-slate-700 dark:hover:text-white text-lg font-mono cursor-pointer">
+                ✕
+              </button>
+            </div>
+
+            <form id="banner-form" class="space-y-4">
+              <input type="hidden" id="banner-id" name="id" />
+
+              <div>
+                <label for="banner-title" class="block text-xs font-mono font-semibold uppercase text-slate-700 dark:text-slate-300 mb-1">
+                  Título del Patrocinio / Campaña
+                </label>
+                <input 
+                  type="text" 
+                  id="banner-title" 
+                  required
+                  placeholder="Ej: Observatorio Cívico de la Democracia"
+                  class="w-full px-3.5 py-2 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 text-xs text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#6BA4D9] font-sans"
+                />
+              </div>
+
+              <div>
+                <label for="banner-destination" class="block text-xs font-mono font-semibold uppercase text-slate-700 dark:text-slate-300 mb-1">
+                  URL de Destino
+                </label>
+                <input 
+                  type="url" 
+                  id="banner-destination" 
+                  required
+                  placeholder="https://ejemplo.com.ar"
+                  class="w-full px-3.5 py-2 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 text-xs text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#6BA4D9] font-mono"
+                />
+              </div>
+
+              <!-- Image Source Tabs: Upload with WebP Compression or External URL -->
+              <div>
+                <div class="flex items-center justify-between mb-2">
+                  <label class="block text-xs font-mono font-semibold uppercase text-slate-700 dark:text-slate-300">
+                    Imagen del Banner
+                  </label>
+                  <span class="text-[10px] font-mono text-emerald-600 dark:text-emerald-400 font-semibold">
+                    Compresión WebP Automática
+                  </span>
+                </div>
+
+                <div class="space-y-3">
+                  <!-- File Upload with WebP Optimizer -->
+                  <div class="border-2 border-dashed border-slate-300 dark:border-slate-700 rounded-xl p-4 text-center hover:border-slate-400 transition-colors">
+                    <input 
+                      type="file" 
+                      id="banner-file-input" 
+                      accept="image/png, image/jpeg, image/webp"
+                      class="hidden"
+                    />
+                    <label 
+                      for="banner-file-input" 
+                      class="cursor-pointer flex flex-col items-center justify-center gap-1.5"
+                    >
+                      <span class="text-2xl">🖼️</span>
+                      <span class="text-xs font-mono font-bold text-slate-800 dark:text-slate-200">
+                        Seleccionar imagen para comprimir a WebP
+                      </span>
+                      <span class="text-[10px] font-mono text-slate-400">
+                        PNG, JPG o WebP (Resolución recomendada: 1200x300px)
+                      </span>
+                    </label>
+
+                    <div id="compression-stats" class="hidden mt-3 p-2.5 rounded-lg bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800 text-[11px] font-mono text-emerald-800 dark:text-emerald-300">
+                    </div>
+                  </div>
+
+                  <!-- Fallback: Direct Image URL -->
+                  <div>
+                    <label for="banner-image-url" class="block text-[11px] font-mono text-slate-500 dark:text-slate-400 mb-1">
+                      O pegar URL directa de imagen:
+                    </label>
+                    <input 
+                      type="text" 
+                      id="banner-image-url" 
+                      placeholder="https://... o data:image/webp;base64,..."
+                      class="w-full px-3.5 py-2 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 text-xs text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#6BA4D9] font-mono"
+                    />
+                  </div>
+
+                  <!-- Live Preview -->
+                  <div id="banner-preview-box" class="hidden rounded-xl border border-slate-200 dark:border-slate-800 overflow-hidden bg-slate-950 p-2">
+                    <div class="text-[10px] font-mono text-slate-400 uppercase tracking-widest mb-1 px-1">Previsualización:</div>
+                    <img id="banner-preview-img" src="" alt="Vista previa" class="w-full h-24 object-contain rounded-lg" />
+                  </div>
+                </div>
+              </div>
+
+              <!-- Position Selector -->
+              <div>
+                <label for="banner-position" class="block text-xs font-mono font-semibold uppercase text-slate-700 dark:text-slate-300 mb-1">
+                  Posición en el Sitio
+                </label>
+                <select 
+                  id="banner-position"
+                  class="w-full px-3.5 py-2 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 text-xs text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#6BA4D9] font-mono"
+                >
+                  <option value="home_top">Portada (Entre Gran Apertura y Bento Grid)</option>
+                  <option value="home_bottom">Pie de Portada (Antes de Metodología)</option>
+                </select>
+              </div>
+
+              <!-- Active Toggle -->
+              <div class="flex items-center gap-3 pt-2">
+                <input 
+                  type="checkbox" 
+                  id="banner-is-active"
+                  class="w-4 h-4 rounded text-[#0B111A] focus:ring-[#6BA4D9] border-slate-300 cursor-pointer"
+                />
+                <label for="banner-is-active" class="text-xs font-mono font-semibold text-slate-800 dark:text-slate-200 cursor-pointer">
+                  Activar este banner en el sitio público inmediatamente
+                </label>
+              </div>
+
+              <div id="banner-error-box" class="hidden p-3 rounded-xl bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-900 text-xs text-rose-700 dark:text-rose-300 font-mono">
+              </div>
+
+              <div class="flex items-center justify-end gap-2 pt-4 border-t border-slate-200 dark:border-slate-800">
+                <button 
+                  type="button" 
+                  id="cancel-banner-btn"
+                  class="px-4 py-2 rounded-xl border border-slate-200 dark:border-slate-700 text-xs font-mono text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors cursor-pointer"
+                >
+                  Cancelar
+                </button>
+
+                <button 
+                  type="submit" 
+                  id="save-banner-btn"
+                  class="px-4 py-2 rounded-xl bg-[#0B111A] hover:bg-slate-800 dark:bg-white dark:hover:bg-slate-100 text-white dark:text-slate-950 font-semibold text-xs font-mono transition-all cursor-pointer shadow-sm"
+                >
+                  Guardar Banner
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </section>
+
+      <!-- ========================================================= -->
+      <!-- TAB 3: SOCIAL MEDIA SYNDICATION CENTER (X / TWITTER)     -->
+      <!-- ========================================================= -->
+      <section id="tab-content-rrss" class="tab-pane hidden space-y-6">
+        <div>
+          <h2 class="font-editorial text-2xl font-bold text-slate-950 dark:text-white">
+            Centro de Redacción y Sindicación RRSS (X / Redes)
+          </h2>
+          <p class="text-xs font-mono text-slate-500 dark:text-slate-400 mt-1">
+            Generá tuits virales de 280 caracteres con el desglose del espectro editorial y copialos al portapapeles con 1 clic sin costo de API.
+          </p>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+          <!-- Left Column: Story Picker -->
+          <div class="lg:col-span-5 space-y-3">
+            <div class="text-xs font-mono font-semibold uppercase text-slate-700 dark:text-slate-300 pb-2 border-b border-slate-200 dark:border-slate-800">
+              Historias del Día ({cachedClusters.length})
+            </div>
+
+            <div class="space-y-2.5 max-h-[600px] overflow-y-auto pr-1">
+              {cachedClusters.map((story, idx) => (
+                <div 
+                  class="story-picker-card p-3 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 hover:border-slate-400 transition-all cursor-pointer shadow-2xs"
+                  data-index={idx}
+                  data-headline={story.neutralHeadline}
+                  data-id={story.id}
+                  data-oficialismo={story.spectrum?.oficialismoPct ?? 0}
+                  data-centro={story.spectrum?.centroDatosPct ?? 0}
+                  data-oposicion={story.spectrum?.oposicionPct ?? 0}
+                  data-outlets={story.articles?.map((a: any) => a.outletName).slice(0, 4).join(', ') ?? ''}
+                >
+                  <div class="flex items-center gap-1.5 text-[10px] font-mono text-slate-400 mb-1">
+                    <span class="px-1.5 py-0.5 rounded bg-slate-100 dark:bg-slate-800 font-bold uppercase">{story.category}</span>
+                    <span>• {story.articles?.length || 0} medios contrastados</span>
+                  </div>
+                  <h4 class="font-editorial text-sm font-bold text-slate-950 dark:text-white line-clamp-2">
+                    {story.neutralHeadline}
+                  </h4>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <!-- Right Column: Tweet Editor & Instant 1-Click Copy -->
+          <div class="lg:col-span-7 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 shadow-sm space-y-5">
+            <div class="flex items-center justify-between pb-3 border-b border-slate-200 dark:border-slate-800">
+              <div class="flex items-center gap-2">
+                <span class="text-lg">🕊️</span>
+                <h3 class="font-editorial text-lg font-bold text-slate-950 dark:text-white">
+                  Editor de Publicación para X
+                </h3>
+              </div>
+              <div class="flex items-center gap-2">
+                <span id="char-counter" class="text-xs font-mono font-bold text-emerald-600 dark:text-emerald-400">
+                  280 caracteres disponibles
+                </span>
+              </div>
+            </div>
+
+            <!-- Textarea for tweet draft -->
+            <div>
+              <textarea 
+                id="tweet-editor-textarea"
+                rows="6"
+                placeholder="Seleccioná una historia de la izquierda para autogenerar el copy..."
+                class="w-full p-4 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 text-sm text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#6BA4D9] font-sans leading-relaxed resize-none"
+              ></textarea>
+            </div>
+
+            <!-- Spectrum Tag Preview -->
+            <div id="tweet-spectrum-preview" class="p-3 rounded-xl bg-slate-100 dark:bg-slate-950/80 border border-slate-200 dark:border-slate-800 text-xs font-mono flex items-center justify-between">
+              <span class="text-slate-500">Espectro de Cobertura:</span>
+              <div class="flex items-center gap-3 font-bold" id="tweet-spectrum-tags">
+                <span class="text-purple-600">🟣 Oficialismo: -%</span>
+                <span class="text-emerald-600">🟢 Centro: -%</span>
+                <span class="text-amber-600">🟠 Oposición: -%</span>
+              </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 pt-2">
+              <!-- 1-Click Clipboard Copy -->
+              <button 
+                type="button" 
+                id="copy-tweet-btn"
+                class="px-5 py-3 rounded-xl bg-[#0B111A] hover:bg-slate-800 dark:bg-white dark:hover:bg-slate-100 text-white dark:text-slate-950 font-bold text-xs uppercase tracking-wider font-mono transition-all flex items-center justify-center gap-2 cursor-pointer shadow-sm"
+              >
+                <span id="copy-icon">📋</span>
+                <span id="copy-btn-text">Copiar al Portapapeles (1 Clic)</span>
+              </button>
+
+              <!-- Direct Tweet API Trigger -->
+              <button 
+                type="button" 
+                id="publish-x-btn"
+                class="px-4 py-3 rounded-xl bg-sky-500 hover:bg-sky-600 text-white font-bold text-xs uppercase tracking-wider font-mono transition-all flex items-center justify-center gap-2 cursor-pointer shadow-sm"
+                title="Publicar directo usando X API v2 @politicheck_ok"
+              >
+                <span>🚀</span>
+                <span>Publicar Directo en X</span>
+              </button>
+            </div>
+
+            <div id="rrss-feedback-box" class="hidden p-3 rounded-xl text-xs font-mono">
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ========================================================= -->
+      <!-- TAB 4: SUPERADMIN USER GOVERNANCE & RBAC                 -->
+      <!-- ========================================================= -->
+      <section id="tab-content-users" class="tab-pane hidden space-y-6">
+        <div>
+          <div class="flex items-center gap-2">
+            <span class="px-2 py-0.5 rounded text-[10px] font-mono font-bold uppercase tracking-wider bg-amber-100 dark:bg-amber-950/60 text-amber-800 dark:text-amber-300 border border-amber-300 dark:border-amber-800">
+              Exclusivo Superadmin
+            </span>
+          </div>
+          <h2 class="font-editorial text-2xl font-bold text-slate-950 dark:text-white mt-1">
+            Gobernanza de Usuarios y Roles (RBAC)
+          </h2>
+          <p class="text-xs font-mono text-slate-500 dark:text-slate-400 mt-1">
+            Control de privilegios sobre la plataforma. El titular <strong class="text-slate-800 dark:text-slate-200">contacto@politicheck.com.ar</strong> cuenta con inmunidad de superadministrador permanente.
+          </p>
+        </div>
+
+        <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl overflow-hidden shadow-sm">
+          <div class="overflow-x-auto">
+            <table class="w-full text-left text-xs font-mono">
+              <thead class="bg-slate-100 dark:bg-slate-950 text-slate-600 dark:text-slate-400 uppercase tracking-wider border-b border-slate-200 dark:border-slate-800">
+                <tr>
+                  <th class="p-4">Usuario / Email</th>
+                  <th class="p-4">Rol Asignado</th>
+                  <th class="p-4">Fecha de Alta</th>
+                  <th class="p-4 text-right">Modificar Privilegios</th>
+                </tr>
+              </thead>
+              <tbody id="users-table-body" class="divide-y divide-slate-200 dark:divide-slate-800">
+                <tr>
+                  <td colspan="4" class="p-8 text-center text-slate-400">
+                    Cargando nómina de usuarios...
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </div>
+</Layout>
+
+<script>
+  import { compressImageToWebP, formatBytes } from '../../utils/imageCompressor';
+
+  // State
+  let currentToken = localStorage.getItem('politicheck_admin_token') || '';
+  let currentUser: any = null;
+  let isSuperadmin = false;
+  let currentBanners: any[] = [];
+
+  // Auth Guard
+  async function initAuth() {
+    if (!currentToken) {
+      window.location.href = '/admin/login';
+      return;
+    }
+
+    try {
+      const res = await fetch('/api/admin/auth', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${currentToken}`
+        },
+        body: JSON.stringify({ action: 'verify' })
+      });
+
+      const data = await res.json();
+      if (!res.ok || !data.success || !data.isAdmin) {
+        throw new Error(data.error || 'Sesión no autorizada');
+      }
+
+      currentUser = data.user;
+      isSuperadmin = data.isSuperadmin;
+
+      // Update UI Header
+      const emailElem = document.getElementById('current-user-email');
+      if (emailElem) emailElem.textContent = currentUser.email;
+
+      const badgeElem = document.getElementById('user-role-badge');
+      if (badgeElem) {
+        badgeElem.textContent = isSuperadmin ? 'SUPERADMIN' : 'ADMIN';
+        badgeElem.className = isSuperadmin
+          ? 'px-2 py-0.5 rounded text-[10px] font-mono font-bold uppercase tracking-wider bg-amber-500/20 text-amber-500 border border-amber-500/30'
+          : 'px-2 py-0.5 rounded text-[10px] font-mono font-bold uppercase tracking-wider bg-indigo-500/20 text-indigo-400 border border-indigo-500/30';
+      }
+
+      // Show superadmin tab if applicable
+      if (isSuperadmin) {
+        document.getElementById('tab-btn-users')?.classList.remove('hidden');
+      }
+
+      // Load initial tabs data
+      loadBanners();
+      if (isSuperadmin) loadUsers();
+    } catch (err) {
+      console.error('[Admin Guard] Auth failed:', err);
+      localStorage.removeItem('politicheck_admin_token');
+      window.location.href = '/admin/login';
+    }
+  }
+
+  initAuth();
+
+  // Logout Handler
+  document.getElementById('logout-btn')?.addEventListener('click', () => {
+    localStorage.removeItem('politicheck_admin_token');
+    localStorage.removeItem('politicheck_admin_user');
+    document.cookie = 'sb-access-token=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+    window.location.href = '/admin/login';
+  });
+
+  // Tab Switching Logic
+  const tabButtons = document.querySelectorAll('.tab-btn');
+  const tabPanes = document.querySelectorAll('.tab-pane');
+
+  tabButtons.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const tabTarget = btn.getAttribute('data-tab');
+
+      tabButtons.forEach(b => {
+        b.classList.remove('active', 'border-[#0B111A]', 'dark:border-white', 'text-slate-950', 'dark:text-white');
+        b.classList.add('border-transparent', 'text-slate-500');
+      });
+
+      btn.classList.add('active', 'border-[#0B111A]', 'dark:border-white', 'text-slate-950', 'dark:text-white');
+      btn.classList.remove('border-transparent', 'text-slate-500');
+
+      tabPanes.forEach(pane => {
+        if (pane.id === `tab-content-${tabTarget}`) {
+          pane.classList.remove('hidden');
+        } else {
+          pane.classList.add('hidden');
+        }
+      });
+    });
+  });
+
+  // ==========================================
+  // TAB 1: FORCE SYNC HANDLER
+  // ==========================================
+  const forceSyncBtn = document.getElementById('force-sync-btn') as HTMLButtonElement;
+  const syncBtnText = document.getElementById('sync-btn-text') as HTMLSpanElement;
+  const syncBtnIcon = document.getElementById('sync-btn-icon') as HTMLSpanElement;
+  const syncTerminal = document.getElementById('sync-terminal') as HTMLDivElement;
+  const syncStatusIndicator = document.getElementById('sync-status-indicator') as HTMLSpanElement;
+
+  function appendTerminal(msg: string, isError = false) {
+    const div = document.createElement('div');
+    div.className = isError ? 'text-rose-400' : 'text-emerald-400';
+    div.textContent = `[${new Date().toLocaleTimeString('es-AR')}] ${msg}`;
+    syncTerminal.appendChild(div);
+    syncTerminal.scrollTop = syncTerminal.scrollHeight;
+  }
+
+  forceSyncBtn?.addEventListener('click', async () => {
+    forceSyncBtn.disabled = true;
+    syncBtnText.textContent = 'Sincronizando feeds y Gemini...';
+    syncBtnIcon.textContent = '⏳';
+    syncStatusIndicator.textContent = 'Ejecutando proceso...';
+    syncStatusIndicator.className = 'text-[11px] font-mono text-amber-500 animate-pulse';
+
+    appendTerminal('Iniciando sincronización forzada bajo credenciales administrativas...');
+    appendTerminal('Descargando y parseando 31 feeds RSS (19 nacionales + 12 internacionales)...');
+
+    try {
+      const res = await fetch('/api/admin/sync', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${currentToken}`
+        }
+      });
+
+      const data = await res.json();
+
+      if (!res.ok || !data.success) {
+        throw new Error(data.message || data.error || 'Error en la sincronización');
+      }
+
+      appendTerminal(` Feeds sincronizados con éxito en ${data.elapsedSeconds}s.`);
+      appendTerminal(` Artículos nacionales analizados: ${data.articlesCount} (Nuevos: ${data.newArticlesCount}).`);
+      appendTerminal(` Artículos internacionales procesados: ${data.foreignArticlesCount}.`);
+      appendTerminal(` Clusters de IA generados: ${data.nationalClustersCount} nacionales, ${data.foreignClustersCount} Mirada Exterior.`);
+      appendTerminal(' Base de datos Supabase actualizada correctamente.');
+
+      syncStatusIndicator.textContent = 'Sincronización completada exitosamente';
+      syncStatusIndicator.className = 'text-[11px] font-mono text-emerald-500 font-bold';
+
+      const statTime = document.getElementById('stat-last-sync-time');
+      if (statTime) statTime.textContent = new Date().toLocaleTimeString('es-AR');
+    } catch (err: any) {
+      appendTerminal(` Error: ${err.message}`, true);
+      syncStatusIndicator.textContent = 'Fallo en la sincronización';
+      syncStatusIndicator.className = 'text-[11px] font-mono text-rose-500 font-bold';
+    } finally {
+      forceSyncBtn.disabled = false;
+      syncBtnText.textContent = 'Forzar Sincronización Ahora';
+      syncBtnIcon.textContent = '⚡';
+    }
+  });
+
+  // ==========================================
+  // TAB 2: BANNERS MANAGEMENT
+  // ==========================================
+  const bannersContainer = document.getElementById('banners-list') as HTMLDivElement;
+  const bannerModal = document.getElementById('banner-modal') as HTMLDivElement;
+  const openModalBtn = document.getElementById('open-banner-modal-btn');
+  const closeModalBtn = document.getElementById('close-banner-modal-btn');
+  const cancelBannerBtn = document.getElementById('cancel-banner-btn');
+  const bannerForm = document.getElementById('banner-form') as HTMLFormElement;
+  const fileInput = document.getElementById('banner-file-input') as HTMLInputElement;
+  const compressionStats = document.getElementById('compression-stats') as HTMLDivElement;
+  const previewBox = document.getElementById('banner-preview-box') as HTMLDivElement;
+  const previewImg = document.getElementById('banner-preview-img') as HTMLImageElement;
+  const imageUrlInput = document.getElementById('banner-image-url') as HTMLInputElement;
+  const bannerErrorBox = document.getElementById('banner-error-box') as HTMLDivElement;
+
+  async function loadBanners() {
+    try {
+      const res = await fetch('/api/admin/banners', {
+        headers: { 'Authorization': `Bearer ${currentToken}` }
+      });
+      const data = await res.json();
+      if (data.success) {
+        currentBanners = data.banners || [];
+        renderBannersList();
+      }
+    } catch (err) {
+      console.error('Error fetching banners:', err);
+    }
+  }
+
+  function renderBannersList() {
+    if (!bannersContainer) return;
+
+    if (currentBanners.length === 0) {
+      bannersContainer.innerHTML = `
+        <div class="p-8 text-center bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl text-xs font-mono text-slate-500">
+          No hay banners configurados. Hacé clic en '+ Crear Nuevo Banner' para dar de alta uno.
+        </div>
+      `;
+      return;
+    }
+
+    bannersContainer.innerHTML = currentBanners.map(b => `
+      <div class="p-4 sm:p-5 rounded-2xl bg-white dark:bg-slate-900 border ${b.is_active ? 'border-emerald-500/50 shadow-xs' : 'border-slate-200 dark:border-slate-800'} transition-all flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+        <div class="flex items-center gap-4 w-full sm:w-auto">
+          <div class="w-24 h-14 bg-slate-950 rounded-lg overflow-hidden shrink-0 flex items-center justify-center border border-slate-800">
+            <img src="${b.image_url}" alt="${b.title}" class="w-full h-full object-contain" />
+          </div>
+          <div class="min-w-0">
+            <div class="flex items-center gap-2">
+              <h4 class="font-editorial text-base font-bold text-slate-950 dark:text-white truncate">
+                ${b.title}
+              </h4>
+              <span class="px-2 py-0.5 rounded text-[10px] font-mono font-bold uppercase tracking-wider ${b.is_active ? 'bg-emerald-100 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-400' : 'bg-slate-100 dark:bg-slate-800 text-slate-500'}">
+                ${b.is_active ? 'ACTIVO EN VIVO' : 'INACTIVO'}
+              </span>
+            </div>
+            <a href="${b.destination_url}" target="_blank" class="text-xs font-mono text-[#6BA4D9] hover:underline truncate block">
+              ${b.destination_url}
+            </a>
+            <span class="text-[10px] font-mono text-slate-400">
+              Posición: ${b.position} • Modificado: ${new Date(b.updated_at || b.created_at).toLocaleDateString('es-AR')}
+            </span>
+          </div>
+        </div>
+
+        <div class="flex items-center gap-2 w-full sm:w-auto justify-end border-t sm:border-t-0 pt-3 sm:pt-0 border-slate-100 dark:border-slate-800">
+          <button 
+            type="button" 
+            class="toggle-banner-btn px-3 py-1.5 rounded-lg text-xs font-mono font-semibold transition-colors cursor-pointer ${b.is_active ? 'bg-amber-50 hover:bg-amber-100 dark:bg-amber-950/40 text-amber-700 dark:text-amber-400' : 'bg-emerald-50 hover:bg-emerald-100 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-400'}"
+            data-id="${b.id}"
+            data-active="${b.is_active}"
+          >
+            ${b.is_active ? 'Pausar' : 'Activar'}
+          </button>
+
+          <button 
+            type="button" 
+            class="delete-banner-btn px-3 py-1.5 rounded-lg text-xs font-mono font-semibold bg-rose-50 hover:bg-rose-100 dark:bg-rose-950/40 text-rose-700 dark:text-rose-400 transition-colors cursor-pointer"
+            data-id="${b.id}"
+            data-title="${b.title}"
+          >
+            Eliminar
+          </button>
+        </div>
+      </div>
+    `).join('');
+
+    // Attach dynamic handlers
+    document.querySelectorAll('.toggle-banner-btn').forEach(btn => {
+      btn.addEventListener('click', async () => {
+        const id = btn.getAttribute('data-id');
+        const active = btn.getAttribute('data-active') === 'true';
+        await toggleBanner(id!, !active);
+      });
+    });
+
+    document.querySelectorAll('.delete-banner-btn').forEach(btn => {
+      btn.addEventListener('click', async () => {
+        const id = btn.getAttribute('data-id');
+        const title = btn.getAttribute('data-title');
+        if (confirm(`¿Estás seguro de eliminar el banner "${title}"?`)) {
+          await deleteBanner(id!);
+        }
+      });
+    });
+  }
+
+  async function toggleBanner(id: string, newActiveState: boolean) {
+    try {
+      const res = await fetch('/api/admin/banners', {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${currentToken}`
+        },
+        body: JSON.stringify({ id, is_active: newActiveState })
+      });
+      const data = await res.json();
+      if (data.success) {
+        await loadBanners();
+      } else {
+        alert(data.error || 'Error al cambiar estado');
+      }
+    } catch (err: any) {
+      alert(err.message);
+    }
+  }
+
+  async function deleteBanner(id: string) {
+    try {
+      const res = await fetch(`/api/admin/banners?id=${id}`, {
+        method: 'DELETE',
+        headers: { 'Authorization': `Bearer ${currentToken}` }
+      });
+      const data = await res.json();
+      if (data.success) {
+        await loadBanners();
+      } else {
+        alert(data.error || 'Error al eliminar');
+      }
+    } catch (err: any) {
+      alert(err.message);
+    }
+  }
+
+  // File Upload with Automatic WebP Compression
+  fileInput?.addEventListener('change', async (e) => {
+    const file = (e.target as HTMLInputElement).files?.[0];
+    if (!file) return;
+
+    compressionStats.classList.remove('hidden');
+    compressionStats.textContent = 'Comprimiendo imagen a WebP con Canvas...';
+
+    try {
+      const result = await compressImageToWebP(file, 1200, 400, 0.82);
+
+      // Update UI stats
+      compressionStats.innerHTML = `
+        <strong>✓ Compresión WebP Exitosa</strong><br>
+        Original: ${formatBytes(result.originalSizeBytes)} ➔ Comprimido: <strong>${formatBytes(result.compressedSizeBytes)}</strong><br>
+        Ahorro de espacio: <strong>${result.reductionPercent}%</strong> (${result.width}x${result.height}px)
+      `;
+
+      // Set preview and populate image url field with base64 webp
+      imageUrlInput.value = result.dataUrl;
+      previewImg.src = result.dataUrl;
+      previewBox.classList.remove('hidden');
+    } catch (err: any) {
+      compressionStats.textContent = `Error al comprimir: ${err.message}`;
+    }
+  });
+
+  imageUrlInput?.addEventListener('input', () => {
+    const val = imageUrlInput.value.trim();
+    if (val) {
+      previewImg.src = val;
+      previewBox.classList.remove('hidden');
+    } else {
+      previewBox.classList.add('hidden');
+    }
+  });
+
+  // Modal Controls
+  openModalBtn?.addEventListener('click', () => {
+    bannerForm.reset();
+    (document.getElementById('banner-id') as HTMLInputElement).value = '';
+    compressionStats.classList.add('hidden');
+    previewBox.classList.add('hidden');
+    bannerErrorBox.classList.add('hidden');
+    bannerModal.classList.remove('hidden');
+  });
+
+  closeModalBtn?.addEventListener('click', () => bannerModal.classList.add('hidden'));
+  cancelBannerBtn?.addEventListener('click', () => bannerModal.classList.add('hidden'));
+
+  // Save Banner Form
+  bannerForm?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    bannerErrorBox.classList.add('hidden');
+
+    const id = (document.getElementById('banner-id') as HTMLInputElement).value;
+    const title = (document.getElementById('banner-title') as HTMLInputElement).value.trim();
+    const destination_url = (document.getElementById('banner-destination') as HTMLInputElement).value.trim();
+    const image_url = imageUrlInput.value.trim();
+    const position = (document.getElementById('banner-position') as HTMLSelectElement).value;
+    const is_active = (document.getElementById('banner-is-active') as HTMLInputElement).checked;
+
+    if (!title || !destination_url || !image_url) {
+      bannerErrorBox.textContent = 'Por favor completá todos los campos requeridos.';
+      bannerErrorBox.classList.remove('hidden');
+      return;
+    }
+
+    try {
+      const res = await fetch('/api/admin/banners', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${currentToken}`
+        },
+        body: JSON.stringify({
+          id: id || undefined,
+          title,
+          destination_url,
+          image_url,
+          position,
+          is_active
+        })
+      });
+
+      const data = await res.json();
+      if (!res.ok || !data.success) {
+        throw new Error(data.error || 'Error al guardar el banner');
+      }
+
+      bannerModal.classList.add('hidden');
+      await loadBanners();
+    } catch (err: any) {
+      bannerErrorBox.textContent = err.message;
+      bannerErrorBox.classList.remove('hidden');
+    }
+  });
+
+  // ==========================================
+  // TAB 3: RRSS SYNDICATION CENTER
+  // ==========================================
+  const tweetTextarea = document.getElementById('tweet-editor-textarea') as HTMLTextAreaElement;
+  const charCounter = document.getElementById('char-counter') as HTMLSpanElement;
+  const copyTweetBtn = document.getElementById('copy-tweet-btn') as HTMLButtonElement;
+  const copyBtnText = document.getElementById('copy-btn-text') as HTMLSpanElement;
+  const copyIcon = document.getElementById('copy-icon') as HTMLSpanElement;
+  const publishXBtn = document.getElementById('publish-x-btn') as HTMLButtonElement;
+  const rrssFeedbackBox = document.getElementById('rrss-feedback-box') as HTMLDivElement;
+  const tweetSpectrumTags = document.getElementById('tweet-spectrum-tags') as HTMLDivElement;
+
+  function updateCharCount() {
+    const len = tweetTextarea.value.length;
+    const remaining = 280 - len;
+
+    charCounter.textContent = `${remaining} caracteres disponibles (${len}/280)`;
+    if (remaining < 0) {
+      charCounter.className = 'text-xs font-mono font-bold text-rose-500 animate-pulse';
+    } else {
+      charCounter.className = 'text-xs font-mono font-bold text-emerald-600 dark:text-emerald-400';
+    }
+  }
+
+  tweetTextarea?.addEventListener('input', updateCharCount);
+
+  // Story click auto-populates tweet draft
+  document.querySelectorAll('.story-picker-card').forEach(card => {
+    card.addEventListener('click', () => {
+      document.querySelectorAll('.story-picker-card').forEach(c => c.classList.remove('ring-2', 'ring-[#6BA4D9]'));
+      card.classList.add('ring-2', 'ring-[#6BA4D9]');
+
+      const headline = card.getAttribute('data-headline') || '';
+      const id = card.getAttribute('data-id') || '';
+      const ofi = card.getAttribute('data-oficialismo') || '0';
+      const cen = card.getAttribute('data-centro') || '0';
+      const opo = card.getAttribute('data-oposicion') || '0';
+      const outlets = card.getAttribute('data-outlets') || '';
+
+      tweetSpectrumTags.innerHTML = `
+        <span class="text-purple-600 dark:text-purple-400">🟣 Oficialismo: ${ofi}%</span>
+        <span class="text-emerald-600 dark:text-emerald-400">🟢 Centro: ${cen}%</span>
+        <span class="text-amber-600 dark:text-amber-400">🟠 Oposición: ${opo}%</span>
+      `;
+
+      // Compose high-converting tweet draft
+      const outletsLine = outlets ? `\nRedacciones: ${outlets}` : '';
+      const tweetDraft = `🗞️ Cobertura periodística en simultáneo:\n"${headline}"${outletsLine}\n\nEspectro editorial contrastado:\n🟣 Oficialismo: ${ofi}%\n🟢 Centro / Datos: ${cen}%\n🟠 Oposición: ${opo}%\n\nMirá el cruce de redacciones sin sesgo en Politicheck 👉 https://www.politicheck.com.ar/historia/${id}`;
+
+      tweetTextarea.value = tweetDraft;
+      updateCharCount();
+    });
+  });
+
+  // 1-Click Copy to Clipboard
+  copyTweetBtn?.addEventListener('click', async () => {
+    const text = tweetTextarea.value.trim();
+    if (!text) {
+      alert('Por favor seleccioná o escribí un tuit primero.');
+      return;
+    }
+
+    try {
+      await navigator.clipboard.writeText(text);
+      copyIcon.textContent = '✓';
+      copyBtnText.textContent = '¡Copiado al Portapapeles!';
+      copyTweetBtn.classList.add('bg-emerald-600', 'text-white');
+
+      setTimeout(() => {
+        copyIcon.textContent = '📋';
+        copyBtnText.textContent = 'Copiar al Portapapeles (1 Clic)';
+        copyTweetBtn.classList.remove('bg-emerald-600');
+      }, 2500);
+    } catch (err) {
+      alert('No se pudo acceder al portapapeles.');
+    }
+  });
+
+  // Publish to X via API
+  publishXBtn?.addEventListener('click', async () => {
+    const text = tweetTextarea.value.trim();
+    if (!text) return;
+
+    publishXBtn.disabled = true;
+    publishXBtn.textContent = 'Publicando en @politicheck_ok...';
+    rrssFeedbackBox.classList.add('hidden');
+
+    try {
+      const res = await fetch('/api/social/tweet-latest', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${currentToken}`
+        },
+        body: JSON.stringify({ customText: text })
+      });
+
+      const data = await res.json();
+      rrssFeedbackBox.classList.remove('hidden');
+
+      if (data.success) {
+        rrssFeedbackBox.className = 'p-3 rounded-xl bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800 text-emerald-800 dark:text-emerald-300 font-mono text-xs';
+        rrssFeedbackBox.textContent = `✓ Publicación exitosa: ${data.tweetUrl || 'Tuit enviado a la cola de X API'}`;
+      } else {
+        rrssFeedbackBox.className = 'p-3 rounded-xl bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-800 text-amber-800 dark:text-amber-300 font-mono text-xs';
+        rrssFeedbackBox.textContent = `Aviso: ${data.message || data.error || 'Credenciales de X simuladas. Utilizá el botón de Copiar al Portapapeles.'}`;
+      }
+    } catch (err: any) {
+      rrssFeedbackBox.className = 'p-3 rounded-xl bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-800 text-rose-800 dark:text-rose-300 font-mono text-xs';
+      rrssFeedbackBox.textContent = `Error al conectar con X API: ${err.message}`;
+      rrssFeedbackBox.classList.remove('hidden');
+    } finally {
+      publishXBtn.disabled = false;
+      publishXBtn.textContent = 'Publicar Directo en X';
+    }
+  });
+
+  // ==========================================
+  // TAB 4: SUPERADMIN USER GOVERNANCE
+  // ==========================================
+  const usersTableBody = document.getElementById('users-table-body') as HTMLTableSectionElement;
+
+  async function loadUsers() {
+    if (!isSuperadmin || !usersTableBody) return;
+
+    try {
+      const res = await fetch('/api/admin/users', {
+        headers: { 'Authorization': `Bearer ${currentToken}` }
+      });
+      const data = await res.json();
+
+      if (!data.success || !data.profiles) {
+        usersTableBody.innerHTML = `
+          <tr>
+            <td colspan="4" class="p-6 text-center text-slate-400">
+              ${data.error || 'Error al cargar usuarios'}
+            </td>
+          </tr>
+        `;
+        return;
+      }
+
+      const profiles = data.profiles;
+      usersTableBody.innerHTML = profiles.map((p: any) => {
+        const isOwner = p.email?.toLowerCase() === 'contacto@politicheck.com.ar';
+        return `
+          <tr class="hover:bg-slate-50 dark:hover:bg-slate-950/60 transition-colors">
+            <td class="p-4">
+              <div class="font-bold text-slate-900 dark:text-white">${p.email}</div>
+              <div class="text-[10px] text-slate-400">${p.id}</div>
+            </td>
+            <td class="p-4">
+              ${isOwner 
+                ? '<span class="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-amber-500/20 text-amber-500 border border-amber-500/30">SUPERADMIN PERMANENTE</span>'
+                : `<span class="px-2 py-0.5 rounded text-[10px] font-mono font-bold ${p.role === 'admin' ? 'bg-indigo-500/20 text-indigo-400 border border-indigo-500/30' : 'bg-slate-100 dark:bg-slate-800 text-slate-400'}">${p.role.toUpperCase()}</span>`
+              }
+            </td>
+            <td class="p-4 text-slate-500">
+              ${p.created_at ? new Date(p.created_at).toLocaleDateString('es-AR') : '-'}
+            </td>
+            <td class="p-4 text-right">
+              ${isOwner
+                ? '<span class="text-[11px] text-slate-400 italic">Inmutable</span>'
+                : `
+                  <select 
+                    class="role-select px-2.5 py-1 rounded-lg bg-slate-100 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 text-xs font-mono text-slate-800 dark:text-slate-200 cursor-pointer"
+                    data-user-id="${p.id}"
+                    data-user-email="${p.email}"
+                  >
+                    <option value="user" ${p.role === 'user' ? 'selected' : ''}>Ciudadano (user)</option>
+                    <option value="moderator" ${p.role === 'moderator' ? 'selected' : ''}>Moderador (moderator)</option>
+                    <option value="admin" ${p.role === 'admin' ? 'selected' : ''}>Administrador (admin)</option>
+                    <option value="superadmin" ${p.role === 'superadmin' ? 'selected' : ''}>Superadmin</option>
+                  </select>
+                `
+              }
+            </td>
+          </tr>
+        `;
+      }).join('');
+
+      // Attach role change listeners
+      document.querySelectorAll('.role-select').forEach(sel => {
+        sel.addEventListener('change', async (e) => {
+          const target = e.target as HTMLSelectElement;
+          const userId = target.getAttribute('data-user-id');
+          const targetEmail = target.getAttribute('data-user-email');
+          const newRole = target.value;
+
+          if (!confirm(`¿Confirmás el cambio de rol para ${targetEmail} a "${newRole}"?`)) {
+            await loadUsers();
+            return;
+          }
+
+          try {
+            const updateRes = await fetch('/api/admin/users', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${currentToken}`
+              },
+              body: JSON.stringify({ userId, targetEmail, role: newRole })
+            });
+
+            const updateData = await updateRes.json();
+            if (!updateData.success) {
+              alert(updateData.error || 'Error al actualizar el rol');
+            }
+            await loadUsers();
+          } catch (err: any) {
+            alert(err.message);
+            await loadUsers();
+          }
+        });
+      });
+    } catch (err) {
+      console.error('Error fetching users:', err);
+    }
+  }
+</script>
+
+<style>
+  /* Custom scrollbar for modern editorial dashboard */
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+</style>

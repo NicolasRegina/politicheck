@@ -1,0 +1,174 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import BrandLogo from '../../components/BrandLogo.astro';
+
+export const prerender = false;
+---
+
+<Layout 
+  title="Acceso al Centro de Control Editorial • Politicheck"
+  description="Panel administrativo y de control editorial de Politicheck Argentina."
+>
+  <div class="min-h-[80vh] flex flex-col justify-center items-center px-4 py-12">
+    <div class="w-full max-w-md">
+      <!-- Institutional Header -->
+      <div class="text-center mb-8">
+        <div class="flex justify-center mb-4">
+          <BrandLogo size="lg" />
+        </div>
+        <h1 class="font-editorial text-3xl font-extrabold text-slate-950 dark:text-white tracking-tight">
+          Centro de Control Editorial
+        </h1>
+        <p class="text-xs font-mono text-slate-500 dark:text-slate-400 mt-2">
+          Acceso restringido para redactores y administradores de Politicheck
+        </p>
+      </div>
+
+      <!-- Login Card -->
+      <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 sm:p-8 shadow-sm">
+        <form id="admin-login-form" class="space-y-4">
+          <div>
+            <label for="email" class="block text-xs font-mono font-semibold uppercase tracking-wider text-slate-700 dark:text-slate-300 mb-1.5">
+              Correo Electrónico
+            </label>
+            <input 
+              type="email" 
+              id="email" 
+              name="email" 
+              required
+              autocomplete="email"
+              placeholder="contacto@politicheck.com.ar"
+              class="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 text-sm text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#6BA4D9] focus:border-transparent transition-all font-sans"
+            />
+          </div>
+
+          <div>
+            <div class="flex items-center justify-between mb-1.5">
+              <label for="password" class="block text-xs font-mono font-semibold uppercase tracking-wider text-slate-700 dark:text-slate-300">
+                Contraseña
+              </label>
+            </div>
+            <input 
+              type="password" 
+              id="password" 
+              name="password" 
+              required
+              autocomplete="current-password"
+              placeholder="••••••••••••"
+              class="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 text-sm text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#6BA4D9] focus:border-transparent transition-all font-sans"
+            />
+          </div>
+
+          <!-- Error Alert (hidden by default) -->
+          <div id="login-error-box" class="hidden p-3 rounded-xl bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-900/60 text-xs text-rose-700 dark:text-rose-300 font-mono">
+          </div>
+
+          <button 
+            type="submit" 
+            id="login-submit-btn"
+            class="w-full py-2.5 px-4 rounded-xl bg-[#0B111A] hover:bg-slate-800 dark:bg-white dark:hover:bg-slate-100 text-white dark:text-slate-950 font-semibold text-sm transition-all shadow-sm flex items-center justify-center gap-2 cursor-pointer font-sans mt-2"
+          >
+            <span id="btn-text">Ingresar al Centro de Control</span>
+            <span id="btn-spinner" class="hidden w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin"></span>
+          </button>
+        </form>
+
+        <div class="mt-6 pt-6 border-t border-slate-200 dark:border-slate-800 text-center">
+          <p class="text-[11px] font-mono text-slate-500 dark:text-slate-400 leading-relaxed">
+            🛡️ Gobernanza RBAC auditada con Supabase Auth. Cuenta Superadmin vinculada a <span class="font-bold text-slate-800 dark:text-slate-200">contacto@politicheck.com.ar</span>.
+          </p>
+        </div>
+      </div>
+
+      <div class="text-center mt-6">
+        <a 
+          href="/" 
+          class="text-xs font-mono text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white transition-colors underline underline-offset-4"
+        >
+          ← Volver a Politicheck Argentina
+        </a>
+      </div>
+    </div>
+  </div>
+</Layout>
+
+<script>
+  // Check if session already exists
+  async function checkExistingSession() {
+    const token = localStorage.getItem('politicheck_admin_token');
+    if (!token) return;
+
+    try {
+      const res = await fetch('/api/admin/auth', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({ action: 'verify' })
+      });
+
+      const data = await res.json();
+      if (data.success && data.isAdmin) {
+        window.location.href = '/admin';
+      }
+    } catch (_) {}
+  }
+
+  checkExistingSession();
+
+  const form = document.getElementById('admin-login-form') as HTMLFormElement;
+  const errorBox = document.getElementById('login-error-box') as HTMLDivElement;
+  const submitBtn = document.getElementById('login-submit-btn') as HTMLButtonElement;
+  const btnText = document.getElementById('btn-text') as HTMLSpanElement;
+  const btnSpinner = document.getElementById('btn-spinner') as HTMLSpanElement;
+
+  form?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    errorBox.classList.add('hidden');
+    errorBox.textContent = '';
+    
+    btnText.textContent = 'Verificando credenciales...';
+    btnSpinner.classList.remove('hidden');
+    submitBtn.disabled = true;
+
+    const email = (document.getElementById('email') as HTMLInputElement)?.value.trim();
+    const password = (document.getElementById('password') as HTMLInputElement)?.value;
+
+    try {
+      const response = await fetch('/api/admin/auth', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password })
+      });
+
+      const data = await response.json();
+
+      if (!response.ok || !data.success) {
+        throw new Error(data.error || 'Credenciales incorrectas o permisos insuficientes.');
+      }
+
+      // Store tokens and profile in localStorage and cookie
+      if (data.session?.access_token) {
+        localStorage.setItem('politicheck_admin_token', data.session.access_token);
+        localStorage.setItem('politicheck_admin_user', JSON.stringify({
+          email: data.user.email,
+          role: data.profile.role,
+          id: data.user.id
+        }));
+        document.cookie = `sb-access-token=${data.session.access_token}; Path=/; SameSite=Lax; Max-Age=604800`;
+      }
+
+      btnText.textContent = '¡Acceso concedido! Redirigiendo...';
+      setTimeout(() => {
+        window.location.href = '/admin';
+      }, 500);
+    } catch (err: any) {
+      errorBox.textContent = err.message || 'Error al intentar iniciar sesión.';
+      errorBox.classList.remove('hidden');
+      btnText.textContent = 'Ingresar al Centro de Control';
+      btnSpinner.classList.add('hidden');
+      submitBtn.disabled = false;
+    }
+  });
+</script>

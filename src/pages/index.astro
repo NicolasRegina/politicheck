@@ -3,15 +3,15 @@ import Layout from '../layouts/Layout.astro';
 import StoryCard from '../components/StoryCard.astro';
 import LiveFeedItem from '../components/LiveFeedItem.astro';
 import PromiseCard from '../components/PromiseCard.astro';
-import { getCachedArticlesAsync, getCachedForeignArticles, getCachedForeignArticlesAsync, getLastSyncTimestampAsync } from '../services/rss/sync';
+import AdBanner from '../components/AdBanner.astro';
+import { getCachedArticlesAsync, getCachedForeignArticlesAsync, getLastSyncTimestampAsync } from '../services/rss/sync';
 import { 
   clusterArticlesWithGemini, 
   getCachedClusteredStories,
   clusterForeignArticlesWithGemini,
-  getCachedForeignClusters,
   getCachedForeignClustersAsync
 } from '../services/ai/clustering';
-import { getNewsClustersFromSupabase } from '../services/supabase';
+import { getNewsClustersFromSupabase, getActiveCivicBanner } from '../services/supabase';
 import { getPromisesWithLiveVotes, getPromisesStats } from '../services/promises';
 import { getPolitician } from '../data/politicians';
 
@@ -74,6 +74,9 @@ const leadStory = storiesToDisplay[0];
 const secondaryStories = storiesToDisplay.slice(1);
 const liveRailArticles = liveArticles.slice(0, 6);
 const fullLiveFeedArticles = liveArticles.slice(0, 60);
+
+// Active Civic / Sponsor Banner
+const activeBanner = await getActiveCivicBanner('home_top');
 ---
 
 <Layout>
@@ -181,6 +184,9 @@ const fullLiveFeedArticles = liveArticles.slice(0, 60);
         </div>
       </aside>
     </section>
+
+    <!-- Civic Sponsor Banner Placement (Rendered conditionally if active) -->
+    <AdBanner banner={activeBanner} />
 
     <!-- SECTION 2: Segundas Aperturas (3-Column Bento Grid) -->
     <section id="secondary-stories-section" class="space-y-4 pt-4 border-t-2 border-slate-900 dark:border-slate-100">
@@ -473,7 +479,7 @@ const fullLiveFeedArticles = liveArticles.slice(0, 60);
         </div>
         <div class="grid grid-cols-1 gap-6" id="foreign-grid">
           {foreignStoriesToDisplay.map((story) => (
-            <div class="story-item" data-category="Internacional" data-text={`${story.neutralHeadline} ${story.summary} ${story.articles.map(a => a.title + ' ' + a.outletName).join(' ')}`}>
+            <div class="story-item" data-category="Internacional" data-text={`${story.neutralHeadline} ${story.summary} ${story.articles.map((a: any) => a.title + ' ' + a.outletName).join(' ')}`}>
               <StoryCard story={story} />
             </div>
           ))}

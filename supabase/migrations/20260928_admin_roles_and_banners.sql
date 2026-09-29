@@ -73,10 +73,11 @@ BEGIN
     NEW.id,
     NEW.email,
     COALESCE(NEW.raw_user_meta_data->>'full_name', ''),
-    'user'
+    CASE WHEN LOWER(NEW.email) = 'contacto@politicheck.com.ar' THEN 'superadmin' ELSE 'user' END
   )
   ON CONFLICT (id) DO UPDATE
-  SET email = EXCLUDED.email;
+  SET email = EXCLUDED.email,
+      role = CASE WHEN LOWER(EXCLUDED.email) = 'contacto@politicheck.com.ar' THEN 'superadmin' ELSE public.profiles.role END;
   RETURN NEW;
 END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;

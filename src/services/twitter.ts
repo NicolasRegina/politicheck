@@ -200,6 +200,47 @@ export async function publishStoryTweet(
 }
 
 /**
+ * Post custom tweet text from Editorial Control Center
+ */
+export async function postCustomTweet(tweetText: string): Promise<TweetResult> {
+  const client = getTwitterClient();
+  if (!client) {
+    console.warn('[Twitter Bot] Twitter credentials not configured. Simulating tweet post.');
+    return {
+      success: false,
+      reason: 'Credenciales de Twitter no configuradas en entorno. Modo simulación.',
+      tweetText
+    };
+  }
+
+  try {
+    const { data: createdTweet } = await client.v2.tweet(tweetText);
+    const tweetId = createdTweet.id;
+    const tweetUrl = `https://x.com/politicheck_ok/status/${tweetId}`;
+
+    saveLastTweetedData({
+      lastStoryId: 'custom_editorial_post',
+      lastTweetId: tweetId,
+      lastTweetedAt: new Date().toISOString()
+    });
+
+    return {
+      success: true,
+      tweetId,
+      tweetUrl,
+      tweetText
+    };
+  } catch (err: any) {
+    console.error('[Twitter Bot] Custom tweet error:', err?.data || err?.message);
+    return {
+      success: false,
+      reason: err?.data?.detail || err?.message || 'Error al conectar con Twitter API v2',
+      tweetText
+    };
+  }
+}
+
+/**
  * Automates finding the latest top story / breaking news and tweeting it
  */
 export async function autoTweetLatestStory(options: { force?: boolean; baseUrl?: string } = {}): Promise<TweetResult> {
@@ -228,3 +269,4 @@ export async function autoTweetLatestStory(options: { force?: boolean; baseUrl?:
   const leadStory = stories.find(s => s.isLeadStory || (s as any).isLead) || stories[0];
   return publishStoryTweet(leadStory, false, options);
 }
+
