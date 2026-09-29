@@ -54,30 +54,34 @@ function formatPubDate(rawDate: string): string {
   }
 }
 
+import { optimizeMediaImageUrl } from '../../utils/images';
+
 // Extract image URL from enclosure, media:content, or img tag
 function extractImageUrl(itemXml: string): string | undefined {
+  let rawUrl: string | undefined;
+
   // 1. Enclosure
   const enclosureMatch = itemXml.match(/<enclosure[^>]+url=["']([^"']+)["']/i);
   if (enclosureMatch && enclosureMatch[1] && !enclosureMatch[1].endsWith('.gif')) {
-    return enclosureMatch[1];
-  }
-
-  // 2. Media content
-  const mediaMatch = itemXml.match(/<media:content[^>]+url=["']([^"']+)["']/i);
-  if (mediaMatch && mediaMatch[1] && !mediaMatch[1].endsWith('.gif')) {
-    return mediaMatch[1];
-  }
-
-  // 3. Img inside description
-  const descMatch = itemXml.match(/<description>([\s\S]*?)<\/description>/i);
-  if (descMatch) {
-    const imgMatch = descMatch[1].match(/<img[^>]+src=["']([^"']+)["']/i);
-    if (imgMatch && imgMatch[1] && !imgMatch[1].includes('tracking') && !imgMatch[1].endsWith('.gif')) {
-      return imgMatch[1];
+    rawUrl = enclosureMatch[1];
+  } else {
+    // 2. Media content
+    const mediaMatch = itemXml.match(/<media:content[^>]+url=["']([^"']+)["']/i);
+    if (mediaMatch && mediaMatch[1] && !mediaMatch[1].endsWith('.gif')) {
+      rawUrl = mediaMatch[1];
+    } else {
+      // 3. Img inside description
+      const descMatch = itemXml.match(/<description>([\s\S]*?)<\/description>/i);
+      if (descMatch) {
+        const imgMatch = descMatch[1].match(/<img[^>]+src=["']([^"']+)["']/i);
+        if (imgMatch && imgMatch[1] && !imgMatch[1].includes('tracking') && !imgMatch[1].endsWith('.gif')) {
+          rawUrl = imgMatch[1];
+        }
+      }
     }
   }
 
-  return undefined;
+  return rawUrl ? optimizeMediaImageUrl(rawUrl, 800) : undefined;
 }
 
 export async function parseFeed(config: RssFeedConfig, timeoutMs = 8000): Promise<Article[]> {

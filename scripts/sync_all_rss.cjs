@@ -136,21 +136,49 @@ function formatPubDate(timestamp) {
   }
 }
 
+function optimizeMediaImageUrl(url, maxWidth = 800) {
+  if (!url || typeof url !== 'string') return undefined;
+  let clean = url.trim();
+  if (!clean.startsWith('http://') && !clean.startsWith('https://')) return clean;
+  try {
+    if (clean.includes('/resizer/') || clean.includes('auth=')) {
+      clean = clean.replace(/([?&])width=\d+/i, `$1width=${maxWidth}`);
+      clean = clean.replace(/([?&])w=\d+/i, `$1w=${maxWidth}`);
+      const maxHeight = Math.round(maxWidth * (9 / 16));
+      clean = clean.replace(/([?&])height=\d+/i, `$1height=${maxHeight}`);
+      clean = clean.replace(/([?&])h=\d+/i, `$1h=${maxHeight}`);
+    }
+    if (clean.includes('fotos.perfil.com') && clean.includes('/trim/')) {
+      clean = clean.replace(/\/trim\/\d+\/\d+\//i, `/trim/${maxWidth}/${Math.round(maxWidth * 9 / 16)}/`);
+    }
+    if (clean.includes('clarin.com') || clean.includes('lanacion.com.ar')) {
+      clean = clean.replace(/([?&])width=\d+/i, `$1width=${maxWidth}`);
+      clean = clean.replace(/([?&])w=\d+/i, `$1w=${maxWidth}`);
+    }
+    return clean;
+  } catch {
+    return url;
+  }
+}
+
 function extractImageUrl(itemXml) {
+  let rawUrl;
   const encMatch = itemXml.match(/<enclosure[^>]+url=["']([^"']+)["']/i);
-  if (encMatch && encMatch[1] && !encMatch[1].endsWith('.gif')) return encMatch[1];
-
-  const mediaMatch = itemXml.match(/<media:content[^>]+url=["']([^"']+)["']/i);
-  if (mediaMatch && mediaMatch[1] && !mediaMatch[1].endsWith('.gif')) return mediaMatch[1];
-
-  const descMatch = itemXml.match(/<description>([\s\S]*?)<\/description>/i);
-  if (descMatch) {
-    const imgMatch = descMatch[1].match(/<img[^>]+src=["']([^"']+)["']/i);
-    if (imgMatch && imgMatch[1] && !imgMatch[1].includes('tracking') && !imgMatch[1].endsWith('.gif')) {
-      return imgMatch[1];
+  if (encMatch && encMatch[1] && !encMatch[1].endsWith('.gif')) rawUrl = encMatch[1];
+  else {
+    const mediaMatch = itemXml.match(/<media:content[^>]+url=["']([^"']+)["']/i);
+    if (mediaMatch && mediaMatch[1] && !mediaMatch[1].endsWith('.gif')) rawUrl = mediaMatch[1];
+    else {
+      const descMatch = itemXml.match(/<description>([\s\S]*?)<\/description>/i);
+      if (descMatch) {
+        const imgMatch = descMatch[1].match(/<img[^>]+src=["']([^"']+)["']/i);
+        if (imgMatch && imgMatch[1] && !imgMatch[1].includes('tracking') && !imgMatch[1].endsWith('.gif')) {
+          rawUrl = imgMatch[1];
+        }
+      }
     }
   }
-  return undefined;
+  return rawUrl ? optimizeMediaImageUrl(rawUrl, 800) : undefined;
 }
 
 const ARGENTINA_KEYWORDS = [
