@@ -363,7 +363,7 @@ export interface CivicBanner {
  * Superadmin emails that are automatically promoted to 'superadmin'
  */
 export const SUPERADMIN_EMAILS = [
-  (process.env.SUPERADMIN_EMAIL || import.meta.env?.SUPERADMIN_EMAIL || 'contacto@politicheck.com.ar').toLowerCase()
+  (process.env.SUPERADMIN_EMAIL || import.meta.env?.SUPERADMIN_EMAIL || 'admin@politicheck.com.ar').toLowerCase()
 ];
 
 /**

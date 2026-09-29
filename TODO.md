@@ -104,9 +104,9 @@
 ### ✅ Tarea 8: Modo Administrador / Superadmin & Centro de Control Editorial (Supabase RBAC) — [COMPLETADA]
 - [x] **Arquitectura de Autenticación y Roles con Supabase (`profiles` + RLS):**
   - Tabla de perfiles (`profiles`) vinculada a `auth.users` con roles: `'superadmin'`, `'admin'`, `'moderator'`, `'user'`.
-  - Migración SQL `supabase/migrations/20260928_admin_roles_and_banners.sql` con RLS, triggers y auto-asignación de `'superadmin'` para `contacto@politicheck.com.ar`.
+  - Migración SQL `supabase/migrations/20260928_admin_roles_and_banners.sql` con RLS, triggers y auto-asignación configurable de `'superadmin'`.
   - **Permisos del Superadmin:**
-    - Panel de gestión de usuarios en `/admin`: auditar nómina, asignar roles (`admin`, `moderator`, `user`) y protección permanente de inmutabilidad para `contacto@politicheck.com.ar`.
+    - Panel de gestión de usuarios en `/admin`: auditar nómina, asignar roles (`admin`, `moderator`, `user`) y protección permanente de inmutabilidad para el superadmin institucional.
     - Eliminación, edición y control forzado de banners y contenidos.
     - Acceso a métricas de salud de los 31 medios monitoreados y consola de sincronización forzada.
   - **Permisos del Administrador (Admin):**
@@ -165,6 +165,23 @@
   - Corrección de 39 errores de TypeScript/Astro hasta alcanzar **0 errores y 0 advertencias** en los 44 archivos.
   - Instalación de `@types/node` en devDependencies.
   - Persistencia de historias internacionales en Supabase Postgres.
+
+---
+
+### ✅ Tarea 12: Mobile UX Compactness & Motor Viral de Placas Gráficas — [COMPLETADA]
+- [x] **Densificación Móvil en `StoryCard.astro`:**
+  - Reducción de padding de contenedor a `p-4 sm:p-6 md:p-8` en móviles para optimizar espacio vertical.
+  - Altura máxima de imágenes secundarias fijada en `160px` (`max-h-[160px] aspect-video object-cover`) con carga perezosa (`loading="lazy"`).
+  - Selector segmentado móvil tipo acordeón/tabs (`[📑 Síntesis y Espectro]` vs `[⚖️ Redacciones (N)]`) para evitar fatiga de scroll en pantallas `< lg`, manteniendo cuadrícula unificada en escritorio (`lg:!block`).
+- [x] **Micro-Copy Explicativo de Encuadre en `SpectrumBar.astro`:**
+  - Micro-copy técnico neutral debajo de la barra de porcentajes: *"Distribución calculada sobre el encuadre editorial de las notas publicadas en las últimas 24 horas."*.
+  - Optimización de estados de foco (`focus:ring-1`) y envoltura flexible para pantallas de 320px sin desbordamiento.
+- [x] **Decluttering Superior en `Header.astro`:**
+  - Unificación de indicadores financieros (Dólar Blue, Oficial, MEP, CCL, Riesgo País, IPC) y estado de sincronización en una sola fila compacta con scroll horizontal (`h-7 sm:h-8`, `overflow-x-auto no-scrollbar whitespace-nowrap`).
+  - Reducción del alto a 28px en móviles y 32px en escritorio para otorgar foco inmediato al titular de portada.
+- [x] **Generador de Placas Gráficas 1080x1080 y Exportación en 1 Clic (`ShareModal.astro`):**
+  - Motor Canvas 2D nativo en cliente (sin librerías pesadas) que genera placa cuadrada en alta definición (1080x1080px): fondo `#0A0E17`, isotipo vectorial oficial de Politicheck, titular contrastado, barra gráfica del espectro y marca de agua institucional.
+  - Botón primario de copiado directo de imagen al portapapeles (`ClipboardItem({'image/png': blob})`) con descarga automática de respaldo en navegadores móviles restrictivos.
 
 ---
 

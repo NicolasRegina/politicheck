@@ -34,65 +34,66 @@ const serverSyncIso = (await getLastSyncTimestampAsync()) || new Date().toISOStr
 ---
 
 <header class="sticky top-0 z-50 bg-white/95 dark:bg-[#0A0E17]/95 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 transition-colors duration-200 shadow-xs">
-  <!-- Top Ticker Bar: Financial Indicators & Weather (Clarín / La Nación / Ámbito style) -->
-  <div class="bg-slate-100/90 dark:bg-slate-950 border-b border-slate-200/80 dark:border-slate-900 py-1 px-4 text-[11px] font-mono text-slate-600 dark:text-slate-400">
-    <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-y-1">
+  <!-- Top Ticker Bar: Streamlined Single-Line Bar (Max 28px mobile / 32px desktop) -->
+  <div class="h-7 sm:h-8 bg-slate-100/95 dark:bg-slate-950 border-b border-slate-200/80 dark:border-slate-900 px-3 sm:px-4 text-[10px] sm:text-[11px] font-mono text-slate-600 dark:text-slate-400 flex items-center overflow-x-auto no-scrollbar whitespace-nowrap">
+    <div class="max-w-7xl mx-auto w-full flex items-center justify-between gap-3 sm:gap-4 shrink-0">
       <!-- Date & Weather (Dynamic) -->
-      <div class="flex items-center gap-3">
+      <div class="flex items-center gap-2 sm:gap-2.5 shrink-0">
         <span class="font-semibold text-slate-800 dark:text-slate-200 capitalize" id="ticker-live-date">
           {serverDateFormatted}
         </span>
         <span class="text-slate-300 dark:text-slate-700">•</span>
-        <span class="hidden sm:inline text-slate-600 dark:text-slate-400" id="ticker-live-weather">
-          Buenos Aires (<span id="weather-temp-val">{initialTemp}</span>°C)
+        <span class="text-slate-600 dark:text-slate-400" id="ticker-live-weather">
+          Bs. As. <span id="weather-temp-val">{initialTemp}</span>°C
         </span>
       </div>
 
-      <!-- Financial Ticker (Live Dólar API Integration) -->
-      <div class="hidden lg:flex items-center gap-4 text-[10px] tracking-tight">
-        <div class="flex items-center gap-1.5" title="Cotización venta Dólar Blue (dolarapi.com)">
-          <span class="text-slate-500 dark:text-slate-400">DÓLAR BLUE:</span>
+      <!-- Financial Ticker (Live Dólar API Integration: Continuous Single-Line Flow) -->
+      <div class="flex items-center gap-3 sm:gap-4 text-[10px] tracking-tight shrink-0">
+        <span class="text-slate-300 dark:text-slate-700">|</span>
+        <div class="flex items-center gap-1" title="Cotización venta Dólar Blue (dolarapi.com)">
+          <span class="text-slate-500 dark:text-slate-400">BLUE:</span>
           <span class="font-bold text-slate-900 dark:text-slate-100" id="ticker-blue-val">${initialBlue}</span>
         </div>
-        <span class="text-slate-300 dark:text-slate-700">|</span>
-        <div class="flex items-center gap-1.5" title="Cotización venta Dólar Oficial">
+        <span class="text-slate-300 dark:text-slate-700 hidden sm:inline">|</span>
+        <div class="flex items-center gap-1 hidden sm:flex" title="Cotización venta Dólar Oficial">
           <span class="text-slate-500 dark:text-slate-400">OFICIAL:</span>
           <span class="font-bold text-slate-900 dark:text-slate-100" id="ticker-oficial-val">${initialOficial}</span>
         </div>
         <span class="text-slate-300 dark:text-slate-700">|</span>
-        <div class="flex items-center gap-1.5" title="Cotización Bolsa MEP">
+        <div class="flex items-center gap-1" title="Cotización Bolsa MEP">
           <span class="text-slate-500 dark:text-slate-400">MEP:</span>
           <span class="font-bold text-slate-900 dark:text-slate-100" id="ticker-mep-val">${initialMep}</span>
         </div>
         <span class="text-slate-300 dark:text-slate-700">|</span>
-        <div class="flex items-center gap-1.5" title="Riesgo País Argentina (argentinadatos.com)">
-          <span class="text-slate-500 dark:text-slate-400">RIESGO PAÍS:</span>
-          <span class="font-bold text-slate-900 dark:text-slate-100" id="ticker-riesgo-val">{initialRiesgoPais} pts</span>
+        <div class="flex items-center gap-1" title="Riesgo País Argentina (argentinadatos.com)">
+          <span class="text-slate-500 dark:text-slate-400">RIESGO:</span>
+          <span class="font-bold text-slate-900 dark:text-slate-100" id="ticker-riesgo-val">{initialRiesgoPais}</span>
         </div>
-        <span class="text-slate-300 dark:text-slate-700">|</span>
-        <div class="flex items-center gap-1.5" title="Índice de Precios al Consumidor mensual (INDEC / argentinadatos.com)">
-          <span class="text-slate-500 dark:text-slate-400">IPC MENSUAL:</span>
+        <span class="text-slate-300 dark:text-slate-700 hidden sm:inline">|</span>
+        <div class="flex items-center gap-1 hidden sm:flex" title="Índice de Precios al Consumidor mensual (INDEC)">
+          <span class="text-slate-500 dark:text-slate-400">IPC:</span>
           <span class="font-bold text-emerald-700 dark:text-emerald-400" id="ticker-ipc-val">{initialIpc.toString().replace('.', ',')}%</span>
         </div>
       </div>
 
       <!-- Live Sync status & Methodology -->
-      <div class="flex items-center gap-2.5 text-[11px]">
+      <div class="flex items-center gap-2 sm:gap-2.5 text-[10px] sm:text-[11px] shrink-0">
         <!-- Live Sync Status Badge (Public with manual trigger) -->
         <button 
           type="button"
           id="btn-manual-sync"
-          class="flex items-center gap-2 px-2.5 py-0.5 rounded-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 shadow-2xs hover:bg-slate-50 dark:hover:bg-slate-800 hover:border-slate-300 dark:hover:border-slate-700 transition-all cursor-pointer"
+          class="flex items-center gap-1.5 sm:gap-2 px-2 sm:px-2.5 py-0.5 rounded-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 shadow-2xs hover:bg-slate-50 dark:hover:bg-slate-800 hover:border-slate-300 dark:hover:border-slate-700 transition-all cursor-pointer"
           title="Clic para sincronizar redacciones y actualizar noticias ahora"
         >
-          <span class="relative flex h-2 w-2" id="sync-ping-dot">
+          <span class="relative flex h-1.5 w-1.5 sm:h-2 sm:w-2" id="sync-ping-dot">
             <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-            <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+            <span class="relative inline-flex rounded-full h-1.5 w-1.5 sm:h-2 sm:w-2 bg-emerald-500"></span>
           </span>
-          <span class="font-bold uppercase tracking-wider text-[10px] text-emerald-700 dark:text-emerald-400">EN VIVO</span>
+          <span class="font-bold uppercase tracking-wider text-[9px] sm:text-[10px] text-emerald-700 dark:text-emerald-400">EN VIVO</span>
           <span class="text-slate-300 dark:text-slate-700">•</span>
           <span 
-            class="text-slate-500 dark:text-slate-400 text-[10px] font-mono" 
+            class="text-slate-500 dark:text-slate-400 text-[9px] sm:text-[10px] font-mono" 
             id="sync-time-ago"
             data-server-sync={serverSyncIso}
           >
@@ -100,8 +101,8 @@ const serverSyncIso = (await getLastSyncTimestampAsync()) || new Date().toISOStr
           </span>
         </button>
 
-        <span class="text-slate-300 dark:text-slate-700">•</span>
-        <a href="/metodologia" class="hover:text-slate-900 dark:hover:text-slate-100 transition-colors underline underline-offset-2">
+        <span class="text-slate-300 dark:text-slate-700 hidden sm:inline">•</span>
+        <a href="/metodologia" class="hidden sm:inline hover:text-slate-900 dark:hover:text-slate-100 transition-colors underline underline-offset-2">
           Metodología
         </a>
       </div>
@@ -112,8 +113,8 @@ const serverSyncIso = (await getLastSyncTimestampAsync()) || new Date().toISOStr
   <BreakingBanner alert={breakingAlert} />
 
   <!-- The Editorial Masthead (The New York Times / La Nación format) -->
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 py-4">
-    <div class="grid grid-cols-1 md:grid-cols-12 items-center gap-4 border-b border-slate-200 dark:border-slate-800 pb-4">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 py-2.5 sm:py-4">
+    <div class="grid grid-cols-1 md:grid-cols-12 items-center gap-2 sm:gap-4 border-b border-slate-200 dark:border-slate-800 pb-2.5 sm:pb-4">
       <!-- Left Column: Edition Metadata -->
       <div class="hidden md:flex md:col-span-3 flex-col text-[11px] font-mono text-slate-500 dark:text-slate-400 space-y-0.5">
         <span class="font-semibold text-slate-700 dark:text-slate-300 uppercase tracking-widest text-[10px]">Edición Digital Nacional</span>
@@ -124,7 +125,7 @@ const serverSyncIso = (await getLastSyncTimestampAsync()) || new Date().toISOStr
       <!-- Center Column: Grand Newspaper Title -->
       <div class="col-span-12 md:col-span-6 text-center">
         <a href="/" class="inline-block group">
-          <h1 class="font-editorial text-3xl sm:text-5xl md:text-5xl font-black tracking-wider text-slate-950 dark:text-white uppercase group-hover:opacity-90 transition-opacity">
+          <h1 class="font-editorial text-2xl sm:text-5xl md:text-5xl font-black tracking-wider text-slate-950 dark:text-white uppercase group-hover:opacity-90 transition-opacity">
             POLITICHECK
           </h1>
           <div class="mt-1 flex items-center justify-center gap-2">
