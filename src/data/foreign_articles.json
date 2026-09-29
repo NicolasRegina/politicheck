@@ -1,5 +1,59 @@
 [
   {
+    "id": "art-bbcmundo-6564418941",
+    "outletId": "bbcmundo",
+    "outletName": "BBC News Mundo",
+    "title": "Qué se sabe del Corredor Andes-Atlántico, el ambicioso proyecto con el que EE.UU. busca acceder a recursos estratégicos de Argentina (y competir con China)",
+    "snippet": "De acuerdo con analistas, el proyecto muestra el interés de Washington en tener mayor presencia en países de América Latina y reducir el espacio de China en la región.",
+    "url": "https://www.bbc.com/mundo/articles/c6n9wrpdje2ro?at_medium=RSS&at_campaign=rss",
+    "publishedAt": "08:04 hs",
+    "timestamp": 1790679843000
+  },
+  {
+    "id": "art-elpais-22068137726",
+    "outletId": "elpais",
+    "outletName": "El País",
+    "title": "Kast enfrenta una dura resistencia interna por haber sumado a Chile al Escudo de las Américas de Trump",
+    "snippet": "De los 15 adherentes, entre ellos la Argentina de Milei y El Salvador de Bukele, el país sudamericano es el único en el que el presidente encara un profundo debate político por los alcances del acuerdo",
+    "url": "https://elpais.com/chile/2026-09-29/kast-enfrenta-una-dura-resistencia-interna-por-haber-sumado-a-chile-al-escudo-de-las-americas-de-trump.html",
+    "publishedAt": "06:30 hs",
+    "timestamp": 1790674200000,
+    "imageUrl": "https://imagenes.elpais.com/resizer/v2/WGX7XCC6EBMDPFPQYQ7CU6QFIM.jpg?auth=4af83844ea147c525fb14f2102cd392b84c121e826e653e63f71a8599062a241"
+  },
+  {
+    "id": "art-elpais-10800145691",
+    "outletId": "elpais",
+    "outletName": "El País",
+    "title": "Del portazo de Petro al regreso al Fondo Monetario Internacional",
+    "snippet": "De la Espriella busca apoyo internacional para unas finanzas deterioradas. Colombia está lejos de Grecia o Argentina, pero su presupuesto ya recorta subsidios a los más pobres",
+    "url": "https://elpais.com/america-colombia/2026-09-29/del-portazo-de-petro-al-regreso-al-fondo-monetario-internacional.html",
+    "publishedAt": "06:30 hs",
+    "timestamp": 1790674200000,
+    "imageUrl": "https://imagenes.elpais.com/resizer/v2/ROI4GYLJINKDPJH4D32JKDG63Y.jpg?auth=6acabb6b4b74ec1ddabc1652c73eef9f2d8ccc14327784ffa4ed92895026c56b"
+  },
+  {
+    "id": "art-elpais-6774029912",
+    "outletId": "elpais",
+    "outletName": "El País",
+    "title": "Una economía al borde de la recesión en Argentina",
+    "snippet": "La actividad está estancada por el freno del consumo, la inversión y el gasto público. Crecen las exportaciones, pero sin traccionar la producción y el empleo",
+    "url": "https://elpais.com/argentina/2026-09-29/una-economia-al-borde-de-la-recesion-en-argentina.html",
+    "publishedAt": "06:30 hs",
+    "timestamp": 1790674200000,
+    "imageUrl": "https://imagenes.elpais.com/resizer/v2/TS2BSBPS5VIIBOFUKWOL2ROZNE.jpg?auth=0d73d0dad200e58c2a74f6a7db99e597b5e6403100e4bdb915722d0877fc607e"
+  },
+  {
+    "id": "art-elpais-5708869220",
+    "outletId": "elpais",
+    "outletName": "El País",
+    "title": "Lucrecia Martel: pequeñas formas de resistencia de una cineasta de culto combativa",
+    "snippet": "La directora argentina recorre Madrid, Barcelona y Valencia para hablar de ‘Un destino común’, su primer libro, y de ‘Nuestra tierra’, su última película",
+    "url": "https://elpais.com/cultura/2026-09-29/lucrecia-martel-pequenas-formas-de-resistencia-de-una-cineasta-de-culto-combativa.html",
+    "publishedAt": "00:30 hs",
+    "timestamp": 1790652601000,
+    "imageUrl": "https://imagenes.elpais.com/resizer/v2/NQI54KKNINB5RJLPL3KI3ASXHU.jpg?auth=4f2d537fbb48aac857afac57bc3fbd9cc3c78eb775685c7ef30b34bc62a0fdaa"
+  },
+  {
     "id": "art-elpais-3355159586",
     "outletId": "elpais",
     "outletName": "El País",
@@ -22,24 +76,13 @@
     "imageUrl": "https://imagenes.elpais.com/resizer/v2/SMTJH5WBQJIG3MTHPNQCVSMMNE.jpg?auth=fe27646d6fe8ff3bac6aa3b30c3832ad4acc52a596210f671047c39b33a2ebe4"
   },
   {
-    "id": "art-elpais-104017206",
-    "outletId": "elpais",
-    "outletName": "El País",
-    "title": "El ministro de Defensa de Kast abre un nuevo frente con Argentina al defender la autodeterminación de los malvinenses",
-    "snippet": "Milei anuncia que sancionará a la empresa británica Thales UK Limited por vuelos no autorizados entre Punta Arenas y las islas",
-    "url": "https://elpais.com/chile/2026-09-28/el-ministro-de-defensa-de-kast-abre-un-nuevo-frente-con-argentina-al-defender-la-autodeterminacion-de-los-malvinenses.html",
-    "publishedAt": "16:29 hs",
-    "timestamp": 1790623745000,
-    "imageUrl": "https://imagenes.elpais.com/resizer/v2/BVKEEXFV4FGDFBUTMNCXZLYHK4.jpg?auth=693e890676c9a78b2357841dae24bb9f3ce2f2028b313a82a8dff4ccc517237d"
-  },
-  {
     "id": "art-bbcmundo-14587962016",
     "outletId": "bbcmundo",
     "outletName": "BBC News Mundo",
     "title": "Por qué están cerrando miles de empresas en Argentina y qué dice de la economía en la era Milei",
     "snippet": "El fenómeno contrasta con el crecimiento económico de Argentina y plantea dudas sobre la solidez y alcance de esa expansión.",
     "url": "https://www.bbc.com/mundo/articles/c6z7zzel0lx5o?at_medium=RSS&at_campaign=rss",
-    "publishedAt": "08:17 hs",
+    "publishedAt": "28/9",
     "timestamp": 1790594271000
   },
   {
@@ -52,16 +95,5 @@
     "publishedAt": "27/9",
     "timestamp": 1790479801000,
     "imageUrl": "https://imagenes.elpais.com/resizer/v2/Q5UYLIUSKJDUBAHDLRUSVLXZ7M.jpg?auth=a8409e8eca34024b446ab8a98ea0d94250743114ff076ed0ebc5d8c84ff5081c"
-  },
-  {
-    "id": "art-elpais-12871255103",
-    "outletId": "elpais",
-    "outletName": "El País",
-    "title": "A la búsqueda de mujeres, y también hombres, que dejan crecer sus cabellos como símbolo de espiritualidad",
-    "snippet": "En ‘Las Pelilargas’, el nuevo fotolibro de la argentina Irina Werning, el pelo se convierte en un motivo para indagar en las tradiciones indígenas, la transmisión cultural y la identidad mestiza latinoamericana",
-    "url": "https://elpais.com/babelia/2026-09-24/a-la-busqueda-de-mujeres-y-tambien-hombres-que-dejan-crecer-sus-cabellos-como-simbolo-de-espiritualidad.html",
-    "publishedAt": "24/9",
-    "timestamp": 1790220601000,
-    "imageUrl": "https://imagenes.elpais.com/resizer/v2/EAW7HK4NLJGHRPEH6Y6NV2MVCU.jpg?auth=495cdab78615144ab22b816573dd7ce088fed456d6d380746ae0e6c6178a80bf"
   }
 ]

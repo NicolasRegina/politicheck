@@ -1,5 +1,6 @@
 const fs = require('fs');
 const path = require('path');
+const { createClient } = require('@supabase/supabase-js');
 
 // Load .env manually
 function loadEnv() {
@@ -21,6 +22,10 @@ function loadEnv() {
   }
 }
 loadEnv();
+
+const supabase = (process.env.SUPABASE_URL && process.env.SUPABASE_ANON_KEY)
+  ? createClient(process.env.SUPABASE_URL, process.env.SUPABASE_ANON_KEY)
+  : null;
 
 const RSS_FEEDS = [
   // 1. Clarín
@@ -288,6 +293,26 @@ async function run() {
   fs.writeFileSync('./src/data/foreign_articles.json', JSON.stringify(uniqueForeign, null, 2), 'utf8');
   console.log(`💾 Saved fresh live_articles.json with timestamp ${nowIso}`);
 
+  if (supabase) {
+    try {
+      const { error: feedErr } = await supabase.from('news_clusters').upsert({
+        id: 'live-feed-cache',
+        lead_title: 'LIVE_FEED_CACHE',
+        neutral_headline: 'Feed de noticias en tiempo real',
+        summary: 'Agregación consolidada de todos los feeds RSS monitoreados',
+        category: 'Feed',
+        spectrum: { oficialismoPct: 0, centroDatosPct: 100, oposicionPct: 0, totalOutlets: 1 },
+        articles: combinedArticles.slice(0, 150),
+        key_quotes: { timestamp: nowIso, totalArticles: combinedArticles.length },
+        updated_at: nowIso
+      }, { onConflict: 'id' });
+      if (feedErr) console.warn('⚠️ Supabase live feed save error:', feedErr.message);
+      else console.log('☁️ Successfully saved live feed to Supabase cloud cache!');
+    } catch (sbErr) {
+      console.warn('⚠️ Supabase live feed exception:', sbErr.message);
+    }
+  }
+
   console.log(`\n📰 Top 8 newest articles across all outlets (Minuto a Minuto preview):`);
   combinedArticles.slice(0, 8).forEach((a, i) => {
     console.log(`  ${i + 1}. [${a.outletName}] (${a.publishedAt}) ${a.title.slice(0, 70)}...`);
@@ -456,6 +481,34 @@ ${JSON.stringify(candidateArticles.map(a => ({ id: a.id, medio: a.outletName, ti
 
         fs.writeFileSync('./src/data/clustered_stories.json', JSON.stringify(clusters, null, 2), 'utf8');
         console.log(`💾 Updated src/data/clustered_stories.json with fresh AI clusters!`);
+
+        if (supabase && clusters.length > 0) {
+          try {
+            const rows = clusters.map((c, idx) => ({
+              id: c.id,
+              lead_title: c.neutralHeadline,
+              neutral_headline: c.neutralHeadline,
+              summary: c.summary,
+              category: c.category || 'Política',
+              spectrum: c.spectrum,
+              articles: c.articles,
+              key_quotes: {
+                kicker: c.kicker,
+                imageUrl: c.imageUrl,
+                imageCaption: c.imageCaption,
+                aiComparisonNotice: c.aiComparisonNotice,
+                isLeadStory: idx === 0,
+                updatedAt: c.updatedAt
+              },
+              updated_at: new Date().toISOString()
+            }));
+            const { error: clustErr } = await supabase.from('news_clusters').upsert(rows, { onConflict: 'id' });
+            if (clustErr) console.warn('⚠️ Supabase clusters save error:', clustErr.message);
+            else console.log(`☁️ Successfully saved ${rows.length} clusters to Supabase cloud!`);
+          } catch (sbErr) {
+            console.warn('⚠️ Supabase clusters exception:', sbErr.message);
+          }
+        }
       }
     } else {
       console.warn('Gemini returned error:', res.status, await res.text());

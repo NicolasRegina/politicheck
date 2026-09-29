@@ -2,6 +2,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import type { Article, StoryCluster, SpectrumBreakdown } from '../../types';
 import { saveNewsClustersToSupabase, getNewsClustersFromSupabase } from '../supabase';
+import { OUTLETS_REGISTRY } from '../../utils/outlets';
 
 const CLUSTERED_STORIES_FILE = path.resolve(process.cwd(), 'src/data/clustered_stories.json');
 const FOREIGN_CLUSTERED_STORIES_FILE = path.resolve(process.cwd(), 'src/data/foreign_clusters.json');
@@ -64,6 +65,18 @@ export function getStoryClusterById(id: string): StoryCluster | undefined {
   const foundInForeign = cachedForeign.find(s => s.id === id);
   if (foundInForeign) return foundInForeign;
 
+  return undefined;
+}
+
+export async function getStoryClusterByIdAsync(id: string): Promise<StoryCluster | undefined> {
+  const local = getStoryClusterById(id);
+  if (local) return local;
+
+  const dbClusters = await getNewsClustersFromSupabase(1440);
+  if (dbClusters) {
+    const found = dbClusters.find(s => s.id === id);
+    if (found) return found;
+  }
   return undefined;
 }
 
@@ -330,7 +343,7 @@ ${JSON.stringify(candidateArticles.map(a => ({ id: a.id, medio: a.outletName, ti
       let centro = 0;
       let opo = 0;
       clusterArticles.forEach(a => {
-        const o = OUTLETS[a.outletId];
+        const o = OUTLETS_REGISTRY[a.outletId];
         const leaning = o?.baselineLeaning || 'centro_datos';
         if (leaning === 'oficialismo') ofi++;
         else if (leaning === 'oposicion') opo++;
@@ -467,7 +480,7 @@ function ruleBasedClustering(articles: Article[]): StoryCluster[] {
       // Calculate spectrum dynamically based on selected outlets
       let ofi = 0, centro = 0, opo = 0;
       selectedArticles.forEach(a => {
-        const o = OUTLETS[a.outletId];
+        const o = OUTLETS_REGISTRY[a.outletId];
         if (o?.baselineLeaning === 'oficialismo') ofi++;
         else if (o?.baselineLeaning === 'oposicion') opo++;
         else centro++;
@@ -613,7 +626,7 @@ Devuelve EXCLUSIVAMENTE un objeto JSON válido con esta estructura:
 
       let ofi = 0, centro = 0, opo = 0;
       clusterArticles.forEach(a => {
-        const o = OUTLETS[a.outletId];
+        const o = OUTLETS_REGISTRY[a.outletId];
         const leaning = o?.baselineLeaning || 'centro_datos';
         if (leaning === 'oficialismo') ofi++;
         else if (leaning === 'oposicion') opo++;
@@ -719,7 +732,7 @@ function ruleBasedForeignClustering(articles: Article[]): StoryCluster[] {
 
       let ofi = 0, centro = 0, opo = 0;
       selectedArticles.forEach(a => {
-        const o = OUTLETS[a.outletId];
+        const o = OUTLETS_REGISTRY[a.outletId];
         if (o?.baselineLeaning === 'oficialismo') ofi++;
         else if (o?.baselineLeaning === 'oposicion') opo++;
         else centro++;

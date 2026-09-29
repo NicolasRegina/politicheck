@@ -2,13 +2,13 @@
 import Layout from '../../layouts/Layout.astro';
 import SpectrumBar from '../../components/SpectrumBar.astro';
 import HeadlineComparison from '../../components/HeadlineComparison.astro';
-import { getStoryClusterById } from '../../services/ai/clustering';
+import { getStoryClusterById, getStoryClusterByIdAsync } from '../../services/ai/clustering';
 import { getOutletMeta } from '../../utils/outlets';
 
 export const prerender = false;
 
 const { id } = Astro.params;
-const story = id ? getStoryClusterById(id) : undefined;
+const story = id ? await getStoryClusterByIdAsync(id) : undefined;
 
 const topOutlets = story ? story.articles.slice(0, 4).map(a => a.outletName) : [];
 const outletsText = topOutlets.length > 1

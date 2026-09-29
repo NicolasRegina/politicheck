@@ -2,168 +2,214 @@
   {
     "id": "story-ai-1",
     "isLeadStory": true,
-    "kicker": "CRISIS FINANCIERA",
-    "neutralHeadline": "El riesgo país superó los 640 puntos y los mercados locales reflejaron tensiones económicas",
-    "category": "Economía",
-    "summary": "Los bonos soberanos sufrieron caídas y el riesgo país escaló a su nivel máximo en lo que va del año, en sintonía con un contexto internacional complejo y datos de actividad en retroceso. Diversos analistas y medios advirtieron sobre el impacto de estas cifras en la estabilidad financiera local.",
-    "updatedAt": "18:25 hs",
-    "imageUrl": "https://static.eldiario.es/clip/29a471b8-c573-4486-b440-3f9a895c16d9_16-9-discover-aspect-ratio_default_0.jpg",
-    "imageCaption": "Cobertura periodística de elDiarioAR.",
+    "kicker": "POLÍTICA Y ECONOMÍA",
+    "neutralHeadline": "El ministro Luis Caputo defendió la gestión económica y cruzó a la oposición de cara al escenario electoral",
+    "category": "Política",
+    "summary": "Durante el CFO Summit, el ministro de Economía Luis Caputo ratificó el rumbo del Gobierno, cuestionó duramente al kirchnerismo y trazó proyecciones de cara al horizonte político. En paralelo, informes sectoriales y medios económicos reflejan la persistente caída en el consumo de los hogares y el debate sobre la sustentabilidad del modelo.",
+    "updatedAt": "10:59 hs",
+    "imageUrl": "https://statics.eleconomista.com.ar/2026/09/6abbd6ab8e8af.png",
+    "imageCaption": "Cobertura periodística de El Economista.",
     "spectrum": {
       "oficialismoPct": 0,
-      "centroDatosPct": 33,
-      "oposicionPct": 67,
+      "centroDatosPct": 67,
+      "oposicionPct": 33,
       "totalOutlets": 3
     },
     "articles": [
       {
-        "id": "art-eldiarioar-114138419",
-        "outletId": "eldiarioar",
-        "outletName": "elDiarioAR",
-        "title": "El riesgo país saltó a 642 puntos y llegó al máximo de 2026",
-        "snippet": "Los bonos soberanos en dólares cayeron en promedio 1,8%, mientras que el dólar oficial alcanzó un récord de $1.550 en el Banco Nación. El riesgo país argentino registró este lunes una fuerte suba de más de 30 unidades y ",
-        "url": "https://www.eldiarioar.com/economia/riesgo-pais-salto-642-puntos-llego-maximo-2026_1_13545426.html",
-        "publishedAt": "18:25 hs",
-        "timestamp": 1790630713000,
-        "imageUrl": "https://static.eldiario.es/clip/29a471b8-c573-4486-b440-3f9a895c16d9_16-9-discover-aspect-ratio_default_0.jpg"
-      },
-      {
-        "id": "art-eleconomista-4974243879",
+        "id": "art-eleconomista-10742734953",
         "outletId": "eleconomista",
         "outletName": "El Economista",
-        "title": "El mundo vibra y la Argentina tiembla",
-        "snippet": "La tensión de los mercados globales y los malos datos que viene mostrando la economía local provocaron un último lunes de setiembre muy complicado. Afuera las tasas de EE.UU. suben a niveles insólitos, el dólar global su",
-        "url": "https://eleconomista.com.ar/finanzas/el-mundo-vibra-argentina-tiembla-n98477",
-        "publishedAt": "19:34 hs",
-        "timestamp": 1790634840000,
-        "imageUrl": "https://statics.eleconomista.com.ar/2026/07/6a613f0c6e704.jpg"
+        "title": "Caputo admitió que se preparan para el peor escenario en 2027 y calificó a Kicillof de \"ANTICRISTO\"",
+        "snippet": "En el CFO Summit 2026, el ministro de Economía defendió los números de Milei, atacó al kirchnerismo y marcó la estrategia del Gobierno frente al año electoral. Dólar, impuestos, reservas y una definición que ya genera ru",
+        "url": "https://eleconomista.com.ar/economia/caputo-admitio-preparan-peor-escenario-2027-califico-kicillof-anticristo-n98493",
+        "publishedAt": "10:59 hs",
+        "timestamp": 1790690340000,
+        "imageUrl": "https://statics.eleconomista.com.ar/2026/09/6abbd6ab8e8af.png"
       },
       {
-        "id": "art-izquierdadiario-20879306815",
-        "outletId": "izquierdadiario",
-        "outletName": "La Izquierda Diario",
-        "title": "De los &#8220;mejores 18 meses&#8221; al pico de la crisis: la gente no conf&#237;a en Milei, Wall Street tampoco",
-        "snippet": "<p>Luego de que el Indec public&#243; la brutal ca&#237;da de la actividad en julio, el JP Morgan recort&#243; su proyecci&#243;n de crecimiento para el pa&#237;s anunciando un nuevo desplome para el 3&#176; trimestre, q",
-        "url": "https://www.laizquierdadiario.com/De-los-mejores-18-meses-al-pico-de-la-crisis-la-gente-no-confia-en-Milei-Wall-Street-tampoco",
-        "publishedAt": "Hace 9 min",
-        "timestamp": 1790649064000
+        "id": "art-eldiarioar-15200898040",
+        "outletId": "eldiarioar",
+        "outletName": "elDiarioAR",
+        "title": "El consumo de los hogares volvió a caer en agosto mientras Caputo aseguró que la economía va \"muy bien\"",
+        "snippet": "Según la Cámara Argentina de Comercio y Servicios, el gasto de las familias bajó 1,1% interanual y 0,8% frente a julio. El mismo día, el ministro de Economía celebró la compra de reservas, descartó una devaluación y volv",
+        "url": "https://www.eldiarioar.com/economia/consumo-hogares-volvio-caer-agosto-caputo-aseguro-economia_1_13547910.html",
+        "publishedAt": "Hace 59 min",
+        "timestamp": 1790696203000,
+        "imageUrl": "https://static.eldiario.es/clip/26112e5c-667e-42eb-a4e9-16754e860ad5_16-9-discover-aspect-ratio_default_0_x957y397.jpg"
+      },
+      {
+        "id": "art-elpais-6774029912",
+        "outletId": "elpais",
+        "outletName": "El País",
+        "title": "Una economía al borde de la recesión en Argentina",
+        "snippet": "La actividad está estancada por el freno del consumo, la inversión y el gasto público. Crecen las exportaciones, pero sin traccionar la producción y el empleo",
+        "url": "https://elpais.com/argentina/2026-09-29/una-economia-al-borde-de-la-recesion-en-argentina.html",
+        "publishedAt": "06:30 hs",
+        "timestamp": 1790674200000,
+        "imageUrl": "https://imagenes.elpais.com/resizer/v2/TS2BSBPS5VIIBOFUKWOL2ROZNE.jpg?auth=0d73d0dad200e58c2a74f6a7db99e597b5e6403100e4bdb915722d0877fc607e"
       }
     ],
-    "aiComparisonNotice": "Los medios económicos y alternativos enfocaron sus coberturas en el desplome de la actividad y el incremento del riesgo país como síntomas directos de un plan de estabilización bajo presión, mientras que los portales de mayor masividad alternaron las alertas financieras con la agenda política internacional del Gobierno."
+    "aiComparisonNotice": "El Cronista y El Economista destacaron las declaraciones punzantes de Caputo hacia la oposición y su análisis de cara al 2027. En contraste, elDiarioAR y El País priorizaron el informe sobre la caída del consumo interno en agosto y el contraste con el discurso oficialista."
   },
   {
     "id": "story-ai-2",
     "isLeadStory": false,
-    "kicker": "POLÍTICA INTERNACIONAL Y GIRA",
-    "neutralHeadline": "Javier Milei encabeza agenda en Europa con gobernadores mientras se debaten vínculos estratégicos",
-    "category": "Política",
-    "summary": "El presidente argentino viajó junto a mandatarios provinciales rumbo a París para participar de eventos orientados a la atracción de inversiones, en medio de negociaciones legislativas y cruces internos por el control de la agenda oficial. Paralelamente, se analizan los movimientos diplomáticos con potencias como Estados Unidos y China.",
-    "updatedAt": "17:20 hs",
-    "imageUrl": "https://static.eldiario.es/clip/7ec43468-14b6-479e-ab9f-ae32e23088fd_16-9-discover-aspect-ratio_default_0_x699y411.jpg",
-    "imageCaption": "Cobertura periodística de elDiarioAR.",
+    "kicker": "JUSTICIA Y CORRUPCIÓN",
+    "neutralHeadline": "Procesaron a exfuncionarios e intervinientes en una causa por presunta corrupción en OSPRERA",
+    "category": "Justicia",
+    "summary": "El juez federal Sebastián Casanello dictó el procesamiento de un exsocio de Martín Menem y de dos exinterventores en el marco de una investigación por supuesta administración fraudulenta y negociaciones incompatibles. La medida incluye un millonario embargo preventivo.",
+    "updatedAt": "Hace 2 min",
+    "imageUrl": "https://tn.com.ar/resizer/v2/A2WQEWC6RZHPJBBEZWSHGMFS6Q.jpg?auth=be4f9b2a06a9fd3825652f1206e6c1cedcefcf8a95b0b69bd160146734a51204",
+    "imageCaption": "Cobertura periodística de Todo Noticias (TN).",
     "spectrum": {
       "oficialismoPct": 33,
-      "centroDatosPct": 33,
-      "oposicionPct": 34,
+      "centroDatosPct": 67,
+      "oposicionPct": 0,
       "totalOutlets": 3
     },
     "articles": [
       {
-        "id": "art-eldiarioar-10342252307",
-        "outletId": "eldiarioar",
-        "outletName": "elDiarioAR",
-        "title": "Milei viaja con gobernadores a París para atraer negocios, con una pelea interna por el control de la agenda",
-        "snippet": "El Presidente encabezará el evento Argentina Week y buscará atraer inversiones mientras negocia su hoja de ruta legislativa con 13 mandatarios. La previa quedó atravesada por cruces entre Cancillería, la Agencia de Inver",
-        "url": "https://www.eldiarioar.com/politica/milei-viaja-gobernadores-paris-atraer-negocios-pelea-interna-control-agenda_1_13544629.html",
-        "publishedAt": "17:20 hs",
-        "timestamp": 1790626828000,
-        "imageUrl": "https://static.eldiario.es/clip/7ec43468-14b6-479e-ab9f-ae32e23088fd_16-9-discover-aspect-ratio_default_0_x699y411.jpg"
+        "id": "art-tn-16913477697",
+        "outletId": "tn",
+        "outletName": "Todo Noticias (TN)",
+        "title": "Procesaron a un exsocio de Martín Menem y a dos exinterventores en una causa por presunta corrupción en OSPRERA",
+        "snippet": "El juez federal Sebastián Casanello los acusó de negociaciones incompatibles con la función pública y administración fraudulenta. Además, ordenó un embargo de 1000 millones de pesos.",
+        "url": "https://tn.com.ar/politica/2026/09/29/procesaron-a-un-exsocio-de-martin-menem-y-a-dos-exinterventores-en-una-causa-por-presunta-corrupcion-en-osprera/",
+        "publishedAt": "Hace 2 min",
+        "timestamp": 1790699619000,
+        "imageUrl": "https://tn.com.ar/resizer/v2/A2WQEWC6RZHPJBBEZWSHGMFS6Q.jpg?auth=be4f9b2a06a9fd3825652f1206e6c1cedcefcf8a95b0b69bd160146734a51204"
       },
       {
-        "id": "art-cronista-1459379239",
-        "outletId": "cronista",
-        "outletName": "El Cronista",
-        "title": "Mientras Milei fortalece su vínculo con EE.UU., una cumbre en Salta mostró el avance de las inversiones chinas",
-        "snippet": "",
-        "url": "https://www.cronista.com/economia-politica/negocios-primero-lo-que-dejo-el-china-day-en-salta/",
-        "publishedAt": "Ahora",
-        "timestamp": 1790676000000,
-        "imageUrl": "https://www.cronista.com/resizer/v2/GX6UYPBJLREUBDKJGGAC6AJZKM.jpg?auth=7a4bd67567f7924781a4004d7afd81af9941022db8758aecbb3551e42125ce8c&amp;smart=true&amp;width=848&amp;height=560"
+        "id": "art-perfil-6558190615",
+        "outletId": "perfil",
+        "outletName": "Perfil",
+        "title": "Marta Lastra: \"¿De qué transparencia hablan si faltan $158 mil millones en la Secretaría Nacional de Discapacidad?\"",
+        "snippet": "La abogada que impulsa amparos colectivos contra el Gobierno cuestionó la política oficialista hacia personas con discapacidad y puso el foco en la auditoría sobre la ex Andis y en la causa judicial que involucra a Diego",
+        "url": "https://www.perfil.com/noticias/cordoba/marta-lastra-de-que-transparencia-hablan-si-faltan-158-mil-millones-en-la-secretaria-nacional-de-discapacidad.phtml",
+        "publishedAt": "Hace 23 min",
+        "timestamp": 1790698365000,
+        "imageUrl": "https://fotos.perfil.com/2026/09/29/trim/540/304/marta-lastra-2336359.jpg"
       },
       {
-        "id": "art-lanacion-1382440047",
-        "outletId": "lanacion",
-        "outletName": "La Nación",
-        "title": "Javier Milei y sus medidas, EN VIVO: el Presidente habló de Patricia Bullrich y dijo: “No la subestimen”",
-        "snippet": "El minuto a minuto de las decisiones del mandatario, las reacciones de la oposición y las declaraciones de los funcionarios",
-        "url": "https://www.lanacion.com.ar/politica/javier-milei-y-sus-medidas-en-vivo-tengo-algunos-enemigos-muy-pesados-aca-y-en-el-mundo-dijo-el-nid28092026/",
-        "publishedAt": "Hace 31 min",
-        "timestamp": 1790647720000,
-        "imageUrl": "https://resizer.glanacion.com/resizer/v2/YJD56ZT5UNCRJDJDKK4GD6HFPM.JPG?auth=29481278f74ab08a9c3ccf711047fbb9a028d1ea9a9990a155d5f6f3a6a8b233&amp;smart=true&amp;width=2000&amp;height=1334"
+        "id": "art-eleconomista-18444112429",
+        "outletId": "eleconomista",
+        "outletName": "El Economista",
+        "title": "Demoledor diagnóstico de Poder Ciudadano: \"La corrupción sigue siendo una enfermedad endémica\"",
+        "snippet": "\"En los últimos años no solo no se ha avanzado en ninguna política específica destinada a incrementar la transparencia, sino que pareciera que buscamos ampliar la impunidad\", afirmó.",
+        "url": "https://eleconomista.com.ar/politica/demoledor-diagnostico-poder-ciudadano-la-corrupcion-sigue-siendo-una-enfermedad-endemica-n98494",
+        "publishedAt": "12:35 hs",
+        "timestamp": 1790696100000,
+        "imageUrl": "https://statics.eleconomista.com.ar/2026/09/6abbdc7e76644.png"
       }
-    ]
+    ],
+    "aiComparisonNotice": "Todo Noticias (TN) focalizó en los nombres propios vinculados al poder político y el monto del embargo ordenado por la justicia federal. Los portales de análisis político general abordaron la causa como parte de un entramado más amplio de escrutinio sobre la gestión de recursos en obras sociales sindicales."
   },
   {
     "id": "story-ai-3",
     "isLeadStory": false,
-    "kicker": "PODER JUDICIAL Y PRESUPUESTO",
-    "neutralHeadline": "La Justicia emite fallos sobre fondos universitarios y avanza en causas por presunta corrupción",
-    "category": "Justicia",
-    "summary": "Tribunales federales y de instancia superior dictaron medidas vinculadas al cumplimiento de transferencias presupuestarias hacia las universidades nacionales. A su vez, continúan las novedades procesales en expedientes de relevancia política vinculados a la administración pública y patrimonios.",
-    "updatedAt": "Hace 10 min",
-    "imageUrl": "https://fotos.perfil.com/2026/08/03/trim/540/304/cristina-2296661.jpg",
-    "imageCaption": "Cobertura periodística de Ámbito Financiero.",
+    "kicker": "SOCIEDAD",
+    "neutralHeadline": "El Gobierno nacional advierte sobre la llegada del fenómeno climático 'Súper Niño' y sus impactos en la región",
+    "category": "Sociedad",
+    "summary": "El Servicio Meteorológico Nacional y distintas carteras del Estado informaron los preparativos y recomendaciones ante la llegada del fenómeno de El Niño. Las autoridades alertaron sobre el potencial incremento de precipitaciones y sus repercusiones en infraestructura, rutas y salud.",
+    "updatedAt": "Hace 1 min",
+    "imageUrl": "https://resizer.glanacion.com/resizer/v2/K6NH6CGJWZAUZBBCLG7V53RAV4.jpg?auth=3bc3496f4a9da1549bf182e37b0dc3c2dcf3c4d8ea8ac392363c1b05663cae57&amp;smart=true&amp;width=2000&amp;height=1333",
+    "imageCaption": "Cobertura periodística de La Nación.",
     "spectrum": {
-      "oficialismoPct": 0,
-      "centroDatosPct": 67,
-      "oposicionPct": 33,
-      "totalOutlets": 3
+      "oficialismoPct": 50,
+      "centroDatosPct": 50,
+      "oposicionPct": 0,
+      "totalOutlets": 2
     },
     "articles": [
       {
-        "id": "art-ambito-4598853002",
-        "outletId": "ambito",
-        "outletName": "Ámbito Financiero",
-        "title": "La Justicia le puso un límite al ajuste: cumplan la ley y transfieran los fondos a las universidades",
-        "snippet": "Hay un límite para el relato y hay un límite para el ajuste. Esta semana, ese límite volvió a marcarlo la Justicia.",
-        "url": "https://www.ambito.com/politica/la-justicia-le-puso-un-limite-al-ajuste-cumplan-la-ley-y-transfieran-los-fondos-las-universidades-n6327750",
-        "publishedAt": "Hace 10 min",
-        "timestamp": 1790649000000
+        "id": "art-lanacion-22967434138",
+        "outletId": "lanacion",
+        "outletName": "La Nación",
+        "title": "Llega el Súper Niño: el Gobierno informó cómo prepararse y qué tener en cuenta ante un posible aumento de las lluvias",
+        "snippet": "Las autoridades nacionales advierten sobre el impacto de este fenómeno climático en la primavera; el Servicio Meteorológico Nacional pide extremar los cuidados para minimizar los riesgos",
+        "url": "https://www.lanacion.com.ar/sociedad/llega-el-super-nino-el-gobierno-informo-como-prepararse-y-que-tener-en-cuenta-ante-un-posible-nid28092026/",
+        "publishedAt": "Hace 1 min",
+        "timestamp": 1790699677000,
+        "imageUrl": "https://resizer.glanacion.com/resizer/v2/K6NH6CGJWZAUZBBCLG7V53RAV4.jpg?auth=3bc3496f4a9da1549bf182e37b0dc3c2dcf3c4d8ea8ac392363c1b05663cae57&amp;smart=true&amp;width=2000&amp;height=1333"
       },
       {
-        "id": "art-perfil-5960278255",
-        "outletId": "perfil",
-        "outletName": "Perfil",
-        "title": "La Justicia recibió una pericia clave a semanas del juicio contra Cristina y Máximo Kirchner por lavado de dinero",
-        "snippet": "Un informe de la Corte Suprema advirtió la falta de balances para justificar los números de Los Sauces. El debate oral, que sentará en el banquillo a la ex presidenta, a su hijo y a empresarios de la obra pública, arranc",
-        "url": "https://www.perfil.com/noticias/politica/la-justicia-recibio-una-pericia-clave-a-semanas-del-juicio-contra-cristina-y-maximo-kirchner-por-lavado-de-dinero.phtml",
-        "publishedAt": "22:10 hs",
-        "timestamp": 1790644211000,
-        "imageUrl": "https://fotos.perfil.com/2026/08/03/trim/540/304/cristina-2296661.jpg"
-      },
-      {
-        "id": "art-cronica-27019646047",
-        "outletId": "cronica",
-        "outletName": "Crónica",
-        "title": "Cuáles son las inconsistencias que no le cerraron al fiscal Pollicita en el patrimonio de Adorni",
-        "snippet": "El fiscal consideró insuficientes las 78 páginas con las que el exjefe de Gabinete intentó justificar su evolución patrimonial. Detectó una diferencia sin explicar de más de $43 millones y ordenó nuevas medidas de prueba",
-        "url": "https://www.cronica.com.ar/politica/cuales-son-las-inconsistencias-que-no-le-cerraron-al-fiscal-pollicita-en-el-patrimonio-de-adorni/",
-        "publishedAt": "20:07 hs",
-        "timestamp": 1790636820000,
-        "imageUrl": "https://www.cronica.com.ar/files/image/1677/1677977/6a42b08aaf68a_800_!.jpg?s=6dcb8dbdc1555788f4d29fb4eef99f2f&amp;d="
+        "id": "art-infobae-305308113",
+        "outletId": "infobae",
+        "outletName": "Infobae",
+        "title": "El número dos de la CAF alertó por el impacto del Super Niño en rutas, salud y producción",
+        "snippet": "Christain Asinelli vinculó las precipitaciones previstas con posibles inundaciones, dificultades para exportar y un escenario que coincide con la temporada de dengue",
+        "url": "https://www.infobae.com/economia/2026/09/29/el-numero-dos-de-la-caf-alerto-por-el-impacto-del-super-nino-en-rutas-salud-y-produccion/",
+        "publishedAt": "Hace 4 min",
+        "timestamp": 1790699482000,
+        "imageUrl": "https://www.infobae.com/resizer/v2/ELIJNXAMG5GUFJH6WJYL5QKROY.jpg?auth=24e4d3a6aaa2f456bc800d94217e07513c554d47c6c6721305beea56e87a4f08&amp;smart=true&amp;width=1280&amp;height=720"
       }
-    ]
+    ],
+    "aiComparisonNotice": "La Nación priorizó las recomendaciones oficiales de prevención ciudadana frente a las tormentas, mientras que Infobae aportó la mirada técnica de organismos internacionales sobre el impacto directo en la producción y la logística exportadora."
   },
   {
     "id": "story-ai-4",
     "isLeadStory": false,
-    "kicker": "SOCIEDAD Y GASTO HABITACIONAL",
-    "neutralHeadline": "Informes revelan el incremento en el costo de vida y las canastas de gastos para sectores vulnerables",
+    "kicker": "SEGURIDAD Y CIUDAD",
+    "neutralHeadline": "La Policía de la Ciudad desalojó y recuperó un hotel en Constitución que llevaba dos décadas usurpado",
     "category": "Sociedad",
-    "summary": "Nuevos relevamientos económicos sectoriales detallaron el impacto de la inflación y el aumento de alquileres sobre los sectores de jubilados y familias inquilinas, requiriendo ingresos considerablemente superiores para cubrir necesidades básicas en el ámbito urbano.",
-    "updatedAt": "16:38 hs",
-    "imageUrl": "https://static.eldiario.es/clip/5a2f1ee8-0bae-45d3-966a-4e147f257154_16-9-discover-aspect-ratio_default_0_x69y605.jpg",
-    "imageCaption": "Cobertura periodística de elDiarioAR.",
+    "summary": "Un operativo conjunto de fuerzas de seguridad porteñas permitió recuperar el edificio del Hotel Montreal, ubicado en el barrio de Constitución, que se encontraba tomado ilegalmente desde hace más de 20 años y era explotado comercialmente por terceros.",
+    "updatedAt": "Hace 8 min",
+    "imageUrl": "https://www.cronica.com.ar/files/image/1714/1714941/6abbe780cb46e_800_!.jpg?s=bfac747fbaafb2b4e1d4c7d6a089a3ec&amp;d=",
+    "imageCaption": "Cobertura periodística de Crónica.",
+    "spectrum": {
+      "oficialismoPct": 0,
+      "centroDatosPct": 100,
+      "oposicionPct": 0,
+      "totalOutlets": 3
+    },
+    "articles": [
+      {
+        "id": "art-cronica-5159214749",
+        "outletId": "cronica",
+        "outletName": "Crónica",
+        "title": "La Ciudad recuperó un hotel de Constitución que estaba tomado hace 21 años y lo explotaban comercialmente",
+        "snippet": "El Hotel Montreal, ubicado en Luis Sáenz Peña 1723, estaba ocupado ilegalmente y sus ocupantes lo explotaban comercialmente. Hay una orden judicial para desalojar el edificio.",
+        "url": "https://www.cronica.com.ar/sociedad/la-ciudad-recupero-un-hotel-de-constitucion-que-estaba-tomado-hace-21-anos-y-lo-explotaban-comercialmente/",
+        "publishedAt": "Hace 8 min",
+        "timestamp": 1790699252000,
+        "imageUrl": "https://www.cronica.com.ar/files/image/1714/1714941/6abbe780cb46e_800_!.jpg?s=bfac747fbaafb2b4e1d4c7d6a089a3ec&amp;d="
+      },
+      {
+        "id": "art-baenegocios-10468699291",
+        "outletId": "baenegocios",
+        "outletName": "BAE Negocios",
+        "title": "La Policía de la Ciudad recuperó un hotel tomado desde hace 21 años y busca devolverlo a sus dueños",
+        "snippet": "Un operativo conjunto de la Ciudad permitió recuperar el edificio donde funcionaba el Hotel Montreal. El inmueble estaba ocupado desde 2005 y, según el Gobierno porteño, era explotado comercialmente por sus ocupantes.",
+        "url": "https://www.baenegocios.com/sociedad/la-policia-de-la-ciudad-recupero-hotel-tomado-desde-hace-21-anos-y-busca-devolverlo-a-sus-duenos/",
+        "publishedAt": "Hace 13 min",
+        "timestamp": 1790698980000,
+        "imageUrl": "https://www.baenegocios.com/files/image/355/355563/6abbe4a055620_800_!.jpg?s=3c4bf480520a0c133e75039bd901786c&amp;d="
+      },
+      {
+        "id": "art-clarin-26653462370",
+        "outletId": "clarin",
+        "outletName": "Clarín",
+        "title": "Condenaron a los asesinos de Lucía Carpanetto: una cita falsa, un ataque planificado desde la cárcel y un sicario por $ 150 mil",
+        "snippet": "La joven tenía 21 años cuando fue asesinada en diciembre de 2022 en Rosario. Dos hombres y una mujer recibieron las penas de 32, 28 y 15 años, respectivamente.",
+        "url": "https://www.clarin.com/policiales/condenaron-asesinos-lucia-carpanetto-cita-falsa-ataque-planificado-carcel-sicario-150-mil_0_2KHA2ASADH.html",
+        "publishedAt": "Hace 25 min",
+        "timestamp": 1790698231000,
+        "imageUrl": "https://www.clarin.com/img/2026/09/29/P0zGjHKxx_1200x630__1.jpg"
+      }
+    ],
+    "aiComparisonNotice": "Crónica y BAE Negocios destacaron el operativo policial y la restitución del inmueble a sus legítimos dueños, subrayando la duración de la toma ilegal y la intervención de la justicia para ordenar el desalojo."
+  },
+  {
+    "id": "story-ai-5",
+    "isLeadStory": false,
+    "kicker": "ECONOMÍA Y PRECIOS",
+    "neutralHeadline": "ANSES confirmó el calendario de pagos y un nuevo bono extraordinario para jubilados en octubre",
+    "category": "Economía",
+    "summary": "El organismo previsional detalló la implementación del adicional de $70.000 que se acreditará junto a los haberes del mes de octubre. La medida busca amortiguar el impacto inflacionario en los sectores de menores ingresos, en medio de cruces políticos sobre el poder adquisitivo.",
+    "updatedAt": "Hace 3 min",
+    "imageUrl": "https://www.cronista.com/resizer/v2/6QY6G4KGTZDI7OLEQZZRJ2UHEU.jpg?auth=e0d09fce8c849f0eb1027876a4574c11888e63c20cabdb80b171d9ad824b7d29&amp;smart=true&amp;width=1920&amp;height=1080",
+    "imageCaption": "Cobertura periodística de El Cronista.",
     "spectrum": {
       "oficialismoPct": 0,
       "centroDatosPct": 67,
@@ -172,37 +218,39 @@
     },
     "articles": [
       {
-        "id": "art-eldiarioar-6161210595",
-        "outletId": "eldiarioar",
-        "outletName": "elDiarioAR",
-        "title": "Una pareja de jubilados que alquila necesitó más de $2,5 millones para vivir en agosto",
-        "snippet": "La canasta para adultos mayores aumentó más de 35% en un año, según la Defensoría del Pueblo porteña. Quienes tienen vivienda propia necesitaron $1,7 millones, mientras que los medicamentos subieron en promedio un 2% dur",
-        "url": "https://www.eldiarioar.com/economia/pareja-jubilados-alquila-necesito-2-5-millones-vivir-agosto_1_13545294.html",
-        "publishedAt": "16:38 hs",
-        "timestamp": 1790624336000,
-        "imageUrl": "https://static.eldiario.es/clip/5a2f1ee8-0bae-45d3-966a-4e147f257154_16-9-discover-aspect-ratio_default_0_x69y605.jpg"
+        "id": "art-cronista-3033342706",
+        "outletId": "cronista",
+        "outletName": "El Cronista",
+        "title": "ANSES pagará un bono de $ 70.000 en octubre: quiénes lo cobran y cómo se paga",
+        "snippet": "El adicional se acreditará junto con la prestación mensual y el monto dependerá de los haberes que perciba cada titular.",
+        "url": "https://www.cronista.com/economia-politica/anses-pagara-un-bono-de-70000-en-octubre-quienes-lo-cobran-y-como-se-paga/",
+        "publishedAt": "Hace 3 min",
+        "timestamp": 1790699553000,
+        "imageUrl": "https://www.cronista.com/resizer/v2/6QY6G4KGTZDI7OLEQZZRJ2UHEU.jpg?auth=e0d09fce8c849f0eb1027876a4574c11888e63c20cabdb80b171d9ad824b7d29&amp;smart=true&amp;width=1920&amp;height=1080"
       },
       {
-        "id": "art-bbcmundo-14587962016",
-        "outletId": "bbcmundo",
-        "outletName": "BBC News Mundo",
-        "title": "Por qué están cerrando miles de empresas en Argentina y qué dice de la economía en la era Milei",
-        "snippet": "El fenómeno contrasta con el crecimiento económico de Argentina y plantea dudas sobre la solidez y alcance de esa expansión.",
-        "url": "https://www.bbc.com/mundo/articles/c6z7zzel0lx5o?at_medium=RSS&at_campaign=rss",
-        "publishedAt": "08:17 hs",
-        "timestamp": 1790594271000
-      },
-      {
-        "id": "art-baenegocios-22606572446",
+        "id": "art-baenegocios-8499250568",
         "outletId": "baenegocios",
         "outletName": "BAE Negocios",
-        "title": "Maricarmen podrá volver a su casa tras el desalojo que desató protestas en España",
-        "snippet": "La mujer de 87 años podrá regresar al departamento de Madrid donde vivió siete décadas. El acuerdo prevé una renta del 30% de sus ingresos y un contrato por ocho años.",
-        "url": "https://www.baenegocios.com/mundo/maricarmen-podra-volver-a-su-casa-tras-el-desalojo-que-desato-protestas-en-espana/",
-        "publishedAt": "Hace 38 min",
-        "timestamp": 1790647320000,
-        "imageUrl": "https://www.baenegocios.com/files/image/355/355533/6abb1c17d60c6_800_!.jpg?s=1d7b9505438a11dfb7d5f47848c3e4c9&amp;d="
+        "title": "Sin bono en octubre: un grupo de jubilados no cobra el extra de $70.000",
+        "snippet": "El organismo previsional determinó el requisito para que los jubilados cobren el bono completo en octubre",
+        "url": "https://www.baenegocios.com/economia/sin-bono-en-octubre-un-grupo-de-jubilados-no-cobra-el-extra-de-70-000/",
+        "publishedAt": "Hace 51 min",
+        "timestamp": 1790696700000,
+        "imageUrl": "https://www.baenegocios.com/files/image/347/347559/6a4e826d04add_800_!.jpg?s=39a6226361064f86fa3dacab4cc8d929&amp;d="
+      },
+      {
+        "id": "art-eldiarioar-2845360504",
+        "outletId": "eldiarioar",
+        "outletName": "elDiarioAR",
+        "title": "Servicios, transporte, alquileres y prepagas: todos los aumentos que llegan en octubre",
+        "snippet": "Los incrementos en diferentes sectores continúan presionando el Índice de Precios al Consumidor (IPC). El comienzo de octubre, como sucede en cada mes, trae aparejado la puesta en marcha de nuevos aumentos en diferentes ",
+        "url": "https://www.eldiarioar.com/economia/servicios-transporte-alquileres-prepagas-aumentos-llegan-octubre_1_13547958.html",
+        "publishedAt": "Hace 47 min",
+        "timestamp": 1790696922000,
+        "imageUrl": "https://static.eldiario.es/clip/b4250258-1484-4670-bb79-854a4340fd8f_16-9-discover-aspect-ratio_default_0_x699y782.jpg"
       }
-    ]
+    ],
+    "aiComparisonNotice": "El Cronista enfocó la noticia en los detalles operativos de cobro y los requisitos para acceder al beneficio, en tanto BAE Negocios puso el acento en las restricciones que dejan a ciertos grupos de jubilados sin percibir el refuerzo completo."
   }
 ]

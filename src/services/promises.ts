@@ -66,6 +66,28 @@ export function getPromises(): CampaignPromise[] {
   return defaultPromises;
 }
 
+export async function getPromisesWithLiveVotes(): Promise<CampaignPromise[]> {
+  const list = getPromises();
+  try {
+    const supabaseVotes = await getSupabaseVotesAggregated();
+    if (supabaseVotes && Object.keys(supabaseVotes).length > 0) {
+      list.forEach(p => {
+        const cloud = supabaseVotes[p.id];
+        if (cloud) {
+          p.votes = {
+            fulfilled: Math.max(p.votes?.fulfilled || 0, cloud.fulfilled),
+            inProgress: Math.max(p.votes?.inProgress || 0, cloud.inProgress),
+            broken: Math.max(p.votes?.broken || 0, cloud.broken)
+          };
+        }
+      });
+    }
+  } catch (err) {
+    console.warn('[Promises Service] Cloud votes merge notice:', err);
+  }
+  return list;
+}
+
 export function getPromiseById(id: string): CampaignPromise | undefined {
   const promises = getPromises();
   return promises.find((p) => p.id === id);

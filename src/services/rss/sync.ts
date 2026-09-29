@@ -94,6 +94,15 @@ export async function syncAllRssFeeds(): Promise<SyncResult> {
     foreignArticles: uniqueForeign
   };
 
+  // Save live feed to Supabase cloud cache
+  try {
+    const { saveLiveArticlesToSupabase } = await import('../supabase');
+    await saveLiveArticlesToSupabase(combinedArticles, syncResult.timestamp);
+    console.log(`[RSS Sync] Successfully saved ${combinedArticles.length} live articles to Supabase cloud cache.`);
+  } catch (supabaseErr) {
+    console.warn('[RSS Sync] Could not save live feed to Supabase:', supabaseErr);
+  }
+
   try {
     const dir = path.dirname(CACHE_FILE_PATH);
     if (!fs.existsSync(dir)) {
@@ -102,8 +111,10 @@ export async function syncAllRssFeeds(): Promise<SyncResult> {
     fs.writeFileSync(CACHE_FILE_PATH, JSON.stringify(syncResult, null, 2), 'utf-8');
     fs.writeFileSync(FOREIGN_CACHE_FILE_PATH, JSON.stringify(uniqueForeign, null, 2), 'utf-8');
     console.log(`[RSS Sync] Saved ${combinedArticles.length} unique articles (${uniqueForeign.length} foreign on Argentina) in ${Date.now() - startTime}ms`);
-  } catch (err) {
-    console.error('[RSS Sync] Failed to write cache files:', err);
+  } catch (err: any) {
+    if (err?.code !== 'EROFS') {
+      console.error('[RSS Sync] Failed to write cache files:', err);
+    }
   }
 
   return syncResult;
@@ -120,6 +131,19 @@ export function getCachedArticles(): Article[] {
     console.warn('[RSS Sync] Could not read cache file, fallback to empty:', err);
   }
   return [];
+}
+
+export async function getCachedArticlesAsync(): Promise<Article[]> {
+  try {
+    const { getLiveArticlesFromSupabase } = await import('../supabase');
+    const cloudFeed = await getLiveArticlesFromSupabase();
+    if (cloudFeed && cloudFeed.articles.length > 0) {
+      return cloudFeed.articles;
+    }
+  } catch (err) {
+    console.warn('[RSS Sync] Cloud feed read error, fallback to local:', err);
+  }
+  return getCachedArticles();
 }
 
 export function getCachedForeignArticles(): Article[] {
@@ -145,4 +169,15 @@ export function getLastSyncTimestamp(): string | null {
     console.warn('[RSS Sync] Could not read cache timestamp:', err);
   }
   return null;
+}
+
+export async function getLastSyncTimestampAsync(): Promise<string | null> {
+  try {
+    const { getLiveArticlesFromSupabase } = await import('../supabase');
+    const cloudFeed = await getLiveArticlesFromSupabase();
+    if (cloudFeed?.timestamp) {
+      return cloudFeed.timestamp;
+    }
+  } catch {}
+  return getLastSyncTimestamp();
 }

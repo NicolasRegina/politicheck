@@ -1,5 +1,5 @@
 import type { APIRoute } from 'astro';
-import { syncAllRssFeeds, getCachedArticles, getLastSyncTimestamp } from '../../../services/rss/sync';
+import { syncAllRssFeeds, getCachedArticles, getLastSyncTimestamp, getLastSyncTimestampAsync } from '../../../services/rss/sync';
 import { 
   clusterArticlesWithGemini, 
   getCachedClusteredStories,
@@ -20,7 +20,7 @@ export const GET: APIRoute = async ({ request }) => {
 
   // Fast-path: live sync status without scraping overhead
   if (url.searchParams.get('status') === 'true') {
-    const lastSync = getLastSyncTimestamp();
+    const lastSync = await getLastSyncTimestampAsync();
     return new Response(JSON.stringify({
       success: true,
       lastSyncTimestamp: lastSync,

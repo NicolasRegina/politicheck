@@ -3,30 +3,39 @@ import Layout from '../layouts/Layout.astro';
 import StoryCard from '../components/StoryCard.astro';
 import LiveFeedItem from '../components/LiveFeedItem.astro';
 import PromiseCard from '../components/PromiseCard.astro';
-import { getCachedArticles, getCachedForeignArticles } from '../services/rss/sync';
+import { getCachedArticlesAsync, getCachedForeignArticles } from '../services/rss/sync';
 import { 
   clusterArticlesWithGemini, 
   getCachedClusteredStories,
   clusterForeignArticlesWithGemini,
   getCachedForeignClusters 
 } from '../services/ai/clustering';
-import { getPromises, getPromisesStats } from '../services/promises';
+import { getNewsClustersFromSupabase } from '../services/supabase';
+import { getPromisesWithLiveVotes, getPromisesStats } from '../services/promises';
 import { getPolitician } from '../data/politicians';
 
-// Fetch live dynamic campaign promises
-const allPromises = getPromises();
+export const prerender = false;
+
+// Edge Cache: cache 30s at CDN, serve stale up to 60s while revalidating
+Astro.response.headers.set('Cache-Control', 'public, s-maxage=30, stale-while-revalidate=60');
+
+// Fetch live dynamic campaign promises with real citizen votes from Supabase
+const allPromises = await getPromisesWithLiveVotes();
 const promisesStats = getPromisesStats(allPromises);
 const uniqueCandidates = Array.from(new Set(allPromises.map(p => p.candidate)));
 
-// Fetch live articles cached from official RSS feeds (No mocks)
-const cachedArticles = getCachedArticles();
-const liveArticles = cachedArticles;
+// Fetch live articles cached from Supabase or official RSS feeds (No mocks)
+const liveArticles = await getCachedArticlesAsync();
 
-// Generate clustered stories dynamically from live articles (Cache-first to protect Gemini quota)
+// Load clustered stories dynamically (Check Supabase cloud first, fallback to cached local)
+const cloudClusters = await getNewsClustersFromSupabase(1440);
 const cachedClusters = getCachedClusteredStories();
-const dynamicStories = cachedClusters.length > 0 
-  ? cachedClusters 
-  : (liveArticles.length > 0 ? await clusterArticlesWithGemini(liveArticles, import.meta.env.GEMINI_API_KEY) : []);
+const dynamicStories = (cloudClusters && cloudClusters.length > 0)
+  ? cloudClusters
+  : (cachedClusters.length > 0
+    ? cachedClusters
+    : (liveArticles.length > 0 ? await clusterArticlesWithGemini(liveArticles, import.meta.env.GEMINI_API_KEY) : []));
+
 const storiesToDisplay = dynamicStories;
 
 // Dynamic Foreign Stories for "La Mirada Exterior"

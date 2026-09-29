@@ -119,7 +119,7 @@ export async function saveNewsClustersToSupabase(clusters: any[]): Promise<boole
   if (!supabase || !clusters || clusters.length === 0) return false;
 
   try {
-    const rows = clusters.map(c => ({
+    const rows = clusters.map((c, idx) => ({
       id: c.id,
       lead_title: c.leadTitle || c.neutralHeadline,
       neutral_headline: c.neutralHeadline,
@@ -127,7 +127,14 @@ export async function saveNewsClustersToSupabase(clusters: any[]): Promise<boole
       category: c.category || 'Política',
       spectrum: c.spectrum,
       articles: c.articles,
-      key_quotes: c.keyQuotes || [],
+      key_quotes: {
+        kicker: c.kicker,
+        imageUrl: c.imageUrl,
+        imageCaption: c.imageCaption,
+        aiComparisonNotice: c.aiComparisonNotice,
+        isLeadStory: c.isLeadStory ?? (idx === 0),
+        updatedAt: c.updatedAt
+      },
       updated_at: new Date().toISOString()
     }));
 
@@ -149,7 +156,7 @@ export async function saveNewsClustersToSupabase(clusters: any[]): Promise<boole
 /**
  * Load latest cached news clusters from Supabase
  */
-export async function getNewsClustersFromSupabase(maxAgeMinutes = 120): Promise<any[] | null> {
+export async function getNewsClustersFromSupabase(maxAgeMinutes = 1440): Promise<any[] | null> {
   if (!supabase) return null;
 
   try {
@@ -158,6 +165,7 @@ export async function getNewsClustersFromSupabase(maxAgeMinutes = 120): Promise<
     const { data, error } = await supabase
       .from('news_clusters')
       .select('*')
+      .neq('id', 'live-feed-cache')
       .gt('updated_at', minTime)
       .order('updated_at', { ascending: false });
 
@@ -165,20 +173,90 @@ export async function getNewsClustersFromSupabase(maxAgeMinutes = 120): Promise<
       return null;
     }
 
-    // Map DB rows back to application Story objects
-    return data.map(row => ({
-      id: row.id,
-      leadTitle: row.lead_title,
-      neutralHeadline: row.neutral_headline,
-      summary: row.summary,
-      category: row.category,
-      spectrum: row.spectrum,
-      articles: row.articles,
-      keyQuotes: row.key_quotes,
-      updatedAt: row.updated_at
-    }));
+    // Map DB rows back to full application StoryCluster objects
+    return data.map((row, idx) => {
+      const meta = (typeof row.key_quotes === 'object' && row.key_quotes !== null) ? row.key_quotes : {};
+      const firstArticleImg = Array.isArray(row.articles) && row.articles[0]?.imageUrl;
+      const defaultImg = row.category === 'Economía' ? '/images/regalias.jpg' : row.category === 'Sociedad' ? '/images/universidad.jpg' : '/images/malvinas.jpg';
+
+      return {
+        id: row.id,
+        isLeadStory: meta.isLeadStory ?? (idx === 0),
+        kicker: meta.kicker || (row.category === 'Internacional' ? 'MIRADA EXTERIOR' : 'EN COBERTURA'),
+        neutralHeadline: row.neutral_headline || row.lead_title,
+        category: row.category,
+        summary: row.summary,
+        updatedAt: meta.updatedAt || row.updated_at,
+        imageUrl: meta.imageUrl || firstArticleImg || defaultImg,
+        imageCaption: meta.imageCaption || `Cobertura periodística de ${row.articles?.[0]?.outletName || 'prensa oficial'}.`,
+        spectrum: row.spectrum,
+        articles: row.articles || [],
+        aiComparisonNotice: meta.aiComparisonNotice || ''
+      };
+    });
   } catch (err: any) {
     console.error('[Supabase] Exception loading news clusters:', err.message);
+    return null;
+  }
+}
+
+/**
+ * Save live minute-by-minute articles feed into Supabase cloud cache
+ */
+export async function saveLiveArticlesToSupabase(articles: any[], timestamp?: string): Promise<boolean> {
+  if (!supabase || !articles || articles.length === 0) return false;
+
+  try {
+    const isoTimestamp = timestamp || new Date().toISOString();
+    const { error } = await supabase
+      .from('news_clusters')
+      .upsert({
+        id: 'live-feed-cache',
+        lead_title: 'LIVE_FEED_CACHE',
+        neutral_headline: 'Feed de noticias en tiempo real',
+        summary: 'Agregación consolidada de todos los feeds RSS monitoreados',
+        category: 'Feed',
+        spectrum: { oficialismoPct: 0, centroDatosPct: 100, oposicionPct: 0, totalOutlets: 1 },
+        articles: articles.slice(0, 150),
+        key_quotes: { timestamp: isoTimestamp, totalArticles: articles.length },
+        updated_at: isoTimestamp
+      }, { onConflict: 'id' });
+
+    if (error) {
+      console.warn('[Supabase] Error saving live feed cache:', error.message);
+      return false;
+    }
+    return true;
+  } catch (err: any) {
+    console.error('[Supabase] Exception saving live feed cache:', err.message);
+    return false;
+  }
+}
+
+/**
+ * Load live minute-by-minute articles feed from Supabase cloud cache
+ */
+export async function getLiveArticlesFromSupabase(): Promise<{ articles: any[]; timestamp: string } | null> {
+  if (!supabase) return null;
+
+  try {
+    const { data, error } = await supabase
+      .from('news_clusters')
+      .select('*')
+      .eq('id', 'live-feed-cache')
+      .maybeSingle();
+
+    if (error || !data || !Array.isArray(data.articles) || data.articles.length === 0) {
+      return null;
+    }
+
+    const meta = (typeof data.key_quotes === 'object' && data.key_quotes !== null) ? data.key_quotes : {};
+    return {
+      articles: data.articles,
+      timestamp: meta.timestamp || data.updated_at
+    };
+  } catch (err: any) {
+    console.error('[Supabase] Exception loading live feed cache:', err.message);
     return null;
   }
 }
