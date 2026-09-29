@@ -600,37 +600,59 @@ Devuelve EXCLUSIVAMENTE un objeto JSON válido con esta estructura:
 }`;
 
   try {
-    const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`;
-    const res = await fetch(geminiUrl, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        contents: [
-          {
-            parts: [
-              { text: systemPrompt },
-              { text: `Artículos internacionales sobre Argentina para analizar:\n${JSON.stringify(articlesPromptPayload, null, 2)}` }
-            ]
+    const CANDIDATE_MODELS = [
+      'gemini-flash-latest',
+      'gemini-3.8-flash',
+      'gemini-3.5-flash-lite',
+      'gemini-flash-lite-latest'
+    ];
+
+    let rawJson = '';
+    let usedModel = '';
+
+    for (const model of CANDIDATE_MODELS) {
+      try {
+        const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`;
+        const res = await fetch(geminiUrl, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            contents: [
+              {
+                parts: [
+                  { text: systemPrompt },
+                  { text: `Artículos internacionales sobre Argentina para analizar:\n${JSON.stringify(articlesPromptPayload, null, 2)}` }
+                ]
+              }
+            ],
+            generationConfig: {
+              temperature: 0.2,
+              responseMimeType: 'application/json'
+            }
+          })
+        });
+
+        if (res.ok) {
+          const data = await res.json();
+          const candidateText = data.candidates?.[0]?.content?.parts?.[0]?.text;
+          if (candidateText) {
+            rawJson = candidateText;
+            usedModel = model;
+            break;
           }
-        ],
-        generationConfig: {
-          temperature: 0.2,
-          responseMimeType: 'application/json'
+        } else {
+          console.warn(`[AI Clustering] Foreign model ${model} failed (${res.status}), trying next candidate...`);
         }
-      })
-    });
-
-    if (!res.ok) {
-      const errText = await res.text();
-      throw new Error(`Gemini API HTTP ${res.status}: ${errText}`);
+      } catch (err: any) {
+        console.warn(`[AI Clustering] Error with foreign model ${model}:`, err.message);
+      }
     }
 
-    const data = await res.json();
-    const rawJson = data.candidates?.[0]?.content?.parts?.[0]?.text;
     if (!rawJson) {
-      throw new Error('Empty response from Gemini API');
+      throw new Error('All candidate Gemini models failed to return a response for foreign clustering');
     }
 
+    console.log(`[AI Clustering] Successfully clustered foreign stories with model: ${usedModel}`);
     const parsed: GeminiClusterResponse = JSON.parse(rawJson);
     const articleMap = new Map(foreignArticles.map(a => [a.id, a]));
 
