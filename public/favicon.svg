@@ -1,5 +1,14 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" fill="none">
-  <rect width="32" height="32" rx="8" fill="#090D16"/>
-  <rect x="2" y="2" width="28" height="28" rx="6" stroke="#334155" stroke-width="1.5"/>
-  <path d="M10 23V9H16.5C18.9853 9 21 11.0147 21 13.5C21 15.9853 18.9853 18 16.5 18H13.5V23H10Z" fill="#F8FAFC"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="none">
+  <!-- Circular Badge Background -->
+  <circle cx="50" cy="50" r="48.5" fill="#0B111A"/>
+  <circle cx="50" cy="50" r="47" stroke="#F4F2EB" stroke-width="1.6" fill="none"/>
+
+  <!-- Argentine Celestial Checkmark -->
+  <polygon points="43.75,57.57 50.59,57.47 52.83,60.01 58.20,52.78 63.87,46.24 71.29,38.91 78.03,33.54 66.50,48.00 53.12,69.09" fill="#6BA4D9"/>
+
+  <!-- Letter P (Architectural Typography) -->
+  <polygon points="33.59,30.81 50.68,30.81 54.88,31.59 57.91,33.06 59.96,34.81 61.43,36.86 62.60,39.99 62.79,44.58 54.20,54.74 50.59,55.42 41.41,55.61 41.41,69.19 33.59,69.19" fill="#F8F9FA"/>
+
+  <!-- Counter Cutout -->
+  <polygon points="41.60,37.25 49.61,37.25 51.56,37.74 52.73,38.43 54.00,39.89 54.79,42.33 54.59,44.97 53.61,46.92 52.44,48.00 50.20,48.88 41.60,48.97" fill="#0B111A"/>
 </svg>

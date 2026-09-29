@@ -5,7 +5,8 @@ const PRECACHE_URLS = [
   '/metodologia',
   '/terminos',
   '/manifest.json',
-  '/favicon.svg'
+  '/favicon.svg',
+  '/images/icon-192.png'
 ];
 
 // Install Event: precache core shell
