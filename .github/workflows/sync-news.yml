@@ -2,8 +2,8 @@ name: Sincronización Automática de Noticias Politicheck
 
 on:
   schedule:
-    # Corre cada 30 minutos (100% gratuito en GitHub Actions)
-    - cron: '*/30 * * * *'
+    # Corre cada 15 minutos (100% gratuito en GitHub Actions, sin restricciones de Vercel Hobby)
+    - cron: '*/15 * * * *'
   workflow_dispatch: # Permite ejecutarlo manualmente desde GitHub con 1 clic
 
 jobs:
