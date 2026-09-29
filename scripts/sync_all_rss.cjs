@@ -182,20 +182,23 @@ async function parseFeed(config) {
       const titleMatch = itemXml.match(/<title>([\s\S]*?)<\/title>/i);
       const linkMatch = itemXml.match(/<link>([\s\S]*?)<\/link>/i);
       const descMatch = itemXml.match(/<description>([\s\S]*?)<\/description>/i);
-      const pubDateMatch = itemXml.match(/<pubDate>([\s\S]*?)<\/pubDate>/i);
+      const pubDateMatch = itemXml.match(/<pubDate>([\s\S]*?)<\/pubDate>/i) || itemXml.match(/<dc:date>([\s\S]*?)<\/dc:date>/i);
 
       const title = cleanText(titleMatch ? titleMatch[1] : '');
       const rawLink = cleanText(linkMatch ? linkMatch[1] : '');
       const snippet = cleanText(descMatch ? descMatch[1] : '').slice(0, 220);
-      const pubDate = pubDateMatch ? pubDateMatch[1] : '';
+      const pubDate = cleanText(pubDateMatch ? pubDateMatch[1] : '');
       const imageUrl = extractImageUrl(itemXml);
 
-      let articleTimestamp = Date.now();
+      let articleTimestamp = 0;
       if (pubDate) {
         const parsedD = new Date(pubDate);
         if (!isNaN(parsedD.getTime())) {
           articleTimestamp = parsedD.getTime();
         }
+      }
+      if (articleTimestamp === 0) {
+        articleTimestamp = Date.now() - (i * 5 * 60 * 1000);
       }
 
       if (title.length > 10 && rawLink.startsWith('http')) {
@@ -298,27 +301,46 @@ async function run() {
   }
 
   console.log(`\n🤖 Calling Gemini Flash with fresh articles to generate balanced clusters...`);
-  const candidateArticles = combinedArticles.slice(0, 80);
+  
+  // Balance candidate articles across distinct outlets (max 4 per outlet)
+  const candidateArticles = [];
+  const candOutletCounts = {};
+  for (const a of combinedArticles) {
+    const count = candOutletCounts[a.outletId] || 0;
+    if (count < 4 && candidateArticles.length < 80) {
+      candidateArticles.push(a);
+      candOutletCounts[a.outletId] = count + 1;
+    }
+  }
 
   const prompt = `
-Eres el motor de análisis editorial y verificación de Politicheck.
+Eres el motor de análisis editorial y verificación de Politicheck (Observatorio de Cobertura Periodística de Argentina).
 Tu objetivo es analizar las siguientes noticias argentinas de última hora y agruparlas en torno a los hechos centrales de gran impacto ("Historias").
 
-Reglas estrictas:
-1. Agrupa solo aquellas noticias que cubren el mismo acontecimiento objetivo.
-2. PRIORIDAD MÁXIMA - COBERTURA MULTI-MEDIO: Agrupa historias donde múltiples redacciones (Clarín, La Nación, Infobae, TN, Ámbito, Página 12, Perfil, etc.) estén informando sobre el mismo hecho central.
-3. VARIEDAD TEMÁTICA Y NÚMERO DE HISTORIAS (OBLIGATORIO):
-   Debes generar obligatoriamente entre 4 y 6 clusters diferentes y equilibrados:
-   - Al menos 1 o 2 historias de "Política" (ej. declaraciones del gobierno, relaciones internacionales, Congreso).
-   - Al menos 1 o 2 historias de "Economía" (ej. actividad económica, campo, reservas, inflación, dólar).
-   - Al menos 1 historia de "Sociedad", "Educación" o "Justicia" (ej. universidades, fallos judiciales, seguridad).
-   El primer cluster ("clusters[0]") será la Gran Apertura de Tapa.
-4. Escribe un titular neutral ("neutralHeadline") estrictamente factual.
-5. Redacta un dictamen comparativo ("aiComparisonNotice") de los encuadres.
-6. Clasifica la categoría ("Política", "Economía", "Sociedad", "Justicia" o "Internacional").
-7. Estima la distribución del espectro (oficialismoPct, centroDatosPct, oposicionPct) sumando el 100%.
+REGLAS DE ORO OBLIGATORIAS:
+1. REGLA FUNDAMENTAL - COMPARACIÓN MULTI-MEDIO ESTRICTA:
+   - El propósito central de Politicheck es comparar cómo DISTINTAS REDACCIONES cubren el mismo hecho.
+   - ESTÁ TERMINANTEMENTE PROHIBIDO que un cluster contenga más de 1 artículo del mismo medio. Cada noticia en "articleIds" DEBE ser de un diario DIFERENTE (por ejemplo: 1 de Clarín, 1 de La Nación, 1 de Infobae, 1 de Ámbito, 1 de Página 12, 1 de elDiarioAR, etc.).
+   - Cada cluster DEBE incluir un MÍNIMO de 2 medios distintos (idealmente entre 3 y 6 medios distintos).
+   - NUNCA agrupes noticias de un solo diario.
 
-Responde ÚNICAMENTE en JSON:
+2. COHERENCIA FACTUAL Y TEMÁTICA ESTRICTA:
+   - Todas las noticias del cluster deben cubrir EXACTAMENTE EL MISMO ACONTECIMIENTO OBJETIVO.
+   - NO agrupes noticias solo porque compartan una palabra genérica. Por ejemplo: NO juntes "Fútbol en Malvinas" con "Debate de sanciones por hidrocarburos en Malvinas". Son dos noticias completamente distintas. Si un artículo no trata del suceso específico central, descártalo.
+
+3. VARIEDAD TEMÁTICA Y NÚMERO DE HISTORIAS (OBLIGATORIO):
+   Debes generar obligatoriamente entre 4 y 6 clusters/historias diferentes y equilibradas:
+   - Al menos 1 o 2 historias de "Política" (ej. declaraciones del gobierno, Congreso, internas políticas, relaciones internacionales).
+   - Al menos 1 o 2 historias de "Economía" (ej. actividad económica, recesión, dólar, deuda, reservas, inflación).
+   - Al menos 1 historia de "Sociedad", "Educación" o "Justicia" (ej. causas judiciales, universidades, reclamos salariales, seguridad).
+   El primer cluster del array ("clusters[0]") será la Gran Apertura de Tapa de mayor trascendencia e impacto nacional.
+
+4. Escribe un titular neutral ("neutralHeadline") estrictamente factual, sin adjetivos tendenciosos.
+5. Redacta un dictamen comparativo de encuadres ("aiComparisonNotice") que explique con rigor periodístico: qué priorizó cada redacción en su titular y qué omitió.
+6. Clasifica la categoría ("Política", "Economía", "Sociedad", "Justicia" o "Internacional").
+7. Estima la distribución del espectro editorial (oficialismoPct, centroDatosPct, oposicionPct) sumando el 100%.
+
+Responde ÚNICAMENTE en JSON con la siguiente estructura:
 {
   "clusters": [
     {
@@ -326,8 +348,8 @@ Responde ÚNICAMENTE en JSON:
       "neutralHeadline": "Titular neutral y factual",
       "category": "Política",
       "summary": "Resumen objetivo en dos oraciones.",
-      "aiComparisonNotice": "Síntesis del contraste de enfoques.",
-      "articleIds": ["id1", "id2", "id3"],
+      "aiComparisonNotice": "Síntesis del contraste de enfoques entre las redacciones.",
+      "articleIds": ["id_medio_1", "id_medio_2", "id_medio_3"],
       "spectrum": {
         "oficialismoPct": 40,
         "centroDatosPct": 35,
@@ -380,7 +402,15 @@ ${JSON.stringify(candidateArticles.map(a => ({ id: a.id, medio: a.outletName, ti
         };
 
         const clusters = parsed.clusters.map((c, idx) => {
-          const clusterArticles = c.articleIds.map(id => articleMap.get(id)).filter(Boolean);
+          const rawArticles = c.articleIds.map(id => articleMap.get(id)).filter(Boolean);
+          const seenOutlets = new Set();
+          const clusterArticles = [];
+          for (const a of rawArticles) {
+            if (!seenOutlets.has(a.outletId)) {
+              seenOutlets.add(a.outletId);
+              clusterArticles.push(a);
+            }
+          }
           const leadImg = clusterArticles.find(a => Boolean(a.imageUrl))?.imageUrl || 
             (c.category === 'Economía' ? '/images/regalias.jpg' : c.category === 'Sociedad' ? '/images/universidad.jpg' : '/images/malvinas.jpg');
 

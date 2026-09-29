@@ -488,4 +488,15 @@ const serverSyncIso = getLastSyncTimestamp() || new Date().toISOString();
 
   updateSyncTimeAgo();
   setInterval(updateSyncTimeAgo, 30000);
+
+  // Background fetch of server live status to overcome CDN edge caching
+  fetch('/api/rss/sync?status=true')
+    .then(res => res.json())
+    .then(data => {
+      if (data.lastSyncTimestamp && syncTimeAgo) {
+        syncTimeAgo.setAttribute('data-server-sync', data.lastSyncTimestamp);
+        updateSyncTimeAgo();
+      }
+    })
+    .catch(() => {});
 </script>

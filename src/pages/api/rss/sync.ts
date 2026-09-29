@@ -1,5 +1,5 @@
 import type { APIRoute } from 'astro';
-import { syncAllRssFeeds, getCachedArticles } from '../../../services/rss/sync';
+import { syncAllRssFeeds, getCachedArticles, getLastSyncTimestamp } from '../../../services/rss/sync';
 import { 
   clusterArticlesWithGemini, 
   getCachedClusteredStories,
@@ -17,6 +17,20 @@ const COOLDOWN_MS = 25 * 60 * 1000; // 25 minutes minimum cooldown to protect Ge
 
 export const GET: APIRoute = async ({ request }) => {
   const url = new URL(request.url);
+
+  // Fast-path: live sync status without scraping overhead
+  if (url.searchParams.get('status') === 'true') {
+    const lastSync = getLastSyncTimestamp();
+    return new Response(JSON.stringify({
+      success: true,
+      lastSyncTimestamp: lastSync,
+      now: new Date().toISOString()
+    }), {
+      status: 200,
+      headers: { 'Content-Type': 'application/json', 'Cache-Control': 'no-cache, no-store' }
+    });
+  }
+
   const now = Date.now();
 
   const forceRefresh = url.searchParams.get('refresh') === 'true';

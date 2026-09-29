@@ -158,20 +158,27 @@ export function selectCrossOutletCandidates(articles: Article[], maxArticles = 7
 
   const selected: Article[] = [];
   const selectedIds = new Set<string>();
+  const outletCounts: Record<string, number> = {};
 
   for (const item of scoredArticles) {
-    if (item.score > 0 && selected.length < maxArticles) {
+    const oId = item.article.outletId;
+    const currentCount = outletCounts[oId] || 0;
+    // Cap at max 4 articles per outlet in candidate pool so no single outlet dominates
+    if (item.score > 0 && selected.length < maxArticles && currentCount < 4) {
       selected.push(item.article);
       selectedIds.add(item.article.id);
+      outletCounts[oId] = currentCount + 1;
     }
   }
 
   // Ensure every monitored outlet has representation in candidate pool
   Object.values(byOutlet).forEach(outletArticles => {
     for (const a of outletArticles.slice(0, 2)) {
-      if (!selectedIds.has(a.id) && selected.length < maxArticles + 25) {
+      const currentCount = outletCounts[a.outletId] || 0;
+      if (!selectedIds.has(a.id) && selected.length < maxArticles + 25 && currentCount < 4) {
         selected.push(a);
         selectedIds.add(a.id);
+        outletCounts[a.outletId] = currentCount + 1;
       }
     }
   });
@@ -194,18 +201,27 @@ export async function clusterArticlesWithGemini(
     const candidateArticles = selectCrossOutletCandidates(articles, 80);
     console.log(`[AI Clustering] Calling Gemini Flash with ${candidateArticles.length} cross-outlet curated articles (from ${articles.length} total)...`);
     const prompt = `
-Eres el motor de análisis editorial y verificación de Politicheck.
-Tu objetivo es analizar las siguientes noticias argentinas publicadas por distintos medios (Clarín, La Nación, Infobae, TN, Ámbito, El Cronista, Página 12, Perfil, elDiarioAR, Crónica, BAE Negocios, Cenital, La Derecha Diario, etc.) y agruparlas en torno a los hechos centrales de gran impacto ("Historias").
+Eres el motor de análisis editorial y verificación de Politicheck (Observatorio de Cobertura Periodística de Argentina).
+Tu objetivo es analizar las siguientes noticias argentinas y agruparlas en torno a los hechos centrales de gran impacto ("Historias").
 
-Reglas estrictas:
-1. Agrupa solo aquellas noticias que cubren el mismo acontecimiento objetivo.
-2. PRIORIDAD MÁXIMA - COBERTURA MULTI-MEDIO: Tu objetivo primordial es agrupar historias de gran envergadura nacional donde la mayor cantidad posible de redacciones (4, 5, 6, 7 o más diarios distintos) estén informando sobre el mismo hecho central. NO te limites a solo 2 diarios: incluye a TODOS los medios del listado que hablen de dicho hecho para que la comparación de titulares y el espectro editorial sea lo más amplio y representativo posible.
+REGLAS DE ORO OBLIGATORIAS:
+1. REGLA FUNDAMENTAL - COMPARACIÓN MULTI-MEDIO ESTRICTA:
+   - El propósito de Politicheck es comparar cómo DISTINTAS REDACCIONES cubren el mismo hecho.
+   - ESTÁ TERMINANTEMENTE PROHIBIDO que un cluster contenga más de 1 artículo del mismo medio. Cada noticia en "articleIds" DEBE ser de un diario DIFERENTE (por ejemplo: 1 de Clarín, 1 de La Nación, 1 de Infobae, 1 de Ámbito, 1 de Página 12, 1 de elDiarioAR, etc.).
+   - Cada cluster DEBE incluir un MÍNIMO de 2 medios distintos (idealmente entre 3 y 6 medios distintos).
+   - NUNCA agrupes noticias de un solo diario.
+
+2. COHERENCIA FACTUAL Y TEMÁTICA ESTRICTA:
+   - Todas las noticias del cluster deben cubrir EXACTAMENTE EL MISMO ACONTECIMIENTO OBJETIVO.
+   - NO agrupes noticias solo porque compartan una palabra genérica. Por ejemplo: NO juntes "Fútbol en Malvinas" con "Debate de sanciones por hidrocarburos en Malvinas". Son dos noticias completamente distintas. Si un artículo no trata del suceso específico central, descártalo.
+
 3. VARIEDAD TEMÁTICA Y NÚMERO DE HISTORIAS (OBLIGATORIO):
    Debes generar obligatoriamente entre 4 y 6 clusters/historias diferentes y equilibradas:
-   - Al menos 1 o 2 historias de "Política" (ej. declaraciones del gobierno, soberanía Malvinas, internas políticas, Congreso).
-   - Al menos 1 o 2 historias de "Economía" (ej. actividad económica, recesión, proyecciones de JP Morgan, dólar, deuda).
-   - Al menos 1 historia de "Sociedad", "Educación" o "Justicia" (ej. paros docentes/universitarios, reclamos salariales, fallos judiciales).
+   - Al menos 1 o 2 historias de "Política" (ej. declaraciones del gobierno, Congreso, internas políticas, relaciones internacionales).
+   - Al menos 1 o 2 historias de "Economía" (ej. actividad económica, recesión, dólar, deuda, reservas, inflación).
+   - Al menos 1 historia de "Sociedad", "Educación" o "Justicia" (ej. causas judiciales, universidades, reclamos salariales, seguridad).
    El primer cluster del array ("clusters[0]") será la Gran Apertura de Tapa de mayor trascendencia e impacto nacional.
+
 4. Escribe un titular neutral ("neutralHeadline") estrictamente factual, sin adjetivos tendenciosos.
 5. Redacta un dictamen comparativo de encuadres ("aiComparisonNotice") que explique con rigor periodístico: qué priorizó cada redacción en su titular y qué omitió.
 6. Clasifica la categoría ("Política", "Economía", "Sociedad", "Justicia" o "Internacional").
@@ -220,12 +236,12 @@ Responde ÚNICAMENTE en formato JSON con la siguiente estructura:
       "category": "Política",
       "summary": "Resumen objetivo en dos oraciones.",
       "aiComparisonNotice": "Síntesis del contraste de enfoques entre las múltiples redacciones.",
-      "articleIds": ["id1", "id2", "id3", "id4", "id5"],
+      "articleIds": ["id_medio_1", "id_medio_2", "id_medio_3"],
       "spectrum": {
         "oficialismoPct": 40,
         "centroDatosPct": 35,
         "oposicionPct": 25,
-        "totalOutlets": 5
+        "totalOutlets": 3
       }
     }
   ]
@@ -285,13 +301,24 @@ ${JSON.stringify(candidateArticles.map(a => ({ id: a.id, medio: a.outletName, ti
     const parsed: GeminiClusterResponse = JSON.parse(rawJson);
     const articleMap = new Map(articles.map(a => [a.id, a]));
 
-    const stories: StoryCluster[] = parsed.clusters.map((c, idx) => {
-      const clusterArticles = c.articleIds
-        .map(id => articleMap.get(id))
-        .filter((a): a is Article => Boolean(a));
+    const stories: StoryCluster[] = parsed.clusters
+      .map((c, idx) => {
+        const rawArticles = c.articleIds
+          .map(id => articleMap.get(id))
+          .filter((a): a is Article => Boolean(a));
 
-      // Pick best journalistic photo among the cluster
-      const leadImgArticle = clusterArticles.find(a => Boolean(a.imageUrl));
+        // POLITICHECK ENFORCEMENT: Strictly at most 1 article per outlet in a cluster
+        const seenOutlets = new Set<string>();
+        const clusterArticles: Article[] = [];
+        for (const a of rawArticles) {
+          if (!seenOutlets.has(a.outletId)) {
+            seenOutlets.add(a.outletId);
+            clusterArticles.push(a);
+          }
+        }
+
+        // Pick best journalistic photo among the cluster
+        const leadImgArticle = clusterArticles.find(a => Boolean(a.imageUrl));
       const fallbackImg = c.category === 'Economía' 
         ? '/images/regalias.jpg' 
         : c.category === 'Sociedad' 

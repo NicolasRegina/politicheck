@@ -26,147 +26,177 @@ const displayTimestamp = (story.updatedAt && story.updatedAt !== 'Reciente')
   : (validArticleTime || 'Hoy');
 ---
 
-<article class={`bg-white dark:bg-[#0F1420] border border-slate-200 dark:border-slate-800/90 rounded-2xl shadow-xs overflow-hidden transition-all duration-300 hover:border-slate-300 dark:hover:border-slate-700 ${story.isLeadStory ? 'p-6 sm:p-8 space-y-6 ring-1 ring-slate-900/5 dark:ring-white/5' : 'p-5 sm:p-6 space-y-5'}`}>
-  <!-- Kicker / Volanta & Meta -->
-  <div class="flex flex-wrap items-center justify-between gap-3 border-b border-slate-200 dark:border-slate-800 pb-3">
-    <div class="flex items-center gap-2">
-      {story.kicker ? (
-        <span class="font-mono text-[11px] font-bold tracking-widest uppercase text-slate-800 dark:text-slate-200">
-          {story.kicker}
-        </span>
-      ) : (
-        <span class="font-mono text-[11px] font-bold tracking-widest uppercase text-slate-800 dark:text-slate-200">
-          {story.category}
-        </span>
-      )}
-      <span class="text-slate-300 dark:text-slate-700">•</span>
-      <span class="font-mono text-[11px] text-slate-500 dark:text-slate-400">{displayTimestamp}</span>
+<article class={`bg-white dark:bg-[#0F1420] border border-slate-200 dark:border-slate-800/90 rounded-2xl shadow-xs overflow-hidden transition-all duration-300 hover:border-slate-300 dark:hover:border-slate-700 flex flex-col h-full justify-between ${story.isLeadStory ? 'p-6 sm:p-8 space-y-6 ring-1 ring-slate-900/5 dark:ring-white/5' : 'p-5 sm:p-6 space-y-5'}`}>
+  <div class="space-y-5">
+    <!-- Kicker / Volanta & Meta -->
+    <div class="flex flex-wrap items-center justify-between gap-3 border-b border-slate-200 dark:border-slate-800 pb-3">
+      <div class="flex items-center gap-2">
+        {story.kicker ? (
+          <span class="font-mono text-[11px] font-bold tracking-widest uppercase text-slate-800 dark:text-slate-200">
+            {story.kicker}
+          </span>
+        ) : (
+          <span class="font-mono text-[11px] font-bold tracking-widest uppercase text-slate-800 dark:text-slate-200">
+            {story.category}
+          </span>
+        )}
+        <span class="text-slate-300 dark:text-slate-700">•</span>
+        <span class="font-mono text-[11px] text-slate-500 dark:text-slate-400">{displayTimestamp}</span>
+      </div>
+
+      <!-- Outlets count badge -->
+      <div class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-[11px] font-mono text-slate-700 dark:text-slate-300">
+        <span class="w-1.5 h-1.5 rounded-full bg-slate-400 dark:bg-slate-500"></span>
+        <span>{story.articles.length} medios comparados</span>
+      </div>
     </div>
 
-    <!-- Outlets count badge -->
-    <div class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-[11px] font-mono text-slate-700 dark:text-slate-300">
-      <span class="w-1.5 h-1.5 rounded-full bg-slate-400 dark:bg-slate-500"></span>
-      <span>{story.articles.length} medios comparados</span>
+    <!-- Story Presentation Layout -->
+    {story.isLeadStory ? (
+      /* LEAD STORY (Gran Apertura de Tapa): Headline, Big Press Photo, Summary, Spectrum */
+      <div class="space-y-6">
+        <div class="space-y-3">
+          <h2 class="font-editorial text-2xl sm:text-3xl md:text-4xl font-extrabold text-slate-950 dark:text-white leading-tight tracking-tight">
+            <a href={`/historia/${story.id}`} class="hover:text-blue-900 dark:hover:text-blue-300 transition-colors">
+              {story.neutralHeadline}
+            </a>
+          </h2>
+          <p class="text-base sm:text-lg text-slate-700 dark:text-slate-300 leading-relaxed font-sans max-w-4xl">
+            {story.summary}
+          </p>
+        </div>
+
+        <!-- Grand Press Photo with Authentic Caption -->
+        {story.imageUrl && (
+          <div class="story-img-wrapper space-y-2">
+            <div class="relative overflow-hidden rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-100 dark:bg-slate-900 aspect-video max-h-[460px]">
+              <img 
+                src={story.imageUrl} 
+                alt={story.neutralHeadline} 
+                loading="eager"
+                referrerpolicy="no-referrer"
+                onerror="const w = this.closest('.story-img-wrapper'); if (w) w.style.display = 'none';"
+                class="w-full h-full object-cover object-center"
+              />
+            </div>
+            {story.imageCaption && (
+              <p class="text-[11px] font-mono text-slate-500 dark:text-slate-400 italic px-1">
+                {story.imageCaption}
+              </p>
+            )}
+          </div>
+        )}
+
+        <!-- Coverage Spectrum Bar -->
+        <div class="bg-slate-50 dark:bg-slate-950/60 rounded-xl p-4 border border-slate-200/90 dark:border-slate-800">
+          <div class="flex items-center justify-between text-[11px] font-mono uppercase tracking-wider text-slate-600 dark:text-slate-400 mb-2">
+            <span class="font-semibold">Distribución del Espectro Editorial</span>
+            <span>Base: {story.spectrum.totalOutlets} medios monitoreados</span>
+          </div>
+          <SpectrumBar spectrum={story.spectrum} articles={story.articles} />
+        </div>
+      </div>
+    ) : (
+      /* SECONDARY STORY: Balanced 3-column Bento Card */
+      <div class="space-y-4">
+        {story.imageUrl && (
+          <div class="story-img-wrapper space-y-1.5">
+            <div class="relative overflow-hidden rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-100 dark:bg-slate-900 aspect-video max-h-[220px]">
+              <img 
+                src={story.imageUrl} 
+                alt={story.neutralHeadline} 
+                loading="lazy"
+                referrerpolicy="no-referrer"
+                onerror="const w = this.closest('.story-img-wrapper'); if (w) w.style.display = 'none';"
+                class="w-full h-full object-cover object-center"
+              />
+            </div>
+            {story.imageCaption && (
+              <p class="text-[10px] font-mono text-slate-500 dark:text-slate-400 italic px-1 truncate">
+                {story.imageCaption}
+              </p>
+            )}
+          </div>
+        )}
+
+        <div class="space-y-2">
+          <h3 class="font-editorial text-lg sm:text-xl font-bold text-slate-950 dark:text-white leading-snug tracking-tight">
+            <a href={`/historia/${story.id}`} class="hover:text-blue-900 dark:hover:text-blue-300 transition-colors">
+              {story.neutralHeadline}
+            </a>
+          </h3>
+          <!-- Summary with line clamp and Ver más toggle -->
+          <div class="story-expandable-block">
+            <p class="expandable-text text-sm text-slate-600 dark:text-slate-300 leading-relaxed font-sans line-clamp-3">
+              {story.summary}
+            </p>
+            {story.summary && story.summary.length > 130 && (
+              <button 
+                type="button" 
+                class="btn-toggle-expand inline-flex items-center gap-1 text-[11px] font-mono font-semibold text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 cursor-pointer pt-1"
+              >
+                <span>Ver más</span>
+                <svg class="w-3 h-3 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                </svg>
+              </button>
+            )}
+          </div>
+        </div>
+
+        <!-- Compact Spectrum Bar -->
+        <div class="bg-slate-50 dark:bg-slate-950/60 rounded-lg p-3 border border-slate-200/80 dark:border-slate-800">
+          <div class="flex items-center justify-between text-[10px] font-mono uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1.5">
+            <span>Espectro Editorial</span>
+            <span>{story.spectrum.totalOutlets} medios</span>
+          </div>
+          <SpectrumBar spectrum={story.spectrum} articles={story.articles} />
+        </div>
+      </div>
+    )}
+
+    <!-- AI Cross-Framing Synthesis (Dictamen de Encuadres) -->
+    {story.aiComparisonNotice && (
+      <div class="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800/80 space-y-1.5">
+        <div class="flex items-center gap-2 text-[10px] font-mono font-bold uppercase tracking-widest text-slate-700 dark:text-slate-300">
+          <svg class="w-3.5 h-3.5 text-slate-600 dark:text-slate-400 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+          </svg>
+          <span class="truncate">Dictamen Politicheck: Matriz de Encuadres</span>
+        </div>
+        <!-- AI Notice with line clamp and Ver más toggle -->
+        <div class="story-expandable-block">
+          <p class="expandable-text text-xs sm:text-sm text-slate-700 dark:text-slate-300 leading-relaxed line-clamp-2">
+            {story.aiComparisonNotice}
+          </p>
+          {story.aiComparisonNotice.length > 120 && (
+            <button 
+              type="button" 
+              class="btn-toggle-expand inline-flex items-center gap-1 text-[10px] font-mono font-semibold text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 cursor-pointer pt-0.5"
+            >
+              <span>Ver más</span>
+              <svg class="w-2.5 h-2.5 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+              </svg>
+            </button>
+          )}
+        </div>
+      </div>
+    )}
+
+    <!-- Comparative Headlines: Interactive Leaning Filter & Pagination -->
+    <div class="space-y-3 pt-2 border-t border-slate-200 dark:border-slate-800">
+      <div class="text-[11px] font-mono uppercase tracking-wider font-semibold text-slate-600 dark:text-slate-400 flex items-center justify-between">
+        <span>Titulares y Enfoques Cruzados:</span>
+        <span class="text-[10px] text-slate-400 dark:text-slate-500 font-normal">Filtro por sesgo</span>
+      </div>
+
+      <HeadlineComparison articles={story.articles} storyId={story.id} isLeadStory={story.isLeadStory} />
     </div>
   </div>
 
-  <!-- Story Presentation Layout -->
-  {story.isLeadStory ? (
-    /* LEAD STORY (Gran Apertura de Tapa): Headline, Big Press Photo, Summary, Spectrum */
-    <div class="space-y-6">
-      <div class="space-y-3">
-        <h2 class="font-editorial text-2xl sm:text-3xl md:text-4xl font-extrabold text-slate-950 dark:text-white leading-tight tracking-tight">
-          <a href={`/historia/${story.id}`} class="hover:text-blue-900 dark:hover:text-blue-300 transition-colors">
-            {story.neutralHeadline}
-          </a>
-        </h2>
-        <p class="text-base sm:text-lg text-slate-700 dark:text-slate-300 leading-relaxed font-sans max-w-4xl">
-          {story.summary}
-        </p>
-      </div>
-
-      <!-- Grand Press Photo with Authentic Caption -->
-      {story.imageUrl && (
-        <div class="story-img-wrapper space-y-2">
-          <div class="relative overflow-hidden rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-100 dark:bg-slate-900 aspect-video max-h-[460px]">
-            <img 
-              src={story.imageUrl} 
-              alt={story.neutralHeadline} 
-              loading="eager"
-              referrerpolicy="no-referrer"
-              onerror="const w = this.closest('.story-img-wrapper'); if (w) w.style.display = 'none';"
-              class="w-full h-full object-cover object-center"
-            />
-          </div>
-          {story.imageCaption && (
-            <p class="text-[11px] font-mono text-slate-500 dark:text-slate-400 italic px-1">
-              {story.imageCaption}
-            </p>
-          )}
-        </div>
-      )}
-
-      <!-- Coverage Spectrum Bar -->
-      <div class="bg-slate-50 dark:bg-slate-950/60 rounded-xl p-4 border border-slate-200/90 dark:border-slate-800">
-        <div class="flex items-center justify-between text-[11px] font-mono uppercase tracking-wider text-slate-600 dark:text-slate-400 mb-2">
-          <span class="font-semibold">Distribución del Espectro Editorial</span>
-          <span>Base: {story.spectrum.totalOutlets} medios monitoreados</span>
-        </div>
-        <SpectrumBar spectrum={story.spectrum} articles={story.articles} />
-      </div>
-    </div>
-  ) : (
-    /* SECONDARY STORY: 2-column or stacked layout */
-    <div class="space-y-4">
-      {story.imageUrl && (
-        <div class="story-img-wrapper space-y-1.5">
-          <div class="relative overflow-hidden rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-100 dark:bg-slate-900 aspect-video max-h-[240px]">
-            <img 
-              src={story.imageUrl} 
-              alt={story.neutralHeadline} 
-              loading="lazy"
-              referrerpolicy="no-referrer"
-              onerror="const w = this.closest('.story-img-wrapper'); if (w) w.style.display = 'none';"
-              class="w-full h-full object-cover object-center"
-            />
-          </div>
-          {story.imageCaption && (
-            <p class="text-[10px] font-mono text-slate-500 dark:text-slate-400 italic px-1 truncate">
-              {story.imageCaption}
-            </p>
-          )}
-        </div>
-      )}
-
-      <div class="space-y-2">
-        <h3 class="font-editorial text-xl sm:text-2xl font-bold text-slate-950 dark:text-white leading-snug tracking-tight">
-          <a href={`/historia/${story.id}`} class="hover:text-blue-900 dark:hover:text-blue-300 transition-colors">
-            {story.neutralHeadline}
-          </a>
-        </h3>
-        <p class="text-sm text-slate-600 dark:text-slate-300 leading-relaxed font-sans">
-          {story.summary}
-        </p>
-      </div>
-
-      <!-- Compact Spectrum Bar -->
-      <div class="bg-slate-50 dark:bg-slate-950/60 rounded-lg p-3 border border-slate-200/80 dark:border-slate-800">
-        <div class="flex items-center justify-between text-[10px] font-mono uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1.5">
-          <span>Espectro Editorial</span>
-          <span>{story.spectrum.totalOutlets} medios</span>
-        </div>
-        <SpectrumBar spectrum={story.spectrum} articles={story.articles} />
-      </div>
-    </div>
-  )}
-
-  <!-- AI Cross-Framing Synthesis (Dictamen de Encuadres) -->
-  {story.aiComparisonNotice && (
-    <div class="p-4 rounded-xl bg-slate-50 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800/80 space-y-1.5">
-      <div class="flex items-center gap-2 text-[10px] font-mono font-bold uppercase tracking-widest text-slate-700 dark:text-slate-300">
-        <svg class="w-3.5 h-3.5 text-slate-600 dark:text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-        </svg>
-        <span>Dictamen Politicheck: Matriz de Encuadres y Énfasis</span>
-      </div>
-      <p class="text-xs sm:text-sm text-slate-700 dark:text-slate-300 leading-relaxed">
-        {story.aiComparisonNotice}
-      </p>
-    </div>
-  )}
-
-  <!-- Comparative Headlines: Interactive Leaning Filter & Pagination -->
-  <div class="space-y-3 pt-2 border-t border-slate-200 dark:border-slate-800">
-    <div class="text-[11px] font-mono uppercase tracking-wider font-semibold text-slate-600 dark:text-slate-400 flex items-center justify-between">
-      <span>Titulares y Enfoques Cruzados de Cada Redacción:</span>
-      <span class="text-[10px] text-slate-400 dark:text-slate-500 font-normal">Filtro por sesgo y paginación</span>
-    </div>
-
-    <HeadlineComparison articles={story.articles} storyId={story.id} isLeadStory={story.isLeadStory} />
-  </div>
-
-  <!-- Dedicated Story Analysis Link & 1-Click Viral Share Bar -->
-  <div class="pt-3.5 border-t border-slate-100 dark:border-slate-800/80 flex flex-wrap items-center justify-between gap-3">
+  <!-- Dedicated Story Analysis Link & 1-Click Viral Share Bar (Always aligned at bottom) -->
+  <div class="mt-auto pt-3.5 border-t border-slate-100 dark:border-slate-800/80 flex flex-wrap items-center justify-between gap-3">
     <!-- 1-Click Share Icons & Modal Trigger -->
     <div class="flex items-center gap-1.5 flex-wrap">
       <button 
@@ -227,3 +257,41 @@ const displayTimestamp = (story.updatedAt && story.updatedAt !== 'Reciente')
     </a>
   </div>
 </article>
+
+<script>
+  function setupExpandButtons() {
+    document.querySelectorAll('.btn-toggle-expand').forEach((btn) => {
+      // Avoid duplicate bindings
+      if (btn.hasAttribute('data-bound')) return;
+      btn.setAttribute('data-bound', 'true');
+
+      btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        const container = btn.closest('.story-expandable-block');
+        if (!container) return;
+        const text = container.querySelector('.expandable-text');
+        const span = btn.querySelector('span');
+        const icon = btn.querySelector('svg');
+        if (!text || !span) return;
+
+        const isExpanded = text.classList.contains('line-clamp-none');
+        if (isExpanded) {
+          text.classList.remove('line-clamp-none');
+          span.textContent = 'Ver más';
+          if (icon) icon.classList.remove('rotate-180');
+        } else {
+          text.classList.add('line-clamp-none');
+          span.textContent = 'Ver menos';
+          if (icon) icon.classList.add('rotate-180');
+        }
+      });
+    });
+  }
+
+  // Setup on page load and on client-side routing
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', setupExpandButtons);
+  } else {
+    setupExpandButtons();
+  }
+</script>

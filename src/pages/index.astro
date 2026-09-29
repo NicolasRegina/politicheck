@@ -158,9 +158,9 @@ const fullLiveFeedArticles = liveArticles.slice(0, 60);
         </span>
       </div>
 
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="secondary-stories-grid">
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 items-stretch" id="secondary-stories-grid">
         {secondaryStories.map((story) => (
-          <div class="story-item" data-category={story.category} data-text={`${story.neutralHeadline} ${story.summary} ${story.articles.map(a => a.title + ' ' + a.outletName).join(' ')}`}>
+          <div class="story-item h-full flex flex-col" data-category={story.category} data-text={`${story.neutralHeadline} ${story.summary} ${story.articles.map(a => a.title + ' ' + a.outletName).join(' ')}`}>
             <StoryCard story={story} />
           </div>
         ))}

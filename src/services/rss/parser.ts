@@ -109,20 +109,23 @@ export async function parseFeed(config: RssFeedConfig, timeoutMs = 8000): Promis
       const titleMatch = itemXml.match(/<title>([\s\S]*?)<\/title>/i);
       const linkMatch = itemXml.match(/<link>([\s\S]*?)<\/link>/i);
       const descMatch = itemXml.match(/<description>([\s\S]*?)<\/description>/i);
-      const pubDateMatch = itemXml.match(/<pubDate>([\s\S]*?)<\/pubDate>/i);
+      const pubDateMatch = itemXml.match(/<pubDate>([\s\S]*?)<\/pubDate>/i) || itemXml.match(/<dc:date>([\s\S]*?)<\/dc:date>/i);
 
       const title = cleanText(titleMatch ? titleMatch[1] : '');
       const rawLink = cleanText(linkMatch ? linkMatch[1] : '');
       const snippet = cleanText(descMatch ? descMatch[1] : '').slice(0, 200);
-      const pubDate = pubDateMatch ? pubDateMatch[1] : '';
+      const pubDate = cleanText(pubDateMatch ? pubDateMatch[1] : '');
       const imageUrl = extractImageUrl(itemXml);
 
-      let articleTimestamp = Date.now();
+      let articleTimestamp = 0;
       if (pubDate) {
         const parsedD = new Date(pubDate);
         if (!isNaN(parsedD.getTime())) {
           articleTimestamp = parsedD.getTime();
         }
+      }
+      if (articleTimestamp === 0) {
+        articleTimestamp = Date.now() - (i * 5 * 60 * 1000);
       }
 
       // Validate minimum editorial requirements
