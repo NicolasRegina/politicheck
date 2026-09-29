@@ -174,14 +174,14 @@ export async function getNewsClustersFromSupabase(maxAgeMinutes = 1440): Promise
     }
 
     // Map DB rows back to full application StoryCluster objects
-    return data.map((row, idx) => {
+    const mapped = data.map((row, idx) => {
       const meta = (typeof row.key_quotes === 'object' && row.key_quotes !== null) ? row.key_quotes : {};
       const firstArticleImg = Array.isArray(row.articles) && row.articles[0]?.imageUrl;
       const defaultImg = row.category === 'Economía' ? '/images/regalias.jpg' : row.category === 'Sociedad' ? '/images/universidad.jpg' : '/images/malvinas.jpg';
 
       return {
         id: row.id,
-        isLeadStory: meta.isLeadStory ?? (idx === 0),
+        isLeadStory: meta.isLeadStory === true || idx === 0,
         kicker: meta.kicker || (row.category === 'Internacional' ? 'MIRADA EXTERIOR' : 'EN COBERTURA'),
         neutralHeadline: row.neutral_headline || row.lead_title,
         category: row.category,
@@ -194,6 +194,15 @@ export async function getNewsClustersFromSupabase(maxAgeMinutes = 1440): Promise
         aiComparisonNotice: meta.aiComparisonNotice || ''
       };
     });
+
+    // Guarantee that the explicit lead story is always the first item in the returned array
+    mapped.sort((a, b) => {
+      if (a.isLeadStory && !b.isLeadStory) return -1;
+      if (!a.isLeadStory && b.isLeadStory) return 1;
+      return 0;
+    });
+
+    return mapped;
   } catch (err: any) {
     console.error('[Supabase] Exception loading news clusters:', err.message);
     return null;

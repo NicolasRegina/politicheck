@@ -3,7 +3,7 @@ import Layout from '../layouts/Layout.astro';
 import StoryCard from '../components/StoryCard.astro';
 import LiveFeedItem from '../components/LiveFeedItem.astro';
 import PromiseCard from '../components/PromiseCard.astro';
-import { getCachedArticlesAsync, getCachedForeignArticles } from '../services/rss/sync';
+import { getCachedArticlesAsync, getCachedForeignArticles, getLastSyncTimestampAsync } from '../services/rss/sync';
 import { 
   clusterArticlesWithGemini, 
   getCachedClusteredStories,
@@ -18,6 +18,14 @@ export const prerender = false;
 
 // Edge Cache: cache 30s at CDN, serve stale up to 60s while revalidating
 Astro.response.headers.set('Cache-Control', 'public, s-maxage=30, stale-while-revalidate=60');
+
+// Trigger background server sync if feeds are older than 15 minutes (self-healing fallback)
+const lastSyncIso = await getLastSyncTimestampAsync();
+const isStale = !lastSyncIso || (Date.now() - new Date(lastSyncIso).getTime() > 15 * 60 * 1000);
+if (isStale) {
+  const syncEndpoint = new URL('/api/rss/sync?cron=true', Astro.url.origin).toString();
+  fetch(syncEndpoint).catch(() => {});
+}
 
 // Fetch live dynamic campaign promises with real citizen votes from Supabase
 const allPromises = await getPromisesWithLiveVotes();
@@ -1108,15 +1116,19 @@ const fullLiveFeedArticles = liveArticles.slice(0, 60);
   // --- Dynamic Live News Auto-Refresh with Scroll Preservation ---
   // Only execute on Portada ('/' or '/index.html'), NEVER on /historia/:id
   if (window.location.pathname === '/' || window.location.pathname === '' || window.location.pathname.endsWith('/index.html')) {
-    let lastArticleCount = 0;
-    const initialBadge = document.querySelector<HTMLElement>('#news-count-badge');
-    if (initialBadge) {
-      const match = initialBadge.textContent?.match(/\d+/);
-      if (match) lastArticleCount = parseInt(match[0], 10);
+    let initialSyncTimestamp: string | null = null;
+    let initialLeadStoryId: string | null = null;
+    let isAutoSyncing = false;
+    let hasAlertShown = false;
+
+    // Grab current server sync timestamp from header if present
+    const syncTimeEl = document.getElementById('sync-time-ago');
+    if (syncTimeEl) {
+      initialSyncTimestamp = syncTimeEl.getAttribute('data-server-sync') || null;
     }
 
-    // Auto-refresh interval (every 60 seconds)
-    const REFRESH_INTERVAL_MS = 60 * 1000;
+    // Auto-refresh interval (every 45 seconds)
+    const REFRESH_INTERVAL_MS = 45 * 1000;
 
     async function checkForNewsUpdates() {
       // If user is navigating away or in subpage like /historia/:id, abort
@@ -1136,40 +1148,87 @@ const fullLiveFeedArticles = liveArticles.slice(0, 60);
           (window as any).updateBreakingNewsBanner(data.breakingAlert);
         }
 
-        // Check if new articles arrived
-        if (lastArticleCount > 0 && data.totalArticles > lastArticleCount) {
-          const newCount = data.totalArticles - lastArticleCount;
-          lastArticleCount = data.totalArticles;
+        // Initialize baseline if not set yet
+        if (!initialSyncTimestamp && data.lastSyncTimestamp) {
+          initialSyncTimestamp = data.lastSyncTimestamp;
+        }
+        if (!initialLeadStoryId && data.leadStoryId) {
+          initialLeadStoryId = data.leadStoryId;
+        }
 
-          // Notify reader with an elegant floating pill that preserves scroll position
-          showFloatingNewsAlert(newCount);
-        } else if (lastArticleCount === 0) {
-          lastArticleCount = data.totalArticles;
+        // Check 1: If feeds in Supabase are older than 15 minutes, trigger background sync!
+        if (data.lastSyncTimestamp && !isAutoSyncing) {
+          const syncAgeMs = Date.now() - new Date(data.lastSyncTimestamp).getTime();
+          if (syncAgeMs > 15 * 60 * 1000) {
+            isAutoSyncing = true;
+            console.log('[Politicheck] Feed tiene más de 15 min. Sincronizando en segundo plano...');
+            fetch('/api/rss/sync?cron=true')
+              .then(r => r.json())
+              .then(syncRes => {
+                isAutoSyncing = false;
+                if (syncRes.success && syncRes.timestamp) {
+                  triggerLiveRefresh();
+                }
+              })
+              .catch(() => {
+                isAutoSyncing = false;
+              });
+          }
+        }
+
+        // Check 2: If a sync occurred from another trigger (GitHub Actions, cron or background sync)
+        const syncTimestampChanged = initialSyncTimestamp && data.lastSyncTimestamp && (data.lastSyncTimestamp !== initialSyncTimestamp);
+        const leadStoryChanged = initialLeadStoryId && data.leadStoryId && (data.leadStoryId !== initialLeadStoryId);
+
+        if (syncTimestampChanged || leadStoryChanged) {
+          triggerLiveRefresh();
         }
       } catch (err) {
         // Silent network fallback
       }
     }
 
-    function showFloatingNewsAlert(count: number) {
-      // Check if alert already exists
+    function triggerLiveRefresh() {
+      if (hasAlertShown) return;
+      hasAlertShown = true;
+
+      // If user is at or near the top of the page (general browsing), refresh automatically!
+      if (window.scrollY < 250) {
+        const currentY = window.scrollY;
+        sessionStorage.setItem('politicheck_restore_scroll', currentY.toString());
+        window.location.reload();
+      } else {
+        // If user is scrolled down reading an article or auditing a promise, show polite floating pill
+        showFloatingNewsAlert();
+      }
+    }
+
+    function showFloatingNewsAlert() {
       let alertEl = document.getElementById('live-news-update-pill');
       if (!alertEl) {
         alertEl = document.createElement('div');
         alertEl.id = 'live-news-update-pill';
-        alertEl.className = 'fixed bottom-6 right-6 z-50 flex items-center gap-3 px-4 py-2.5 rounded-2xl bg-slate-900 text-white dark:bg-slate-100 dark:text-slate-950 font-mono text-xs font-bold shadow-xl border border-slate-700 dark:border-slate-300 transition-all transform translate-y-0 animate-bounce cursor-pointer';
+        alertEl.className = 'fixed bottom-6 right-6 z-50 flex items-center gap-3 px-4 py-2.5 rounded-2xl bg-slate-900 text-white dark:bg-slate-100 dark:text-slate-950 font-mono text-xs font-bold shadow-2xl border border-slate-700 dark:border-slate-300 transition-all transform translate-y-0 animate-bounce cursor-pointer';
         alertEl.innerHTML = `
-          <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
-          <span>🔴 Hay ${count} noticias nuevas</span>
-          <button class="ml-2 px-2 py-1 rounded bg-slate-800 dark:bg-slate-200 text-[10px] text-white dark:text-slate-900 font-bold hover:underline">Ver ahora</button>
+          <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-ping"></span>
+          <span>🔴 Hay noticias y aperturas de tapa nuevas</span>
+          <button class="ml-2 px-2.5 py-1 rounded bg-slate-800 dark:bg-slate-200 text-[10px] text-white dark:text-slate-900 font-bold hover:underline">Actualizar ahora</button>
         `;
         
         alertEl.addEventListener('click', () => {
-          // Store exact scroll position, refresh and restore
           const currentY = window.scrollY;
           sessionStorage.setItem('politicheck_restore_scroll', currentY.toString());
           window.location.reload();
         });
+
+        // Also if user scrolls back up near the top, auto-refresh
+        window.addEventListener('scroll', () => {
+          if (window.scrollY < 200) {
+            const currentY = window.scrollY;
+            sessionStorage.setItem('politicheck_restore_scroll', currentY.toString());
+            window.location.reload();
+          }
+        }, { passive: true });
 
         document.body.appendChild(alertEl);
       }
@@ -1185,7 +1244,8 @@ const fullLiveFeedArticles = liveArticles.slice(0, 60);
       }
     }
 
-    // Start background timer
+    // Check after 3 seconds, then poll every REFRESH_INTERVAL_MS
+    setTimeout(checkForNewsUpdates, 3000);
     setInterval(checkForNewsUpdates, REFRESH_INTERVAL_MS);
   }
 </script>
