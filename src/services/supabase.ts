@@ -362,7 +362,9 @@ export interface CivicBanner {
 /**
  * Superadmin emails that are automatically promoted to 'superadmin'
  */
-export const SUPERADMIN_EMAILS = ['contacto@politicheck.com.ar'];
+export const SUPERADMIN_EMAILS = [
+  (process.env.SUPERADMIN_EMAIL || import.meta.env?.SUPERADMIN_EMAIL || 'contacto@politicheck.com.ar').toLowerCase()
+];
 
 /**
  * Helper to create a scoped Supabase client with a user's JWT access token

@@ -18,7 +18,7 @@ export const ALL: APIRoute = async ({ request }) => {
   if (!auth.isAuthenticated || !auth.isSuperadmin) {
     return new Response(JSON.stringify({ 
       success: false, 
-      error: 'Acceso restringido. Solo el Superadministrador (contacto@politicheck.com.ar) puede gestionar roles y usuarios.' 
+      error: 'Acceso restringido. Solo el Superadministrador titular puede gestionar roles y usuarios.' 
     }), {
       status: 403,
       headers: { 'Content-Type': 'application/json' }
@@ -31,7 +31,12 @@ export const ALL: APIRoute = async ({ request }) => {
   try {
     // 1. GET: Fetch all profiles
     if (method === 'GET') {
-      const profiles = await getAllProfiles(scopedClient || undefined);
+      const rawProfiles = await getAllProfiles(scopedClient || undefined);
+      const profiles = rawProfiles.map(p => ({
+        ...p,
+        isOwner: SUPERADMIN_EMAILS.includes(p.email?.toLowerCase())
+      }));
+
       return new Response(JSON.stringify({ success: true, profiles }), {
         status: 200,
         headers: { 'Content-Type': 'application/json' }
@@ -57,7 +62,7 @@ export const ALL: APIRoute = async ({ request }) => {
       if (targetEmail && SUPERADMIN_EMAILS.includes(targetEmail.toLowerCase()) && role !== 'superadmin') {
         return new Response(JSON.stringify({
           success: false,
-          error: 'No está permitido degradar al Superadministrador principal (contacto@politicheck.com.ar).'
+          error: 'No está permitido degradar al Superadministrador principal.'
         }), {
           status: 400,
           headers: { 'Content-Type': 'application/json' }
