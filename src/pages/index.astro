@@ -3,7 +3,6 @@ import Layout from '../layouts/Layout.astro';
 import StoryCard from '../components/StoryCard.astro';
 import LiveFeedItem from '../components/LiveFeedItem.astro';
 import PromiseCard from '../components/PromiseCard.astro';
-import { MOCK_STORIES, MOCK_LIVE_FEED, MOCK_FOREIGN_STORIES } from '../data/mockData';
 import { getCachedArticles, getCachedForeignArticles } from '../services/rss/sync';
 import { 
   clusterArticlesWithGemini, 
@@ -19,29 +18,27 @@ const allPromises = getPromises();
 const promisesStats = getPromisesStats(allPromises);
 const uniqueCandidates = Array.from(new Set(allPromises.map(p => p.candidate)));
 
-// Fetch live articles cached from official RSS feeds
+// Fetch live articles cached from official RSS feeds (No mocks)
 const cachedArticles = getCachedArticles();
-const liveArticles = cachedArticles.length > 0 ? cachedArticles : MOCK_LIVE_FEED;
+const liveArticles = cachedArticles;
 
 // Generate clustered stories dynamically from live articles (Cache-first to protect Gemini quota)
 const cachedClusters = getCachedClusteredStories();
 const dynamicStories = cachedClusters.length > 0 
   ? cachedClusters 
-  : await clusterArticlesWithGemini(liveArticles, import.meta.env.GEMINI_API_KEY);
-const storiesToDisplay = dynamicStories.length > 0 ? dynamicStories : MOCK_STORIES;
+  : (liveArticles.length > 0 ? await clusterArticlesWithGemini(liveArticles, import.meta.env.GEMINI_API_KEY) : []);
+const storiesToDisplay = dynamicStories;
 
 // Dynamic Foreign Stories for "La Mirada Exterior"
 const cachedForeignArticles = getCachedForeignArticles();
 const cachedForeignClusters = getCachedForeignClusters();
 const dynamicForeignStories = cachedForeignClusters.length > 0
   ? cachedForeignClusters
-  : cachedForeignArticles.length > 0
+  : (cachedForeignArticles.length > 0
     ? await clusterForeignArticlesWithGemini(cachedForeignArticles, import.meta.env.GEMINI_API_KEY)
-    : [];
+    : []);
 
-const foreignStoriesToDisplay = dynamicForeignStories.length > 0 
-  ? dynamicForeignStories 
-  : MOCK_FOREIGN_STORIES;
+const foreignStoriesToDisplay = dynamicForeignStories;
 
 const leadStory = storiesToDisplay[0];
 const secondaryStories = storiesToDisplay.slice(1);
@@ -106,9 +103,15 @@ const fullLiveFeedArticles = liveArticles.slice(0, 60);
         </div>
 
         <div id="lead-story-slot" class="w-full">
-          <div id="grand-opening-card-wrapper" class="story-item" data-category={leadStory.category} data-text={`${leadStory.neutralHeadline} ${leadStory.summary} ${leadStory.articles.map(a => a.title + ' ' + a.outletName).join(' ')}`}>
-            <StoryCard story={leadStory} />
-          </div>
+          {leadStory ? (
+            <div id="grand-opening-card-wrapper" class="story-item" data-category={leadStory.category} data-text={`${leadStory.neutralHeadline} ${leadStory.summary} ${leadStory.articles.map(a => a.title + ' ' + a.outletName).join(' ')}`}>
+              <StoryCard story={leadStory} />
+            </div>
+          ) : (
+            <div class="p-8 text-center rounded-2xl bg-white dark:bg-slate-900/60 border border-dashed border-slate-300 dark:border-slate-800 text-xs font-mono text-slate-500">
+              Sincronizando flujo de noticias oficiales...
+            </div>
+          )}
         </div>
       </div>
 

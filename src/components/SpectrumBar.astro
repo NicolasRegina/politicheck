@@ -1,6 +1,6 @@
 ---
 import type { SpectrumBreakdown, Article } from '../types';
-import { OUTLETS } from '../data/mockData';
+import { getOutletMeta } from '../utils/outlets';
 
 interface Props {
   spectrum?: SpectrumBreakdown;
@@ -18,7 +18,7 @@ if (articles && articles.length > 0) {
   let opo = 0;
 
   articles.forEach((a) => {
-    const outlet = OUTLETS[a.outletId];
+    const outlet = getOutletMeta(a.outletId);
     const leaning = outlet?.baselineLeaning || 'centro_datos';
     if (leaning === 'oficialismo') ofi++;
     else if (leaning === 'oposicion') opo++;

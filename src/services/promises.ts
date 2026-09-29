@@ -2,9 +2,10 @@ import fs from 'node:fs';
 import path from 'node:path';
 import crypto from 'node:crypto';
 import type { CampaignPromise, CitizenVoteRecord } from '../types';
-import { MOCK_PROMISES } from '../data/mockData';
+import rawPromises from '../data/promises.json';
 import { recordSupabaseVote, getSupabaseVotesAggregated } from './supabase';
 
+const defaultPromises: CampaignPromise[] = rawPromises as CampaignPromise[];
 const PROMISES_FILE = path.resolve(process.cwd(), 'src/data/promises.json');
 const VOTES_FILE = path.resolve(process.cwd(), 'src/data/citizen_votes.json');
 const SALT = process.env.VOTE_SALT || 'politicheck-civic-secret-salt-2027';
@@ -39,27 +40,30 @@ export function saveCitizenVotes(votes: CitizenVoteRecord[]): void {
 
 export function getPromises(): CampaignPromise[] {
   try {
+    let list = defaultPromises;
     if (fs.existsSync(PROMISES_FILE)) {
       const data = fs.readFileSync(PROMISES_FILE, 'utf-8');
       const parsed = JSON.parse(data) as CampaignPromise[];
       if (Array.isArray(parsed) && parsed.length > 0) {
-        // Aggregate real votes strictly from votes log
-        const votesLog = getCitizenVotes();
-        parsed.forEach(p => {
-          const promiseVotes = votesLog.filter(v => v.promiseId === p.id);
-          p.votes = {
-            fulfilled: promiseVotes.filter(v => v.voteType === 'fulfilled').length,
-            inProgress: promiseVotes.filter(v => v.voteType === 'inProgress').length,
-            broken: promiseVotes.filter(v => v.voteType === 'broken').length
-          };
-        });
-        return parsed;
+        list = parsed;
       }
     }
+
+    // Aggregate real votes strictly from votes log
+    const votesLog = getCitizenVotes();
+    list.forEach(p => {
+      const promiseVotes = votesLog.filter(v => v.promiseId === p.id);
+      p.votes = {
+        fulfilled: promiseVotes.filter(v => v.voteType === 'fulfilled').length,
+        inProgress: promiseVotes.filter(v => v.voteType === 'inProgress').length,
+        broken: promiseVotes.filter(v => v.voteType === 'broken').length
+      };
+    });
+    return list;
   } catch (error) {
     console.error('[Promises Service] Error reading promises file:', error);
   }
-  return MOCK_PROMISES;
+  return defaultPromises;
 }
 
 export function getPromiseById(id: string): CampaignPromise | undefined {

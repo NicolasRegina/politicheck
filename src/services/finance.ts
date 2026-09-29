@@ -1,3 +1,6 @@
+import fs from 'node:fs';
+import path from 'node:path';
+
 export interface ExchangeRate {
   casa: string;
   nombre: string;
@@ -12,6 +15,7 @@ export interface FinancialTickerData {
   mep: number;
   ccl: number;
   riesgoPais: number;
+  ipc: number;
   lastUpdated: string;
 }
 
@@ -20,7 +24,27 @@ export interface WeatherData {
   conditionText: string;
 }
 
+const CACHE_FILE = path.resolve(process.cwd(), 'src/data/latest_finance.json');
+
+function getCachedFinance(): FinancialTickerData | null {
+  try {
+    if (fs.existsSync(CACHE_FILE)) {
+      const raw = fs.readFileSync(CACHE_FILE, 'utf-8');
+      return JSON.parse(raw);
+    }
+  } catch {}
+  return null;
+}
+
+function saveCachedFinance(data: FinancialTickerData): void {
+  try {
+    fs.writeFileSync(CACHE_FILE, JSON.stringify(data, null, 2), 'utf-8');
+  } catch {}
+}
+
 export async function fetchLiveFinancialData(): Promise<FinancialTickerData | null> {
+  const cached = getCachedFinance();
+
   try {
     const res = await fetch('https://dolarapi.com/v1/dolares', {
       headers: { Accept: 'application/json' }
@@ -28,13 +52,14 @@ export async function fetchLiveFinancialData(): Promise<FinancialTickerData | nu
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
     const data: ExchangeRate[] = await res.json();
 
-    const blue = data.find(d => d.casa === 'blue')?.venta ?? 1340;
-    const oficial = data.find(d => d.casa === 'oficial')?.venta ?? 1020;
-    const mep = data.find(d => d.casa === 'bolsa')?.venta ?? 1285;
-    const ccl = data.find(d => d.casa === 'contadoconliqui')?.venta ?? 1310;
+    const blue = data.find(d => d.casa === 'blue')?.venta ?? cached?.blue ?? 1555;
+    const oficial = data.find(d => d.casa === 'oficial')?.venta ?? cached?.oficial ?? 1545;
+    const mep = Math.round(data.find(d => d.casa === 'bolsa')?.venta ?? cached?.mep ?? 1548);
+    const ccl = Math.round(data.find(d => d.casa === 'contadoconliqui')?.venta ?? cached?.ccl ?? 1615);
     const lastUpdated = data[0]?.fechaActualizacion || new Date().toISOString();
 
-    let riesgoPais = 628;
+    // 1. Live Riesgo País
+    let riesgoPais = cached?.riesgoPais ?? 628;
     try {
       const rpRes = await fetch('https://api.argentinadatos.com/v1/finanzas/indices/riesgo-pais/ultimo');
       if (rpRes.ok) {
@@ -43,10 +68,33 @@ export async function fetchLiveFinancialData(): Promise<FinancialTickerData | nu
       }
     } catch {}
 
-    return { blue, oficial, mep, ccl, riesgoPais, lastUpdated };
+    // 2. Live INDEC Monthly Inflation (IPC)
+    let ipc = cached?.ipc ?? 1.7;
+    try {
+      const ipcRes = await fetch('https://api.argentinadatos.com/v1/finanzas/indices/inflacion');
+      if (ipcRes.ok) {
+        const ipcData = await ipcRes.json();
+        if (Array.isArray(ipcData) && ipcData.length > 0) {
+          const latest = ipcData[ipcData.length - 1];
+          if (typeof latest.valor === 'number') ipc = latest.valor;
+        }
+      }
+    } catch {}
+
+    const result: FinancialTickerData = { blue, oficial, mep, ccl, riesgoPais, ipc, lastUpdated };
+    saveCachedFinance(result);
+    return result;
   } catch (err) {
-    console.warn('[FinanceService] Could not fetch live dollar rates, using fallback:', err);
-    return null;
+    console.warn('[FinanceService] Could not fetch live dollar rates, using cached/fallback:', err);
+    return cached ?? {
+      blue: 1555,
+      oficial: 1545,
+      mep: 1548,
+      ccl: 1615,
+      riesgoPais: 628,
+      ipc: 1.7,
+      lastUpdated: new Date().toISOString()
+    };
   }
 }
 

@@ -1,7 +1,6 @@
 import type { APIRoute } from 'astro';
 import { getCachedArticles } from '../../../services/rss/sync';
 import { getCachedClusteredStories } from '../../../services/ai/clustering';
-import { MOCK_STORIES } from '../../../data/mockData';
 import { detectBreakingNews } from '../../../services/breaking';
 
 export const prerender = false;
@@ -9,11 +8,7 @@ export const prerender = false;
 export const GET: APIRoute = async () => {
   try {
     const articles = getCachedArticles();
-    let stories = getCachedClusteredStories();
-    if (stories.length === 0) {
-      stories = MOCK_STORIES;
-    }
-
+    const stories = getCachedClusteredStories();
     const breakingAlert = detectBreakingNews(stories, articles);
 
     return new Response(

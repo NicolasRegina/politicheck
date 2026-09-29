@@ -1,7 +1,6 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import type { Article, StoryCluster, SpectrumBreakdown } from '../../types';
-import { OUTLETS, MOCK_STORIES } from '../../data/mockData';
 import { saveNewsClustersToSupabase, getNewsClustersFromSupabase } from '../supabase';
 
 const CLUSTERED_STORIES_FILE = path.resolve(process.cwd(), 'src/data/clustered_stories.json');
@@ -65,7 +64,7 @@ export function getStoryClusterById(id: string): StoryCluster | undefined {
   const foundInForeign = cachedForeign.find(s => s.id === id);
   if (foundInForeign) return foundInForeign;
 
-  return MOCK_STORIES.find(s => s.id === id);
+  return undefined;
 }
 
 interface GeminiClusterResponse {

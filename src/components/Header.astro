@@ -3,7 +3,6 @@ import { fetchLiveFinancialData, fetchLiveWeather } from '../services/finance';
 import BreakingBanner from './BreakingBanner.astro';
 import { detectBreakingNews } from '../services/breaking';
 import { getCachedClusteredStories } from '../services/ai/clustering';
-import { MOCK_STORIES } from '../data/mockData';
 import { getLastSyncTimestamp } from '../services/rss/sync';
 
 interface Props {
@@ -16,16 +15,25 @@ const { activeTab = 'temas-del-dia' } = Astro.props;
 const finance = await fetchLiveFinancialData();
 const weather = await fetchLiveWeather();
 
-const initialBlue = finance ? finance.blue : 1340;
-const initialOficial = finance ? finance.oficial : 1020;
-const initialMep = finance ? finance.mep : 1285;
+const initialBlue = finance ? finance.blue : 1555;
+const initialOficial = finance ? finance.oficial : 1545;
+const initialMep = finance ? finance.mep : 1548;
 const initialRiesgoPais = finance ? finance.riesgoPais : 628;
+const initialIpc = finance ? finance.ipc : 1.7;
 const initialTemp = weather ? weather.temperature : 19;
 
-// Detect active breaking news
+// Dynamic server-rendered live date in Spanish
+const now = new Date();
+const serverDateFormatted = new Intl.DateTimeFormat('es-AR', {
+  weekday: 'long',
+  day: 'numeric',
+  month: 'long',
+  year: 'numeric'
+}).format(now);
+
+// Detect active breaking news strictly from real clustered stories (No mocks)
 const cachedStories = getCachedClusteredStories();
-const storiesForAlert = cachedStories.length > 0 ? cachedStories : MOCK_STORIES;
-const breakingAlert = detectBreakingNews(storiesForAlert);
+const breakingAlert = detectBreakingNews(cachedStories);
 
 // Get real server sync timestamp
 const serverSyncIso = getLastSyncTimestamp() || new Date().toISOString();
@@ -38,7 +46,7 @@ const serverSyncIso = getLastSyncTimestamp() || new Date().toISOString();
       <!-- Date & Weather (Dynamic) -->
       <div class="flex items-center gap-3">
         <span class="font-semibold text-slate-800 dark:text-slate-200 capitalize" id="ticker-live-date">
-          Sábado, 26 de septiembre de 2026
+          {serverDateFormatted}
         </span>
         <span class="text-slate-300 dark:text-slate-700">•</span>
         <span class="hidden sm:inline text-slate-600 dark:text-slate-400" id="ticker-live-weather">
@@ -68,9 +76,9 @@ const serverSyncIso = getLastSyncTimestamp() || new Date().toISOString();
           <span class="font-bold text-slate-900 dark:text-slate-100" id="ticker-riesgo-val">{initialRiesgoPais} pts</span>
         </div>
         <span class="text-slate-300 dark:text-slate-700">|</span>
-        <div class="flex items-center gap-1.5">
+        <div class="flex items-center gap-1.5" title="Índice de Precios al Consumidor mensual (INDEC / argentinadatos.com)">
           <span class="text-slate-500 dark:text-slate-400">IPC MENSUAL:</span>
-          <span class="font-bold text-emerald-700 dark:text-emerald-400">2,4%</span>
+          <span class="font-bold text-emerald-700 dark:text-emerald-400" id="ticker-ipc-val">{initialIpc.toString().replace('.', ',')}%</span>
         </div>
       </div>
 
@@ -457,6 +465,20 @@ const serverSyncIso = getLastSyncTimestamp() || new Date().toISOString();
       if (d && typeof d.valor === 'number') {
         const rpEl = document.getElementById('ticker-riesgo-val');
         if (rpEl) rpEl.textContent = `${d.valor} pts`;
+      }
+    })
+    .catch(() => {});
+
+  // Background fetch for live INDEC monthly inflation (IPC)
+  fetch('https://api.argentinadatos.com/v1/finanzas/indices/inflacion')
+    .then(r => r.json())
+    .then(data => {
+      if (Array.isArray(data) && data.length > 0) {
+        const latest = data[data.length - 1];
+        if (typeof latest.valor === 'number') {
+          const ipcEl = document.getElementById('ticker-ipc-val');
+          if (ipcEl) ipcEl.textContent = `${latest.valor.toString().replace('.', ',')}%`;
+        }
       }
     })
     .catch(() => {});
