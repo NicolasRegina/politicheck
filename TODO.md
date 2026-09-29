@@ -138,15 +138,32 @@
   - Algoritmo de rescate para complementar con rule-based en caso de que Gemini devuelva menos de 3 clusters.
 - [x] **Ordenamiento Cronológico Universal de Noticias (`sync.ts` y `parser.ts`):**
   - Incorporación de `timestamp` epoch en cada artículo.
-  - Ordenamiento estricto descendente de los 878 artículos cruzados: la pestaña "Minuto a Minuto" ahora mezcla dinámicamente Clarín, Infobae, La Nación, TN, Página 12, Ámbito, El Cronista, Crónica y Perfil por orden de publicación en vivo, eliminando el monopolio de un solo medio.
+  - Ordenamiento estricto descendente de los artículos: la pestaña "Minuto a Minuto" ahora mezcla dinámicamente Clarín, Infobae, La Nación, TN, Página 12, Ámbito, El Cronista, Crónica y Perfil por orden de publicación en vivo, eliminando el monopolio de un solo medio.
   - Ampliación de la vista completa de Minuto a Minuto a 60 notas en vivo (en vez de 20).
 - [x] **Apertura de Tapa Reactiva a Filtros de Categoría (`index.astro`):**
   - Encabezados dinámicos que informan la sección filtrada (`Cobertura en Sección: POLÍTICA (X historias)`).
   - Desplazamiento suave directo a las historias que coinciden con la sección seleccionada.
-- [x] **Transparencia de Horarios y Retiro del Botón Público:**
-  - Reemplazo del texto ambiguo "Hace +1 hora" por el horario exacto del servidor: `Hoy 21:15 hs (hace 4 min)`.
-  - Retiro del botón público de "Actualizar Noticias" y reemplazo por un badge institucional no intrusivo `🟢 EN VIVO • Sincronizado hoy`. El botón de sync manual queda reservado exclusivamente para el `/admin`.
-  - Cron de Vercel acelerado a **cada 15 minutos** (`*/15 * * * *` en `vercel.json`).
+- [x] **Transparencia de Horarios, Fallback de Auto-Sync y Botón EN VIVO:**
+  - `Header.astro` lee dinámicamente la marca de sincronización en la nube desde Supabase (`getLastSyncTimestampAsync()`).
+  - Cápsula interactiva `🟢 EN VIVO` en el encabezado con feedback y disparador manual de sincronización para lectores.
+  - **Auto-Sync Fallback bajo demanda**: si los feeds tienen más de 15 minutos, tanto el servidor en SSR como el navegador en segundo plano disparan la sincronización de feeds y el clúster de IA.
+  - **Auto-refresco reactivo sin F5**: polling cada 45 segundos que recarga la portada si el usuario está arriba, o muestra una pastilla no intrusiva si está scrolleado abajo.
+
+---
+
+### ✅ Tarea 11: Identidad Visual Oficial y Optimización de Activos — [COMPLETADA]
+- [x] **Isotipo Vectorial Oficial (`twitter_profile_logo`):**
+  - Vectorización matemática 1:1 en `public/favicon.svg` y `public/images/logo.svg` (círculo azul oscuro `#0B111A`, anillo marfil `#F4F2EB`, letra P arquitectónica blanca y tilde celeste argentino `#6BA4D9`).
+  - Creación del componente reutilizable `src/components/BrandLogo.astro`.
+  - Reemplazo de todos los marcadores simulados (`<div ...>P</div>`) en el popup de instalación PWA (`PwaBanner.astro`) y en el pie de página (`Footer.astro`).
+- [x] **Iconografía PWA Nativa:**
+  - Generación de `public/images/icon-192.png` y `public/images/icon-512.png` vinculados a `manifest.json` y cacheados en `sw.js`.
+- [x] **Estandarización de Imágenes de Dirigentes:**
+  - Redimensión y recorte de `mauricio-macri.jpg` de 844x1245px (806 KB) a 250x369px (17.8 KB), igualando la escala de Milei, Kicillof, Massa y Villarruel.
+- [x] **Auditoría Integral de Calidad (`code-tester`):**
+  - Corrección de 39 errores de TypeScript/Astro hasta alcanzar **0 errores y 0 advertencias** en los 44 archivos.
+  - Instalación de `@types/node` en devDependencies.
+  - Persistencia de historias internacionales en Supabase Postgres.
 
 ---
 

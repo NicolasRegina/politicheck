@@ -29,10 +29,12 @@ Politicheck agrega en tiempo real las noticias de los principales medios naciona
 
 ## 🛠️ Stack Tecnológico
 
-* **Framework:** [Astro 5](https://astro.build/) (Arquitectura de islas, híbrido SSR/SSG con `@astrojs/node`).
-* **Estilos:** [Tailwind CSS v4](https://tailwindcss.com/) con diseño editorial responsivo.
+* **Framework:** [Astro 5](https://astro.build/) (Arquitectura de islas, híbrido SSR/SSG con adaptador `@astrojs/vercel`).
+* **Base de Datos & Auth:** [Supabase](https://supabase.com/) (PostgreSQL Serverless, Auth y Storage).
+* **Estilos:** [Tailwind CSS v4](https://tailwindcss.com/) con diseño editorial responsivo y tokens monocromáticos.
 * **Inteligencia Artificial:** [Google Gemini 2.5 Flash](https://aistudio.google.com/) para clustering semántico y análisis de encuadres mediáticos.
-* **Datos y Feeds:** Parsing RSS oficial en tiempo real, APIs financieras argentinas y almacenamiento persistente.
+* **Datos y Feeds:** Parsing RSS oficial en tiempo real de 31 redacciones, APIs financieras argentinas (Dólar Oficial/Blue) y persistencia en Supabase.
+* **Infraestructura:** Vercel Serverless con Vercel Cron (`*/15 * * * *`).
 
 ---
 
@@ -40,7 +42,7 @@ Politicheck agrega en tiempo real las noticias de los principales medios naciona
 
 ### 1. Clonar el repositorio
 ```bash
-git clone https://github.com/tu-usuario/politicheck.git
+git clone https://github.com/NicolasRegina/politicheck.git
 cd politicheck
 ```
 
@@ -50,14 +52,17 @@ npm install
 ```
 
 ### 3. Configurar variables de entorno
-Copiá el archivo de ejemplo y completá tu clave de API:
+Copiá el archivo de ejemplo y completá tus claves de API:
 ```bash
 cp .env.example .env
 ```
-Editá `.env` y agregá tu clave de Google Gemini:
+Editá `.env` y agregá tus credenciales:
 ```env
 GEMINI_API_KEY=tu_api_key_de_gemini
-PORT=4321
+PUBLIC_SUPABASE_URL=tu_supabase_url
+PUBLIC_SUPABASE_ANON_KEY=tu_supabase_anon_key
+SUPABASE_SERVICE_ROLE_KEY=tu_service_role_key
+CRON_SECRET=tu_cron_secret
 ```
 
 ### 4. Iniciar el servidor de desarrollo

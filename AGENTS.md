@@ -19,3 +19,8 @@ Canonical triage roles (`needs-triage`, `needs-info`, `ready-for-agent`, `ready-
 ### Domain docs
 
 Single-context layout at repo root (`CONTEXT.md` and `docs/adr/`). See `docs/agents/domain.md`.
+
+### Session Handoff
+
+When transitioning between coding sessions or agents, use the `handoff` skill (`C:\Users\nicoj\.gemini\config\skills\handoff\SKILL.md`). Keep `TODO.md` and `CONTEXT.md` updated as the single source of truth for completed tasks and pending roadmap priorities.
+

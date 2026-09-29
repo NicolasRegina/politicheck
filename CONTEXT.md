@@ -57,3 +57,30 @@ _Evitar_: Discurso, propuesta vaga, declaración.
 **Estado de Cumplimiento (Promise Status)**:
 Clasificación objetiva del ciclo de vida de una promesa (ej. En campaña, En proceso, Cumplida, Incumplida, Trastocada).
 _Evitar_: Juicio de valor, opinión.
+
+---
+
+### Identidad Visual y Marca
+
+**Isotipo Oficial (P-Checkmark)**:
+Símbolo compuesto por un círculo base azul oscuro (`#0B111A`), anillo perimetral marfil (`#F4F2EB`), letra **P** arquitectónica en blanco puro (`#F8F9FA`) y tilde celeste bandera argentina (`#6BA4D9`). Representa simultáneamente política periodística y verificación factual. Utilizado en favicon, iconos PWA e identidad institucional.
+
+**Lienzo Monocromático**:
+Paleta técnica neutral (Zinc / Carbon / Slate) para todo el sitio, reservando colores partidarios única y estrictamente para la pertenencia política de los candidatos.
+
+---
+
+### Roles y Gobernanza (RBAC Supabase)
+
+**Superadministrador (Superadmin)**:
+Usuario supremo del sistema (`contacto@politicheck.com.ar`). Capacidad exclusiva de ABM sobre otros administradores y superadministradores, eliminación forzada de contenidos, moderación general y gestión de credenciales.
+
+**Administrador (Admin)**:
+Gestor editorial y publicitario. Puede administrar banners de patrocinio, previsualizar y sindicar contenido a X/Twitter, forzar sincronizaciones RSS y moderar reportes. No puede alterar perfiles de otros administradores.
+
+**Moderador (Moderator)**:
+Rol futuro orientado al control de mensajes en el chat electoral en vivo y foro cívico.
+
+**Ciudadano / Usuario (User)**:
+Participante democrático habilitado para votar en el Promesómetro, comentar en debates y contrastar fuentes sin recolección abusiva de datos personales.
+
