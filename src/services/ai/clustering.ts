@@ -200,10 +200,16 @@ Tu objetivo es analizar las siguientes noticias argentinas publicadas por distin
 Reglas estrictas:
 1. Agrupa solo aquellas noticias que cubren el mismo acontecimiento objetivo.
 2. PRIORIDAD MÁXIMA - COBERTURA MULTI-MEDIO: Tu objetivo primordial es agrupar historias de gran envergadura nacional donde la mayor cantidad posible de redacciones (4, 5, 6, 7 o más diarios distintos) estén informando sobre el mismo hecho central. NO te limites a solo 2 diarios: incluye a TODOS los medios del listado que hablen de dicho hecho para que la comparación de titulares y el espectro editorial sea lo más amplio y representativo posible.
-3. Escribe un titular neutral ("neutralHeadline") estrictamente factual, sin adjetivos tendenciosos.
-4. Redacta un dictamen comparativo de encuadres ("aiComparisonNotice") que explique con rigor periodístico: qué priorizó cada redacción en su titular y qué omitió.
-5. Clasifica la categoría ("Política", "Economía", "Sociedad", "Justicia" o "Internacional").
-6. Estima la distribución del espectro editorial (oficialismoPct, centroDatosPct, oposicionPct) sumando el 100%.
+3. VARIEDAD TEMÁTICA Y NÚMERO DE HISTORIAS (OBLIGATORIO):
+   Debes generar obligatoriamente entre 4 y 6 clusters/historias diferentes y equilibradas:
+   - Al menos 1 o 2 historias de "Política" (ej. declaraciones del gobierno, soberanía Malvinas, internas políticas, Congreso).
+   - Al menos 1 o 2 historias de "Economía" (ej. actividad económica, recesión, proyecciones de JP Morgan, dólar, deuda).
+   - Al menos 1 historia de "Sociedad", "Educación" o "Justicia" (ej. paros docentes/universitarios, reclamos salariales, fallos judiciales).
+   El primer cluster del array ("clusters[0]") será la Gran Apertura de Tapa de mayor trascendencia e impacto nacional.
+4. Escribe un titular neutral ("neutralHeadline") estrictamente factual, sin adjetivos tendenciosos.
+5. Redacta un dictamen comparativo de encuadres ("aiComparisonNotice") que explique con rigor periodístico: qué priorizó cada redacción en su titular y qué omitió.
+6. Clasifica la categoría ("Política", "Economía", "Sociedad", "Justicia" o "Internacional").
+7. Estima la distribución del espectro editorial (oficialismoPct, centroDatosPct, oposicionPct) sumando el 100%.
 
 Responde ÚNICAMENTE en formato JSON con la siguiente estructura:
 {
@@ -230,8 +236,8 @@ ${JSON.stringify(candidateArticles.map(a => ({ id: a.id, medio: a.outletName, ti
 `;
 
     const CANDIDATE_MODELS = [
-      'gemini-flash-latest',
       'gemini-flash-lite-latest',
+      'gemini-flash-latest',
       'gemini-3.5-flash-lite',
       'gemini-3.8-flash'
     ];
@@ -286,7 +292,12 @@ ${JSON.stringify(candidateArticles.map(a => ({ id: a.id, medio: a.outletName, ti
 
       // Pick best journalistic photo among the cluster
       const leadImgArticle = clusterArticles.find(a => Boolean(a.imageUrl));
-      const imageUrl = leadImgArticle?.imageUrl || '/images/malvinas.jpg';
+      const fallbackImg = c.category === 'Economía' 
+        ? '/images/regalias.jpg' 
+        : c.category === 'Sociedad' 
+          ? '/images/universidad.jpg' 
+          : '/images/malvinas.jpg';
+      const imageUrl = leadImgArticle?.imageUrl || fallbackImg;
 
       // Calculate spectrum deterministically from participating articles and their outlets
       let ofi = 0;
@@ -304,6 +315,12 @@ ${JSON.stringify(candidateArticles.map(a => ({ id: a.id, medio: a.outletName, ti
       const centroPct = Math.round((centro / total) * 100);
       const opoPct = Math.max(0, 100 - ofiPct - centroPct);
 
+      // Extract accurate timestamp from articles
+      const articleTimes = clusterArticles
+        .map(a => a.publishedAt)
+        .filter(t => t && t !== 'Reciente');
+      const formattedTimestamp = articleTimes[0] || (clusterArticles[0] ? 'Hoy' : 'Reciente');
+
       return {
         id: `story-ai-${idx + 1}`,
         isLeadStory: idx === 0,
@@ -311,7 +328,7 @@ ${JSON.stringify(candidateArticles.map(a => ({ id: a.id, medio: a.outletName, ti
         neutralHeadline: c.neutralHeadline,
         category: c.category,
         summary: c.summary,
-        updatedAt: 'Reciente',
+        updatedAt: formattedTimestamp,
         imageUrl,
         imageCaption: `Cobertura periodística de ${leadImgArticle?.outletName || 'prensa oficial'}.`,
         spectrum: {
@@ -324,6 +341,20 @@ ${JSON.stringify(candidateArticles.map(a => ({ id: a.id, medio: a.outletName, ti
         aiComparisonNotice: c.aiComparisonNotice
       };
     });
+
+    // Safeguard: If Gemini returned fewer than 3 clusters, complement with rule-based clusters to ensure multiple categories
+    if (stories.length < 3) {
+      console.log(`[AI Clustering] Gemini returned only ${stories.length} cluster(s). Complementing with rule-based stories to ensure balanced categories...`);
+      const fallbackStories = ruleBasedClustering(articles);
+      const existingHeadlines = new Set(stories.map(s => s.neutralHeadline.toLowerCase()));
+      for (const fb of fallbackStories) {
+        if (!existingHeadlines.has(fb.neutralHeadline.toLowerCase())) {
+          fb.isLeadStory = false;
+          fb.id = `story-fb-${stories.length + 1}`;
+          stories.push(fb);
+        }
+      }
+    }
 
     if (stories.length > 0) {
       saveClusteredStories(stories);

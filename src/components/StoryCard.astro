@@ -20,6 +20,10 @@ const storyUrl = `https://politicheck.com.ar/historia/${story.id}`;
 const waUrl = `https://api.whatsapp.com/send?text=${encodeURIComponent(viralShareText + ' ' + storyUrl)}`;
 const xUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(viralShareText)}&url=${encodeURIComponent(storyUrl)}`;
 const tgUrl = `https://t.me/share/url?url=${encodeURIComponent(storyUrl)}&text=${encodeURIComponent(viralShareText)}`;
+const validArticleTime = story.articles.map(a => a.publishedAt).find(t => t && t !== 'Reciente');
+const displayTimestamp = (story.updatedAt && story.updatedAt !== 'Reciente')
+  ? story.updatedAt
+  : (validArticleTime || 'Hoy');
 ---
 
 <article class={`bg-white dark:bg-[#0F1420] border border-slate-200 dark:border-slate-800/90 rounded-2xl shadow-xs overflow-hidden transition-all duration-300 hover:border-slate-300 dark:hover:border-slate-700 ${story.isLeadStory ? 'p-6 sm:p-8 space-y-6 ring-1 ring-slate-900/5 dark:ring-white/5' : 'p-5 sm:p-6 space-y-5'}`}>
@@ -36,7 +40,7 @@ const tgUrl = `https://t.me/share/url?url=${encodeURIComponent(storyUrl)}&text=$
         </span>
       )}
       <span class="text-slate-300 dark:text-slate-700">•</span>
-      <span class="font-mono text-[11px] text-slate-500 dark:text-slate-400">{story.updatedAt}</span>
+      <span class="font-mono text-[11px] text-slate-500 dark:text-slate-400">{displayTimestamp}</span>
     </div>
 
     <!-- Outlets count badge -->

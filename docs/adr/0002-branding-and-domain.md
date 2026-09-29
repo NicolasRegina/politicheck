@@ -9,4 +9,4 @@ El proyecto necesita un nombre de marca que comunique rigor cívico, neutralidad
    - "Politicheck" combina con claridad el foco político y la verificación objetiva sin connotación partidaria.
 2. **Estrategia de Dominio**:
    - Para Google / SEO no existe diferencia técnica entre `.ar` y `.com.ar` (ambos geolocalizan en Argentina con idéntico valor).
-   - Se recomienda registrar **`politicheck.com.ar`** (familiar para el usuario tradicional) y **`politicheck.ar`** (marca moderna y concisa), apuntando uno como dominio canónico y el otro mediante redirección 301.
+   - Se registró **`politicheck.com.ar`** (familiar para el usuario tradicional) y **`politicheck.ar`** (marca moderna y concisa), apuntando uno como dominio canónico y el otro mediante redirección 301.

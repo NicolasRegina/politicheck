@@ -127,3 +127,16 @@ export function getCachedForeignArticles(): Article[] {
   }
   return [];
 }
+
+export function getLastSyncTimestamp(): string | null {
+  try {
+    if (fs.existsSync(CACHE_FILE_PATH)) {
+      const content = fs.readFileSync(CACHE_FILE_PATH, 'utf-8');
+      const data: SyncResult = JSON.parse(content);
+      return data.timestamp || null;
+    }
+  } catch (err) {
+    console.warn('[RSS Sync] Could not read cache timestamp:', err);
+  }
+  return null;
+}

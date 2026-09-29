@@ -4,6 +4,7 @@ import BreakingBanner from './BreakingBanner.astro';
 import { detectBreakingNews } from '../services/breaking';
 import { getCachedClusteredStories } from '../services/ai/clustering';
 import { MOCK_STORIES } from '../data/mockData';
+import { getLastSyncTimestamp } from '../services/rss/sync';
 
 interface Props {
   activeTab?: string;
@@ -24,6 +25,9 @@ const initialTemp = weather ? weather.temperature : 19;
 const cachedStories = getCachedClusteredStories();
 const storiesForAlert = cachedStories.length > 0 ? cachedStories : MOCK_STORIES;
 const breakingAlert = detectBreakingNews(storiesForAlert);
+
+// Get real server sync timestamp
+const serverSyncIso = getLastSyncTimestamp() || new Date().toISOString();
 ---
 
 <header class="sticky top-0 z-50 bg-white/95 dark:bg-[#0A0E17]/95 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 transition-colors duration-200 shadow-xs">
@@ -87,8 +91,12 @@ const breakingAlert = detectBreakingNews(storiesForAlert);
           </svg>
         </button>
 
-        <span class="hidden sm:inline text-slate-400 dark:text-slate-500 text-[10px] font-mono" id="sync-time-ago">
-          Actualizado recién
+        <span 
+          class="hidden sm:inline text-slate-500 dark:text-slate-400 text-[10px] font-mono" 
+          id="sync-time-ago"
+          data-server-sync={serverSyncIso}
+        >
+          Sincronizado hoy
         </span>
 
         <span class="text-slate-300 dark:text-slate-700">•</span>
@@ -376,16 +384,41 @@ const breakingAlert = detectBreakingNews(storiesForAlert);
 
       // Filter stories on homepage
       const storyItems = document.querySelectorAll<HTMLElement>('.story-item');
+      const grandOpeningHeader = document.getElementById('grand-opening-header');
+      const grandOpeningLeadCard = document.querySelector<HTMLElement>('#grand-opening-card-wrapper');
+      const secondaryHeading = document.getElementById('secondary-stories-heading');
       let firstVisibleMatch: HTMLElement | null = null;
+      let visibleCount = 0;
+
       storyItems.forEach(item => {
         const itemCat = item.getAttribute('data-category');
         if (targetSec === 'all' || itemCat === targetSec) {
           item.style.display = '';
+          visibleCount++;
           if (!firstVisibleMatch) firstVisibleMatch = item;
         } else {
           item.style.display = 'none';
         }
       });
+
+      // Manage Gran Apertura Header visibility
+      if (grandOpeningHeader && grandOpeningLeadCard) {
+        const leadCat = grandOpeningLeadCard.getAttribute('data-category');
+        if (targetSec === 'all' || leadCat === targetSec) {
+          grandOpeningHeader.style.display = '';
+        } else {
+          grandOpeningHeader.style.display = 'none';
+        }
+      }
+
+      // Update secondary stories section heading dynamically
+      if (secondaryHeading) {
+        if (targetSec === 'all') {
+          secondaryHeading.textContent = 'Temas Destacados en Portada';
+        } else {
+          secondaryHeading.textContent = `Cobertura en Sección: ${targetSec.toUpperCase()} (${visibleCount} historias)`;
+        }
+      }
 
       // Filter status banner management
       const filterBanner = document.getElementById('filter-status-banner');
@@ -397,7 +430,7 @@ const breakingAlert = detectBreakingNews(storiesForAlert);
         } else {
           filterBanner.classList.remove('hidden');
           filterBanner.classList.add('flex');
-          filterText.textContent = targetSec;
+          filterText.textContent = `${targetSec} • ${visibleCount} historias encontradas`;
         }
       }
 
@@ -405,7 +438,7 @@ const breakingAlert = detectBreakingNews(storiesForAlert);
       if (targetSec === 'all') {
         window.scrollTo({ top: 0, behavior: 'smooth' });
       } else if (firstVisibleMatch) {
-        firstVisibleMatch.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        firstVisibleMatch.scrollIntoView({ behavior: 'smooth', block: 'start' });
       }
     });
   });
@@ -431,21 +464,35 @@ const breakingAlert = detectBreakingNews(storiesForAlert);
 
   function updateSyncTimeAgo() {
     if (!syncTimeAgo) return;
-    const lastSync = localStorage.getItem('politicheck_last_sync_timestamp');
-    if (!lastSync) {
+    const serverSync = syncTimeAgo.getAttribute('data-server-sync');
+    const localSync = localStorage.getItem('politicheck_last_sync_timestamp');
+
+    let syncTimeMs = serverSync ? new Date(serverSync).getTime() : 0;
+    if (localSync) {
+      const localMs = parseInt(localSync, 10);
+      if (localMs > syncTimeMs) syncTimeMs = localMs;
+    }
+
+    if (!syncTimeMs || isNaN(syncTimeMs)) {
       syncTimeAgo.textContent = 'Actualizado recién';
       return;
     }
-    const diffMs = Date.now() - parseInt(lastSync, 10);
+
+    const diffMs = Date.now() - syncTimeMs;
     const diffMins = Math.floor(diffMs / 60000);
+    const syncDate = new Date(syncTimeMs);
+    const timeFormatted = syncDate.toLocaleTimeString('es-AR', { hour: '2-digit', minute: '2-digit' }) + ' hs';
+
     if (diffMins < 1) {
-      syncTimeAgo.textContent = 'Actualizado recién';
-    } else if (diffMins === 1) {
-      syncTimeAgo.textContent = 'Hace 1 min';
+      syncTimeAgo.textContent = `Actualizado recién (${timeFormatted})`;
     } else if (diffMins < 60) {
-      syncTimeAgo.textContent = `Hace ${diffMins} min`;
+      syncTimeAgo.textContent = `Hace ${diffMins} min (${timeFormatted})`;
+    } else if (diffMins < 1440) {
+      const diffHours = Math.floor(diffMins / 60);
+      syncTimeAgo.textContent = `Hoy ${timeFormatted} (hace ${diffHours}h)`;
     } else {
-      syncTimeAgo.textContent = 'Hace +1 hora';
+      const dayFormatted = syncDate.toLocaleDateString('es-AR', { day: '2-digit', month: '2-digit' });
+      syncTimeAgo.textContent = `${dayFormatted} a las ${timeFormatted}`;
     }
   }
 

@@ -44,14 +44,31 @@ function saveLastTweetedData(data: LastTweetedData): void {
   }
 }
 
+function getEnvVar(key: string): string {
+  if (process.env[key]) return process.env[key]!;
+  if (typeof import.meta !== 'undefined' && (import.meta as any).env?.[key]) {
+    return (import.meta as any).env[key];
+  }
+  try {
+    const envPath = path.resolve(process.cwd(), '.env');
+    if (fs.existsSync(envPath)) {
+      const content = fs.readFileSync(envPath, 'utf-8');
+      const regex = new RegExp(`^${key}=(.+)$`, 'm');
+      const match = content.match(regex);
+      if (match && match[1]) return match[1].trim();
+    }
+  } catch (e) {}
+  return '';
+}
+
 /**
  * Returns TwitterApi client instance if environment credentials exist
  */
 export function getTwitterClient(): TwitterApi | null {
-  const appKey = process.env.TWITTER_API_KEY || process.env.TWITTER_CONSUMER_KEY;
-  const appSecret = process.env.TWITTER_API_SECRET || process.env.TWITTER_CONSUMER_SECRET;
-  const accessToken = process.env.TWITTER_ACCESS_TOKEN;
-  const accessSecret = process.env.TWITTER_ACCESS_TOKEN_SECRET;
+  const appKey = getEnvVar('TWITTER_API_KEY') || getEnvVar('TWITTER_CONSUMER_KEY');
+  const appSecret = getEnvVar('TWITTER_API_SECRET') || getEnvVar('TWITTER_CONSUMER_SECRET');
+  const accessToken = getEnvVar('TWITTER_ACCESS_TOKEN');
+  const accessSecret = getEnvVar('TWITTER_ACCESS_TOKEN_SECRET');
 
   if (!appKey || !appSecret || !accessToken || !accessSecret) {
     return null;

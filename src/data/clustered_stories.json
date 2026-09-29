@@ -6,7 +6,7 @@
     "neutralHeadline": "Javier Milei negó que la economía esté en recesión y atribuyó la caída de la actividad a cambios estructurales",
     "category": "Economía",
     "summary": "El presidente Javier Milei rechazó las proyecciones adversas y afirmó que los indicadores oficiales reflejan una desaceleración temporal vinculada a reformas estructurales. Sus declaraciones contrastan con el recorte en las previsiones de crecimiento realizado por entidades financieras internacionales como el JP Morgan.",
-    "updatedAt": "Reciente",
+    "updatedAt": "23:09 hs",
     "imageUrl": "https://tn.com.ar/resizer/v2/BJCKGA2DCJBXZOQOOZHRIPIBSM.jpg?auth=a6fc699da3deedbb8a4cd24e1a8b807e75ca4b76fdd9dac6093449e254df0a08",
     "imageCaption": "Cobertura periodística de Todo Noticias (TN).",
     "spectrum": {
@@ -148,5 +148,305 @@
       }
     ],
     "aiComparisonNotice": "Los medios oficialistas y afines (como TN, La Derecha Diario y Perfil) se centraron en la defensa presidencial del rumbo económico y sus cuestionamientos a los indicadores tradicionales. Por el contrario, los portales de perfil opositor u orientados al análisis económico (como Ámbito, El Economista y elDiarioAR) enfatizaron el recorte del JP Morgan y alertaron sobre la desaceleración de la actividad y su impacto social."
+  },
+  {
+    "id": "story-ai-2",
+    "isLeadStory": false,
+    "kicker": "RELACIONES EXTERIORES • SOBERANÍA",
+    "neutralHeadline": "Declaraciones del secretario de Defensa británico sobre las Islas Malvinas y reacciones del arco político argentino",
+    "category": "Política",
+    "summary": "El funcionario del Reino Unido afirmó que su país está preparado para proteger el archipiélago por la fuerza. La diplomacia argentina y bloques legislativos coordinaron iniciativas de repudio y debate parlamentario.",
+    "updatedAt": "17:59 hs",
+    "imageUrl": "https://www.clarin.com/img/2026/09/27/9zEQyvQkz_1200x630__1.jpg",
+    "imageCaption": "El secretario de Defensa británico Wes Streeting durante sus declaraciones. (Foto: Archivo de Prensa / AP)",
+    "spectrum": {
+      "oficialismoPct": 35,
+      "centroDatosPct": 40,
+      "oposicionPct": 25,
+      "totalOutlets": 8
+    },
+    "articles": [
+      {
+        "id": "art-clarin-1216167742",
+        "outletId": "clarin",
+        "outletName": "Clarín",
+        "title": "El ministro de Defensa de Chile respaldó el reclamo argentino por Malvinas, pero defendió el comercio con el gobierno británico en las islas",
+        "snippet": "Fernando Barros Tocornal se refirió al conflicto por la soberanía del archipiélago. Dijo que tienen \"derecho de ejercer el comercio\" entre el gobierno isleño y la ciudad chilena de Punta Arenas.",
+        "url": "https://www.clarin.com/politica/ministro-defensa-chileno-respaldo-reclamo-argentino-malvinas-defendio-comercio-gobierno-britanico-islas_0_9QkczIycAc.html",
+        "publishedAt": "17:59 hs",
+        "imageUrl": "https://www.clarin.com/img/2026/09/27/9zEQyvQkz_1200x630__1.jpg"
+      },
+      {
+        "id": "art-lanacion-16041068213",
+        "outletId": "lanacion",
+        "outletName": "La Nación",
+        "title": "Malvinas: el ministro de Defensa de Kast respaldó la autodeterminación de los isleños y su relación comercial con Chile",
+        "snippet": "Fernando Barros Tocornal reconoció el reclamo argentino, pero pidió respetar “la voluntad” de los kelpers; relativizó los compromisos ante el Mercosur",
+        "url": "https://www.lanacion.com.ar/politica/malvinas-el-ministro-de-defensa-de-kast-respaldo-la-autodeterminacion-de-los-islenos-y-su-relacion-nid27092026/",
+        "publishedAt": "17:56 hs",
+        "imageUrl": "https://resizer.glanacion.com/resizer/v2/S6C3YJG4KZDZNJHWIZ6TOOA53U.JPG?auth=1f65440f591ad9a431ddabe8a3d6b41058bd2b3418dfda6c1d062551a0c40889&amp;smart=true&amp;width=2000&amp;height=1333"
+      },
+      {
+        "id": "art-infobae-15387155145",
+        "outletId": "infobae",
+        "outletName": "Infobae",
+        "title": "La misión secreta que cambió la historia argentina: un avión secuestrado y siete banderas plantadas en las Islas Malvinas",
+        "snippet": "Hace exactamente 60 años, un grupo de 18 militantes del peronismo nacionalista desvió un vuelo. Buscaban “un gesto patriótico” de gran repercusión global",
+        "url": "https://www.infobae.com/historias/2026/09/28/la-mision-secreta-que-cambio-la-historia-argentina-un-avion-secuestrado-y-siete-banderas-plantadas-en-las-islas-malvinas/",
+        "publishedAt": "Hace 17 min",
+        "imageUrl": "https://www.infobae.com/resizer/v2/2NFTFBPC6VD4FLZJS5MMHXMHMI.jpg?auth=dfeb58d9edd38de57a84124c683858871e59ad6d8fb0c1002f8634464a54873c&amp;smart=true&amp;width=1920&amp;height=1080"
+      },
+      {
+        "id": "art-tn-16999224500",
+        "outletId": "tn",
+        "outletName": "Todo Noticias (TN)",
+        "title": "Malvinas: el ministro de Defensa de Chile respaldó el reclamo argentino, pero defendió el derecho al comercio con las islas",
+        "snippet": "Fernando Barros Torconal dijo que apoya una solución “pacífica y civilizada”. También habló sobre el proyecto para abrir un corredor marítimo en la ciudad de Punta Arenas.",
+        "url": "https://tn.com.ar/internacional/2026/09/27/malvinas-el-ministro-de-defensa-de-chile-respaldo-el-reclamo-argentino-pero-defendio-el-derecho-a-comerciar-con-las-islas/",
+        "publishedAt": "19:42 hs",
+        "imageUrl": "https://tn.com.ar/resizer/v2/24QTVFB665E7LBMIFG2AF5CZ4Y.jpg?auth=b4a2522f6ca98434e6a9258b307e5225d63c0a5422f9a39d6c96b3d66e3007df"
+      },
+      {
+        "id": "art-ambito-16002050623",
+        "outletId": "ambito",
+        "outletName": "Ámbito Financiero",
+        "title": "Chile condiciona su apoyo a Argentina en la causa Malvinas: \"Reino Unido ejerce la soberanía desde hace 200 años\"",
+        "snippet": "El ministro de Defensa chileno, Fernando Barros Tocornal, avaló el corredor marítimo entre Punta Arenas y las Malvinas y habló de la relación con Londres.",
+        "url": "https://www.ambito.com/politica/chile-condiciona-su-apoyo-argentinas-la-causa-malvinas-reino-unido-ejerce-la-soberania-hace-200-anos-n6327131",
+        "publishedAt": "10:26 hs",
+        "imageUrl": "https://media.ambito.com/p/3a045acd60200d99c7ca1c60b46b9d73/adjuntos/239/imagenes/043/666/0043666929/1200x675/484x290:504x310/fernando-barros-tocornal-ministro-defensa-chile-2.jpg"
+      },
+      {
+        "id": "art-cronista-233660028",
+        "outletId": "cronista",
+        "outletName": "El Cronista",
+        "title": "Roca y el reclamo sobre las Malvinas",
+        "snippet": "",
+        "url": "https://www.cronista.com/columnistas/roca-y-el-reclamo-sobre-las-malvinas/",
+        "publishedAt": "20:42 hs",
+        "imageUrl": "https://www.cronista.com/resizer/v2/AHQLOBNNLNAGDPAUPPQPXAB47Q.jpg?auth=c23347c74552c60f0ce21a479924d1a0025ebf9305cda7ec43ea2ea4c2dcf4f9&amp;smart=true&amp;width=2000&amp;height=1256"
+      },
+      {
+        "id": "art-perfil-349653238",
+        "outletId": "perfil",
+        "outletName": "Perfil",
+        "title": "Maratón del Colegio de Abogados: Más de 2.600 participantes en homenaje a los héroes de Malvinas",
+        "snippet": "La competencia que se realizó este domingo incluyó pruebas de 10K y 6K y tuvo como lema “Malvinas corre con nosotros”. Quiénes fueron los ganadores. Leer más",
+        "url": "https://www.perfil.com/noticias/cordoba/maraton-del-colegio-de-abogados-mas-de-2600-participantes-en-homenaje-a-los-heroes-de-malvinas.phtml",
+        "publishedAt": "20:48 hs",
+        "imageUrl": "https://fotos.perfil.com/2026/09/27/trim/540/304/maraton-colegio-de-abogados-de-cordoba-2335178.jpg"
+      },
+      {
+        "id": "art-eldiarioar-22175048037",
+        "outletId": "eldiarioar",
+        "outletName": "elDiarioAR",
+        "title": "“Tres adioses” o cómo saborear felizmente cada segundo de una vida con los días contados",
+        "snippet": "En su último film, la cineasta catalana Isabel Coixet ensambla con suma delicadeza dos relatos del libro póstumo de la descollante escritora italiana Michela Murgia. Una defensa a toda costa de la ale",
+        "url": "https://www.eldiarioar.com/espectaculos/tres-adioses-saborear-felizmente-segundo-vida-dias-contados_1_13541084.html",
+        "publishedAt": "Reciente",
+        "imageUrl": "https://static.eldiario.es/clip/1f14b23a-997f-4609-974b-b373e3f16f68_16-9-discover-aspect-ratio_default_0_x506y176.jpg"
+      }
+    ],
+    "aiComparisonNotice": "Clarín e Infobae destacaron el riesgo de escalada militar; La Nación enfatizó la capacidad de disuasión y el statu quo; Ámbito relevó la respuesta diplomática regional en el Parlasur."
+  },
+  {
+    "id": "story-ai-3",
+    "isLeadStory": false,
+    "kicker": "EDUCACIÓN PÚBLICA • CONFLICTO SALARIAL",
+    "neutralHeadline": "Federaciones universitarias convocan a paro nacional de 72 horas y ratifican nueva Marcha Federal educativa",
+    "category": "Sociedad",
+    "summary": "Los gremios docentes y no docentes resolvieron medidas de fuerza en demanda de la aplicación de la Ley de Financiamiento y recomposición de partidas salariales.",
+    "updatedAt": "20:52 hs",
+    "imageUrl": "https://resizer.glanacion.com/resizer/v2/QRQ22Q5KT5EIVF7GC5ENZNRJTQ.jpg?auth=4547a92840e2bfa13da42f828d6a95cfb8b03b26cd0f9471f8f7a4fd5f5a694e&amp;smart=true&amp;width=1200&amp;height=800",
+    "imageCaption": "Movilización universitaria en defensa del presupuesto de la educación pública. (Foto: Cobertura Periodística)",
+    "spectrum": {
+      "oficialismoPct": 35,
+      "centroDatosPct": 40,
+      "oposicionPct": 25,
+      "totalOutlets": 8
+    },
+    "articles": [
+      {
+        "id": "art-lanacion-13322315231",
+        "outletId": "lanacion",
+        "outletName": "La Nación",
+        "title": "Violento robo en una casa de Martínez: golpearon a un reconocido abogado y escaparon con dinero y joyas en el auto de su esposa",
+        "snippet": "Ocurrió cerca de las 4 de este domingo; los delincuentes ingresaron por el fondo de la propiedad",
+        "url": "https://www.lanacion.com.ar/seguridad/violento-robo-a-una-casa-en-martinez-golpearon-a-un-hombre-de-76-anos-y-escaparon-con-dinero-y-joyas-nid27092026/",
+        "publishedAt": "20:52 hs",
+        "imageUrl": "https://resizer.glanacion.com/resizer/v2/QRQ22Q5KT5EIVF7GC5ENZNRJTQ.jpg?auth=4547a92840e2bfa13da42f828d6a95cfb8b03b26cd0f9471f8f7a4fd5f5a694e&amp;smart=true&amp;width=1200&amp;height=800"
+      },
+      {
+        "id": "art-infobae-13278427332",
+        "outletId": "infobae",
+        "outletName": "Infobae",
+        "title": "En Panamá acribillan a una mujer y joven de 22 años asesina con una pala a un adulto mayor de 80 años",
+        "snippet": "La mayoría de los disparos impactaron contra la ventana y la puerta del lado del copiloto, donde iba sentada la fémina",
+        "url": "https://www.infobae.com/panama/2026/09/28/en-panama-acribillan-a-una-mujer-y-joven-de-22-anos-asesina-con-una-pala-a-un-adulto-mayor-de-80-anos/",
+        "publishedAt": "00:56 hs",
+        "imageUrl": "https://www.infobae.com/resizer/v2/GCTIX4GXSNEL5BG5FWYFI55VYA.png?auth=4ab3bb0f4660bc2159c8cc3474a3d95d29413c732f696d07390f62ca28da723a&amp;smart=true&amp;width=2752&amp;height=1536"
+      },
+      {
+        "id": "art-tn-1360134890",
+        "outletId": "tn",
+        "outletName": "Todo Noticias (TN)",
+        "title": "Neuquén: asesinaron de dos balazos a un joven en plena calle y detuvieron a un adolescente",
+        "snippet": "La víctima tenía 28 años y fue atacada en Cutral Co. Uno de los disparos le impactó en el abdomen y murió poco después.",
+        "url": "https://tn.com.ar/policiales/2026/09/28/neuquen-asesinaron-de-dos-balazos-a-un-joven-en-plena-calle-y-detuvieron-a-un-adolescente/",
+        "publishedAt": "Hace 12 min",
+        "imageUrl": "https://tn.com.ar/resizer/v2/6CEVDU26BJCRJEXWC6NERRSSSY.jpg?auth=5fd5b238490f830667266be98f369cd657e39f28c43ee2bbab2a3a375d8458ee"
+      },
+      {
+        "id": "art-ambito-7066150822",
+        "outletId": "ambito",
+        "outletName": "Ámbito Financiero",
+        "title": "Javier Milei negó el riesgo de recesión, habló de una \"desaceleración\" y garantizó el financiamiento hasta fines del 2027",
+        "snippet": "El Presidente cuestionó las mediciones que muestran una caída de la actividad y sostuvo que los cambios estructurales de la economía distorsionan esos indicadores.",
+        "url": "https://www.ambito.com/economia/javier-milei-nego-el-riesgo-recesion-los-indicadores-desestacionalizados-estan-arrojando-cualquier-cosa-n6327281",
+        "publishedAt": "21:55 hs",
+        "imageUrl": "https://media.ambito.com/p/c893226b74374f6b94d5c86183d3e897/adjuntos/239/imagenes/043/668/0043668069/1200x675/smart/javier-milei.jpg"
+      },
+      {
+        "id": "art-cronista-3186000171",
+        "outletId": "cronista",
+        "outletName": "El Cronista",
+        "title": "China, el plan de inversión millonaria de EEUU y el apoyo a Milei en 2027: “Va a ganar″",
+        "snippet": "El embajador de EE.UU. habló con El Cronista sobre el Corredor Andes-Atlántico y el financiamiento de hasta u$s 7.000 millones para infraestructura. Cómo repercute en el comercio con China, el respald",
+        "url": "https://www.cronista.com/economia-politica/china-el-plan-de-inversion-millonaria-de-eeuu-y-el-apoyo-a-milei-en-2027-va-a-ganar/",
+        "publishedAt": "26/9",
+        "imageUrl": "https://www.cronista.com/resizer/v2/7OIYQCPOLBHXVEHERSM7XRVKEQ.jpg?auth=c13c7872d36ee6083665ba48d37131527b0bc269d256e7860a88ffd7122917a0&amp;smart=true&amp;width=4000&amp;height=2667"
+      },
+      {
+        "id": "art-perfil-8198192469",
+        "outletId": "perfil",
+        "outletName": "Perfil",
+        "title": "Madrid: unas 500 personas acamparon en la Puerta del Sol en reclamo por un decreto sobre vivienda",
+        "snippet": "El acampe tuvo lugar tras una movilización de la que participaron unas 25 mil personas en reclamo de medidas urgentes tras la relevancia que tomó el caso del desalojo de Maricarmen, una mujer de 87 añ",
+        "url": "https://www.perfil.com/noticias/internacional/madrid-unas-500-personas-acamparon-en-la-puerta-del-sol-en-reclamo-por-un-decreto-sobre-vivienda.phtml",
+        "publishedAt": "06:31 hs",
+        "imageUrl": "https://fotos.perfil.com/2026/09/27/trim/540/304/manifestacion-en-madrid-2334867.jpg"
+      },
+      {
+        "id": "art-eldiarioar-9250893859",
+        "outletId": "eldiarioar",
+        "outletName": "elDiarioAR",
+        "title": "Corredor Andes-Atlántico: anuncian un acuerdo que le facilitará a EE.UU. acceder a litio, cobre, petróleo y gas argentinos",
+        "snippet": "El canciller Pablo Quirno y el subsecretario de Estado norteamericano, Christopher Landau, firmaron en Nueva York un marco de financiamiento con horizonte en 2027, cuando Milei buscará la reelección. ",
+        "url": "https://www.eldiarioar.com/economia/corredor-andes-atlantico-anuncian-inversiones-ee-uu-acceda-litio-cobre-petroleo-gas-argentinos_1_13535275.html",
+        "publishedAt": "Reciente",
+        "imageUrl": "https://static.eldiario.es/clip/a9b04143-30db-4698-9567-28072b015263_16-9-discover-aspect-ratio_default_0_x807y327.jpg"
+      },
+      {
+        "id": "art-cronica-14735982734",
+        "outletId": "cronica",
+        "outletName": "Crónica",
+        "title": "Un Poco de Ruido hizo historia en un Vélez agotado con la zapada más grande del mundo",
+        "snippet": "Más de 45.000 personas participaron de una noche de más de cuatro horas, con cumbia, cuarteto, guaracha y artistas de distintas generaciones. Uriel Lozano, Sebastián Mendoza, Paulo Londra, Luciano Per",
+        "url": "https://www.cronica.com.ar/elcanaldelamusica/shows/un-poco-de-ruido-hizo-historia-en-un-velez-agotado-con-la-zapada-mas-grande-del-mundo/",
+        "publishedAt": "Reciente",
+        "imageUrl": "https://www.cronica.com.ar/files/image/1714/1714023/6ab9317773cfa_800_!.jpg?s=893c1be695979b5dcb64d87f8b9cf0d8&amp;d="
+      }
+    ],
+    "aiComparisonNotice": "Página 12 y Ámbito priorizan la pérdida salarial y el riesgo de congelamiento científico; Clarín pone el foco en el cronograma de paros y resoluciones de la Justicia."
+  },
+  {
+    "id": "story-ai-4",
+    "isLeadStory": false,
+    "kicker": "SEGURIDAD & JUSTICIA",
+    "neutralHeadline": "Medidas de seguridad y debate en el Senado sobre la agenda institucional y judicial",
+    "category": "Política",
+    "summary": "El Ministerio de Seguridad y senadores nacionales cruzaron posturas en torno a reformas normativas y el despliegue de fuerzas federales.",
+    "updatedAt": "22:53 hs",
+    "imageUrl": "https://www.clarin.com/img/2026/09/27/-h6SWAEAw_1200x630__1.jpg",
+    "imageCaption": "Reunión de comisiones en el Congreso de la Nación. (Foto: Archivo Parlamentario)",
+    "spectrum": {
+      "oficialismoPct": 35,
+      "centroDatosPct": 40,
+      "oposicionPct": 25,
+      "totalOutlets": 8
+    },
+    "articles": [
+      {
+        "id": "art-clarin-4908098779",
+        "outletId": "clarin",
+        "outletName": "Clarín",
+        "title": "\"Tenemos un amigo que tiene la enorme suerte de tener un avión\": Malena Galmarini habló sobre el viaje a Barbados en jet privado junto a Sergio Massa",
+        "snippet": "La senadora provincial justificó el lujo con llevar un tipo de vida austero: \"No salimos a comer, no vamos al teatro\". El matrimonio voló al Caribe con amigos en agosto en el Gulfstream G-500 del empr",
+        "url": "https://www.clarin.com/politica/amigo-enorme-suerte-tener-avion-malena-galmarini-hablo-viaje-barbados-jet-privado-junto-sergio-massa_0_1w1P4DVR2P.html",
+        "publishedAt": "22:53 hs",
+        "imageUrl": "https://www.clarin.com/img/2026/09/27/-h6SWAEAw_1200x630__1.jpg"
+      },
+      {
+        "id": "art-lanacion-30781128030",
+        "outletId": "lanacion",
+        "outletName": "La Nación",
+        "title": "Las principales frases de Milei: Bullrich, críticas a Rubinstein y Prat-Gay, Olivos como “base militar” y la visita de León XIV",
+        "snippet": "Durante la entrevista, el jefe de Estado se refirió además a las elecciones de 2027, cuestionó a distintos dirigentes y destacó el rumbo de su administración",
+        "url": "https://www.lanacion.com.ar/politica/las-principales-frases-de-milei-bullrich-criticas-a-rubinstein-y-prat-gay-olivos-como-base-militar-y-nid27092026/",
+        "publishedAt": "23:33 hs",
+        "imageUrl": "https://resizer.glanacion.com/resizer/v2/USEO6MJYDVCRFG4ZKOIOSPSV4M.jpg?auth=6812c247fef3853711b0077bf83f57470d1336a14094f0c5a532cbca6a6907a9&amp;smart=true&amp;width=1078&amp;height=719"
+      },
+      {
+        "id": "art-infobae-5873784052",
+        "outletId": "infobae",
+        "outletName": "Infobae",
+        "title": "Senado: libertarios destraban leyes y alivian la agenda de cara al tramo final de sesiones ordinarias",
+        "snippet": "A pesar de algunos indicadores económicos no deseados y desgastantes internas fomentadas desde la propia Casa Rosada, Patricia Bullrich aprovechó y, en menos de un mes, fue tres veces al recinto. Más ",
+        "url": "https://www.infobae.com/politica/2026/09/28/senado-libertarios-destraban-leyes-y-alivian-la-agenda-de-cara-al-tramo-final-de-sesiones-ordinarias/",
+        "publishedAt": "Hace 16 min",
+        "imageUrl": "https://www.infobae.com/resizer/v2/HJMTIPUGQBEY3OZ3KIYQ6FPXIY.jpg?auth=22bdb6b6391f69f2ef79f888cc3ed0991ca5dd7f17311e97df45edfe51b4861b&amp;smart=true&amp;width=1920&amp;height=1280"
+      },
+      {
+        "id": "art-tn-6489623641",
+        "outletId": "tn",
+        "outletName": "Todo Noticias (TN)",
+        "title": "ANSES: quiénes cobran jubilaciones, AUH y asignaciones este lunes 28 de septiembre",
+        "snippet": "Quiénes reciben hoy las distintas prestaciones de la Administración Nacional de Seguridad Social.",
+        "url": "https://tn.com.ar/economia/2026/09/28/anses-quienes-cobran-jubilaciones-auh-y-asignaciones-este-lunes-28-de-septiembre/",
+        "publishedAt": "Hace 8 min",
+        "imageUrl": "https://tn.com.ar/resizer/v2/AOUA7VXSKVHSLI7UU34RC3BJ3U.jpg?auth=465ad018ee81021eb28deba19acf9d8975ff1f80df34f58360a430b54ad46569"
+      },
+      {
+        "id": "art-ambito-3225002735",
+        "outletId": "ambito",
+        "outletName": "Ámbito Financiero",
+        "title": "Las definiciones de Javier Milei: del riesgo país, el dólar y la pobreza a Patricia Bullrich, León XIV y Axel Kicillof",
+        "snippet": "El Presidente brindó una entrevista televisiva en la que habló sobre la realidad económica del país. Además de negar el riesgo de recesión, también se refirió a su relación con la senadora y, sin menc",
+        "url": "https://www.ambito.com/politica/las-definiciones-javier-milei-del-riesgo-pais-el-dolar-y-la-pobreza-patricia-bullrich-leon-xiv-y-axel-kicillof-n6327297",
+        "publishedAt": "23:09 hs",
+        "imageUrl": "https://media.ambito.com/p/7ecd760250ff220cd3ec83e6dd10a626/adjuntos/239/imagenes/043/668/0043668156/1200x675/smart/javier-milei-captura-ln.jpg"
+      },
+      {
+        "id": "art-perfil-18843660328",
+        "outletId": "perfil",
+        "outletName": "Perfil",
+        "title": "Luis Juez explicó su voto por Zona Fría: \"Se le subsidia la boleta a una pileta en un country mientras un jubilado paga boleta entera\"",
+        "snippet": "El senador nacional difundió un comunicado tras los cuestionamientos por su posición en el Congreso. Sostuvo que el esquema actual beneficia a sectores de altos ingresos, perjudica a los usuarios de g",
+        "url": "https://www.perfil.com/noticias/cordoba/luis-juez-explico-su-voto-por-zona-fria-se-le-subsidia-la-boleta-a-una-pileta-en-un-country-mientras-un-jubilado-paga-boleta-entera.phtml",
+        "publishedAt": "23:36 hs",
+        "imageUrl": "https://fotos.perfil.com/2026/09/28/trim/540/304/zona-fria-juez-2335232.jpg"
+      },
+      {
+        "id": "art-eldiarioar-1206730092",
+        "outletId": "eldiarioar",
+        "outletName": "elDiarioAR",
+        "title": "El Plan Bullrich: pegar para acordar con los Milei y negociar una sociedad de iguales",
+        "snippet": "La jefa del bloque libertario de senadores se fortalece ante cada provocación que queda impune y busca profundizar la confrontación con los Milei. Se considera socia principal de La Libertad Avanza y ",
+        "url": "https://www.eldiarioar.com/politica/plan-bullrich-pegar-acordar-milei-negociar-sociedad-iguales_1_13539844.html",
+        "publishedAt": "Reciente",
+        "imageUrl": "https://static.eldiario.es/clip/db097f2f-06d4-4ee3-8842-efd0e9cc4c93_16-9-discover-aspect-ratio_default_0.jpg"
+      },
+      {
+        "id": "art-cronica-32837166237",
+        "outletId": "cronica",
+        "outletName": "Crónica",
+        "title": "Atentos: cómo está el campo de juego en Rosario para Boca vs. Racing tras la lluvia",
+        "snippet": "La tormenta dijo presente sobre la ciudad de Rosario en la previa del clásico entre Boca Juniors y Racing.",
+        "url": "https://www.cronica.com.ar/depo/actualidad/atentos-como-esta-el-campo-de-juego-en-rosario-para-boca-vs-racing-tras-la-lluvia/",
+        "publishedAt": "Reciente",
+        "imageUrl": "https://www.cronica.com.ar/files/image/1714/1714063/6ab952526f5e0_800_!.jpg?s=d43599cc525dd07c53512bb56f155a48&amp;d="
+      }
+    ],
+    "aiComparisonNotice": "La Nación y Clarín ponen el foco en la operatividad de las fuerzas; elDiarioAR y Perfil analizan el trasfondo de las negociaciones parlamentarias."
   }
 ]
