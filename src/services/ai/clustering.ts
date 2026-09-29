@@ -21,6 +21,9 @@ export function saveClusteredStories(stories: StoryCluster[]) {
 export function saveForeignClusteredStories(stories: StoryCluster[]) {
   try {
     fs.writeFileSync(FOREIGN_CLUSTERED_STORIES_FILE, JSON.stringify(stories, null, 2), 'utf-8');
+    saveNewsClustersToSupabase(stories).catch(err => {
+      console.warn('[AI Clustering] Supabase foreign save notice:', err);
+    });
   } catch (err) {
     console.error('[AI Clustering] Error saving foreign clustered stories:', err);
   }

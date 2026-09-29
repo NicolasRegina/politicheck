@@ -2,7 +2,6 @@
 import type { StoryCluster } from '../types';
 import SpectrumBar from './SpectrumBar.astro';
 import HeadlineComparison from './HeadlineComparison.astro';
-import { getOutletMeta } from '../utils/outlets';
 
 interface Props {
   story: StoryCluster;
@@ -77,7 +76,7 @@ const displayTimestamp = (story.updatedAt && story.updatedAt !== 'Reciente')
                 fetchpriority="high"
                 decoding="async"
                 referrerpolicy="no-referrer"
-                onerror="const w = this.closest('.story-img-wrapper'); if (w) w.style.display = 'none';"
+                onerror="this.closest('.story-img-wrapper')?.style.setProperty('display', 'none');"
                 class="w-full h-full object-cover object-center"
               />
             </div>
@@ -110,7 +109,7 @@ const displayTimestamp = (story.updatedAt && story.updatedAt !== 'Reciente')
                 loading="lazy"
                 decoding="async"
                 referrerpolicy="no-referrer"
-                onerror="const w = this.closest('.story-img-wrapper'); if (w) w.style.display = 'none';"
+                onerror="this.closest('.story-img-wrapper')?.style.setProperty('display', 'none');"
                 class="w-full h-full object-cover object-center"
               />
             </div>

@@ -216,9 +216,12 @@ export async function autoTweetLatestStory(options: { force?: boolean; baseUrl?:
 
   // Check if there is an active breaking alert
   const breakingAlert = detectBreakingNews(stories, articles);
-  if (breakingAlert && breakingAlert.story) {
-    console.log(`[Twitter Bot] Detected breaking alert for story ${breakingAlert.story.id}. Priority tweeting.`);
-    return publishStoryTweet(breakingAlert.story, true, options);
+  if (breakingAlert && breakingAlert.storyId) {
+    const breakingStory = stories.find(s => s.id === breakingAlert.storyId);
+    if (breakingStory) {
+      console.log(`[Twitter Bot] Detected breaking alert for story ${breakingStory.id}. Priority tweeting.`);
+      return publishStoryTweet(breakingStory, true, options);
+    }
   }
 
   // Otherwise, tweet the grand lead story (Tapa del Día)

@@ -121,7 +121,7 @@ const fullLiveFeedArticles = liveArticles.slice(0, 60);
 
         <div id="lead-story-slot" class="w-full">
           {leadStory ? (
-            <div id="grand-opening-card-wrapper" class="story-item" data-category={leadStory.category} data-text={`${leadStory.neutralHeadline} ${leadStory.summary} ${leadStory.articles.map(a => a.title + ' ' + a.outletName).join(' ')}`}>
+            <div id="grand-opening-card-wrapper" class="story-item" data-category={leadStory.category} data-text={`${leadStory.neutralHeadline} ${leadStory.summary} ${leadStory.articles.map((a: any) => a.title + ' ' + a.outletName).join(' ')}`}>
               <StoryCard story={leadStory} />
             </div>
           ) : (
@@ -182,7 +182,7 @@ const fullLiveFeedArticles = liveArticles.slice(0, 60);
 
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 items-stretch" id="secondary-stories-grid">
         {secondaryStories.map((story) => (
-          <div class="story-item h-full flex flex-col" data-category={story.category} data-text={`${story.neutralHeadline} ${story.summary} ${story.articles.map(a => a.title + ' ' + a.outletName).join(' ')}`}>
+          <div class="story-item h-full flex flex-col" data-category={story.category} data-text={`${story.neutralHeadline} ${story.summary} ${story.articles.map((a: any) => a.title + ' ' + a.outletName).join(' ')}`}>
             <StoryCard story={story} />
           </div>
         ))}

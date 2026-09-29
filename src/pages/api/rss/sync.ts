@@ -1,5 +1,5 @@
 import type { APIRoute } from 'astro';
-import { syncAllRssFeeds, getCachedArticles, getLastSyncTimestamp, getLastSyncTimestampAsync } from '../../../services/rss/sync';
+import { syncAllRssFeeds, getLastSyncTimestampAsync } from '../../../services/rss/sync';
 import { 
   clusterArticlesWithGemini, 
   getCachedClusteredStories,
@@ -64,7 +64,7 @@ export const GET: APIRoute = async ({ request }) => {
     const existingForeignClusters = getCachedForeignClusters();
     const hasForeignClusters = existingForeignClusters.length > 0;
 
-    const shouldCluster = isAuthorizedAdmin || !hasClusters || !hasForeignClusters || (!isCooldownActive && newArticlesCount > 0);
+    const shouldCluster = forceRefresh || isAuthorizedAdmin || !hasClusters || !hasForeignClusters || (!isCooldownActive && newArticlesCount > 0);
 
     let clustersCount = 0;
     let foreignClustersCount = 0;

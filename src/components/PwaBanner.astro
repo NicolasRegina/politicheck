@@ -116,7 +116,7 @@ import BrandLogo from './BrandLogo.astro';
     installBtn.addEventListener('click', async () => {
       if (!deferredPrompt) return;
       deferredPrompt.prompt();
-      const { outcome } = await deferredPrompt.userChoice;
+      await deferredPrompt.userChoice;
       deferredPrompt = null;
       if (pwaBanner) pwaBanner.classList.add('hidden');
     });

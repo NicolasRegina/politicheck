@@ -20,7 +20,7 @@ export const ALL: APIRoute = async ({ request }) => {
         });
       }
 
-      const topStory = stories.find(s => s.isLead) || stories[0];
+      const topStory = stories.find(s => s.isLeadStory) || stories[0];
       const previewText = formatViralStoryTweet(topStory, false, origin);
 
       return new Response(
@@ -28,7 +28,7 @@ export const ALL: APIRoute = async ({ request }) => {
           success: true,
           preview: true,
           storyId: topStory.id,
-          storyTitle: topStory.title,
+          storyTitle: topStory.neutralHeadline,
           characterCount: previewText.length,
           tweetText: previewText
         }),

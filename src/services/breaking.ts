@@ -28,7 +28,7 @@ const URGENT_KEYWORDS = [
  */
 export function detectBreakingNews(
   stories: StoryCluster[], 
-  articles?: Article[]
+  _articles?: Article[]
 ): BreakingAlert | null {
   if (!stories || stories.length === 0) return null;
 

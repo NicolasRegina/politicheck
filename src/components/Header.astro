@@ -5,12 +5,6 @@ import { detectBreakingNews } from '../services/breaking';
 import { getCachedClusteredStories } from '../services/ai/clustering';
 import { getLastSyncTimestampAsync } from '../services/rss/sync';
 
-interface Props {
-  activeTab?: string;
-}
-
-const { activeTab = 'temas-del-dia' } = Astro.props;
-
 // Fetch initial data at build/render time
 const finance = await fetchLiveFinancialData();
 const weather = await fetchLiveWeather();

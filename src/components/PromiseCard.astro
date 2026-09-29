@@ -74,7 +74,6 @@ const promiseUrl = `https://politicheck.com.ar/promesa/${promise.id}`;
 const viralPromiseText = `🗳️ ¿Cumplió ${promise.candidate}? "${promise.promiseText}" — Veredicto: ${promise.statusLabel}. Votá en vivo y mirá la auditoría ciudadana en Politicheck:`;
 const waUrl = `https://api.whatsapp.com/send?text=${encodeURIComponent(viralPromiseText + ' ' + promiseUrl)}`;
 const xUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(viralPromiseText)}&url=${encodeURIComponent(promiseUrl)}`;
-const tgUrl = `https://t.me/share/url?url=${encodeURIComponent(promiseUrl)}&text=${encodeURIComponent(viralPromiseText)}`;
 ---
 
 <div 
