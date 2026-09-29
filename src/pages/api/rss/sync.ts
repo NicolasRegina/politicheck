@@ -10,6 +10,7 @@ import { getNewsClustersFromSupabase } from '../../../services/supabase';
 import { autoTweetLatestStory } from '../../../services/twitter';
 
 export const prerender = false;
+export const maxDuration = 60;
 
 // In-memory timestamp tracker for cooldown
 let lastClusterTimestamp = 0;

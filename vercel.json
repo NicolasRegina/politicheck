@@ -6,11 +6,6 @@
       "schedule": "0 0 * * *"
     }
   ],
-  "functions": {
-    "src/pages/api/rss/sync.ts": {
-      "maxDuration": 60
-    }
-  },
   "headers": [
     {
       "source": "/(.*)",
