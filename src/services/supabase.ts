@@ -1,7 +1,7 @@
 import { createClient } from '@supabase/supabase-js';
 
-const supabaseUrl = import.meta.env.SUPABASE_URL || process.env.SUPABASE_URL;
-const supabaseKey = import.meta.env.SUPABASE_ANON_KEY || process.env.SUPABASE_ANON_KEY;
+const supabaseUrl = import.meta.env?.SUPABASE_URL || process.env.SUPABASE_URL || import.meta.env?.PUBLIC_SUPABASE_URL || process.env.PUBLIC_SUPABASE_URL;
+const supabaseKey = import.meta.env?.SUPABASE_ANON_KEY || process.env.SUPABASE_ANON_KEY || import.meta.env?.PUBLIC_SUPABASE_ANON_KEY || process.env.PUBLIC_SUPABASE_ANON_KEY;
 
 export const isSupabaseConfigured = Boolean(supabaseUrl && supabaseKey);
 
@@ -166,6 +166,7 @@ export async function getNewsClustersFromSupabase(maxAgeMinutes = 1440): Promise
       .from('news_clusters')
       .select('*')
       .neq('id', 'live-feed-cache')
+      .neq('id', 'foreign-feed-cache')
       .gt('updated_at', minTime)
       .order('updated_at', { ascending: false });
 
@@ -269,3 +270,65 @@ export async function getLiveArticlesFromSupabase(): Promise<{ articles: any[]; 
     return null;
   }
 }
+
+/**
+ * Save foreign articles feed into Supabase cloud cache
+ */
+export async function saveLiveForeignArticlesToSupabase(articles: any[], timestamp?: string): Promise<boolean> {
+  if (!supabase || !articles || articles.length === 0) return false;
+
+  try {
+    const isoTimestamp = timestamp || new Date().toISOString();
+    const { error } = await supabase
+      .from('news_clusters')
+      .upsert({
+        id: 'foreign-feed-cache',
+        lead_title: 'FOREIGN_FEED_CACHE',
+        neutral_headline: 'Feed de prensa internacional sobre Argentina',
+        summary: 'Agregación consolidada de medios internacionales monitoreados',
+        category: 'Internacional',
+        spectrum: { oficialismoPct: 0, centroDatosPct: 100, oposicionPct: 0, totalOutlets: 1 },
+        articles: articles.slice(0, 100),
+        key_quotes: { timestamp: isoTimestamp, totalArticles: articles.length },
+        updated_at: isoTimestamp
+      }, { onConflict: 'id' });
+
+    if (error) {
+      console.warn('[Supabase] Error saving foreign feed cache:', error.message);
+      return false;
+    }
+    return true;
+  } catch (err: any) {
+    console.error('[Supabase] Exception saving foreign feed cache:', err.message);
+    return false;
+  }
+}
+
+/**
+ * Load foreign articles feed from Supabase cloud cache
+ */
+export async function getLiveForeignArticlesFromSupabase(): Promise<{ articles: any[]; timestamp: string } | null> {
+  if (!supabase) return null;
+
+  try {
+    const { data, error } = await supabase
+      .from('news_clusters')
+      .select('*')
+      .eq('id', 'foreign-feed-cache')
+      .maybeSingle();
+
+    if (error || !data || !Array.isArray(data.articles) || data.articles.length === 0) {
+      return null;
+    }
+
+    const meta = (typeof data.key_quotes === 'object' && data.key_quotes !== null) ? data.key_quotes : {};
+    return {
+      articles: data.articles,
+      timestamp: meta.timestamp || data.updated_at
+    };
+  } catch (err: any) {
+    console.error('[Supabase] Exception loading foreign feed cache:', err.message);
+    return null;
+  }
+}
+

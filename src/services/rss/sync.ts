@@ -94,11 +94,14 @@ export async function syncAllRssFeeds(): Promise<SyncResult> {
     foreignArticles: uniqueForeign
   };
 
-  // Save live feed to Supabase cloud cache
+  // Save live feed and foreign feed to Supabase cloud cache
   try {
-    const { saveLiveArticlesToSupabase } = await import('../supabase');
-    await saveLiveArticlesToSupabase(combinedArticles, syncResult.timestamp);
-    console.log(`[RSS Sync] Successfully saved ${combinedArticles.length} live articles to Supabase cloud cache.`);
+    const { saveLiveArticlesToSupabase, saveLiveForeignArticlesToSupabase } = await import('../supabase');
+    await Promise.all([
+      saveLiveArticlesToSupabase(combinedArticles, syncResult.timestamp),
+      saveLiveForeignArticlesToSupabase(uniqueForeign, syncResult.timestamp)
+    ]);
+    console.log(`[RSS Sync] Successfully saved ${combinedArticles.length} live articles and ${uniqueForeign.length} foreign articles to Supabase.`);
   } catch (supabaseErr) {
     console.warn('[RSS Sync] Could not save live feed to Supabase:', supabaseErr);
   }
@@ -156,6 +159,19 @@ export function getCachedForeignArticles(): Article[] {
     console.warn('[RSS Sync] Could not read foreign cache file, fallback to empty:', err);
   }
   return [];
+}
+
+export async function getCachedForeignArticlesAsync(): Promise<Article[]> {
+  try {
+    const { getLiveForeignArticlesFromSupabase } = await import('../supabase');
+    const cloudForeign = await getLiveForeignArticlesFromSupabase();
+    if (cloudForeign && cloudForeign.articles.length > 0) {
+      return cloudForeign.articles;
+    }
+  } catch (err) {
+    console.warn('[RSS Sync] Cloud foreign feed read error, fallback to local:', err);
+  }
+  return getCachedForeignArticles();
 }
 
 export function getLastSyncTimestamp(): string | null {

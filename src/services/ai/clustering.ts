@@ -59,6 +59,21 @@ export function getCachedForeignClusters(): StoryCluster[] {
   return [];
 }
 
+export async function getCachedForeignClustersAsync(): Promise<StoryCluster[]> {
+  try {
+    const dbClusters = await getNewsClustersFromSupabase(1440);
+    if (dbClusters && dbClusters.length > 0) {
+      const foreign = dbClusters.filter(c => c.category === 'Internacional' || c.kicker?.includes('MIRADA EXTERIOR'));
+      if (foreign.length > 0) {
+        return foreign;
+      }
+    }
+  } catch (err) {
+    console.warn('[AI Clustering] Supabase foreign clusters read error:', err);
+  }
+  return getCachedForeignClusters();
+}
+
 export function getStoryClusterById(id: string): StoryCluster | undefined {
   const cached = getCachedClusteredStories();
   const foundInCached = cached.find(s => s.id === id);
