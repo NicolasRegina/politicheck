@@ -19,6 +19,7 @@ const weather = await fetchLiveWeather();
 const initialBlue = finance ? finance.blue : 1340;
 const initialOficial = finance ? finance.oficial : 1020;
 const initialMep = finance ? finance.mep : 1285;
+const initialRiesgoPais = finance ? finance.riesgoPais : 628;
 const initialTemp = weather ? weather.temperature : 19;
 
 // Detect active breaking news
@@ -62,9 +63,9 @@ const serverSyncIso = getLastSyncTimestamp() || new Date().toISOString();
           <span class="font-bold text-slate-900 dark:text-slate-100" id="ticker-mep-val">${initialMep}</span>
         </div>
         <span class="text-slate-300 dark:text-slate-700">|</span>
-        <div class="flex items-center gap-1.5">
+        <div class="flex items-center gap-1.5" title="Riesgo País Argentina (argentinadatos.com)">
           <span class="text-slate-500 dark:text-slate-400">RIESGO PAÍS:</span>
-          <span class="font-bold text-slate-900 dark:text-slate-100">1.180 pts</span>
+          <span class="font-bold text-slate-900 dark:text-slate-100" id="ticker-riesgo-val">{initialRiesgoPais} pts</span>
         </div>
         <span class="text-slate-300 dark:text-slate-700">|</span>
         <div class="flex items-center gap-1.5">
@@ -375,64 +376,13 @@ const serverSyncIso = getLastSyncTimestamp() || new Date().toISOString();
       const mainTab = document.querySelector<HTMLButtonElement>('[data-tab="temas-del-dia"]');
       if (mainTab) mainTab.click();
 
-      // Filter stories on homepage
-      const storyItems = document.querySelectorAll<HTMLElement>('.story-item');
-      const grandOpeningHeader = document.getElementById('grand-opening-header');
-      const grandOpeningLeadCard = document.querySelector<HTMLElement>('#grand-opening-card-wrapper');
-      const secondaryHeading = document.getElementById('secondary-stories-heading');
-      let firstVisibleMatch: HTMLElement | null = null;
-      let visibleCount = 0;
-
-      storyItems.forEach(item => {
-        const itemCat = item.getAttribute('data-category');
-        if (targetSec === 'all' || itemCat === targetSec) {
-          item.style.display = '';
-          visibleCount++;
-          if (!firstVisibleMatch) firstVisibleMatch = item;
-        } else {
-          item.style.display = 'none';
-        }
-      });
-
-      // Manage Gran Apertura Header visibility
-      if (grandOpeningHeader && grandOpeningLeadCard) {
-        const leadCat = grandOpeningLeadCard.getAttribute('data-category');
-        if (targetSec === 'all' || leadCat === targetSec) {
-          grandOpeningHeader.style.display = '';
-        } else {
-          grandOpeningHeader.style.display = 'none';
-        }
+      // Delegate dynamic lead promotion and filtering to page layout manager
+      if (typeof (window as any).politicheckFilterCategory === 'function') {
+        (window as any).politicheckFilterCategory(targetSec);
       }
 
-      // Update secondary stories section heading dynamically
-      if (secondaryHeading) {
-        if (targetSec === 'all') {
-          secondaryHeading.textContent = 'Temas Destacados en Portada';
-        } else {
-          secondaryHeading.textContent = `Cobertura en Sección: ${targetSec.toUpperCase()} (${visibleCount} historias)`;
-        }
-      }
-
-      // Filter status banner management
-      const filterBanner = document.getElementById('filter-status-banner');
-      const filterText = document.getElementById('filter-status-text');
-      if (filterBanner && filterText) {
-        if (targetSec === 'all') {
-          filterBanner.classList.add('hidden');
-          filterBanner.classList.remove('flex');
-        } else {
-          filterBanner.classList.remove('hidden');
-          filterBanner.classList.add('flex');
-          filterText.textContent = `${targetSec} • ${visibleCount} historias encontradas`;
-        }
-      }
-
-      // Smooth scroll to top of news grid or matching story
-      if (targetSec === 'all') {
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-      } else if (firstVisibleMatch) {
-        firstVisibleMatch.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      }
+      // Smooth scroll to top
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     });
   });
 
@@ -496,6 +446,17 @@ const serverSyncIso = getLastSyncTimestamp() || new Date().toISOString();
       if (data.lastSyncTimestamp && syncTimeAgo) {
         syncTimeAgo.setAttribute('data-server-sync', data.lastSyncTimestamp);
         updateSyncTimeAgo();
+      }
+    })
+    .catch(() => {});
+
+  // Background fetch for Riesgo País live update
+  fetch('https://api.argentinadatos.com/v1/finanzas/indices/riesgo-pais/ultimo')
+    .then(r => r.json())
+    .then(d => {
+      if (d && typeof d.valor === 'number') {
+        const rpEl = document.getElementById('ticker-riesgo-val');
+        if (rpEl) rpEl.textContent = `${d.valor} pts`;
       }
     })
     .catch(() => {});

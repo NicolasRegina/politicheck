@@ -11,6 +11,7 @@ export interface FinancialTickerData {
   oficial: number;
   mep: number;
   ccl: number;
+  riesgoPais: number;
   lastUpdated: string;
 }
 
@@ -33,7 +34,16 @@ export async function fetchLiveFinancialData(): Promise<FinancialTickerData | nu
     const ccl = data.find(d => d.casa === 'contadoconliqui')?.venta ?? 1310;
     const lastUpdated = data[0]?.fechaActualizacion || new Date().toISOString();
 
-    return { blue, oficial, mep, ccl, lastUpdated };
+    let riesgoPais = 628;
+    try {
+      const rpRes = await fetch('https://api.argentinadatos.com/v1/finanzas/indices/riesgo-pais/ultimo');
+      if (rpRes.ok) {
+        const rpData = await rpRes.json();
+        if (typeof rpData.valor === 'number') riesgoPais = rpData.valor;
+      }
+    } catch {}
+
+    return { blue, oficial, mep, ccl, riesgoPais, lastUpdated };
   } catch (err) {
     console.warn('[FinanceService] Could not fetch live dollar rates, using fallback:', err);
     return null;

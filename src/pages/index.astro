@@ -105,8 +105,10 @@ const fullLiveFeedArticles = liveArticles.slice(0, 60);
           </div>
         </div>
 
-        <div id="grand-opening-card-wrapper" class="story-item" data-category={leadStory.category} data-text={`${leadStory.neutralHeadline} ${leadStory.summary} ${leadStory.articles.map(a => a.title + ' ' + a.outletName).join(' ')}`}>
-          <StoryCard story={leadStory} />
+        <div id="lead-story-slot" class="w-full">
+          <div id="grand-opening-card-wrapper" class="story-item" data-category={leadStory.category} data-text={`${leadStory.neutralHeadline} ${leadStory.summary} ${leadStory.articles.map(a => a.title + ' ' + a.outletName).join(' ')}`}>
+            <StoryCard story={leadStory} />
+          </div>
         </div>
       </div>
 
@@ -148,7 +150,7 @@ const fullLiveFeedArticles = liveArticles.slice(0, 60);
     </section>
 
     <!-- SECTION 2: Segundas Aperturas (3-Column Bento Grid) -->
-    <section class="space-y-4 pt-4 border-t-2 border-slate-900 dark:border-slate-100">
+    <section id="secondary-stories-section" class="space-y-4 pt-4 border-t-2 border-slate-900 dark:border-slate-100">
       <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-200 dark:border-slate-800 pb-2">
         <h3 id="secondary-stories-heading" class="font-editorial text-xl sm:text-2xl font-bold text-slate-950 dark:text-white uppercase tracking-tight">
           Temas Destacados en Portada
@@ -479,22 +481,29 @@ const fullLiveFeedArticles = liveArticles.slice(0, 60);
     });
   });
 
-  // Clear filter button logic (connected to Header nav sections)
+  // --- Dynamic Lead Story Promotion & Category/Search Filtering ---
+  const leadSlot = document.getElementById('lead-story-slot');
+  const grandOpeningHeader = document.getElementById('grand-opening-header');
+  const secondarySection = document.getElementById('secondary-stories-section');
+  const secondaryHeading = document.getElementById('secondary-stories-heading');
+  const secondaryGrid = document.getElementById('secondary-stories-grid');
+  const filterBanner = document.getElementById('filter-status-banner');
+  const filterText = document.getElementById('filter-status-text');
   const clearFilterBtn = document.getElementById('clear-filter-btn');
-  if (clearFilterBtn) {
-    clearFilterBtn.addEventListener('click', () => {
-      const allNavBtn = document.querySelector<HTMLButtonElement>('.nav-section-btn[data-nav-section="all"]');
-      if (allNavBtn) allNavBtn.click();
-    });
-  }
-
-  // Client-side Quick Search Filter
-  const searchInput = document.getElementById('search-input') as HTMLInputElement | null;
   const newsSearchBanner = document.getElementById('news-search-banner');
   const newsSearchText = document.getElementById('news-search-text');
+  const searchInput = document.getElementById('search-input') as HTMLInputElement | null;
   const clearSearchBtn = document.getElementById('clear-search-btn');
   const resetSearchBtn = document.getElementById('reset-search-btn');
   const newsEmptyState = document.getElementById('news-empty-state');
+
+  const origLeadCard = document.getElementById('grand-opening-card-wrapper');
+  const origSecondaryCards = secondaryGrid ? (Array.from(secondaryGrid.children) as HTMLElement[]) : [];
+  const allStories = origLeadCard ? [origLeadCard, ...origSecondaryCards] : origSecondaryCards;
+  const liveItems = document.querySelectorAll<HTMLElement>('.live-item');
+
+  let activeCategory = 'all';
+  let activeSearchQuery = '';
 
   function normalizeStr(str: string): string {
     return (str || '')
@@ -504,73 +513,182 @@ const fullLiveFeedArticles = liveArticles.slice(0, 60);
       .trim();
   }
 
-  function applyNewsSearch() {
-    if (!searchInput) return;
-    const rawQuery = searchInput.value.trim();
-    const query = normalizeStr(rawQuery);
-    const storyItems = document.querySelectorAll<HTMLElement>('.story-item');
-    const liveItems = document.querySelectorAll<HTMLElement>('.live-item');
+  function updateNewsLayout() {
+    const normQuery = normalizeStr(activeSearchQuery);
+    const isCategoryFilter = activeCategory !== 'all';
+    const isSearchFilter = normQuery.length > 0;
 
-    if (query) {
-      // Ensure main news view is displayed when searching
-      const mainTab = document.querySelector<HTMLButtonElement>('[data-tab="temas-del-dia"]');
-      const mainView = document.getElementById('view-temas-del-dia');
-      if (mainView && mainView.classList.contains('hidden') && mainTab) {
-        mainTab.click();
-      }
-    }
-
-    let visibleStoriesCount = 0;
-
-    storyItems.forEach(el => {
-      const text = normalizeStr(el.getAttribute('data-text') || '');
-      if (!query || text.includes(query)) {
-        el.style.display = '';
-        visibleStoriesCount++;
-      } else {
-        el.style.display = 'none';
-      }
-    });
-
+    // Filter live rail items if searching
     liveItems.forEach(el => {
       const text = normalizeStr(el.getAttribute('data-text') || '');
-      if (!query || text.includes(query)) {
+      if (!normQuery || text.includes(normQuery)) {
         el.style.display = '';
       } else {
         el.style.display = 'none';
       }
     });
 
-    // Update Banner
-    if (newsSearchBanner && newsSearchText) {
-      if (!query) {
+    // Match stories against both category and search query
+    const matchingStories = allStories.filter(card => {
+      const cat = card.getAttribute('data-category') || '';
+      const text = normalizeStr(card.getAttribute('data-text') || '');
+
+      const matchesCat = !isCategoryFilter || cat.toLowerCase() === activeCategory.toLowerCase();
+      const matchesSearch = !isSearchFilter || text.includes(normQuery);
+
+      return matchesCat && matchesSearch;
+    });
+
+    // Hide non-matching stories
+    allStories.forEach(card => {
+      if (!matchingStories.includes(card)) {
+        card.style.display = 'none';
+      }
+    });
+
+    // State 1: Reset / No filters active
+    if (!isCategoryFilter && !isSearchFilter) {
+      if (origLeadCard && leadSlot) {
+        leadSlot.appendChild(origLeadCard);
+        origLeadCard.style.display = '';
+      }
+      if (secondaryGrid) {
+        origSecondaryCards.forEach(card => {
+          secondaryGrid.appendChild(card);
+          card.style.display = '';
+        });
+        secondaryGrid.className = 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 items-stretch';
+      }
+      if (grandOpeningHeader) grandOpeningHeader.style.display = '';
+      if (secondarySection) secondarySection.style.display = '';
+      if (secondaryHeading) secondaryHeading.textContent = 'Temas Destacados en Portada';
+      if (filterBanner) {
+        filterBanner.classList.add('hidden');
+        filterBanner.classList.remove('flex');
+      }
+      if (newsSearchBanner) {
         newsSearchBanner.classList.add('hidden');
         newsSearchBanner.classList.remove('flex');
+      }
+      if (newsEmptyState) newsEmptyState.classList.add('hidden');
+      return;
+    }
+
+    // State 2: Filters active - update status banners
+    if (filterBanner && filterText) {
+      if (isCategoryFilter) {
+        filterBanner.classList.remove('hidden');
+        filterBanner.classList.add('flex');
+        filterText.textContent = `${activeCategory} • ${matchingStories.length} ${matchingStories.length === 1 ? 'historia encontrada' : 'historias encontradas'}`;
       } else {
-        newsSearchBanner.classList.remove('hidden');
-        newsSearchBanner.classList.add('flex');
-        newsSearchText.textContent = `Búsqueda: "${rawQuery}" • ${visibleStoriesCount} noticias encontradas`;
+        filterBanner.classList.add('hidden');
+        filterBanner.classList.remove('flex');
       }
     }
 
-    // Empty state
-    if (newsEmptyState) {
-      if (query && visibleStoriesCount === 0) {
-        newsEmptyState.classList.remove('hidden');
+    if (newsSearchBanner && newsSearchText) {
+      if (isSearchFilter) {
+        newsSearchBanner.classList.remove('hidden');
+        newsSearchBanner.classList.add('flex');
+        newsSearchText.textContent = `Búsqueda: "${activeSearchQuery}" • ${matchingStories.length} noticias encontradas`;
       } else {
-        newsEmptyState.classList.add('hidden');
+        newsSearchBanner.classList.add('hidden');
+        newsSearchBanner.classList.remove('flex');
+      }
+    }
+
+    // Case 2A: 0 matching stories
+    if (matchingStories.length === 0) {
+      if (origLeadCard) origLeadCard.style.display = 'none';
+      if (grandOpeningHeader) grandOpeningHeader.style.display = 'none';
+      if (secondarySection) secondarySection.style.display = 'none';
+      if (newsEmptyState) {
+        newsEmptyState.classList.remove('hidden');
+        const emptyTitle = newsEmptyState.querySelector('p');
+        if (emptyTitle) {
+          emptyTitle.textContent = isSearchFilter 
+            ? `No se encontraron noticias que coincidan con "${activeSearchQuery}".`
+            : `No se encontraron historias en la sección ${activeCategory} en este momento.`;
+        }
+      }
+      return;
+    }
+
+    // Case 2B: 1 or more matching stories -> DYNAMIC PROMOTION to lead slot
+    if (newsEmptyState) newsEmptyState.classList.add('hidden');
+    if (grandOpeningHeader) grandOpeningHeader.style.display = '';
+
+    const firstMatch = matchingStories[0];
+    if (leadSlot && firstMatch) {
+      leadSlot.appendChild(firstMatch);
+      firstMatch.style.display = '';
+    }
+
+    const secondaryMatches = matchingStories.slice(1);
+    if (secondaryMatches.length > 0 && secondarySection && secondaryGrid) {
+      secondarySection.style.display = '';
+      secondaryMatches.forEach(card => {
+        secondaryGrid.appendChild(card);
+        card.style.display = '';
+      });
+
+      if (secondaryMatches.length === 1) {
+        secondaryGrid.className = 'grid grid-cols-1 md:grid-cols-2 gap-6 items-stretch';
+      } else {
+        secondaryGrid.className = 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 items-stretch';
+      }
+
+      if (secondaryHeading) {
+        secondaryHeading.textContent = isCategoryFilter
+          ? `Más coberturas en ${activeCategory} (${secondaryMatches.length})`
+          : `Otras noticias encontradas (${secondaryMatches.length})`;
+      }
+    } else {
+      // No extra stories -> hide secondary section cleanly
+      if (secondarySection) {
+        secondarySection.style.display = 'none';
       }
     }
   }
 
+  // Expose category filter function globally
+  (window as any).politicheckFilterCategory = (category: string) => {
+    activeCategory = category || 'all';
+    updateNewsLayout();
+  };
+
+  // Clear filter button logic
+  if (clearFilterBtn) {
+    clearFilterBtn.addEventListener('click', () => {
+      const allNavBtn = document.querySelector<HTMLButtonElement>('.nav-section-btn[data-nav-section="all"]');
+      if (allNavBtn) {
+        allNavBtn.click();
+      } else {
+        (window as any).politicheckFilterCategory('all');
+      }
+    });
+  }
+
+  // Quick Search input events
   if (searchInput) {
-    searchInput.addEventListener('input', applyNewsSearch);
+    searchInput.addEventListener('input', () => {
+      activeSearchQuery = searchInput.value.trim();
+      if (activeSearchQuery) {
+        const mainTab = document.querySelector<HTMLButtonElement>('[data-tab="temas-del-dia"]');
+        const mainView = document.getElementById('view-temas-del-dia');
+        if (mainView && mainView.classList.contains('hidden') && mainTab) {
+          mainTab.click();
+        }
+      }
+      updateNewsLayout();
+    });
   }
 
   const clearSearchHandler = () => {
     if (searchInput) {
       searchInput.value = '';
-      applyNewsSearch();
+      activeSearchQuery = '';
+      updateNewsLayout();
     }
   };
 
@@ -584,10 +702,15 @@ const fullLiveFeedArticles = liveArticles.slice(0, 60);
 
   if (qParam && searchInput) {
     searchInput.value = qParam;
-    applyNewsSearch();
+    activeSearchQuery = qParam.trim();
+    updateNewsLayout();
   } else if (secParam) {
     const matchingNavBtn = document.querySelector<HTMLButtonElement>(`.nav-section-btn[data-nav-section="${secParam}"]`);
-    if (matchingNavBtn) matchingNavBtn.click();
+    if (matchingNavBtn) {
+      matchingNavBtn.click();
+    } else {
+      (window as any).politicheckFilterCategory(secParam);
+    }
   }
 
   // --- Client-side Campaign Promises Filtering & 4-Item Pagination ---
@@ -1054,3 +1177,41 @@ const fullLiveFeedArticles = liveArticles.slice(0, 60);
     setInterval(checkForNewsUpdates, REFRESH_INTERVAL_MS);
   }
 </script>
+
+<style is:global>
+  /* Promoted Lead Story styling when inside #lead-story-slot */
+  #lead-story-slot article {
+    padding: 1.5rem !important;
+  }
+  @media (min-width: 640px) {
+    #lead-story-slot article {
+      padding: 2rem !important;
+    }
+  }
+  #lead-story-slot .story-img-wrapper .aspect-video {
+    max-height: 420px !important;
+  }
+  #lead-story-slot h3.font-editorial {
+    font-size: 1.75rem !important;
+    line-height: 2.25rem !important;
+  }
+  @media (min-width: 768px) {
+    #lead-story-slot h3.font-editorial {
+      font-size: 2.25rem !important;
+      line-height: 2.5rem !important;
+    }
+    #lead-story-slot .articles-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    }
+  }
+  #lead-story-slot .story-expandable-block .expandable-text {
+    -webkit-line-clamp: unset !important;
+    display: block !important;
+    font-size: 1.05rem !important;
+    line-height: 1.625rem !important;
+  }
+  #lead-story-slot .story-expandable-block .btn-toggle-expand {
+    display: none !important;
+  }
+</style>
+
