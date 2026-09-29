@@ -75,29 +75,22 @@ const serverSyncIso = getLastSyncTimestamp() || new Date().toISOString();
 
       <!-- Live Sync status & Methodology -->
       <div class="flex items-center gap-2.5 text-[11px]">
-        <button
-          type="button"
-          id="btn-sync-rss"
-          class="flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 hover:border-slate-400 dark:hover:border-slate-600 hover:text-slate-950 dark:hover:text-white transition-all cursor-pointer shadow-2xs group"
-          title="Sincronizar feeds RSS de diarios y re-agrupar con Gemini en vivo"
-        >
+        <!-- Live Sync Status Badge (Public) -->
+        <div class="flex items-center gap-2 px-2.5 py-0.5 rounded-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 shadow-2xs">
           <span class="relative flex h-2 w-2">
-            <span class="sync-ping animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
             <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
           </span>
-          <span class="font-semibold uppercase tracking-wider text-[10px]" id="sync-button-text">Actualizar Noticias</span>
-          <svg id="sync-spinner-icon" class="w-3 h-3 text-slate-400 group-hover:text-slate-700 dark:group-hover:text-slate-200 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-          </svg>
-        </button>
-
-        <span 
-          class="hidden sm:inline text-slate-500 dark:text-slate-400 text-[10px] font-mono" 
-          id="sync-time-ago"
-          data-server-sync={serverSyncIso}
-        >
-          Sincronizado hoy
-        </span>
+          <span class="font-bold uppercase tracking-wider text-[10px] text-emerald-700 dark:text-emerald-400">EN VIVO</span>
+          <span class="text-slate-300 dark:text-slate-700">•</span>
+          <span 
+            class="text-slate-500 dark:text-slate-400 text-[10px] font-mono" 
+            id="sync-time-ago"
+            data-server-sync={serverSyncIso}
+          >
+            Sincronizando...
+          </span>
+        </div>
 
         <span class="text-slate-300 dark:text-slate-700">•</span>
         <a href="/metodologia" class="hover:text-slate-900 dark:hover:text-slate-100 transition-colors underline underline-offset-2">
@@ -456,10 +449,7 @@ const serverSyncIso = getLastSyncTimestamp() || new Date().toISOString();
     });
   }
 
-  // --- Manual RSS & Gemini Sync Button Logic ---
-  const syncBtn = document.getElementById('btn-sync-rss');
-  const syncText = document.getElementById('sync-button-text');
-  const syncIcon = document.getElementById('sync-spinner-icon');
+  // --- Dynamic Live Sync Timestamp Logic ---
   const syncTimeAgo = document.getElementById('sync-time-ago');
 
   function updateSyncTimeAgo() {
@@ -498,40 +488,4 @@ const serverSyncIso = getLastSyncTimestamp() || new Date().toISOString();
 
   updateSyncTimeAgo();
   setInterval(updateSyncTimeAgo, 30000);
-
-  if (syncBtn) {
-    syncBtn.addEventListener('click', async () => {
-      if (syncBtn.getAttribute('data-syncing') === 'true') return;
-      syncBtn.setAttribute('data-syncing', 'true');
-
-      if (syncIcon) syncIcon.classList.add('animate-spin');
-      if (syncText) syncText.textContent = 'Sincronizando...';
-
-      try {
-        const res = await fetch('/api/rss/sync?refresh=true&cluster=true');
-        const data = await res.json();
-
-        if (data.success) {
-          localStorage.setItem('politicheck_last_sync_timestamp', Date.now().toString());
-          if (syncText) syncText.textContent = `Actualizado (${data.count} noticias)`;
-          if (syncTimeAgo) syncTimeAgo.textContent = 'Actualizado recién';
-
-          setTimeout(() => {
-            const currentY = window.scrollY;
-            sessionStorage.setItem('politicheck_restore_scroll', currentY.toString());
-            window.location.reload();
-          }, 900);
-        } else {
-          if (syncText) syncText.textContent = 'Reintentar';
-        }
-      } catch (err) {
-        if (syncText) syncText.textContent = 'Error al sincronizar';
-      } finally {
-        setTimeout(() => {
-          if (syncIcon) syncIcon.classList.remove('animate-spin');
-          syncBtn.removeAttribute('data-syncing');
-        }, 1200);
-      }
-    });
-  }
 </script>

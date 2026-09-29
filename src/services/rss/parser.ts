@@ -117,6 +117,14 @@ export async function parseFeed(config: RssFeedConfig, timeoutMs = 8000): Promis
       const pubDate = pubDateMatch ? pubDateMatch[1] : '';
       const imageUrl = extractImageUrl(itemXml);
 
+      let articleTimestamp = Date.now();
+      if (pubDate) {
+        const parsedD = new Date(pubDate);
+        if (!isNaN(parsedD.getTime())) {
+          articleTimestamp = parsedD.getTime();
+        }
+      }
+
       // Validate minimum editorial requirements
       if (title.length > 10 && rawLink.startsWith('http')) {
         const id = `art-${config.outletId}-${Math.abs(title.split('').reduce((a, b) => ((a << 5) - a) + b.charCodeAt(0), 0))}`;
@@ -129,6 +137,7 @@ export async function parseFeed(config: RssFeedConfig, timeoutMs = 8000): Promis
           snippet,
           url: rawLink,
           publishedAt: formatPubDate(pubDate),
+          timestamp: articleTimestamp,
           imageUrl
         });
       }

@@ -70,7 +70,13 @@ export async function syncAllRssFeeds(): Promise<SyncResult> {
 
   const uniqueNational = deduplicate(nationalArticles);
   const uniqueForeign = deduplicate(foreignArticles);
+
+  // Sort strictly by timestamp descending (newest first across ALL outlets)
+  uniqueNational.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
+  uniqueForeign.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
+
   const combinedArticles = [...uniqueNational, ...uniqueForeign];
+  combinedArticles.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
 
   // Check how many are genuinely new compared to existing cache
   const existingArticles = getCachedArticles();

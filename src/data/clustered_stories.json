@@ -2,451 +2,222 @@
   {
     "id": "story-ai-1",
     "isLeadStory": true,
-    "kicker": "DEBATE ECONÓMICO",
-    "neutralHeadline": "Javier Milei negó que la economía esté en recesión y atribuyó la caída de la actividad a cambios estructurales",
-    "category": "Economía",
-    "summary": "El presidente Javier Milei rechazó las proyecciones adversas y afirmó que los indicadores oficiales reflejan una desaceleración temporal vinculada a reformas estructurales. Sus declaraciones contrastan con el recorte en las previsiones de crecimiento realizado por entidades financieras internacionales como el JP Morgan.",
-    "updatedAt": "23:09 hs",
-    "imageUrl": "https://tn.com.ar/resizer/v2/BJCKGA2DCJBXZOQOOZHRIPIBSM.jpg?auth=a6fc699da3deedbb8a4cd24e1a8b807e75ca4b76fdd9dac6093449e254df0a08",
-    "imageCaption": "Cobertura periodística de Todo Noticias (TN).",
+    "kicker": "POLÍTICA Y SOBERANÍA",
+    "neutralHeadline": "Diputados inicia el debate sobre el proyecto para ampliar las sanciones por la explotación de recursos naturales en Malvinas",
+    "category": "Política",
+    "summary": "El plenario de comisiones de la Cámara de Diputados comienza a debatir la iniciativa oficialista que busca endurecer las sanciones por la explotación hidrocarburífera no autorizada en las Islas Malvinas. El oficialismo apunta a conseguir dictamen para llevar el proyecto al recinto a comienzos de octubre, en un contexto marcado por tensiones internacionales y advertencias sobre proyectos británicos en la zona.",
+    "updatedAt": "Ahora",
+    "imageUrl": "https://static.eldiario.es/clip/0181437c-687c-46fa-97b9-7952eba32f0f_16-9-discover-aspect-ratio_default_0.jpg",
+    "imageCaption": "Cobertura periodística de elDiarioAR.",
     "spectrum": {
-      "oficialismoPct": 15,
-      "centroDatosPct": 54,
-      "oposicionPct": 31,
-      "totalOutlets": 13
+      "oficialismoPct": 0,
+      "centroDatosPct": 0,
+      "oposicionPct": 100,
+      "totalOutlets": 3
     },
     "articles": [
       {
-        "id": "art-tn-17537090348",
-        "outletId": "tn",
-        "outletName": "Todo Noticias (TN)",
-        "title": "Milei defendió su programa y negó que la economía vaya a entrar en recesión: “Hay una desaceleración del ritmo de expansión”",
-        "snippet": "El Presidente relativizó la caída del 2,9% de la actividad durante julio. Aseguró que la Argentina atraviesa cambios estructurales y que, por eso, hay sectores que crecerán y otros que sufrirán una co",
-        "url": "https://tn.com.ar/politica/2026/09/27/milei-defendio-su-programa-y-nego-que-la-economia-vaya-a-entrar-en-recesion-hay-una-desaceleracion-del-ritmo-de-expansion/",
-        "publishedAt": "21:07 hs",
-        "imageUrl": "https://tn.com.ar/resizer/v2/BJCKGA2DCJBXZOQOOZHRIPIBSM.jpg?auth=a6fc699da3deedbb8a4cd24e1a8b807e75ca4b76fdd9dac6093449e254df0a08"
+        "id": "art-eldiarioar-216608726",
+        "outletId": "eldiarioar",
+        "outletName": "elDiarioAR",
+        "title": "Diputados empieza a debatir el proyecto que amplía las sanciones por explotación de recursos en Malvinas",
+        "snippet": "El plenario de las comisiones de Defensa, Legislación Penal y Relaciones Exteriores y Culto se reunirá el miércoles a las 12. El Gobierno busca avanzar con el dictamen el 6 de octubre y llevar la iniciativa al recinto al",
+        "url": "https://www.eldiarioar.com/politica/diputados-empieza-debatir-proyecto-amplia-sanciones-explotacion-recursos-malvinas_1_13542210.html",
+        "publishedAt": "Ahora",
+        "timestamp": 1790641939691,
+        "imageUrl": "https://static.eldiario.es/clip/0181437c-687c-46fa-97b9-7952eba32f0f_16-9-discover-aspect-ratio_default_0.jpg"
       },
       {
-        "id": "art-perfil-7383378517",
-        "outletId": "perfil",
-        "outletName": "Perfil",
-        "title": "Milei negó que haya una recesión y cuestionó los indicadores: “Están arrojando cualquier cosa”",
-        "snippet": "El Presidente defendió el rumbo económico durante una entrevista televisiva y sostuvo que la caída de la actividad responde a cambios estructurales. Sus declaraciones se conocieron después de que JP M",
-        "url": "https://www.perfil.com/noticias/economia/milei-nego-que-haya-una-recesion-y-cuestiono-los-indicadores-estan-arrojando-cualquier-cosa.phtml",
-        "publishedAt": "21:58 hs",
-        "imageUrl": "https://fotos.perfil.com/2026/09/24/trim/540/304/javier-milei-2333297.jpg"
+        "id": "art-eldiarioar-1825229829",
+        "outletId": "eldiarioar",
+        "outletName": "elDiarioAR",
+        "title": "Malvinas: expertos argentinos advierten sobre impactos ambientales del proyecto petrolero Sea Lion, autorizado por Reino Unido",
+        "snippet": "Dos empresas proyectan buscar hidrocarburos a 220 kilómetros de las islas, lo que revivió el conflicto por la soberanía de Malvinas entre Argentina y Reino Unido. En Argentina, un fallo judicial ordenó suspender el avanc",
+        "url": "https://www.eldiarioar.com/blog/relatos-ambientales/malvinas-impactos-ambientales-proyecto-petrolero-autorizado-reino-unido_132_13536772.html",
+        "publishedAt": "Ahora",
+        "timestamp": 1790641939689,
+        "imageUrl": "https://static.eldiario.es/clip/37549fcb-ebd7-41c0-8d2d-60ae425f9c45_16-9-discover-aspect-ratio_default_0.jpg"
       },
       {
-        "id": "art-ambito-3225002735",
-        "outletId": "ambito",
-        "outletName": "Ámbito Financiero",
-        "title": "Las definiciones de Javier Milei: del riesgo país, el dólar y la pobreza a Patricia Bullrich, León XIV y Axel Kicillof",
-        "snippet": "El Presidente brindó una entrevista televisiva en la que habló sobre la realidad económica del país. Además de negar el riesgo de recesión, también se refirió a su relación con la senadora y, sin menc",
-        "url": "https://www.ambito.com/politica/las-definiciones-javier-milei-del-riesgo-pais-el-dolar-y-la-pobreza-patricia-bullrich-leon-xiv-y-axel-kicillof-n6327297",
-        "publishedAt": "23:09 hs",
-        "imageUrl": "https://media.ambito.com/p/7ecd760250ff220cd3ec83e6dd10a626/adjuntos/239/imagenes/043/668/0043668156/1200x675/smart/javier-milei-captura-ln.jpg"
-      },
-      {
-        "id": "art-ambito-7066150822",
-        "outletId": "ambito",
-        "outletName": "Ámbito Financiero",
-        "title": "Javier Milei negó el riesgo de recesión, habló de una \"desaceleración\" y garantizó el financiamiento hasta fines del 2027",
-        "snippet": "El Presidente cuestionó las mediciones que muestran una caída de la actividad y sostuvo que los cambios estructurales de la economía distorsionan esos indicadores.",
-        "url": "https://www.ambito.com/economia/javier-milei-nego-el-riesgo-recesion-los-indicadores-desestacionalizados-estan-arrojando-cualquier-cosa-n6327281",
-        "publishedAt": "21:55 hs",
-        "imageUrl": "https://media.ambito.com/p/c893226b74374f6b94d5c86183d3e897/adjuntos/239/imagenes/043/668/0043668069/1200x675/smart/javier-milei.jpg"
-      },
-      {
-        "id": "art-infobae-1707952319",
-        "outletId": "infobae",
-        "outletName": "Infobae",
-        "title": "¿De “recesión técnica” a recesión a secas?: Economía espera un repunte de actividad, pero los privados ven difícil revertir la fuerte caída de julio",
-        "snippet": "Tras los recientes datos del Indec, estiman necesario un crecimiento cercano a 3% mensual para que el tercer trimestre arroje un saldo positivo. Según la Secretaría de Finanzas, están dadas todas las ",
-        "url": "https://www.infobae.com/economia/2026/09/28/de-recesion-tecnica-a-recesion-a-secas-economia-espera-un-repunte-de-actividad-pero-los-privados-ven-dificil-revertir-la-fuerte-caida-de-julio/",
-        "publishedAt": "Hace 22 min",
-        "imageUrl": "https://www.infobae.com/resizer/v2/T4QN2O3K2RCBVNJ6MZVBZVNOMA.jpg?auth=fd62a9688442650de2a7ed2d064262995d5edd96f2c77211a51ee0c8916bc2d1&amp;smart=true&amp;width=4452&amp;height=2968"
-      },
-      {
-        "id": "art-perfil-7600890934",
-        "outletId": "perfil",
-        "outletName": "Perfil",
-        "title": "JP Morgan cambió su pronóstico para la Argentina en apenas cuatro días y ahora anticipa una recesión",
-        "snippet": "El banco de inversión había proyectado un crecimiento de 2,7% para 2026. Tras el dato de actividad de julio, recortó su estimación al 1,5% y prevé una contracción anualizada de 4% en el tercer trimest",
-        "url": "https://www.perfil.com/noticias/economia/jp-morgan-cambio-su-pronostico-para-la-argentina-en-apenas-cuatro-dias-y-ahora-anticipa-una-recesion.phtml",
-        "publishedAt": "17:37 hs",
-        "imageUrl": "https://fotos.perfil.com/2025/10/22/trim/540/304/jp-morgan-y-eeuu-negocian-un-credito-de-usd-20000-millones-para-argentina-2123587.jpg"
-      },
-      {
-        "id": "art-clarin-3841163382",
-        "outletId": "clarin",
-        "outletName": "Clarín",
-        "title": "Milei negó que haya una recesión y afirmó que los indicadores \"dan cualquier cosa\" por los cambios estructurales en la economía",
-        "snippet": "Cuestionó duramente a los economistas críticos y atribuyó la caída del consumo al crecimiento del comercio electrónico. Respaldó a Patricia Bullrich y estimó que un 70% del electorado apoyará su proye",
-        "url": "https://www.clarin.com/politica/milei-nego-recesion-afirmo-indicadores-dan-cualquier-cosa-cambios-estructurales-economia_0_LQsde53U2W.html",
-        "publishedAt": "22:06 hs",
-        "imageUrl": "https://www.clarin.com/img/2026/09/27/G2x65aAiX_1200x630__1.jpg"
-      },
-      {
-        "id": "art-cronica-9634645069",
-        "outletId": "cronica",
-        "outletName": "Crónica",
-        "title": "Milei negó que la economía vaya a entrar en recesión: \"Hay una desaceleración del ritmo de expansión\"",
-        "snippet": "El Presidente relativizó el último dato de caída de la actividad. \"Los ponderadores de los desestacionalizados están arrojando cualquier cosa\", expresó.",
-        "url": "https://www.cronica.com.ar/politica/milei-nego-que-la-economia-vaya-a-entrar-en-recesion-hay-una-desaceleracion-del-ritmo-de-expansion/",
-        "publishedAt": "Reciente",
-        "imageUrl": "https://www.cronica.com.ar/files/image/1696/1696701/6a806ba1bd795_800_!.jpg?s=ed1319c771e269da454b5abbf0d61c67&amp;d="
-      },
-      {
-        "id": "art-baenegocios-24404096327",
-        "outletId": "baenegocios",
-        "outletName": "BAE Negocios",
-        "title": "Milei negó que la Argentina esté en recesión y cuestionó los datos de actividad",
-        "snippet": "El Presidente rechazó el diagnóstico tras el recorte de JP Morgan y sostuvo que los indicadores desestacionalizados no reflejan los cambios estructurales.",
-        "url": "https://www.baenegocios.com/economia/milei-nego-que-la-argentina-este-en-recesion-y-cuestiono-los-datos-de-actividad/",
-        "publishedAt": "Reciente",
-        "imageUrl": "https://www.baenegocios.com/files/image/355/355183/6ab549c884f37_800_!.jpg?s=cc1cf90227e1293d83731c3a6174e44d&amp;d="
-      },
-      {
-        "id": "art-ambito-5657052607",
-        "outletId": "ambito",
-        "outletName": "Ámbito Financiero",
-        "title": "A un paso de la recesión: los números del INDEC desmienten el relato oficial de crecimiento",
-        "snippet": "Aunque el discurso oficial celebre meses de expansión, los últimos datos oficiales confirman que la actividad productiva ya está cayendo.",
-        "url": "https://www.ambito.com/economia/a-un-paso-la-recesion-los-numeros-del-indec-desmienten-el-relato-oficial-crecimiento-n6327240",
-        "publishedAt": "18:27 hs",
-        "imageUrl": "https://media.ambito.com/p/bb1733448ac5cc5502ed4d978de30c7a/adjuntos/239/imagenes/042/751/0042751795/foto-centro-industrial.jpg"
-      },
-      {
-        "id": "art-eleconomista-12081562621",
-        "outletId": "eleconomista",
-        "outletName": "El Economista",
-        "title": "\"La actividad enfrenta vientos en contra\": JP Morgan pulverizó la proyección de crecimiento para Argentina a 1,5%",
-        "snippet": "JP Morgan recortó fuerte su proyección para Argentina: espera que el PBI crezca apenas 1,5% en 2026, con debilidad en consumo, empleo, industria y construcción.",
-        "url": "https://eleconomista.com.ar/economia/la-actividad-enfrenta-vientos-contra-jp-morgan-pulverizo-proyeccion-crecimiento-argentina-15-n98444",
-        "publishedAt": "13:44 hs",
-        "imageUrl": "https://statics.eleconomista.com.ar/2026/03/69b03e4eaacb8.jpg"
-      },
-      {
-        "id": "art-derechadiario-6369938923",
-        "outletId": "derechadiario",
-        "outletName": "La Derecha Diario",
-        "title": "Milei dio una entrevista y ratificó el rumbo económico: “Yo tengo confianza en los argentinos”",
-        "snippet": "El Presidente aseguró que la economía atraviesa cambios estructurales y proyectó cuatro años consecutivos de crecimiento.",
-        "url": "https://derechadiario.com.ar/politica/milei-defendio-rumbo-economico-tengo-confianza-en-argentinos",
-        "publishedAt": "21:04 hs",
-        "imageUrl": "https://d59jb5sy46ag5.cloudfront.net/imagenes_notas/PORTADAWEB-Milei-Majul-Entrevistajpg_0357f347cbda.webp"
-      },
-      {
-        "id": "art-cronista-2613659471",
-        "outletId": "cronista",
-        "outletName": "El Cronista",
-        "title": "Milei apuntó contra quienes piden un dólar más caro: “Quieren gente pobre y menos empleo”",
-        "snippet": "",
-        "url": "https://www.cronista.com/economia-politica/milei-apunto-contra-quienes-piden-un-dolar-mas-caro-quieren-gente-pobre-y-menos-empleo/",
-        "publishedAt": "21:48 hs",
-        "imageUrl": "https://www.cronista.com/resizer/v2/DWKTTBGPE5GBNLIOC5VMVG6KYI.jpg?auth=353acbe3aaeae7a13e7bbd3411cd363fe2b2e0602c273c2773f5c19c4d02dcd9&amp;smart=true&amp;width=1200&amp;height=675"
+        "id": "art-eldiarioar-1737269359",
+        "outletId": "eldiarioar",
+        "outletName": "elDiarioAR",
+        "title": "Fútbol en las Malvinas: una liga de cuatro equipos, un seleccionado amateur y el enojo con la Argentina",
+        "snippet": "El fútbol malvinense es amateur y su estructura incluye la liga de once jugadores, torneos de siete, Futsal, categorías juveniles y fútbol femenino. El nuevo campo de césped sintético permitió extender la actividad duran",
+        "url": "https://www.eldiarioar.com/deportes/futbol-malvinas-liga-cuatro-equipos-seleccionado-amateur-enojo-argentina_1_13528314.html",
+        "publishedAt": "Ahora",
+        "timestamp": 1790641939694,
+        "imageUrl": "https://static.eldiario.es/clip/2d8ad857-1dbd-49c4-a530-b493d86e97e2_16-9-discover-aspect-ratio_default_0.jpg"
       }
     ],
-    "aiComparisonNotice": "Los medios oficialistas y afines (como TN, La Derecha Diario y Perfil) se centraron en la defensa presidencial del rumbo económico y sus cuestionamientos a los indicadores tradicionales. Por el contrario, los portales de perfil opositor u orientados al análisis económico (como Ámbito, El Economista y elDiarioAR) enfatizaron el recorte del JP Morgan y alertaron sobre la desaceleración de la actividad y su impacto social."
+    "aiComparisonNotice": "Los sectores oficialistas destacan la defensa de la soberanía y la respuesta institucional, mientras que las miradas críticas señalan contradicciones en la política exterior y advierten sobre los riesgos geopolíticos y ambientales con potencias extranjeras."
   },
   {
     "id": "story-ai-2",
     "isLeadStory": false,
-    "kicker": "RELACIONES EXTERIORES • SOBERANÍA",
-    "neutralHeadline": "Declaraciones del secretario de Defensa británico sobre las Islas Malvinas y reacciones del arco político argentino",
-    "category": "Política",
-    "summary": "El funcionario del Reino Unido afirmó que su país está preparado para proteger el archipiélago por la fuerza. La diplomacia argentina y bloques legislativos coordinaron iniciativas de repudio y debate parlamentario.",
-    "updatedAt": "17:59 hs",
-    "imageUrl": "https://www.clarin.com/img/2026/09/27/9zEQyvQkz_1200x630__1.jpg",
-    "imageCaption": "El secretario de Defensa británico Wes Streeting durante sus declaraciones. (Foto: Archivo de Prensa / AP)",
+    "kicker": "ACTIVIDAD Y RECESIÓN",
+    "neutralHeadline": "La actividad económica cayó 2,9% en julio y registró la mayor baja del año según el EMAE",
+    "category": "Economía",
+    "summary": "El Estimador Mensual de Actividad Económica (EMAE) de julio mostró una contracción interanual del 1,4% y una caída mensual desestacionalizada del 2,9%, marcando el retroceso más pronunciado en lo que va del año. Los sectores de comercio y la industria manufacturera sufrieron las caídas más significativas, contrarrestadas parcialmente por el desempeño positivo de la minería y la pesca.",
+    "updatedAt": "Ahora",
+    "imageUrl": "https://static.eldiario.es/clip/2086714a-811e-4a9e-aa93-e4b85e6db06f_16-9-discover-aspect-ratio_default_0.jpg",
+    "imageCaption": "Cobertura periodística de elDiarioAR.",
     "spectrum": {
-      "oficialismoPct": 35,
-      "centroDatosPct": 40,
-      "oposicionPct": 25,
-      "totalOutlets": 8
+      "oficialismoPct": 0,
+      "centroDatosPct": 0,
+      "oposicionPct": 100,
+      "totalOutlets": 2
     },
     "articles": [
       {
-        "id": "art-clarin-1216167742",
-        "outletId": "clarin",
-        "outletName": "Clarín",
-        "title": "El ministro de Defensa de Chile respaldó el reclamo argentino por Malvinas, pero defendió el comercio con el gobierno británico en las islas",
-        "snippet": "Fernando Barros Tocornal se refirió al conflicto por la soberanía del archipiélago. Dijo que tienen \"derecho de ejercer el comercio\" entre el gobierno isleño y la ciudad chilena de Punta Arenas.",
-        "url": "https://www.clarin.com/politica/ministro-defensa-chileno-respaldo-reclamo-argentino-malvinas-defendio-comercio-gobierno-britanico-islas_0_9QkczIycAc.html",
-        "publishedAt": "17:59 hs",
-        "imageUrl": "https://www.clarin.com/img/2026/09/27/9zEQyvQkz_1200x630__1.jpg"
-      },
-      {
-        "id": "art-lanacion-16041068213",
-        "outletId": "lanacion",
-        "outletName": "La Nación",
-        "title": "Malvinas: el ministro de Defensa de Kast respaldó la autodeterminación de los isleños y su relación comercial con Chile",
-        "snippet": "Fernando Barros Tocornal reconoció el reclamo argentino, pero pidió respetar “la voluntad” de los kelpers; relativizó los compromisos ante el Mercosur",
-        "url": "https://www.lanacion.com.ar/politica/malvinas-el-ministro-de-defensa-de-kast-respaldo-la-autodeterminacion-de-los-islenos-y-su-relacion-nid27092026/",
-        "publishedAt": "17:56 hs",
-        "imageUrl": "https://resizer.glanacion.com/resizer/v2/S6C3YJG4KZDZNJHWIZ6TOOA53U.JPG?auth=1f65440f591ad9a431ddabe8a3d6b41058bd2b3418dfda6c1d062551a0c40889&amp;smart=true&amp;width=2000&amp;height=1333"
-      },
-      {
-        "id": "art-infobae-15387155145",
-        "outletId": "infobae",
-        "outletName": "Infobae",
-        "title": "La misión secreta que cambió la historia argentina: un avión secuestrado y siete banderas plantadas en las Islas Malvinas",
-        "snippet": "Hace exactamente 60 años, un grupo de 18 militantes del peronismo nacionalista desvió un vuelo. Buscaban “un gesto patriótico” de gran repercusión global",
-        "url": "https://www.infobae.com/historias/2026/09/28/la-mision-secreta-que-cambio-la-historia-argentina-un-avion-secuestrado-y-siete-banderas-plantadas-en-las-islas-malvinas/",
-        "publishedAt": "Hace 17 min",
-        "imageUrl": "https://www.infobae.com/resizer/v2/2NFTFBPC6VD4FLZJS5MMHXMHMI.jpg?auth=dfeb58d9edd38de57a84124c683858871e59ad6d8fb0c1002f8634464a54873c&amp;smart=true&amp;width=1920&amp;height=1080"
-      },
-      {
-        "id": "art-tn-16999224500",
-        "outletId": "tn",
-        "outletName": "Todo Noticias (TN)",
-        "title": "Malvinas: el ministro de Defensa de Chile respaldó el reclamo argentino, pero defendió el derecho al comercio con las islas",
-        "snippet": "Fernando Barros Torconal dijo que apoya una solución “pacífica y civilizada”. También habló sobre el proyecto para abrir un corredor marítimo en la ciudad de Punta Arenas.",
-        "url": "https://tn.com.ar/internacional/2026/09/27/malvinas-el-ministro-de-defensa-de-chile-respaldo-el-reclamo-argentino-pero-defendio-el-derecho-a-comerciar-con-las-islas/",
-        "publishedAt": "19:42 hs",
-        "imageUrl": "https://tn.com.ar/resizer/v2/24QTVFB665E7LBMIFG2AF5CZ4Y.jpg?auth=b4a2522f6ca98434e6a9258b307e5225d63c0a5422f9a39d6c96b3d66e3007df"
-      },
-      {
-        "id": "art-ambito-16002050623",
-        "outletId": "ambito",
-        "outletName": "Ámbito Financiero",
-        "title": "Chile condiciona su apoyo a Argentina en la causa Malvinas: \"Reino Unido ejerce la soberanía desde hace 200 años\"",
-        "snippet": "El ministro de Defensa chileno, Fernando Barros Tocornal, avaló el corredor marítimo entre Punta Arenas y las Malvinas y habló de la relación con Londres.",
-        "url": "https://www.ambito.com/politica/chile-condiciona-su-apoyo-argentinas-la-causa-malvinas-reino-unido-ejerce-la-soberania-hace-200-anos-n6327131",
-        "publishedAt": "10:26 hs",
-        "imageUrl": "https://media.ambito.com/p/3a045acd60200d99c7ca1c60b46b9d73/adjuntos/239/imagenes/043/666/0043666929/1200x675/484x290:504x310/fernando-barros-tocornal-ministro-defensa-chile-2.jpg"
-      },
-      {
-        "id": "art-cronista-233660028",
-        "outletId": "cronista",
-        "outletName": "El Cronista",
-        "title": "Roca y el reclamo sobre las Malvinas",
-        "snippet": "",
-        "url": "https://www.cronista.com/columnistas/roca-y-el-reclamo-sobre-las-malvinas/",
-        "publishedAt": "20:42 hs",
-        "imageUrl": "https://www.cronista.com/resizer/v2/AHQLOBNNLNAGDPAUPPQPXAB47Q.jpg?auth=c23347c74552c60f0ce21a479924d1a0025ebf9305cda7ec43ea2ea4c2dcf4f9&amp;smart=true&amp;width=2000&amp;height=1256"
-      },
-      {
-        "id": "art-perfil-349653238",
-        "outletId": "perfil",
-        "outletName": "Perfil",
-        "title": "Maratón del Colegio de Abogados: Más de 2.600 participantes en homenaje a los héroes de Malvinas",
-        "snippet": "La competencia que se realizó este domingo incluyó pruebas de 10K y 6K y tuvo como lema “Malvinas corre con nosotros”. Quiénes fueron los ganadores. Leer más",
-        "url": "https://www.perfil.com/noticias/cordoba/maraton-del-colegio-de-abogados-mas-de-2600-participantes-en-homenaje-a-los-heroes-de-malvinas.phtml",
-        "publishedAt": "20:48 hs",
-        "imageUrl": "https://fotos.perfil.com/2026/09/27/trim/540/304/maraton-colegio-de-abogados-de-cordoba-2335178.jpg"
-      },
-      {
-        "id": "art-eldiarioar-22175048037",
+        "id": "art-eldiarioar-5007809993",
         "outletId": "eldiarioar",
         "outletName": "elDiarioAR",
-        "title": "“Tres adioses” o cómo saborear felizmente cada segundo de una vida con los días contados",
-        "snippet": "En su último film, la cineasta catalana Isabel Coixet ensambla con suma delicadeza dos relatos del libro póstumo de la descollante escritora italiana Michela Murgia. Una defensa a toda costa de la ale",
-        "url": "https://www.eldiarioar.com/espectaculos/tres-adioses-saborear-felizmente-segundo-vida-dias-contados_1_13541084.html",
-        "publishedAt": "Reciente",
-        "imageUrl": "https://static.eldiario.es/clip/1f14b23a-997f-4609-974b-b373e3f16f68_16-9-discover-aspect-ratio_default_0_x506y176.jpg"
+        "title": "La actividad económica cayó 2,9% en julio y registró el mayor retroceso del año",
+        "snippet": "El EMAE también mostró una baja interanual del 1,4%. El comercio y la industria manufacturera estuvieron entre los sectores que más incidieron negativamente, mientras que la pesca y la minería mostraron fuertes subas. La",
+        "url": "https://www.eldiarioar.com/economia/actividad-economica-cayo-2-9-julio-registro-mayor-retroceso-ano_1_13536698.html",
+        "publishedAt": "Ahora",
+        "timestamp": 1790641939695,
+        "imageUrl": "https://static.eldiario.es/clip/2086714a-811e-4a9e-aa93-e4b85e6db06f_16-9-discover-aspect-ratio_default_0.jpg"
+      },
+      {
+        "id": "art-eldiarioar-7604849658",
+        "outletId": "eldiarioar",
+        "outletName": "elDiarioAR",
+        "title": "Destrucción del empleo, precarización y ¿más o menos pobreza?",
+        "snippet": "La economía crece, pero el empleo formal se derrumba y los sectores que traccionan la actividad no alcanzan a compensar la crisis del mercado interno. Mientras avanzan el cuentapropismo y la informalidad, los datos de in",
+        "url": "https://www.eldiarioar.com/opinion/tribuna/destruccion-empleo-precarizacion-pobreza_129_13539532.html",
+        "publishedAt": "Ahora",
+        "timestamp": 1790641939687,
+        "imageUrl": "https://static.eldiario.es/clip/04c636b0-e0f9-4b56-a7e7-a5a25963d9df_16-9-discover-aspect-ratio_default_1077405.jpg"
       }
     ],
-    "aiComparisonNotice": "Clarín e Infobae destacaron el riesgo de escalada militar; La Nación enfatizó la capacidad de disuasión y el statu quo; Ámbito relevó la respuesta diplomática regional en el Parlasur."
+    "aiComparisonNotice": "El análisis económico diverge entre quienes atribuyen el freno a un necesario proceso de transición y saneamiento macroeconómico y los sectores que remarcan el impacto recesivo sobre el mercado interno y el empleo industrial."
   },
   {
     "id": "story-ai-3",
     "isLeadStory": false,
-    "kicker": "EDUCACIÓN PÚBLICA • CONFLICTO SALARIAL",
-    "neutralHeadline": "Federaciones universitarias convocan a paro nacional de 72 horas y ratifican nueva Marcha Federal educativa",
+    "kicker": "INDICADORES SOCIALES",
+    "neutralHeadline": "La pobreza urbana trepó al 32,3% de la población durante el primer semestre del año",
     "category": "Sociedad",
-    "summary": "Los gremios docentes y no docentes resolvieron medidas de fuerza en demanda de la aplicación de la Ley de Financiamiento y recomposición de partidas salariales.",
-    "updatedAt": "20:52 hs",
-    "imageUrl": "https://resizer.glanacion.com/resizer/v2/QRQ22Q5KT5EIVF7GC5ENZNRJTQ.jpg?auth=4547a92840e2bfa13da42f828d6a95cfb8b03b26cd0f9471f8f7a4fd5f5a694e&amp;smart=true&amp;width=1200&amp;height=800",
-    "imageCaption": "Movilización universitaria en defensa del presupuesto de la educación pública. (Foto: Cobertura Periodística)",
+    "summary": "Un informe de medición de pobreza correspondiente al primer semestre registró un incremento al 32,3% de la población urbana afectada por la insuficiencia de ingresos. El repunte se produce tras variaciones previas en el contexto de ajuste, impulsado por la erosión del poder adquisitivo y las dificultades en la recuperación del mercado laboral formal.",
+    "updatedAt": "Ahora",
+    "imageUrl": "https://static.eldiario.es/clip/ea79cd89-2a55-4a77-8127-9a71670392c6_16-9-discover-aspect-ratio_default_0_x915y603.jpg",
+    "imageCaption": "Cobertura periodística de elDiarioAR.",
     "spectrum": {
-      "oficialismoPct": 35,
-      "centroDatosPct": 40,
-      "oposicionPct": 25,
-      "totalOutlets": 8
+      "oficialismoPct": 0,
+      "centroDatosPct": 0,
+      "oposicionPct": 100,
+      "totalOutlets": 1
     },
     "articles": [
       {
-        "id": "art-lanacion-13322315231",
-        "outletId": "lanacion",
-        "outletName": "La Nación",
-        "title": "Violento robo en una casa de Martínez: golpearon a un reconocido abogado y escaparon con dinero y joyas en el auto de su esposa",
-        "snippet": "Ocurrió cerca de las 4 de este domingo; los delincuentes ingresaron por el fondo de la propiedad",
-        "url": "https://www.lanacion.com.ar/seguridad/violento-robo-a-una-casa-en-martinez-golpearon-a-un-hombre-de-76-anos-y-escaparon-con-dinero-y-joyas-nid27092026/",
-        "publishedAt": "20:52 hs",
-        "imageUrl": "https://resizer.glanacion.com/resizer/v2/QRQ22Q5KT5EIVF7GC5ENZNRJTQ.jpg?auth=4547a92840e2bfa13da42f828d6a95cfb8b03b26cd0f9471f8f7a4fd5f5a694e&amp;smart=true&amp;width=1200&amp;height=800"
+        "id": "art-eldiarioar-5959083373",
+        "outletId": "eldiarioar",
+        "outletName": "elDiarioAR",
+        "title": "Vuelve a crecer la pobreza con Milei: saltó al 32,3% de la población en el primer semestre",
+        "snippet": "El indicador había comenzado la era libertaria subiendo del 40% al 53%, para luego descender al 28% por la merma de la inflación. Pero los ingresos insuficientes, el empeoramiento del empleo y la actividad económica y la",
+        "url": "https://www.eldiarioar.com/economia/vuelve-crecer-pobreza-milei-salto-32-3-poblacion-primer-semestre_1_13536538.html",
+        "publishedAt": "Ahora",
+        "timestamp": 1790641939695,
+        "imageUrl": "https://static.eldiario.es/clip/ea79cd89-2a55-4a77-8127-9a71670392c6_16-9-discover-aspect-ratio_default_0_x915y603.jpg"
+      }
+    ],
+    "aiComparisonNotice": "Mientras que las fuentes oficiales y los analistas afines valoran la contención de la hiperinflación inicial, los informes sociales y de la oposición enfatizan el deterioro persistente de los sectores vulnerables y la caída del consumo básico."
+  },
+  {
+    "id": "story-ai-4",
+    "isLeadStory": false,
+    "kicker": "INVESTIGACIÓN JUDICIAL",
+    "neutralHeadline": "La Justicia avanza en la causa por presuntas irregularidades y coimas en la Agencia Nacional de Discapacidad",
+    "category": "Justicia",
+    "summary": "En el marco de la investigación por supuestas coimas y contrataciones irregulares en la ANDIS, la expareja de uno de los implicados prestó declaración testimonial aportando documentación digital. Paralelamente, se presentaron solicitudes formales de detención para prevenir riesgos procesales de fuga o entorpecimiento de la instrucción a cargo del fuero federal.",
+    "updatedAt": "Ahora",
+    "imageUrl": "https://static.eldiario.es/clip/c7b84347-7e90-4910-92cc-e06ee4490876_16-9-discover-aspect-ratio_default_0_x243y130.jpg",
+    "imageCaption": "Cobertura periodística de elDiarioAR.",
+    "spectrum": {
+      "oficialismoPct": 0,
+      "centroDatosPct": 0,
+      "oposicionPct": 100,
+      "totalOutlets": 2
+    },
+    "articles": [
+      {
+        "id": "art-eldiarioar-7509977527",
+        "outletId": "eldiarioar",
+        "outletName": "elDiarioAR",
+        "title": "La expareja de Cerimedo declaró por las coimas en ANDIS y ratificó sus dichos sobre Karina Milei",
+        "snippet": "La abogada boliviana Nadia Beller declaró durante una hora ante la Justicia de su país, a pedido del fiscal argentino Franco Picardi. Aseguró que puso a disposición su teléfono celular, donde afirma tener elementos vincu",
+        "url": "https://www.eldiarioar.com/politica/expareja-cerimedo-declaro-coimas-andis-ratifico-dichos-karina-milei_1_13533416.html",
+        "publishedAt": "Ahora",
+        "timestamp": 1790641939698,
+        "imageUrl": "https://static.eldiario.es/clip/c7b84347-7e90-4910-92cc-e06ee4490876_16-9-discover-aspect-ratio_default_0_x243y130.jpg"
       },
       {
-        "id": "art-infobae-13278427332",
-        "outletId": "infobae",
-        "outletName": "Infobae",
-        "title": "En Panamá acribillan a una mujer y joven de 22 años asesina con una pala a un adulto mayor de 80 años",
-        "snippet": "La mayoría de los disparos impactaron contra la ventana y la puerta del lado del copiloto, donde iba sentada la fémina",
-        "url": "https://www.infobae.com/panama/2026/09/28/en-panama-acribillan-a-una-mujer-y-joven-de-22-anos-asesina-con-una-pala-a-un-adulto-mayor-de-80-anos/",
-        "publishedAt": "00:56 hs",
-        "imageUrl": "https://www.infobae.com/resizer/v2/GCTIX4GXSNEL5BG5FWYFI55VYA.png?auth=4ab3bb0f4660bc2159c8cc3474a3d95d29413c732f696d07390f62ca28da723a&amp;smart=true&amp;width=2752&amp;height=1536"
-      },
+        "id": "art-eldiarioar-11952682294",
+        "outletId": "eldiarioar",
+        "outletName": "elDiarioAR",
+        "title": "Pidieron detener a Spagnuolo tras detectar nuevas irregularidades en contrataciones de la ANDIS",
+        "snippet": "El abogado Gregorio Dalbón presentó la solicitud ante el juez Ariel Lijo y alegó riesgos de entorpecimiento de la investigación y de fuga. El exfuncionario fue procesado en la causa por las presuntas coimas en el organis",
+        "url": "https://www.eldiarioar.com/politica/pidieron-detener-spagnuolo-detectar-nuevas-irregularidades-contrataciones-andis_1_13545100.html",
+        "publishedAt": "Ahora",
+        "timestamp": 1790641939681,
+        "imageUrl": "https://static.eldiario.es/clip/ab54331f-285f-4e69-8cf5-0133d95038eb_16-9-discover-aspect-ratio_default_0_x377y139.jpg"
+      }
+    ],
+    "aiComparisonNotice": "La cobertura judicial se centra en las implicancias institucionales para funcionarios del área, contrastando las demandas de esclarecimiento de la oposición con la postura de cautela del Poder Ejecutivo frente a los tribunales."
+  },
+  {
+    "id": "story-ai-5",
+    "isLeadStory": false,
+    "kicker": "AGENDA INTERNACIONAL",
+    "neutralHeadline": "El Gobierno consolida vínculos bilaterales y financieros con Estados Unidos en materia de recursos estratégicos",
+    "category": "Internacional",
+    "summary": "Funcionarios del Gobierno nacional y representantes diplomáticos de Estados Unidos suscribieron acuerdos de cooperación y financiamiento en Nueva York orientados a facilitar el desarrollo y acceso a minerales críticos como litio y cobre, así como hidrocarburos. Las gestiones se complementan con reuniones orientadas a promover inversiones en infraestructura tecnológica y centros de datos.",
+    "updatedAt": "Ahora",
+    "imageUrl": "https://www.cronista.com/resizer/v2/GX6UYPBJLREUBDKJGGAC6AJZKM.jpg?auth=7a4bd67567f7924781a4004d7afd81af9941022db8758aecbb3551e42125ce8c&amp;smart=true&amp;width=848&amp;height=560",
+    "imageCaption": "Cobertura periodística de El Cronista.",
+    "spectrum": {
+      "oficialismoPct": 0,
+      "centroDatosPct": 33,
+      "oposicionPct": 67,
+      "totalOutlets": 3
+    },
+    "articles": [
       {
-        "id": "art-tn-1360134890",
-        "outletId": "tn",
-        "outletName": "Todo Noticias (TN)",
-        "title": "Neuquén: asesinaron de dos balazos a un joven en plena calle y detuvieron a un adolescente",
-        "snippet": "La víctima tenía 28 años y fue atacada en Cutral Co. Uno de los disparos le impactó en el abdomen y murió poco después.",
-        "url": "https://tn.com.ar/policiales/2026/09/28/neuquen-asesinaron-de-dos-balazos-a-un-joven-en-plena-calle-y-detuvieron-a-un-adolescente/",
-        "publishedAt": "Hace 12 min",
-        "imageUrl": "https://tn.com.ar/resizer/v2/6CEVDU26BJCRJEXWC6NERRSSSY.jpg?auth=5fd5b238490f830667266be98f369cd657e39f28c43ee2bbab2a3a375d8458ee"
-      },
-      {
-        "id": "art-ambito-7066150822",
-        "outletId": "ambito",
-        "outletName": "Ámbito Financiero",
-        "title": "Javier Milei negó el riesgo de recesión, habló de una \"desaceleración\" y garantizó el financiamiento hasta fines del 2027",
-        "snippet": "El Presidente cuestionó las mediciones que muestran una caída de la actividad y sostuvo que los cambios estructurales de la economía distorsionan esos indicadores.",
-        "url": "https://www.ambito.com/economia/javier-milei-nego-el-riesgo-recesion-los-indicadores-desestacionalizados-estan-arrojando-cualquier-cosa-n6327281",
-        "publishedAt": "21:55 hs",
-        "imageUrl": "https://media.ambito.com/p/c893226b74374f6b94d5c86183d3e897/adjuntos/239/imagenes/043/668/0043668069/1200x675/smart/javier-milei.jpg"
-      },
-      {
-        "id": "art-cronista-3186000171",
+        "id": "art-cronista-1459379239",
         "outletId": "cronista",
         "outletName": "El Cronista",
-        "title": "China, el plan de inversión millonaria de EEUU y el apoyo a Milei en 2027: “Va a ganar″",
-        "snippet": "El embajador de EE.UU. habló con El Cronista sobre el Corredor Andes-Atlántico y el financiamiento de hasta u$s 7.000 millones para infraestructura. Cómo repercute en el comercio con China, el respald",
-        "url": "https://www.cronista.com/economia-politica/china-el-plan-de-inversion-millonaria-de-eeuu-y-el-apoyo-a-milei-en-2027-va-a-ganar/",
-        "publishedAt": "26/9",
-        "imageUrl": "https://www.cronista.com/resizer/v2/7OIYQCPOLBHXVEHERSM7XRVKEQ.jpg?auth=c13c7872d36ee6083665ba48d37131527b0bc269d256e7860a88ffd7122917a0&amp;smart=true&amp;width=4000&amp;height=2667"
-      },
-      {
-        "id": "art-perfil-8198192469",
-        "outletId": "perfil",
-        "outletName": "Perfil",
-        "title": "Madrid: unas 500 personas acamparon en la Puerta del Sol en reclamo por un decreto sobre vivienda",
-        "snippet": "El acampe tuvo lugar tras una movilización de la que participaron unas 25 mil personas en reclamo de medidas urgentes tras la relevancia que tomó el caso del desalojo de Maricarmen, una mujer de 87 añ",
-        "url": "https://www.perfil.com/noticias/internacional/madrid-unas-500-personas-acamparon-en-la-puerta-del-sol-en-reclamo-por-un-decreto-sobre-vivienda.phtml",
-        "publishedAt": "06:31 hs",
-        "imageUrl": "https://fotos.perfil.com/2026/09/27/trim/540/304/manifestacion-en-madrid-2334867.jpg"
+        "title": "Mientras Milei fortalece su vínculo con EE.UU., una cumbre en Salta mostró el avance de las inversiones chinas",
+        "snippet": "",
+        "url": "https://www.cronista.com/economia-politica/negocios-primero-lo-que-dejo-el-china-day-en-salta/",
+        "publishedAt": "Ahora",
+        "timestamp": 1790676000000,
+        "imageUrl": "https://www.cronista.com/resizer/v2/GX6UYPBJLREUBDKJGGAC6AJZKM.jpg?auth=7a4bd67567f7924781a4004d7afd81af9941022db8758aecbb3551e42125ce8c&amp;smart=true&amp;width=848&amp;height=560"
       },
       {
         "id": "art-eldiarioar-9250893859",
         "outletId": "eldiarioar",
         "outletName": "elDiarioAR",
         "title": "Corredor Andes-Atlántico: anuncian un acuerdo que le facilitará a EE.UU. acceder a litio, cobre, petróleo y gas argentinos",
-        "snippet": "El canciller Pablo Quirno y el subsecretario de Estado norteamericano, Christopher Landau, firmaron en Nueva York un marco de financiamiento con horizonte en 2027, cuando Milei buscará la reelección. ",
+        "snippet": "El canciller Pablo Quirno y el subsecretario de Estado norteamericano, Christopher Landau, firmaron en Nueva York un marco de financiamiento con horizonte en 2027, cuando Milei buscará la reelección. El crédito de US$6.0",
         "url": "https://www.eldiarioar.com/economia/corredor-andes-atlantico-anuncian-inversiones-ee-uu-acceda-litio-cobre-petroleo-gas-argentinos_1_13535275.html",
-        "publishedAt": "Reciente",
+        "publishedAt": "Ahora",
+        "timestamp": 1790641939698,
         "imageUrl": "https://static.eldiario.es/clip/a9b04143-30db-4698-9567-28072b015263_16-9-discover-aspect-ratio_default_0_x807y327.jpg"
       },
       {
-        "id": "art-cronica-14735982734",
-        "outletId": "cronica",
-        "outletName": "Crónica",
-        "title": "Un Poco de Ruido hizo historia en un Vélez agotado con la zapada más grande del mundo",
-        "snippet": "Más de 45.000 personas participaron de una noche de más de cuatro horas, con cumbia, cuarteto, guaracha y artistas de distintas generaciones. Uriel Lozano, Sebastián Mendoza, Paulo Londra, Luciano Per",
-        "url": "https://www.cronica.com.ar/elcanaldelamusica/shows/un-poco-de-ruido-hizo-historia-en-un-velez-agotado-con-la-zapada-mas-grande-del-mundo/",
-        "publishedAt": "Reciente",
-        "imageUrl": "https://www.cronica.com.ar/files/image/1714/1714023/6ab9317773cfa_800_!.jpg?s=893c1be695979b5dcb64d87f8b9cf0d8&amp;d="
-      }
-    ],
-    "aiComparisonNotice": "Página 12 y Ámbito priorizan la pérdida salarial y el riesgo de congelamiento científico; Clarín pone el foco en el cronograma de paros y resoluciones de la Justicia."
-  },
-  {
-    "id": "story-ai-4",
-    "isLeadStory": false,
-    "kicker": "SEGURIDAD & JUSTICIA",
-    "neutralHeadline": "Medidas de seguridad y debate en el Senado sobre la agenda institucional y judicial",
-    "category": "Política",
-    "summary": "El Ministerio de Seguridad y senadores nacionales cruzaron posturas en torno a reformas normativas y el despliegue de fuerzas federales.",
-    "updatedAt": "22:53 hs",
-    "imageUrl": "https://www.clarin.com/img/2026/09/27/-h6SWAEAw_1200x630__1.jpg",
-    "imageCaption": "Reunión de comisiones en el Congreso de la Nación. (Foto: Archivo Parlamentario)",
-    "spectrum": {
-      "oficialismoPct": 35,
-      "centroDatosPct": 40,
-      "oposicionPct": 25,
-      "totalOutlets": 8
-    },
-    "articles": [
-      {
-        "id": "art-clarin-4908098779",
-        "outletId": "clarin",
-        "outletName": "Clarín",
-        "title": "\"Tenemos un amigo que tiene la enorme suerte de tener un avión\": Malena Galmarini habló sobre el viaje a Barbados en jet privado junto a Sergio Massa",
-        "snippet": "La senadora provincial justificó el lujo con llevar un tipo de vida austero: \"No salimos a comer, no vamos al teatro\". El matrimonio voló al Caribe con amigos en agosto en el Gulfstream G-500 del empr",
-        "url": "https://www.clarin.com/politica/amigo-enorme-suerte-tener-avion-malena-galmarini-hablo-viaje-barbados-jet-privado-junto-sergio-massa_0_1w1P4DVR2P.html",
-        "publishedAt": "22:53 hs",
-        "imageUrl": "https://www.clarin.com/img/2026/09/27/-h6SWAEAw_1200x630__1.jpg"
-      },
-      {
-        "id": "art-lanacion-30781128030",
-        "outletId": "lanacion",
-        "outletName": "La Nación",
-        "title": "Las principales frases de Milei: Bullrich, críticas a Rubinstein y Prat-Gay, Olivos como “base militar” y la visita de León XIV",
-        "snippet": "Durante la entrevista, el jefe de Estado se refirió además a las elecciones de 2027, cuestionó a distintos dirigentes y destacó el rumbo de su administración",
-        "url": "https://www.lanacion.com.ar/politica/las-principales-frases-de-milei-bullrich-criticas-a-rubinstein-y-prat-gay-olivos-como-base-militar-y-nid27092026/",
-        "publishedAt": "23:33 hs",
-        "imageUrl": "https://resizer.glanacion.com/resizer/v2/USEO6MJYDVCRFG4ZKOIOSPSV4M.jpg?auth=6812c247fef3853711b0077bf83f57470d1336a14094f0c5a532cbca6a6907a9&amp;smart=true&amp;width=1078&amp;height=719"
-      },
-      {
-        "id": "art-infobae-5873784052",
-        "outletId": "infobae",
-        "outletName": "Infobae",
-        "title": "Senado: libertarios destraban leyes y alivian la agenda de cara al tramo final de sesiones ordinarias",
-        "snippet": "A pesar de algunos indicadores económicos no deseados y desgastantes internas fomentadas desde la propia Casa Rosada, Patricia Bullrich aprovechó y, en menos de un mes, fue tres veces al recinto. Más ",
-        "url": "https://www.infobae.com/politica/2026/09/28/senado-libertarios-destraban-leyes-y-alivian-la-agenda-de-cara-al-tramo-final-de-sesiones-ordinarias/",
-        "publishedAt": "Hace 16 min",
-        "imageUrl": "https://www.infobae.com/resizer/v2/HJMTIPUGQBEY3OZ3KIYQ6FPXIY.jpg?auth=22bdb6b6391f69f2ef79f888cc3ed0991ca5dd7f17311e97df45edfe51b4861b&amp;smart=true&amp;width=1920&amp;height=1280"
-      },
-      {
-        "id": "art-tn-6489623641",
-        "outletId": "tn",
-        "outletName": "Todo Noticias (TN)",
-        "title": "ANSES: quiénes cobran jubilaciones, AUH y asignaciones este lunes 28 de septiembre",
-        "snippet": "Quiénes reciben hoy las distintas prestaciones de la Administración Nacional de Seguridad Social.",
-        "url": "https://tn.com.ar/economia/2026/09/28/anses-quienes-cobran-jubilaciones-auh-y-asignaciones-este-lunes-28-de-septiembre/",
-        "publishedAt": "Hace 8 min",
-        "imageUrl": "https://tn.com.ar/resizer/v2/AOUA7VXSKVHSLI7UU34RC3BJ3U.jpg?auth=465ad018ee81021eb28deba19acf9d8975ff1f80df34f58360a430b54ad46569"
-      },
-      {
-        "id": "art-ambito-3225002735",
-        "outletId": "ambito",
-        "outletName": "Ámbito Financiero",
-        "title": "Las definiciones de Javier Milei: del riesgo país, el dólar y la pobreza a Patricia Bullrich, León XIV y Axel Kicillof",
-        "snippet": "El Presidente brindó una entrevista televisiva en la que habló sobre la realidad económica del país. Además de negar el riesgo de recesión, también se refirió a su relación con la senadora y, sin menc",
-        "url": "https://www.ambito.com/politica/las-definiciones-javier-milei-del-riesgo-pais-el-dolar-y-la-pobreza-patricia-bullrich-leon-xiv-y-axel-kicillof-n6327297",
-        "publishedAt": "23:09 hs",
-        "imageUrl": "https://media.ambito.com/p/7ecd760250ff220cd3ec83e6dd10a626/adjuntos/239/imagenes/043/668/0043668156/1200x675/smart/javier-milei-captura-ln.jpg"
-      },
-      {
-        "id": "art-perfil-18843660328",
-        "outletId": "perfil",
-        "outletName": "Perfil",
-        "title": "Luis Juez explicó su voto por Zona Fría: \"Se le subsidia la boleta a una pileta en un country mientras un jubilado paga boleta entera\"",
-        "snippet": "El senador nacional difundió un comunicado tras los cuestionamientos por su posición en el Congreso. Sostuvo que el esquema actual beneficia a sectores de altos ingresos, perjudica a los usuarios de g",
-        "url": "https://www.perfil.com/noticias/cordoba/luis-juez-explico-su-voto-por-zona-fria-se-le-subsidia-la-boleta-a-una-pileta-en-un-country-mientras-un-jubilado-paga-boleta-entera.phtml",
-        "publishedAt": "23:36 hs",
-        "imageUrl": "https://fotos.perfil.com/2026/09/28/trim/540/304/zona-fria-juez-2335232.jpg"
-      },
-      {
-        "id": "art-eldiarioar-1206730092",
+        "id": "art-eldiarioar-28580116588",
         "outletId": "eldiarioar",
         "outletName": "elDiarioAR",
-        "title": "El Plan Bullrich: pegar para acordar con los Milei y negociar una sociedad de iguales",
-        "snippet": "La jefa del bloque libertario de senadores se fortalece ante cada provocación que queda impune y busca profundizar la confrontación con los Milei. Se considera socia principal de La Libertad Avanza y ",
-        "url": "https://www.eldiarioar.com/politica/plan-bullrich-pegar-acordar-milei-negociar-sociedad-iguales_1_13539844.html",
-        "publishedAt": "Reciente",
-        "imageUrl": "https://static.eldiario.es/clip/db097f2f-06d4-4ee3-8842-efd0e9cc4c93_16-9-discover-aspect-ratio_default_0.jpg"
-      },
-      {
-        "id": "art-cronica-32837166237",
-        "outletId": "cronica",
-        "outletName": "Crónica",
-        "title": "Atentos: cómo está el campo de juego en Rosario para Boca vs. Racing tras la lluvia",
-        "snippet": "La tormenta dijo presente sobre la ciudad de Rosario en la previa del clásico entre Boca Juniors y Racing.",
-        "url": "https://www.cronica.com.ar/depo/actualidad/atentos-como-esta-el-campo-de-juego-en-rosario-para-boca-vs-racing-tras-la-lluvia/",
-        "publishedAt": "Reciente",
-        "imageUrl": "https://www.cronica.com.ar/files/image/1714/1714063/6ab952526f5e0_800_!.jpg?s=d43599cc525dd07c53512bb56f155a48&amp;d="
+        "title": "Milei se reunió con una multinacional de data centers que tiene accionistas chinos",
+        "snippet": "El Presidente recibió este lunes a autoridades de DayOne Data, una empresa de centros de datos que nació como filial de la china GDS Holdings, que aún conserva acciones. El embajador Lamelas sostiene una disputa por el u",
+        "url": "https://www.eldiarioar.com/economia/milei-reunion-multinacional-data-centers-accionistas-chinos_1_13492983.html",
+        "publishedAt": "Ahora",
+        "timestamp": 1790641939700,
+        "imageUrl": "https://static.eldiario.es/clip/9b42249f-7fe0-4fd6-b7c8-ac1581e1fc6e_16-9-discover-aspect-ratio_default_0_x212y186.jpg"
       }
     ],
-    "aiComparisonNotice": "La Nación y Clarín ponen el foco en la operatividad de las fuerzas; elDiarioAR y Perfil analizan el trasfondo de las negociaciones parlamentarias."
+    "aiComparisonNotice": "Los enfoques diplomáticos resaltan la inserción internacional y la llegada de inversiones extranjeras, en tanto que los sectores críticos advierten sobre los riesgos de primarización de la economía y la pérdida de soberanía sobre recursos estratégicos."
   }
 ]

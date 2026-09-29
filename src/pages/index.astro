@@ -45,7 +45,8 @@ const foreignStoriesToDisplay = dynamicForeignStories.length > 0
 
 const leadStory = storiesToDisplay[0];
 const secondaryStories = storiesToDisplay.slice(1);
-const liveFeedArticles = liveArticles.slice(0, 20);
+const liveRailArticles = liveArticles.slice(0, 6);
+const fullLiveFeedArticles = liveArticles.slice(0, 60);
 ---
 
 <Layout>
@@ -126,7 +127,7 @@ const liveFeedArticles = liveArticles.slice(0, 20);
 
         <!-- Wire Items List -->
         <div class="space-y-3" id="wire-rail-list">
-          {liveFeedArticles.slice(0, 5).map((article) => (
+          {liveRailArticles.map((article) => (
             <div class="live-item" data-text={`${article.title} ${article.snippet} ${article.outletName}`}>
               <LiveFeedItem article={article} />
             </div>
@@ -400,7 +401,7 @@ const liveFeedArticles = liveArticles.slice(0, 20);
     </div>
 
     <div class="grid grid-cols-1 md:grid-cols-2 gap-4" id="live-feed-full-list">
-      {liveFeedArticles.map((article) => (
+      {fullLiveFeedArticles.map((article) => (
         <div class="live-item" data-text={`${article.title} ${article.snippet} ${article.outletName}`}>
           <LiveFeedItem article={article} />
         </div>

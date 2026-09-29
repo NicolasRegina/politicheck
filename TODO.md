@@ -101,32 +101,63 @@
 
 ---
 
-### ⏳ Tarea 8: Modo Administrador / Superadmin & Centro de Control Editorial — [PENDIENTE]
-- [ ] **Autenticación y Seguridad del Panel (`/admin`):**
-  - Acceso protegido por contraseña maestra (`ADMIN_SECRET_KEY`) con cookie de sesión segura `httpOnly`.
-  - Sin costo mensual ni dependencias pagas (autenticación nativa SSR en Vercel/Node o Supabase Auth).
-- [ ] **Gestor de Banners Publicitarios:**
-  - Configuración de espacios publicitarios cívicos/comerciales (toggle visible/oculto).
-  - Carga de imagen de banner (URL directa o subida a Supabase Storage) y enlace de destino (`href`).
-  - Renderizado condicional en la portada (`AdBanner.astro`) sin romper la estética editorial ni el tiempo de carga.
-- [ ] **Centro de Publicación y Redacción RRSS (X / Twitter):**
-  - Panel visual de previsualización de posteos generado automáticamente para cada noticia clusterizada del día.
-  - Generador de copies virales con 1 clic y campo de texto editable para retocar el contenido en el acto.
-  - Botón de **Copiado Rápido al Portapapeles** (para pegar manualmente en X.com en 2 segundos mientras la API de X esté en modo manual).
-  - Botón de **Publicación Directa en X** (vía `/api/social/tweet-latest`) cuando se activen los créditos de la API.
-- [ ] **Monitor de Salud y Estado del Sistema:**
-  - Verificación del estado de los 31 feeds RSS, fecha/hora exacta del último scraping y botón de sincronización forzada.
+### ⏳ Tarea 8: Modo Administrador / Superadmin & Centro de Control Editorial (Supabase RBAC) — [PENDIENTE]
+- [ ] **Arquitectura de Autenticación y Roles con Supabase (`profiles` + RLS):**
+  - Tabla de perfiles (`profiles`) vinculada a `auth.users` con roles: `'superadmin'`, `'admin'`, `'moderator'`, `'user'`.
+  - Políticas de seguridad a nivel de fila (Row Level Security - RLS).
+  - **Permisos del Superadmin:**
+    - Panel de gestión ABM de usuarios: crear, editar, asignar roles o revocar permisos de otros administradores y superadmins.
+    - Borrado o edición forzada de cualquier historia, cluster o banner.
+    - Acceso a métricas globales de tráfico, llaves API y configuraciones críticas.
+    - Moderación suprema de futuros canales de comunidad (Chat y Foro).
+  - **Permisos del Administrador (Admin):**
+    - Gestión del Gestor de Banners (activar/desactivar, subir imagen a Supabase Storage, link de destino).
+    - Centro de RRSS (previsualizar copies, editar texto, botón de 1 clic para copiar a X y publicación directa).
+    - Disparo de sincronización forzada de los 31 feeds RSS y re-clustering.
+    - Moderación de reportes de noticias.
+    - *Restricción de seguridad:* Un admin NO puede crear, editar ni modificar roles de otros admins ni superadmins.
+- [ ] **Ruta Protegida `/admin` con UI Moderna:**
+  - Login formal con Supabase Auth (email y contraseña).
+  - Dashboard editorial con métricas de salud de los 31 feeds RSS y botones de acción rápida.
+- [ ] **Gestor de Banners Publicitarios / Patrocinios Cívicos:**
+  - Toggle de estado (Activo / Oculto).
+  - Subida de banner a Supabase Storage (500 MB libres) o enlace directo a imagen.
+  - Enlace de destino (`href`) y texto alternativo.
+  - Bloque `<AdBanner />` en la portada del usuario que solo se renderiza si el banner está en `ON`.
+- [ ] **Centro de Redacción y Copiado RRSS para X / Redes:**
+  - Tarjetas de previsualización para cada noticia de portada del día.
+  - Campo de texto editable para retocar el copy al instante.
+  - Botón de **Copiado al Portapapeles con 1 Clic** (para pegar manualmente en X.com en 2 segundos sin costo de API).
+  - Botón de **Publicar Directo en X** (vía `/api/social/tweet-latest`) para cuando se activen créditos.
 
 ---
 
-### ⏳ Tarea 9: Gran Apertura Dinámica por Sección y Transparencia de Horarios RSS — [PENDIENTE]
-- [ ] **Generación Multi-Historia en Clustering de Gemini (`clustering.ts`):**
-  - Ajustar el prompt de Gemini para exigir siempre la generación de entre 4 y 6 clusters temáticos cubriendo las secciones clave ("Política", "Economía", "Sociedad", "Justicia").
-  - Evitar que la página quede con 1 sola noticia de portada y grilla secundaria vacía.
-- [ ] **Apertura de Tapa Reactiva a Filtros de Categoría (`index.astro`):**
-  - Hacer que la Gran Apertura muestre dinámicamente la noticia principal de la categoría seleccionada (ej: si el usuario hace clic en "Política", la gran apertura pasa a ser la principal de política, y las secundarias las restantes de política).
-  - Evitar que la Gran Apertura quede oculta o en blanco al filtrar secciones.
-- [ ] **Precisión de Horarios y Timestamps en Tiempo Real:**
-  - Reemplazar la etiqueta estática "Reciente" en las tarjetas por la hora exacta de la noticia (ej: "Hoy, 21:07 hs" o "Hace 25 min").
-  - Conectar el indicador del Header (`#sync-time-ago`) al timestamp real del servidor (`live_articles.json`) mostrando la hora y fecha exacta del último sync (ej: "Sincronizado hoy, 20:45 hs").
+### ✅ Tarea 9: Gran Apertura Dinámica por Sección, Orden Cronológico y Timestamps Transparentes — [COMPLETADA]
+- [x] **Generación Multi-Historia en Clustering de Gemini (`clustering.ts`):**
+  - Prompt actualizado exigiendo de 4 a 6 historias independientes cubriendo las secciones troncales (Política, Economía, Sociedad, Justicia, Internacional).
+  - Algoritmo de rescate para complementar con rule-based en caso de que Gemini devuelva menos de 3 clusters.
+- [x] **Ordenamiento Cronológico Universal de Noticias (`sync.ts` y `parser.ts`):**
+  - Incorporación de `timestamp` epoch en cada artículo.
+  - Ordenamiento estricto descendente de los 878 artículos cruzados: la pestaña "Minuto a Minuto" ahora mezcla dinámicamente Clarín, Infobae, La Nación, TN, Página 12, Ámbito, El Cronista, Crónica y Perfil por orden de publicación en vivo, eliminando el monopolio de un solo medio.
+  - Ampliación de la vista completa de Minuto a Minuto a 60 notas en vivo (en vez de 20).
+- [x] **Apertura de Tapa Reactiva a Filtros de Categoría (`index.astro`):**
+  - Encabezados dinámicos que informan la sección filtrada (`Cobertura en Sección: POLÍTICA (X historias)`).
+  - Desplazamiento suave directo a las historias que coinciden con la sección seleccionada.
+- [x] **Transparencia de Horarios y Retiro del Botón Público:**
+  - Reemplazo del texto ambiguo "Hace +1 hora" por el horario exacto del servidor: `Hoy 21:15 hs (hace 4 min)`.
+  - Retiro del botón público de "Actualizar Noticias" y reemplazo por un badge institucional no intrusivo `🟢 EN VIVO • Sincronizado hoy`. El botón de sync manual queda reservado exclusivamente para el `/admin`.
+  - Cron de Vercel acelerado a **cada 15 minutos** (`*/15 * * * *` en `vercel.json`).
+
+---
+
+### ⏳ Tarea 10: Foro Cívico de Debate & Sala de Chat Electoral en Vivo (Backlog) — [PENDIENTE]
+- [ ] **Sala de Chat Electoral en Vivo (Live Stream Chat):**
+  - Chat en tiempo real durante debates presidenciales, discursos de apertura de sesiones y noches de conteo electoral.
+  - Implementación con Supabase Realtime (WebSockets) y control de spam (rate-limiting de mensajes por minuto).
+  - Herramientas de moderación en vivo para administradores y moderadores (silenciar, banear por IP/cuenta, borrado de mensajes de odio o bots).
+- [ ] **Foro Cívico de Contraste Ciudadano:**
+  - Hilos de debate asociados a cada historia clusterizada de portada.
+  - Sistema de reputación ciudadana y argumentos fundamentados (con cita de fuentes obligatoria para combatir fake news).
+  - Roles de usuario: solo usuarios registrados pueden comentar y votar positivamente argumentos de valor cívico.
+
 

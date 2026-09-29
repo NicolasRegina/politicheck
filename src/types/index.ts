@@ -21,6 +21,7 @@ export interface Article {
   snippet: string;
   url: string;
   publishedAt: string;
+  timestamp?: number;
   imageUrl?: string;
   framingSummary?: string; // Análisis del encuadre por IA
   specificFocus?: string; // En qué hace hincapié (ej. "Costo fiscal", "Alivio al agro")

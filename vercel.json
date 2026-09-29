@@ -3,7 +3,7 @@
   "crons": [
     {
       "path": "/api/rss/sync?cron=true&refresh=true",
-      "schedule": "0 * * * *"
+      "schedule": "*/15 * * * *"
     }
   ],
   "headers": [
