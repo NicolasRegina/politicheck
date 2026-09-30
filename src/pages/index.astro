@@ -44,7 +44,8 @@ const areClustersStale = !nationalCloudClusters.length || (
 );
 
 if (isFeedStale || areClustersStale) {
-  const syncEndpoint = new URL('/api/rss/sync?cron=true', Astro.url.origin).toString();
+  const cronSecret = process.env.CRON_SECRET || 'politicheck_cron_dev_secret';
+  const syncEndpoint = new URL(`/api/rss/sync?key=${encodeURIComponent(cronSecret)}`, Astro.url.origin).toString();
   fetch(syncEndpoint).catch(() => {});
 }
 
@@ -1199,7 +1200,6 @@ const activeBanner = await getActiveCivicBanner('home_top');
   if (window.location.pathname === '/' || window.location.pathname === '' || window.location.pathname.endsWith('/index.html')) {
     let initialSyncTimestamp: string | null = null;
     let initialLeadStoryId: string | null = null;
-    let isAutoSyncing = false;
     let hasAlertShown = false;
 
     // Grab current server sync timestamp from header if present
@@ -1237,27 +1237,7 @@ const activeBanner = await getActiveCivicBanner('home_top');
           initialLeadStoryId = data.leadStoryId;
         }
 
-        // Check 1: If feeds in Supabase are older than 15 minutes, trigger background sync!
-        if (data.lastSyncTimestamp && !isAutoSyncing) {
-          const syncAgeMs = Date.now() - new Date(data.lastSyncTimestamp).getTime();
-          if (syncAgeMs > 15 * 60 * 1000) {
-            isAutoSyncing = true;
-            console.log('[Politicheck] Feed tiene más de 15 min. Sincronizando en segundo plano...');
-            fetch('/api/rss/sync?cron=true')
-              .then(r => r.json())
-              .then(syncRes => {
-                isAutoSyncing = false;
-                if (syncRes.success && syncRes.timestamp) {
-                  triggerLiveRefresh();
-                }
-              })
-              .catch(() => {
-                isAutoSyncing = false;
-              });
-          }
-        }
-
-        // Check 2: If a sync occurred from another trigger (GitHub Actions, cron or background sync)
+        // Check: If a sync occurred on the server (Vercel Cron or server self-healing)
         const syncTimestampChanged = initialSyncTimestamp && data.lastSyncTimestamp && (data.lastSyncTimestamp !== initialSyncTimestamp);
         const leadStoryChanged = initialLeadStoryId && data.leadStoryId && (data.leadStoryId !== initialLeadStoryId);
 

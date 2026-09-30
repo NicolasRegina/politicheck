@@ -35,8 +35,7 @@ export const GET: APIRoute = async ({ request }) => {
   const now = Date.now();
 
   const forceRefresh = url.searchParams.get('refresh') === 'true';
-  const isCron = url.searchParams.get('cron') === 'true';
-  const isVercelCron = request.headers.get('x-vercel-cron') === '1' || isCron;
+  const isVercelCron = request.headers.get('x-vercel-cron') === '1';
   const authHeader = request.headers.get('Authorization') || '';
   const expectedSecret = process.env.CRON_SECRET || 'politicheck_cron_dev_secret';
   const adminQueryKey = url.searchParams.get('key') || '';
