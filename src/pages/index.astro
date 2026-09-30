@@ -20,14 +20,6 @@ export const prerender = false;
 // Edge Cache: cache 30s at CDN, serve stale up to 60s while revalidating
 Astro.response.headers.set('Cache-Control', 'public, s-maxage=30, stale-while-revalidate=60');
 
-// Trigger background server sync if feeds are older than 15 minutes (self-healing fallback)
-const lastSyncIso = await getLastSyncTimestampAsync();
-const isStale = !lastSyncIso || (Date.now() - new Date(lastSyncIso).getTime() > 15 * 60 * 1000);
-if (isStale) {
-  const syncEndpoint = new URL('/api/rss/sync?cron=true', Astro.url.origin).toString();
-  fetch(syncEndpoint).catch(() => {});
-}
-
 // Fetch live dynamic campaign promises with real citizen votes from Supabase
 const allPromises = await getPromisesWithLiveVotes();
 const promisesStats = getPromisesStats(allPromises);
@@ -43,6 +35,18 @@ const cachedClusters = getCachedClusteredStories();
 // Separate national vs foreign clusters from Supabase
 const nationalCloudClusters = cloudClusters ? cloudClusters.filter(c => c.category !== 'Internacional' && !c.kicker?.includes('MIRADA EXTERIOR')) : [];
 const foreignCloudClusters = cloudClusters ? cloudClusters.filter(c => c.category === 'Internacional' || c.kicker?.includes('MIRADA EXTERIOR')) : [];
+
+// Trigger background server sync if feeds are older than 15 minutes OR if clusters are older than 60 minutes (self-healing fallback)
+const lastSyncIso = await getLastSyncTimestampAsync();
+const isFeedStale = !lastSyncIso || (Date.now() - new Date(lastSyncIso).getTime() > 15 * 60 * 1000);
+const areClustersStale = !nationalCloudClusters.length || (
+  cloudClusters && cloudClusters[0]?.updated_at && (Date.now() - new Date(cloudClusters[0].updated_at).getTime() > 60 * 60 * 1000)
+);
+
+if (isFeedStale || areClustersStale) {
+  const syncEndpoint = new URL('/api/rss/sync?cron=true', Astro.url.origin).toString();
+  fetch(syncEndpoint).catch(() => {});
+}
 
 const dynamicStories = (nationalCloudClusters.length > 0)
   ? nationalCloudClusters

@@ -7,26 +7,50 @@ import { OUTLETS_REGISTRY } from '../../utils/outlets';
 const CLUSTERED_STORIES_FILE = path.resolve(process.cwd(), 'src/data/clustered_stories.json');
 const FOREIGN_CLUSTERED_STORIES_FILE = path.resolve(process.cwd(), 'src/data/foreign_clusters.json');
 
-export function saveClusteredStories(stories: StoryCluster[]) {
+export async function saveClusteredStories(stories: StoryCluster[]): Promise<boolean> {
+  // 1. Primary: Save to Supabase Cloud PostgreSQL cache
+  try {
+    const saved = await saveNewsClustersToSupabase(stories);
+    if (saved) {
+      console.log(`[AI Clustering] Successfully persisted ${stories.length} stories to Supabase news_clusters.`);
+    }
+  } catch (err: any) {
+    console.warn('[AI Clustering] Supabase background save notice:', err.message);
+  }
+
+  // 2. Secondary: Update local file if writable (local dev environment)
   try {
     fs.writeFileSync(CLUSTERED_STORIES_FILE, JSON.stringify(stories, null, 2), 'utf-8');
-    saveNewsClustersToSupabase(stories).catch(err => {
-      console.warn('[AI Clustering] Supabase background save notice:', err);
-    });
-  } catch (err) {
-    console.error('[AI Clustering] Error saving clustered stories:', err);
+  } catch (err: any) {
+    if (err?.code !== 'EROFS') {
+      console.warn('[AI Clustering] Local cache write notice:', err.message);
+    }
   }
+
+  return true;
 }
 
-export function saveForeignClusteredStories(stories: StoryCluster[]) {
+export async function saveForeignClusteredStories(stories: StoryCluster[]): Promise<boolean> {
+  // 1. Primary: Save to Supabase Cloud PostgreSQL cache
+  try {
+    const saved = await saveNewsClustersToSupabase(stories);
+    if (saved) {
+      console.log(`[AI Clustering] Successfully persisted ${stories.length} foreign stories to Supabase news_clusters.`);
+    }
+  } catch (err: any) {
+    console.warn('[AI Clustering] Supabase foreign save notice:', err.message);
+  }
+
+  // 2. Secondary: Update local file if writable (local dev environment)
   try {
     fs.writeFileSync(FOREIGN_CLUSTERED_STORIES_FILE, JSON.stringify(stories, null, 2), 'utf-8');
-    saveNewsClustersToSupabase(stories).catch(err => {
-      console.warn('[AI Clustering] Supabase foreign save notice:', err);
-    });
-  } catch (err) {
-    console.error('[AI Clustering] Error saving foreign clustered stories:', err);
+  } catch (err: any) {
+    if (err?.code !== 'EROFS') {
+      console.warn('[AI Clustering] Local foreign cache write notice:', err.message);
+    }
   }
+
+  return true;
 }
 
 export function getCachedClusteredStories(): StoryCluster[] {
@@ -172,7 +196,8 @@ export function selectCrossOutletCandidates(articles: Article[], maxArticles = 7
     }
   });
 
-  // 4. Score articles based on overlap with cross-outlet keywords
+  // 4. Score articles based on overlap with cross-outlet keywords + recency weighting
+  const now = Date.now();
   const scoredArticles = articles.map(a => {
     const text = (a.title + ' ' + (a.snippet || '')).toLowerCase();
     let score = 0;
@@ -181,6 +206,17 @@ export function selectCrossOutletCandidates(articles: Article[], maxArticles = 7
         score += wordToOutlets.get(kw)?.size || 1;
       }
     });
+
+    // Recency weighting: heavily boost articles from the last few hours
+    const ageHours = a.timestamp ? Math.max(0, (now - a.timestamp) / (1000 * 60 * 60)) : 12;
+    if (ageHours <= 4) {
+      score *= 2.5;
+    } else if (ageHours <= 8) {
+      score *= 1.8;
+    } else if (ageHours > 16) {
+      score *= 0.35;
+    }
+
     return { article: a, score };
   });
 
@@ -282,9 +318,10 @@ ${JSON.stringify(candidateArticles.map(a => ({ id: a.id, medio: a.outletName, ti
 `;
 
     const CANDIDATE_MODELS = [
-      'gemini-flash-lite-latest',
-      'gemini-flash-latest',
       'gemini-3.5-flash-lite',
+      'gemini-flash-lite-latest',
+      'gemini-3.5-flash',
+      'gemini-3.1-flash-lite',
       'gemini-3.8-flash'
     ];
 
@@ -372,7 +409,10 @@ ${JSON.stringify(candidateArticles.map(a => ({ id: a.id, medio: a.outletName, ti
       const centroPct = Math.round((centro / total) * 100);
       const opoPct = Math.max(0, 100 - ofiPct - centroPct);
 
-      // Extract accurate timestamp from articles
+      // Sort cluster articles newest first so the latest headline/image leads
+      clusterArticles.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
+
+      // Extract accurate timestamp from the freshest article in cluster
       const articleTimes = clusterArticles
         .map(a => a.publishedAt)
         .filter(t => t && t !== 'Reciente');
@@ -414,7 +454,7 @@ ${JSON.stringify(candidateArticles.map(a => ({ id: a.id, medio: a.outletName, ti
     }
 
     if (stories.length > 0) {
-      saveClusteredStories(stories);
+      await saveClusteredStories(stories);
     }
     console.log(`[AI Clustering] Gemini successfully generated ${stories.length} story clusters!`);
     return stories;
@@ -422,7 +462,7 @@ ${JSON.stringify(candidateArticles.map(a => ({ id: a.id, medio: a.outletName, ti
     console.warn('[AI Clustering] Gemini call failed, falling back to rule-based clustering:', (err as Error).message);
     const fallbackStories = ruleBasedClustering(articles);
     if (fallbackStories.length > 0) {
-      saveClusteredStories(fallbackStories);
+      await saveClusteredStories(fallbackStories);
     }
     return fallbackStories;
   }
@@ -601,10 +641,11 @@ Devuelve EXCLUSIVAMENTE un objeto JSON válido con esta estructura:
 
   try {
     const CANDIDATE_MODELS = [
-      'gemini-flash-latest',
-      'gemini-3.8-flash',
       'gemini-3.5-flash-lite',
-      'gemini-flash-lite-latest'
+      'gemini-flash-lite-latest',
+      'gemini-3.5-flash',
+      'gemini-3.1-flash-lite',
+      'gemini-3.8-flash'
     ];
 
     let rawJson = '';
@@ -699,7 +740,7 @@ Devuelve EXCLUSIVAMENTE un objeto JSON válido con esta estructura:
     });
 
     if (stories.length > 0) {
-      saveForeignClusteredStories(stories);
+      await saveForeignClusteredStories(stories);
     }
     console.log(`[AI Clustering] Gemini successfully generated ${stories.length} foreign story clusters!`);
     return stories;
@@ -707,7 +748,7 @@ Devuelve EXCLUSIVAMENTE un objeto JSON válido con esta estructura:
     console.warn('[AI Clustering] Gemini foreign call failed, falling back to rule-based foreign clustering:', (err as Error).message);
     const fallbackStories = ruleBasedForeignClustering(foreignArticles);
     if (fallbackStories.length > 0) {
-      saveForeignClusteredStories(fallbackStories);
+      await saveForeignClusteredStories(fallbackStories);
     }
     return fallbackStories;
   }

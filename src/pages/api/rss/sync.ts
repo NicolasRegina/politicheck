@@ -59,12 +59,16 @@ export const GET: APIRoute = async ({ request }) => {
     const isCooldownActive = timeSinceLastCluster < COOLDOWN_MS;
 
     // Check if we should call Gemini AI:
-    const existingClusters = (await getNewsClustersFromSupabase(1)) || getCachedClusteredStories();
-    const hasClusters = existingClusters.length > 0;
-    const existingForeignClusters = getCachedForeignClusters();
-    const hasForeignClusters = existingForeignClusters.length > 0;
+    // If Supabase has no fresh national clusters in the last 60 minutes, re-clustering is required
+    const recentDbClusters = await getNewsClustersFromSupabase(60);
+    const hasFreshNationalClusters = Boolean(
+      recentDbClusters && recentDbClusters.filter(c => c.category !== 'Internacional' && !c.kicker?.includes('MIRADA EXTERIOR')).length >= 3
+    );
+    const hasFreshForeignClusters = Boolean(
+      recentDbClusters && recentDbClusters.filter(c => c.category === 'Internacional' || c.kicker?.includes('MIRADA EXTERIOR')).length >= 1
+    );
 
-    const shouldCluster = forceRefresh || isAuthorizedAdmin || !hasClusters || !hasForeignClusters || (!isCooldownActive && newArticlesCount > 0);
+    const shouldCluster = forceRefresh || isAuthorizedAdmin || !hasFreshNationalClusters || !hasFreshForeignClusters || (!isCooldownActive && newArticlesCount > 0);
 
     let clustersCount = 0;
     let foreignClustersCount = 0;
@@ -82,7 +86,7 @@ export const GET: APIRoute = async ({ request }) => {
       console.log(`[Sync API] Cooldown active or no new articles. Returning cached clusters.`);
       const cached = (await getNewsClustersFromSupabase(120)) || getCachedClusteredStories();
       clustersCount = cached.length;
-      foreignClustersCount = existingForeignClusters.length;
+      foreignClustersCount = (recentDbClusters?.filter(c => c.category === 'Internacional').length) || getCachedForeignClusters().length;
     }
 
     // 3. Automated Social Media Syndication (X / Twitter Bot @politicheck_ok)
