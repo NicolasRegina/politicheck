@@ -122,6 +122,11 @@ export async function getStoryClusterByIdAsync(id: string): Promise<StoryCluster
   return undefined;
 }
 
+interface GeminiClusterArticleItem {
+  id: string;
+  specificFocus?: string;
+}
+
 interface GeminiClusterResponse {
   clusters: {
     kicker: string;
@@ -129,7 +134,8 @@ interface GeminiClusterResponse {
     category: string;
     summary: string;
     aiComparisonNotice: string;
-    articleIds: string[];
+    articleIds?: string[];
+    articles?: (GeminiClusterArticleItem | string)[];
     spectrum: SpectrumBreakdown;
   }[];
 }
@@ -273,13 +279,14 @@ Tu objetivo es analizar las siguientes noticias argentinas y agruparlas en torno
 REGLAS DE ORO OBLIGATORIAS:
 1. REGLA FUNDAMENTAL - COMPARACIÓN MULTI-MEDIO ESTRICTA:
    - El propósito de Politicheck es comparar cómo DISTINTAS REDACCIONES cubren el mismo hecho.
-   - ESTÁ TERMINANTEMENTE PROHIBIDO que un cluster contenga más de 1 artículo del mismo medio. Cada noticia en "articleIds" DEBE ser de un diario DIFERENTE (por ejemplo: 1 de Clarín, 1 de La Nación, 1 de Infobae, 1 de Ámbito, 1 de Página 12, 1 de elDiarioAR, etc.).
+   - ESTÁ TERMINANTEMENTE PROHIBIDO que un cluster contenga más de 1 artículo del mismo medio. Cada noticia DEBE ser de un diario DIFERENTE (por ejemplo: 1 de Clarín, 1 de La Nación, 1 de Infobae, 1 de Ámbito, 1 de Página 12, 1 de elDiarioAR, etc.).
    - Cada cluster DEBE incluir un MÍNIMO de 2 medios distintos (idealmente entre 3 y 6 medios distintos).
    - NUNCA agrupes noticias de un solo diario.
 
 2. COHERENCIA FACTUAL Y TEMÁTICA ESTRICTA:
-   - Todas las noticias del cluster deben cubrir EXACTAMENTE EL MISMO ACONTECIMIENTO OBJETIVO.
-   - NO agrupes noticias solo porque compartan una palabra genérica. Por ejemplo: NO juntes "Fútbol en Malvinas" con "Debate de sanciones por hidrocarburos en Malvinas". Son dos noticias completamente distintas. Si un artículo no trata del suceso específico central, descártalo.
+   - Todas las noticias del cluster deben cubrir EXACTAMENTE EL MISMO ACONTECIMIENTO OBJETIVO (por ejemplo: el mismo discurso o conferencia, el mismo anuncio económico, la misma sesión en Diputados, el mismo fallo judicial).
+   - REGLA CLAVE PARA DISCURSOS O EVENTOS (ej. Coloquio de IDEA o acto oficial): Si la noticia central es una alocución o discurso, TODAS las notas agrupadas DEBEN ser coberturas de esa misma disertación. Si un diario titula con una frase particular (ej. Kicillof, elecciones 2027 o riesgo país), indícalo en "specificFocus", pero NUNCA mezcles noticias sobre otros acontecimientos ajenos que hayan ocurrido en otro ámbito.
+   - NO agrupes noticias solo porque compartan una palabra genérica. Si un artículo no trata del suceso específico central, descártalo.
 
 3. VARIEDAD TEMÁTICA Y NÚMERO DE HISTORIAS (OBLIGATORIO):
    Debes generar obligatoriamente entre 4 y 6 clusters/historias diferentes y equilibradas:
@@ -290,8 +297,9 @@ REGLAS DE ORO OBLIGATORIAS:
 
 4. Escribe un titular neutral ("neutralHeadline") estrictamente factual, sin adjetivos tendenciosos.
 5. Redacta un dictamen comparativo de encuadres ("aiComparisonNotice") que explique con rigor periodístico: qué priorizó cada redacción en su titular y qué omitió.
-6. Clasifica la categoría ("Política", "Economía", "Sociedad", "Justicia" o "Internacional").
-7. Estima la distribución del espectro editorial (oficialismoPct, centroDatosPct, oposicionPct) sumando el 100%.
+6. En "articles", devuelve un arreglo de objetos con "id" y un "specificFocus" sintético de 3 a 7 palabras que explique el encuadre o frase elegida por ese diario (ej: "Cruces a la oposición y fallo de la Corte", "Advertencia electoral sobre 2027", "Tono electoral y riesgo país").
+7. Clasifica la categoría ("Política", "Economía", "Sociedad", "Justicia" o "Internacional").
+8. Estima la distribución del espectro editorial (oficialismoPct, centroDatosPct, oposicionPct) sumando el 100%.
 
 Responde ÚNICAMENTE en formato JSON con la siguiente estructura:
 {
@@ -302,12 +310,15 @@ Responde ÚNICAMENTE en formato JSON con la siguiente estructura:
       "category": "Política",
       "summary": "Resumen objetivo en dos oraciones.",
       "aiComparisonNotice": "Síntesis del contraste de enfoques entre las múltiples redacciones.",
-      "articleIds": ["id_medio_1", "id_medio_2", "id_medio_3"],
+      "articles": [
+        { "id": "id_medio_1", "specificFocus": "Encuadre o frase priorizada por este medio" },
+        { "id": "id_medio_2", "specificFocus": "Encuadre o frase priorizada por este medio" }
+      ],
       "spectrum": {
         "oficialismoPct": 40,
         "centroDatosPct": 35,
         "oposicionPct": 25,
-        "totalOutlets": 3
+        "totalOutlets": 2
       }
     }
   ]
@@ -370,7 +381,24 @@ ${JSON.stringify(candidateArticles.map(a => ({ id: a.id, medio: a.outletName, ti
 
     const stories: StoryCluster[] = parsed.clusters
       .map((c, idx) => {
-        const rawArticles = c.articleIds
+        // Support both articles = [{ id, specificFocus }] and articleIds = [id]
+        const fociMap = new Map<string, string>();
+        const targetIds: string[] = [];
+
+        if (Array.isArray(c.articles)) {
+          for (const item of c.articles) {
+            if (typeof item === 'string') {
+              targetIds.push(item);
+            } else if (item && typeof item === 'object' && item.id) {
+              targetIds.push(item.id);
+              if (item.specificFocus) fociMap.set(item.id, item.specificFocus);
+            }
+          }
+        } else if (Array.isArray(c.articleIds)) {
+          targetIds.push(...c.articleIds);
+        }
+
+        const rawArticles = targetIds
           .map(id => articleMap.get(id))
           .filter((a): a is Article => Boolean(a));
 
@@ -380,7 +408,11 @@ ${JSON.stringify(candidateArticles.map(a => ({ id: a.id, medio: a.outletName, ti
         for (const a of rawArticles) {
           if (!seenOutlets.has(a.outletId)) {
             seenOutlets.add(a.outletId);
-            clusterArticles.push(a);
+            const focus = fociMap.get(a.id) || a.specificFocus;
+            clusterArticles.push({
+              ...a,
+              specificFocus: focus
+            });
           }
         }
 
@@ -698,7 +730,17 @@ Devuelve EXCLUSIVAMENTE un objeto JSON válido con esta estructura:
     const articleMap = new Map(foreignArticles.map(a => [a.id, a]));
 
     const stories: StoryCluster[] = parsed.clusters.map((c, idx) => {
-      const clusterArticles = c.articleIds
+      const targetIds: string[] = [];
+      if (Array.isArray(c.articles)) {
+        for (const item of c.articles) {
+          if (typeof item === 'string') targetIds.push(item);
+          else if (item && typeof item === 'object' && item.id) targetIds.push(item.id);
+        }
+      } else if (Array.isArray(c.articleIds)) {
+        targetIds.push(...c.articleIds);
+      }
+
+      const clusterArticles = targetIds
         .map(id => articleMap.get(id))
         .filter((a): a is Article => Boolean(a));
 

@@ -196,11 +196,13 @@ export async function getNewsClustersFromSupabase(maxAgeMinutes = 1440): Promise
       };
     });
 
-    // Guarantee that the explicit lead story is always the first item in the returned array
+    // Guarantee that the explicit lead story is always the first item in the returned array, prioritizing the freshest
     mapped.sort((a, b) => {
       if (a.isLeadStory && !b.isLeadStory) return -1;
       if (!a.isLeadStory && b.isLeadStory) return 1;
-      return 0;
+      const timeA = new Date(a.updatedAt).getTime() || 0;
+      const timeB = new Date(b.updatedAt).getTime() || 0;
+      return timeB - timeA;
     });
 
     return mapped;
