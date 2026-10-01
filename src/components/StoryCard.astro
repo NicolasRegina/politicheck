@@ -211,16 +211,9 @@ const displayTimestamp = (story.updatedAt && story.updatedAt !== 'Reciente')
 
     <!-- PANEL 2: CONTRASTE DE REDACCIONES (Hidden on mobile by default, always visible on lg:) -->
     <div class="card-panel-redacciones space-y-3 pt-2 border-t border-slate-200 dark:border-slate-800 hidden lg:!block">
-      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-1 text-[10px] sm:text-[11px] font-mono">
-        <div class="flex items-center gap-1.5 font-bold uppercase tracking-wider text-slate-800 dark:text-slate-200">
-          <svg class="w-3.5 h-3.5 text-blue-600 dark:text-blue-400 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
-          </svg>
-          <span>Titulares de cada redacción sobre este mismo hecho:</span>
-        </div>
-        <span class="text-[10px] text-slate-500 dark:text-slate-400">
-          Filtro por sesgo editorial
-        </span>
+      <div class="text-[10px] sm:text-[11px] font-mono uppercase tracking-wider font-semibold text-slate-600 dark:text-slate-400 flex items-center justify-between">
+        <span>Titulares y Enfoques Cruzados:</span>
+        <span class="text-[9px] sm:text-[10px] text-slate-400 dark:text-slate-500 font-normal">Filtro por sesgo</span>
       </div>
 
       <HeadlineComparison articles={story.articles} storyId={story.id} isLeadStory={story.isLeadStory} />
