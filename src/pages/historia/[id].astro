@@ -20,8 +20,11 @@ const metaDesc = story
   ? `${story.summary} Cotejo de ${story.articles.length} medios (${outletsText}). ${spectrumText}`
   : undefined;
 const pageUrl = `https://www.politicheck.com.ar/historia/${id}`;
+const cleanHeadline = (story?.neutralHeadline || '').length > 110
+  ? story!.neutralHeadline.slice(0, 110).trim().replace(/[,.:;]+$/, '') + '...'
+  : (story?.neutralHeadline || '');
 const viralShareText = story
-  ? `Mirá cómo ${outletsText} cubrieron esta misma noticia: "${story.neutralHeadline}". ${spectrumText} Comparativa sin sesgo en simultáneo:`
+  ? `🗞️ "${cleanHeadline}"\n\nMedios: ${outletsText}\n📊 Espectro: 🟣 ${story.spectrum.oficialismoPct}% | 🟢 ${story.spectrum.centroDatosPct}% | 🟠 ${story.spectrum.oposicionPct}%\n\n👉 Comparativa sin sesgo:`
   : '';
 ---
 

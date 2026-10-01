@@ -9,14 +9,16 @@ interface Props {
 
 const { story } = Astro.props;
 
-// Persuasive viral copy calculation
-const topOutlets = story.articles.slice(0, 4).map(a => a.outletName);
-const outletsText = topOutlets.length > 1
-  ? `${topOutlets.slice(0, -1).join(', ')} y ${topOutlets[topOutlets.length - 1]}`
-  : topOutlets[0] || 'múltiples redacciones';
-const viralShareText = `Mirá cómo ${outletsText} cubrieron esta misma noticia en simultáneo: "${story.neutralHeadline}". Comparativa sin sesgo en Politicheck:`;
+// Persuasive viral copy calculation (optimized strictly <= 280 chars for standard X accounts)
+const topOutlets = Array.from(new Set(story.articles.slice(0, 3).map(a => a.outletName)));
+const outletsText = topOutlets.join(', ');
+const rawHeadline = story.neutralHeadline || '';
+const cleanHeadline = rawHeadline.length > 110
+  ? rawHeadline.slice(0, 110).trim().replace(/[,.:;]+$/, '') + '...'
+  : rawHeadline;
+const viralShareText = `🗞️ "${cleanHeadline}"\n\nMedios: ${outletsText}\n📊 Espectro: 🟣 ${story.spectrum?.oficialismoPct ?? 0}% | 🟢 ${story.spectrum?.centroDatosPct ?? 0}% | 🟠 ${story.spectrum?.oposicionPct ?? 0}%\n\n👉 Comparativa sin sesgo:`;
 const storyUrl = `https://politicheck.com.ar/historia/${story.id}`;
-const waUrl = `https://api.whatsapp.com/send?text=${encodeURIComponent(viralShareText + ' ' + storyUrl)}`;
+const waUrl = `https://api.whatsapp.com/send?text=${encodeURIComponent(viralShareText + '\n' + storyUrl)}`;
 const xUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(viralShareText)}&url=${encodeURIComponent(storyUrl)}`;
 const tgUrl = `https://t.me/share/url?url=${encodeURIComponent(storyUrl)}&text=${encodeURIComponent(viralShareText)}`;
 const validArticleTime = story.articles.map(a => a.publishedAt).find(t => t && t !== 'Reciente');

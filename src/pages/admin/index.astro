@@ -400,7 +400,7 @@ const liveArticles = await getCachedArticlesAsync();
                   data-oficialismo={story.spectrum?.oficialismoPct ?? 0}
                   data-centro={story.spectrum?.centroDatosPct ?? 0}
                   data-oposicion={story.spectrum?.oposicionPct ?? 0}
-                  data-outlets={story.articles?.map((a: any) => a.outletName).slice(0, 4).join(', ') ?? ''}
+                  data-outlets={Array.from(new Set(story.articles?.map((a: any) => a.outletName).filter(Boolean) || [])).slice(0, 3).join(', ')}
                 >
                   <div class="flex items-center gap-1.5 text-[10px] font-mono text-slate-400 mb-1">
                     <span class="px-1.5 py-0.5 rounded bg-slate-100 dark:bg-slate-800 font-bold uppercase">{story.category}</span>
@@ -943,11 +943,18 @@ const liveArticles = await getCachedArticlesAsync();
   const rrssFeedbackBox = document.getElementById('rrss-feedback-box') as HTMLDivElement;
   const tweetSpectrumTags = document.getElementById('tweet-spectrum-tags') as HTMLDivElement;
 
-  function updateCharCount() {
-    const len = tweetTextarea.value.length;
-    const remaining = 280 - len;
+  function calcTwitterLength(text: string): number {
+    // Twitter/X transforms any URL to a 23-character t.co link
+    const urlRegex = /https?:\/\/\S+/g;
+    const withoutUrls = text.replace(urlRegex, '12345678901234567890123');
+    return Array.from(withoutUrls).length;
+  }
 
-    charCounter.textContent = `${remaining} caracteres disponibles (${len}/280)`;
+  function updateCharCount() {
+    const xLen = calcTwitterLength(tweetTextarea.value);
+    const remaining = 280 - xLen;
+
+    charCounter.textContent = `${remaining} caracteres disponibles en X (${xLen}/280)`;
     if (remaining < 0) {
       charCounter.className = 'text-xs font-mono font-bold text-rose-500 animate-pulse';
     } else {
@@ -976,9 +983,38 @@ const liveArticles = await getCachedArticlesAsync();
         <span class="text-amber-600 dark:text-amber-400">🟠 Oposición: ${opo}%</span>
       `;
 
-      // Compose high-converting tweet draft
-      const outletsLine = outlets ? `\nRedacciones: ${outlets}` : '';
-      const tweetDraft = `🗞️ Cobertura periodística en simultáneo:\n"${headline}"${outletsLine}\n\nEspectro editorial contrastado:\n🟣 Oficialismo: ${ofi}%\n🟢 Centro / Datos: ${cen}%\n🟠 Oposición: ${opo}%\n\nMirá el cruce de redacciones sin sesgo en Politicheck 👉 https://www.politicheck.com.ar/historia/${id}`;
+      // Compose high-converting, strictly compliant 280-char tweet draft
+      const rawOutlets = outlets ? Array.from(new Set(outlets.split(',').map((o: string) => o.trim()).filter(Boolean))) : [];
+      const outletsStr = rawOutlets.slice(0, 3).join(', ');
+      const storyUrl = `https://politicheck.com.ar/historia/${id}`;
+
+      const spectrumLine = `📊 Espectro: 🟣 ${ofi}% | 🟢 ${cen}% | 🟠 ${opo}%`;
+      const outletsLine = outletsStr ? `Medios: ${outletsStr}\n` : '';
+      const ctaLine = `👉 Comparativa sin sesgo en vivo:\n${storyUrl}`;
+
+      let tweetDraft = `🗞️ "${headline}"\n\n${outletsLine}${spectrumLine}\n\n${ctaLine}`;
+
+      // Enforce strict limit <= 265 chars (leaving safety margin for standard non-premium X accounts)
+      if (calcTwitterLength(tweetDraft) > 265) {
+        const overflow = calcTwitterLength(tweetDraft) - 258;
+        const maxHeadlineLen = Math.max(50, headline.length - overflow);
+        let sliced = headline.slice(0, maxHeadlineLen);
+        const lastSpace = sliced.lastIndexOf(' ');
+        if (lastSpace > 40) sliced = sliced.slice(0, lastSpace);
+        const trimmedHeadline = sliced.trim().replace(/[,.:;]+$/, '') + '...';
+        tweetDraft = `🗞️ "${trimmedHeadline}"\n\n${outletsLine}${spectrumLine}\n\n${ctaLine}`;
+      }
+
+      // If still over due to lengthy outlet names, drop outlets line to prioritize the full story and spectrum
+      if (calcTwitterLength(tweetDraft) > 275) {
+        const overflow = calcTwitterLength(tweetDraft) - 260;
+        const maxHeadlineLen = Math.max(40, headline.length - overflow);
+        let sliced = headline.slice(0, maxHeadlineLen);
+        const lastSpace = sliced.lastIndexOf(' ');
+        if (lastSpace > 35) sliced = sliced.slice(0, lastSpace);
+        const trimmedHeadline = sliced.trim().replace(/[,.:;]+$/, '') + '...';
+        tweetDraft = `🗞️ "${trimmedHeadline}"\n\n${spectrumLine}\n\n${ctaLine}`;
+      }
 
       tweetTextarea.value = tweetDraft;
       updateCharCount();

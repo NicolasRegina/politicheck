@@ -114,12 +114,15 @@ export function formatViralStoryTweet(story: StoryCluster, isBreaking = false, b
   tweet += `📊 Espectro: 🟣 ${ofi}% | 🟢 ${cen}% | 🟠 ${opo}%\n\n`;
   tweet += `👉 Leé la comparativa sin sesgo en vivo:\n${storyUrl}`;
 
-  // If over 270 chars, trim the headline cleanly
-  if (getTwitterLength(tweet) > 270) {
-    const availableTitleLength = Math.max(40, headline.length - (getTwitterLength(tweet) - 270));
-    const trimmedTitle = headline.slice(0, availableTitleLength).trim() + '...';
+  // If over 265 chars, trim the headline cleanly at word boundary
+  if (getTwitterLength(tweet) > 265) {
+    const availableTitleLength = Math.max(40, headline.length - (getTwitterLength(tweet) - 258));
+    let sliced = headline.slice(0, availableTitleLength);
+    const lastSpace = sliced.lastIndexOf(' ');
+    if (lastSpace > 35) sliced = sliced.slice(0, lastSpace);
+    const trimmedTitle = sliced.trim().replace(/[,.:;]+$/, '') + '...';
     
-    tweet = `${prefix} | ${trimmedTitle}\n\n`;
+    tweet = `${prefix} | "${trimmedTitle}"\n\n`;
     tweet += `📊 Espectro: 🟣 ${ofi}% | 🟢 ${cen}% | 🟠 ${opo}%\n\n`;
     tweet += `👉 Comparativa en vivo:\n${storyUrl}`;
   }
