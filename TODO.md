@@ -185,6 +185,21 @@
 
 ---
 
+### ✅ Tarea 13: Algoritmo de Prioridad Editorial para la Gran Apertura de Tapa — [COMPLETADA]
+- [x] **Diagnóstico y Corrección de Parsing de Fechas en Clústeres:**
+  - Corrección del bug donde cadenas de texto de presentación (ej. `"2/10"`) eran evaluadas por `new Date()` como 10 de febrero de 2001 (`981774000000 ms`), provocando que historias viejas superaran a noticias frescas con timestamps relativos (`"Hace 5 min"` -> `NaN`).
+  - Incorporación de campo `timestamp: number` numérico exacto en milisegundos en `StoryCluster` y metadatos de Supabase.
+- [x] **Motor de Scoring Editorial Multiredacción (`computeClusterEditorialScore`):**
+  - Prioridad absoluta para hechos cubiertos en simultáneo por múltiples medios en las últimas 24 horas: `Score = (redacciones_distintas * 60) + puntaje_frescura`.
+  - Bonificación de frescura (+300 pts si < 6h, +200 pts si < 12h) y penalización progresiva para notas viejas (> 24h: -150 pts/día).
+  - La historia con mayor consenso editorial del ciclo actual (ej. 8 redacciones en simultáneo) asume de forma garantizada el rol de *Gran Apertura de Tapa*.
+- [x] **Auto-Clustering Fallback en SSR y Sincronización Ininterrumpida:**
+  - Si los clústeres en la nube superan las 12 horas de antigüedad pero existen artículos RSS del día, SSR ejecuta automáticamente la clusterización con Gemini para regenerar la portada sin esperar un cron externo.
+  - Corrección del parámetro de consulta de clústeres recientes en `/api/rss/sync` (`{ maxAgeMinutes: 60 }`), eliminando la confusión entre minutos y días en la comprobación de frescura.
+
+
+---
+
 ### ⏳ Tarea 10: Foro Cívico de Debate & Sala de Chat Electoral en Vivo (Backlog) — [PENDIENTE]
 - [ ] **Sala de Chat Electoral en Vivo (Live Stream Chat):**
   - Chat en tiempo real durante debates presidenciales, discursos de apertura de sesiones y noches de conteo electoral.

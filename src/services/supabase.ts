@@ -113,30 +113,80 @@ export async function getSupabaseVotesAggregated(): Promise<Record<string, { ful
 }
 
 /**
+ * Compute editorial score to determine the Gran Apertura de Tapa.
+ * Prioritizes:
+ * 1. Breadth of coverage: number of distinct newsrooms covering the story.
+ * 2. Freshness: stories from today/recent hours score exponentially higher than stories from days ago.
+ */
+export function computeClusterEditorialScore(story: any): number {
+  const now = Date.now();
+  const rawUpdated = new Date(story.updated_at || story.updatedAt).getTime();
+  const articleTimes = (Array.isArray(story.articles) ? story.articles : [])
+    .map((a: any) => typeof a.timestamp === 'number' && !isNaN(a.timestamp) && a.timestamp > 0 ? a.timestamp : new Date(a.publishedAt).getTime())
+    .filter((t: number) => !isNaN(t) && t > 0);
+
+  const bestTime = articleTimes.length > 0 ? Math.max(...articleTimes) : (!isNaN(rawUpdated) ? rawUpdated : (story.timestamp || 0));
+  const ageHours = bestTime > 0 ? Math.max(0, (now - bestTime) / (1000 * 60 * 60)) : 72;
+
+  const distinctOutlets = new Set((story.articles || []).map((a: any) => a.outletId || a.outletName)).size;
+
+  // 60 points per distinct newsroom reporting
+  const coverageScore = distinctOutlets * 60;
+
+  // Freshness score:
+  // < 6h: 300 pts
+  // < 12h: 200 pts
+  // < 24h: 100 pts
+  // > 24h: heavily penalized so it moves down to the secondary feed
+  let freshnessScore = 0;
+  if (ageHours < 6) {
+    freshnessScore = 300;
+  } else if (ageHours < 12) {
+    freshnessScore = 200;
+  } else if (ageHours < 24) {
+    freshnessScore = 100;
+  } else {
+    // 24h+ penalty: -150 points per day of age
+    freshnessScore = -Math.min(1500, Math.round((ageHours / 24) * 150));
+  }
+
+  return coverageScore + freshnessScore;
+}
+
+/**
  * Save clustered news stories into Supabase cloud cache
  */
 export async function saveNewsClustersToSupabase(clusters: any[]): Promise<boolean> {
   if (!supabase || !clusters || clusters.length === 0) return false;
 
   try {
-    const rows = clusters.map((c, idx) => ({
-      id: c.id,
-      lead_title: c.leadTitle || c.neutralHeadline,
-      neutral_headline: c.neutralHeadline,
-      summary: c.summary,
-      category: c.category || 'Política',
-      spectrum: c.spectrum,
-      articles: c.articles,
-      key_quotes: {
-        kicker: c.kicker,
-        imageUrl: c.imageUrl,
-        imageCaption: c.imageCaption,
-        aiComparisonNotice: c.aiComparisonNotice,
-        isLeadStory: c.isLeadStory ?? (idx === 0),
-        updatedAt: c.updatedAt
-      },
-      updated_at: new Date().toISOString()
-    }));
+    const rows = clusters.map((c, idx) => {
+      const articleTimes = (Array.isArray(c.articles) ? c.articles : [])
+        .map((a: any) => typeof a.timestamp === 'number' ? a.timestamp : new Date(a.publishedAt).getTime())
+        .filter((t: number) => !isNaN(t) && t > 0);
+      const clusterTimestamp = c.timestamp || (articleTimes.length > 0 ? Math.max(...articleTimes) : Date.now());
+
+      return {
+        id: c.id,
+        lead_title: c.leadTitle || c.neutralHeadline,
+        neutral_headline: c.neutralHeadline,
+        summary: c.summary,
+        category: c.category || 'Política',
+        spectrum: c.spectrum,
+        articles: c.articles,
+        key_quotes: {
+          kicker: c.kicker,
+          imageUrl: c.imageUrl,
+          imageCaption: c.imageCaption,
+          aiComparisonNotice: c.aiComparisonNotice,
+          isLeadStory: c.isLeadStory ?? (idx === 0),
+          updatedAt: c.updatedAt,
+          timestamp: clusterTimestamp,
+          outletsCount: Array.isArray(c.articles) ? new Set(c.articles.map((a: any) => a.outletId || a.outletName)).size : 1
+        },
+        updated_at: new Date(clusterTimestamp).toISOString()
+      };
+    });
 
     const { error } = await supabase
       .from('news_clusters')
@@ -153,25 +203,46 @@ export async function saveNewsClustersToSupabase(clusters: any[]): Promise<boole
   }
 }
 
+export interface GetNewsClustersOptions {
+  maxAgeMinutes?: number;
+  maxAgeDays?: number;
+  limit?: number;
+}
+
 /**
  * Load latest cached news clusters from Supabase with historical accumulation
  */
-export async function getNewsClustersFromSupabase(limitOrMinutes = 100, maxAgeDays = 60): Promise<any[] | null> {
+export async function getNewsClustersFromSupabase(
+  param?: number | GetNewsClustersOptions,
+  maxAgeDays = 60
+): Promise<any[] | null> {
   if (!supabase) return null;
 
   try {
-    // Support both legacy maxAgeMinutes (e.g. 1440) or limit (e.g. 100)
     let limit = 100;
-    let days = maxAgeDays;
-    if (limitOrMinutes > 365) {
-      // legacy minutes parameter
-      days = Math.max(30, Math.round(limitOrMinutes / 1440));
-      limit = 150;
-    } else if (limitOrMinutes > 0) {
-      limit = limitOrMinutes;
-    }
+    let minTime: string;
 
-    const minTime = new Date(Date.now() - days * 24 * 60 * 60 * 1000).toISOString();
+    if (typeof param === 'object' && param !== null) {
+      limit = param.limit || 100;
+      if (param.maxAgeMinutes) {
+        minTime = new Date(Date.now() - param.maxAgeMinutes * 60 * 1000).toISOString();
+      } else {
+        const days = param.maxAgeDays || 60;
+        minTime = new Date(Date.now() - days * 24 * 60 * 60 * 1000).toISOString();
+      }
+    } else {
+      const num = typeof param === 'number' ? param : 100;
+      if (num <= 240) {
+        // e.g. 60 or 120 minutes
+        minTime = new Date(Date.now() - num * 60 * 1000).toISOString();
+        limit = 50;
+      } else {
+        // e.g. 1440 or historical query
+        const days = maxAgeDays || 60;
+        minTime = new Date(Date.now() - days * 24 * 60 * 60 * 1000).toISOString();
+        limit = 150;
+      }
+    }
 
     const { data, error } = await supabase
       .from('news_clusters')
@@ -192,6 +263,11 @@ export async function getNewsClustersFromSupabase(limitOrMinutes = 100, maxAgeDa
       const firstArticleImg = Array.isArray(row.articles) && row.articles[0]?.imageUrl;
       const defaultImg = row.category === 'Economía' ? '/images/regalias.jpg' : row.category === 'Sociedad' ? '/images/universidad.jpg' : '/images/malvinas.jpg';
 
+      const articleTimes = (Array.isArray(row.articles) ? row.articles : [])
+        .map((a: any) => typeof a.timestamp === 'number' ? a.timestamp : new Date(a.publishedAt).getTime())
+        .filter((t: number) => !isNaN(t) && t > 0);
+      const accurateTimestamp = meta.timestamp || (articleTimes.length > 0 ? Math.max(...articleTimes) : new Date(row.updated_at).getTime());
+
       return {
         id: row.id,
         isLeadStory: false,
@@ -200,6 +276,7 @@ export async function getNewsClustersFromSupabase(limitOrMinutes = 100, maxAgeDa
         category: row.category,
         summary: row.summary,
         updatedAt: meta.updatedAt || row.updated_at,
+        timestamp: accurateTimestamp,
         imageUrl: meta.imageUrl || firstArticleImg || defaultImg,
         imageCaption: meta.imageCaption || `Cobertura periodística de ${row.articles?.[0]?.outletName || 'prensa oficial'}.`,
         spectrum: row.spectrum,
@@ -208,10 +285,15 @@ export async function getNewsClustersFromSupabase(limitOrMinutes = 100, maxAgeDa
       };
     });
 
-    // Guarantee that the freshest story is always the lead story, followed chronologically by historical stories
+    // Rank stories by Editorial Score (Most relevant multi-outlet news of today first)
     mapped.sort((a, b) => {
-      const timeA = new Date(a.updatedAt).getTime() || 0;
-      const timeB = new Date(b.updatedAt).getTime() || 0;
+      const scoreA = computeClusterEditorialScore(a);
+      const scoreB = computeClusterEditorialScore(b);
+      if (scoreA !== scoreB) {
+        return scoreB - scoreA;
+      }
+      const timeA = a.timestamp || new Date(a.updatedAt).getTime() || 0;
+      const timeB = b.timestamp || new Date(b.updatedAt).getTime() || 0;
       return timeB - timeA;
     });
 

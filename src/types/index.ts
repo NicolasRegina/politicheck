@@ -41,6 +41,7 @@ export interface StoryCluster {
   category: string; // 'Economía', 'Política', 'Justicia', 'Internacional'
   summary: string;
   updatedAt: string;
+  timestamp?: number; // Epoch timestamp en milisegundos para ordenamiento determinístico
   imageUrl?: string; // Fotografía periodística real de portada
   imageCaption?: string; // Pie de foto periodístico y créditos de agencia
   spectrum: SpectrumBreakdown;

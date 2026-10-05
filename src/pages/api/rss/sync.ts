@@ -62,7 +62,7 @@ export const GET: APIRoute = async ({ request }) => {
 
     // Check if we should call Gemini AI:
     // If Supabase has no fresh national clusters in the last 60 minutes, re-clustering is required
-    const recentDbClusters = await getNewsClustersFromSupabase(60);
+    const recentDbClusters = await getNewsClustersFromSupabase({ maxAgeMinutes: 60 });
     const hasFreshNationalClusters = Boolean(
       recentDbClusters && recentDbClusters.filter(c => c.category !== 'Internacional' && !c.kicker?.includes('MIRADA EXTERIOR')).length >= 3
     );
@@ -86,7 +86,7 @@ export const GET: APIRoute = async ({ request }) => {
       geminiInvoked = true;
     } else {
       console.log(`[Sync API] Cooldown active or no new articles. Returning cached clusters.`);
-      const cached = (await getNewsClustersFromSupabase(120)) || getCachedClusteredStories();
+      const cached = (await getNewsClustersFromSupabase({ maxAgeMinutes: 120 })) || getCachedClusteredStories();
       clustersCount = cached.length;
       foreignClustersCount = (recentDbClusters?.filter(c => c.category === 'Internacional').length) || getCachedForeignClusters().length;
     }

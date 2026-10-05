@@ -49,13 +49,52 @@ if (isFeedStale || areClustersStale) {
   fetch(syncEndpoint).catch(() => {});
 }
 
-const dynamicStories = (nationalCloudClusters.length > 0)
-  ? nationalCloudClusters
-  : (cloudClusters && cloudClusters.length > 0)
-    ? cloudClusters
-    : (cachedClusters.length > 0
-      ? cachedClusters
-      : (liveArticles.length > 0 ? await clusterArticlesWithGemini(liveArticles, import.meta.env.GEMINI_API_KEY) : []));
+// Check if national cloud clusters contain fresh stories from today (< 12 hours)
+const newestCloudTimestamp = nationalCloudClusters.length > 0
+  ? Math.max(
+      nationalCloudClusters[0].timestamp || 0,
+      new Date(nationalCloudClusters[0].updatedAt).getTime() || 0
+    )
+  : 0;
+const areCloudClustersFromToday = newestCloudTimestamp > 0 && (Date.now() - newestCloudTimestamp < 12 * 60 * 60 * 1000);
+
+let dynamicStories: any[] = [];
+if (areCloudClustersFromToday && nationalCloudClusters.length >= 3) {
+  dynamicStories = nationalCloudClusters;
+} else if (liveArticles.length > 0) {
+  try {
+    const freshlyClustered = await clusterArticlesWithGemini(liveArticles, import.meta.env.GEMINI_API_KEY);
+    if (freshlyClustered.length > 0) {
+      // Merge freshly clustered with existing historical clusters
+      const seenIds = new Set(freshlyClustered.map(s => s.id));
+      const historicalRest = nationalCloudClusters.filter(c => !seenIds.has(c.id));
+      dynamicStories = [...freshlyClustered, ...historicalRest];
+    } else {
+      dynamicStories = nationalCloudClusters.length > 0 ? nationalCloudClusters : cachedClusters;
+    }
+  } catch {
+    dynamicStories = nationalCloudClusters.length > 0 ? nationalCloudClusters : cachedClusters;
+  }
+} else {
+  dynamicStories = nationalCloudClusters.length > 0 ? nationalCloudClusters : (cloudClusters || cachedClusters);
+}
+
+// Compute editorial score on storiesToDisplay to ensure the most relevant news of today leads
+const { computeClusterEditorialScore } = await import('../services/supabase');
+dynamicStories.sort((a, b) => {
+  const scoreA = computeClusterEditorialScore(a);
+  const scoreB = computeClusterEditorialScore(b);
+  if (scoreA !== scoreB) return scoreB - scoreA;
+  const timeA = a.timestamp || new Date(a.updatedAt).getTime() || 0;
+  const timeB = b.timestamp || new Date(b.updatedAt).getTime() || 0;
+  return timeB - timeA;
+});
+
+if (dynamicStories.length > 0) {
+  dynamicStories.forEach((s, idx) => {
+    s.isLeadStory = (idx === 0);
+  });
+}
 
 const storiesToDisplay = dynamicStories;
 
@@ -69,6 +108,18 @@ const dynamicForeignStories = (foreignCloudClusters.length > 0)
     : (liveForeignArticles.length > 0
       ? await clusterForeignArticlesWithGemini(liveForeignArticles, import.meta.env.GEMINI_API_KEY)
       : []));
+
+dynamicForeignStories.sort((a, b) => {
+  const scoreA = computeClusterEditorialScore(a);
+  const scoreB = computeClusterEditorialScore(b);
+  if (scoreA !== scoreB) return scoreB - scoreA;
+  return (b.timestamp || 0) - (a.timestamp || 0);
+});
+if (dynamicForeignStories.length > 0) {
+  dynamicForeignStories.forEach((s, idx) => {
+    s.isLeadStory = (idx === 0);
+  });
+}
 
 const foreignStoriesToDisplay = dynamicForeignStories;
 

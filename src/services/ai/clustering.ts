@@ -482,6 +482,7 @@ ${JSON.stringify(candidateArticles.map(a => ({ id: a.id, medio: a.outletName, ti
         category: c.category,
         summary: c.summary,
         updatedAt: formattedTimestamp,
+        timestamp: clusterArticles[0]?.timestamp || Date.now(),
         imageUrl,
         imageCaption: `Cobertura periodística de ${leadImgArticle?.outletName || 'prensa oficial'}.`,
         spectrum: {
@@ -507,6 +508,17 @@ ${JSON.stringify(candidateArticles.map(a => ({ id: a.id, medio: a.outletName, ti
           stories.push(fb);
         }
       }
+    }
+
+    // Rank stories: highest concurrent newsrooms (most outlets) leads the front page
+    stories.sort((a, b) => {
+      const outletsA = (a.articles || []).length;
+      const outletsB = (b.articles || []).length;
+      if (outletsB !== outletsA) return outletsB - outletsA;
+      return (b.timestamp || 0) - (a.timestamp || 0);
+    });
+    if (stories.length > 0) {
+      stories.forEach((s, i) => { s.isLeadStory = (i === 0); });
     }
 
     if (stories.length > 0) {
@@ -604,14 +616,27 @@ function ruleBasedClustering(articles: Article[]): StoryCluster[] {
       const centroPct = Math.round((centro / total) * 100);
       const opoPct = Math.max(0, 100 - ofiPct - centroPct);
 
+      const articleTimes = selectedArticles
+        .map(a => typeof a.timestamp === 'number' ? a.timestamp : new Date(a.publishedAt).getTime())
+        .filter(t => !isNaN(t) && t > 0);
+      const clusterTimestamp = articleTimes.length > 0 ? Math.max(...articleTimes) : Date.now();
+
+      const cleanSlug = topic.neutralHeadline.toLowerCase()
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .replace(/[^a-z0-9]+/g, '-')
+        .slice(0, 50)
+        .replace(/^-|-$/g, '');
+
       stories.push({
-        id: `story-cluster-${idx + 1}`,
-        isLeadStory: idx === 0,
+        id: cleanSlug ? `story-${cleanSlug}` : `story-cluster-${idx + 1}`,
+        isLeadStory: false,
         kicker: topic.kicker,
         neutralHeadline: topic.neutralHeadline,
         category: topic.category,
         summary: topic.summary,
         updatedAt: selectedArticles[0]?.publishedAt || 'Reciente',
+        timestamp: clusterTimestamp,
         imageUrl: leadImg,
         imageCaption: topic.defaultCaption,
         spectrum: {
@@ -625,6 +650,18 @@ function ruleBasedClustering(articles: Article[]): StoryCluster[] {
       });
     }
   });
+
+  // Rank stories by coverage breadth: the event with the most concurrent newsrooms leads
+  stories.sort((a, b) => {
+    const outletsA = (a.articles || []).length;
+    const outletsB = (b.articles || []).length;
+    if (outletsB !== outletsA) return outletsB - outletsA;
+    return (b.timestamp || 0) - (a.timestamp || 0);
+  });
+
+  if (stories.length > 0) {
+    stories[0].isLeadStory = true;
+  }
 
   return stories;
 }
