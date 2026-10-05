@@ -111,14 +111,28 @@ export function getStoryClusterById(id: string): StoryCluster | undefined {
 }
 
 export async function getStoryClusterByIdAsync(id: string): Promise<StoryCluster | undefined> {
+  // 1. Direct query to Supabase cloud PostgreSQL by exact ID first (avoids stale local mocks)
+  try {
+    const { getStoryClusterByIdFromSupabase } = await import('../supabase');
+    const cloudStory = await getStoryClusterByIdFromSupabase(id);
+    if (cloudStory) return cloudStory;
+  } catch (err) {
+    console.warn('[AI Clustering] Error fetching story from Supabase by ID:', err);
+  }
+
+  // 2. Check full cached clusters from Supabase
+  try {
+    const dbClusters = await getNewsClustersFromSupabase(100);
+    if (dbClusters) {
+      const found = dbClusters.find(s => s.id === id);
+      if (found) return found;
+    }
+  } catch {}
+
+  // 3. Fallback to local files only if not found in cloud
   const local = getStoryClusterById(id);
   if (local) return local;
 
-  const dbClusters = await getNewsClustersFromSupabase(1440);
-  if (dbClusters) {
-    const found = dbClusters.find(s => s.id === id);
-    if (found) return found;
-  }
   return undefined;
 }
 
@@ -450,8 +464,18 @@ ${JSON.stringify(candidateArticles.map(a => ({ id: a.id, medio: a.outletName, ti
         .filter(t => t && t !== 'Reciente');
       const formattedTimestamp = articleTimes[0] || (clusterArticles[0] ? 'Hoy' : 'Reciente');
 
+      const cleanSlug = c.neutralHeadline
+        ? c.neutralHeadline.toLowerCase()
+            .normalize('NFD')
+            .replace(/[\u0300-\u036f]/g, '')
+            .replace(/[^a-z0-9]+/g, '-')
+            .slice(0, 50)
+            .replace(/^-|-$/g, '')
+        : '';
+      const uniqueClusterId = cleanSlug ? `story-${cleanSlug}` : `story-ai-${Date.now().toString(36)}-${idx + 1}`;
+
       return {
-        id: `story-ai-${idx + 1}`,
+        id: uniqueClusterId,
         isLeadStory: idx === 0,
         kicker: c.kicker,
         neutralHeadline: c.neutralHeadline,
@@ -760,8 +784,18 @@ Devuelve EXCLUSIVAMENTE un objeto JSON válido con esta estructura:
       const centroPct = Math.round((centro / total) * 100);
       const opoPct = Math.max(0, 100 - ofiPct - centroPct);
 
+      const cleanForeignSlug = c.neutralHeadline
+        ? c.neutralHeadline.toLowerCase()
+            .normalize('NFD')
+            .replace(/[\u0300-\u036f]/g, '')
+            .replace(/[^a-z0-9]+/g, '-')
+            .slice(0, 50)
+            .replace(/^-|-$/g, '')
+        : '';
+      const uniqueForeignId = cleanForeignSlug ? `foreign-${cleanForeignSlug}` : `foreign-ai-${Date.now().toString(36)}-${idx + 1}`;
+
       return {
-        id: `foreign-ai-${idx + 1}`,
+        id: uniqueForeignId,
         isLeadStory: idx === 0,
         kicker: c.kicker,
         neutralHeadline: c.neutralHeadline,

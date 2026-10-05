@@ -14,10 +14,10 @@ jobs:
       - name: Ping al endpoint de sincronización
         run: |
           echo "Disparando actualización periódica de noticias y caché en Politicheck..."
-          HTTP_CODE=$(curl -s -o /dev/null -w "%{http_code}" --max-time 60 "https://www.politicheck.com.ar/api/rss/sync?cron=true")
+          HTTP_CODE=$(curl -s -o /dev/null -w "%{http_code}" --max-time 60 "https://www.politicheck.com.ar/api/rss/sync?cron=true&key=politicheck_cron_dev_secret")
           echo "Respuesta HTTP dominio principal: $HTTP_CODE"
           if [ "$HTTP_CODE" -ne 200 ]; then
             echo "Reintentando con dominio alternativo Vercel..."
-            curl -s -S --max-time 60 "https://politicheck-five.vercel.app/api/rss/sync?cron=true"
+            curl -s -S --max-time 60 "https://politicheck-five.vercel.app/api/rss/sync?cron=true&key=politicheck_cron_dev_secret"
           fi
           echo "Sincronización finalizada correctamente."

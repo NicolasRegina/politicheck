@@ -258,6 +258,17 @@ const serverSyncIso = (await getLastSyncTimestampAsync()) || new Date().toISOStr
             </svg>
             <span>Mirada Exterior</span>
           </button>
+
+          <button 
+            type="button"
+            data-tab="promesas"
+            class="tab-btn px-2.5 sm:px-3 py-1.5 rounded-lg transition-all duration-200 flex items-center gap-1.5 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 whitespace-nowrap"
+          >
+            <svg class="w-3.5 h-3.5 text-slate-500 dark:text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            <span>Promesas 2027</span>
+          </button>
         </nav>
       </div>
     </div>
@@ -367,14 +378,9 @@ const serverSyncIso = (await getLastSyncTimestampAsync()) || new Date().toISOStr
       btn.classList.remove('text-slate-700', 'dark:text-slate-300');
 
       if (targetSec === 'promesas') {
-        // Switch to main view first if hidden
-        const mainTab = document.querySelector<HTMLButtonElement>('[data-tab="temas-del-dia"]');
-        if (mainTab) mainTab.click();
-        
-        // Scroll to Promesas section
-        const promesasSec = document.getElementById('monitor-promesas');
-        if (promesasSec) {
-          promesasSec.scrollIntoView({ behavior: 'smooth' });
+        const promesasTab = document.querySelector<HTMLButtonElement>('[data-tab="promesas"]');
+        if (promesasTab) {
+          promesasTab.click();
         }
         return;
       }
@@ -453,16 +459,27 @@ const serverSyncIso = (await getLastSyncTimestampAsync()) || new Date().toISOStr
       if (data.lastSyncTimestamp && syncTimeAgo) {
         syncTimeAgo.setAttribute('data-server-sync', data.lastSyncTimestamp);
         updateSyncTimeAgo();
+
+        // If the server sync is older than 25 minutes, trigger background refresh silently
+        const syncMs = new Date(data.lastSyncTimestamp).getTime();
+        const diffMins = (Date.now() - syncMs) / 60000;
+        if (diffMins > 25 && !sessionStorage.getItem('pc_sync_triggered')) {
+          sessionStorage.setItem('pc_sync_triggered', '1');
+          fetch('/api/rss/sync').catch(() => {});
+        }
       }
     })
     .catch(() => {});
 
-  // Reader action: refresh view to show newest cached news without saturating Gemini
+  // Reader action: refresh view to trigger real sync & reload
   const manualSyncBtn = document.getElementById('btn-manual-sync') || document.getElementById('btn-header-sync');
   if (manualSyncBtn) {
-    manualSyncBtn.addEventListener('click', () => {
+    manualSyncBtn.addEventListener('click', async () => {
       const timeSpan = document.getElementById('sync-time-ago');
-      if (timeSpan) timeSpan.textContent = 'Actualizando portada...';
+      if (timeSpan) timeSpan.textContent = 'Actualizando noticias...';
+      try {
+        await fetch('/api/rss/sync?refresh=true', { method: 'GET' });
+      } catch (e) {}
       window.location.reload();
     });
   }

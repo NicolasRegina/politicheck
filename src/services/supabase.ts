@@ -154,13 +154,24 @@ export async function saveNewsClustersToSupabase(clusters: any[]): Promise<boole
 }
 
 /**
- * Load latest cached news clusters from Supabase
+ * Load latest cached news clusters from Supabase with historical accumulation
  */
-export async function getNewsClustersFromSupabase(maxAgeMinutes = 1440): Promise<any[] | null> {
+export async function getNewsClustersFromSupabase(limitOrMinutes = 100, maxAgeDays = 60): Promise<any[] | null> {
   if (!supabase) return null;
 
   try {
-    const minTime = new Date(Date.now() - maxAgeMinutes * 60 * 1000).toISOString();
+    // Support both legacy maxAgeMinutes (e.g. 1440) or limit (e.g. 100)
+    let limit = 100;
+    let days = maxAgeDays;
+    if (limitOrMinutes > 365) {
+      // legacy minutes parameter
+      days = Math.max(30, Math.round(limitOrMinutes / 1440));
+      limit = 150;
+    } else if (limitOrMinutes > 0) {
+      limit = limitOrMinutes;
+    }
+
+    const minTime = new Date(Date.now() - days * 24 * 60 * 60 * 1000).toISOString();
 
     const { data, error } = await supabase
       .from('news_clusters')
@@ -168,21 +179,22 @@ export async function getNewsClustersFromSupabase(maxAgeMinutes = 1440): Promise
       .neq('id', 'live-feed-cache')
       .neq('id', 'foreign-feed-cache')
       .gt('updated_at', minTime)
-      .order('updated_at', { ascending: false });
+      .order('updated_at', { ascending: false })
+      .limit(limit);
 
     if (error || !data || data.length === 0) {
       return null;
     }
 
     // Map DB rows back to full application StoryCluster objects
-    const mapped = data.map((row, idx) => {
+    const mapped = data.map(row => {
       const meta = (typeof row.key_quotes === 'object' && row.key_quotes !== null) ? row.key_quotes : {};
       const firstArticleImg = Array.isArray(row.articles) && row.articles[0]?.imageUrl;
       const defaultImg = row.category === 'Economía' ? '/images/regalias.jpg' : row.category === 'Sociedad' ? '/images/universidad.jpg' : '/images/malvinas.jpg';
 
       return {
         id: row.id,
-        isLeadStory: meta.isLeadStory === true || idx === 0,
+        isLeadStory: false,
         kicker: meta.kicker || (row.category === 'Internacional' ? 'MIRADA EXTERIOR' : 'EN COBERTURA'),
         neutralHeadline: row.neutral_headline || row.lead_title,
         category: row.category,
@@ -196,18 +208,59 @@ export async function getNewsClustersFromSupabase(maxAgeMinutes = 1440): Promise
       };
     });
 
-    // Guarantee that the explicit lead story is always the first item in the returned array, prioritizing the freshest
+    // Guarantee that the freshest story is always the lead story, followed chronologically by historical stories
     mapped.sort((a, b) => {
-      if (a.isLeadStory && !b.isLeadStory) return -1;
-      if (!a.isLeadStory && b.isLeadStory) return 1;
       const timeA = new Date(a.updatedAt).getTime() || 0;
       const timeB = new Date(b.updatedAt).getTime() || 0;
       return timeB - timeA;
     });
 
+    if (mapped.length > 0) {
+      mapped[0].isLeadStory = true;
+    }
+
     return mapped;
   } catch (err: any) {
     console.error('[Supabase] Exception loading news clusters:', err.message);
+    return null;
+  }
+}
+
+/**
+ * Fetch a single story cluster directly from Supabase by its exact ID
+ */
+export async function getStoryClusterByIdFromSupabase(id: string): Promise<any | null> {
+  if (!supabase || !id) return null;
+
+  try {
+    const { data: row, error } = await supabase
+      .from('news_clusters')
+      .select('*')
+      .eq('id', id)
+      .maybeSingle();
+
+    if (error || !row) return null;
+
+    const meta = (typeof row.key_quotes === 'object' && row.key_quotes !== null) ? row.key_quotes : {};
+    const firstArticleImg = Array.isArray(row.articles) && row.articles[0]?.imageUrl;
+    const defaultImg = row.category === 'Economía' ? '/images/regalias.jpg' : row.category === 'Sociedad' ? '/images/universidad.jpg' : '/images/malvinas.jpg';
+
+    return {
+      id: row.id,
+      isLeadStory: meta.isLeadStory === true,
+      kicker: meta.kicker || (row.category === 'Internacional' ? 'MIRADA EXTERIOR' : 'EN COBERTURA'),
+      neutralHeadline: row.neutral_headline || row.lead_title,
+      category: row.category,
+      summary: row.summary,
+      updatedAt: meta.updatedAt || row.updated_at,
+      imageUrl: meta.imageUrl || firstArticleImg || defaultImg,
+      imageCaption: meta.imageCaption || `Cobertura periodística de ${row.articles?.[0]?.outletName || 'prensa oficial'}.`,
+      spectrum: row.spectrum,
+      articles: row.articles || [],
+      aiComparisonNotice: meta.aiComparisonNotice || ''
+    };
+  } catch (err: any) {
+    console.error('[Supabase] Exception loading story cluster by ID:', err.message);
     return null;
   }
 }

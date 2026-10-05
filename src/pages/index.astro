@@ -211,10 +211,197 @@ const activeBanner = await getActiveCivicBanner('home_top');
           </div>
         ))}
       </div>
+
+      <!-- Historical Stories Pagination Toolbar -->
+      <div id="stories-pagination" class="flex flex-col sm:flex-row items-center justify-between gap-4 pt-6 border-t border-slate-200 dark:border-slate-800 text-xs font-mono">
+        <div class="text-slate-500 dark:text-slate-400" id="pagination-info">
+          Mostrando <span id="pagination-range" class="font-bold text-slate-800 dark:text-slate-200">1-{Math.min(6, secondaryStories.length)}</span> de <span id="pagination-total" class="font-bold text-slate-800 dark:text-slate-200">{secondaryStories.length}</span> historias
+        </div>
+        <div class="flex items-center gap-2" id="pagination-controls">
+          <button 
+            type="button" 
+            id="pagination-prev-btn" 
+            class="px-3 py-1.5 rounded-lg border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 disabled:opacity-30 disabled:pointer-events-none transition-colors cursor-pointer"
+            disabled
+          >
+            ← Anterior
+          </button>
+          <div id="pagination-pages" class="flex items-center gap-1"></div>
+          <button 
+            type="button" 
+            id="pagination-next-btn" 
+            class="px-3 py-1.5 rounded-lg border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 disabled:opacity-30 disabled:pointer-events-none transition-colors cursor-pointer"
+          >
+            Siguiente →
+          </button>
+        </div>
+      </div>
     </section>
 
+    <!-- SECTION 4: Metodología, Independencia y Fuentes RSS -->
+    <section id="metodologia" class="bg-slate-50 dark:bg-[#0D111A] border border-slate-200 dark:border-slate-800/90 rounded-2xl p-6 sm:p-8 space-y-5">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-200 dark:border-slate-800 pb-3">
+        <div class="flex items-center gap-2 text-xs font-mono font-bold uppercase tracking-widest text-slate-800 dark:text-slate-200">
+          <svg class="w-4 h-4 text-slate-600 dark:text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+          <span>Declaración de Independencia y Metodología de Auditoría</span>
+        </div>
+        <a 
+          href="/metodologia" 
+          class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-900 text-white dark:bg-white dark:text-slate-900 text-xs font-mono font-bold hover:opacity-90 transition-opacity self-start sm:self-auto shadow-sm"
+        >
+          <span>Ver Metodología Completa & 31 Medios</span>
+          <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+          </svg>
+        </a>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-xs text-slate-600 dark:text-slate-400 font-sans leading-relaxed">
+        <div class="space-y-1.5">
+          <h4 class="font-bold text-slate-900 dark:text-slate-100 font-mono text-[11px] uppercase">
+            1. Agregación RSS Oficial (31 Redacciones)
+          </h4>
+          <p>
+            No realizamos scraping invasivo ni intervenimos los contenidos. Toda la información proviene de los canales RSS públicos y oficiales sindicados directamente por Clarín, La Nación, Infobae, TN, Ámbito, El Cronista, Perfil, elDiarioAR, Crónica, BAE, Cenital, La Izquierda Diario, El Economista, La Derecha Diario, Financial Times, El País, CNN, BBC Mundo, France 24, Le Monde, DW y agencias globales.
+          </p>
+        </div>
+
+        <div class="space-y-1.5">
+          <h4 class="font-bold text-slate-900 dark:text-slate-100 font-mono text-[11px] uppercase">
+            2. Análisis de Encuadres por IA
+          </h4>
+          <p>
+            Los resúmenes de contraste son generados de manera automatizada mediante modelos de lenguaje analizando la selección de adjetivos, omisiones temáticas y encuadre del titular, sin adherencia a ninguna fuerza política partidaria.
+          </p>
+        </div>
+
+        <div class="space-y-1.5">
+          <h4 class="font-bold text-slate-900 dark:text-slate-100 font-mono text-[11px] uppercase">
+            3. Espectro y Transparencia
+          </h4>
+          <p>
+            La plataforma computa de manera determinística la distribución del espectro editorial en base a las notas publicadas por cada redacción, contrastando encuadres oficialistas, fácticos y opositores para empoderar al lector.
+          </p>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- VIEW 2: Último Momento (Chronological full wire feed) -->
+  <div id="view-ultimo-momento" class="view-content space-y-6 hidden">
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-200 dark:border-slate-800 pb-3">
+      <div>
+        <div class="flex items-center gap-2 text-xs font-mono text-slate-500 dark:text-slate-400">
+          <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+          <span class="font-bold text-slate-900 dark:text-slate-100 uppercase tracking-wider">Noticias de Redacción en Vivo</span>
+        </div>
+        <h2 class="font-editorial text-2xl sm:text-3xl font-bold text-slate-950 dark:text-white">
+          Minuto a Minuto: Flujo Cronológico de Noticias
+        </h2>
+      </div>
+      <span class="text-xs font-mono text-slate-500 dark:text-slate-400">Sincronización en tiempo real</span>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4" id="live-feed-full-list">
+      {fullLiveFeedArticles.map((article) => (
+        <div class="live-item" data-text={`${article.title} ${article.snippet} ${article.outletName}`}>
+          <LiveFeedItem article={article} />
+        </div>
+      ))}
+    </div>
+  </div>
+
+  <!-- VIEW 3: Mirada Exterior (International coverage) -->
+  <div id="view-mirada-exterior" class="view-content space-y-10 hidden">
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-200 dark:border-slate-800 pb-3">
+      <div>
+        <div class="flex items-center gap-2 text-xs font-mono text-slate-500 dark:text-slate-400">
+          <span class="w-2 h-2 rounded-full bg-slate-900 dark:bg-slate-100"></span>
+          <span class="font-bold text-slate-900 dark:text-slate-100 uppercase tracking-wider">Prensa Internacional</span>
+        </div>
+        <h2 class="font-editorial text-2xl sm:text-3xl font-bold text-slate-950 dark:text-white">
+          La Mirada de Afuera: Argentina en los Medios del Mundo
+        </h2>
+      </div>
+      <div class="flex flex-col sm:items-end text-xs font-mono text-slate-500 dark:text-slate-400">
+        <span class="text-emerald-600 dark:text-emerald-400 font-bold">● Cobertura internacional en tiempo real</span>
+        <span>Le Figaro • France 24 • BBC Mundo • El País • The Guardian • Expansión • Le Monde • Nikkei</span>
+      </div>
+    </div>
+
+    <!-- Section A: Cobertura Cruzada y Encuadres (Clusters) -->
+    {foreignStoriesToDisplay.length > 0 && (
+      <div class="space-y-4">
+        <div class="flex items-center justify-between text-xs font-mono text-slate-500 dark:text-slate-400 border-b border-slate-200 dark:border-slate-800 pb-2">
+          <span class="font-bold uppercase tracking-wider text-slate-900 dark:text-slate-100">
+            Grandes Encuadres Internacionales
+          </span>
+          <span>{foreignStoriesToDisplay.length} temas analizados</span>
+        </div>
+        <div class="grid grid-cols-1 gap-6" id="foreign-grid">
+          {foreignStoriesToDisplay.map((story) => (
+            <div class="story-item" data-category="Internacional" data-text={`${story.neutralHeadline} ${story.summary} ${story.articles.map((a: any) => a.title + ' ' + a.outletName).join(' ')}`}>
+              <StoryCard story={story} />
+            </div>
+          ))}
+        </div>
+      </div>
+    )}
+
+    <!-- Section B: Cable Internacional en Vivo (Feed individual de corresponsales) -->
+    <div class="space-y-4">
+      <div class="flex items-center justify-between text-xs font-mono text-slate-500 dark:text-slate-400 border-b border-slate-200 dark:border-slate-800 pb-2">
+        <div class="flex items-center gap-2">
+          <span class="w-2 h-2 rounded-full bg-blue-500 animate-pulse"></span>
+          <span class="font-bold uppercase tracking-wider text-slate-900 dark:text-slate-100">
+            Cable Internacional en Directo
+          </span>
+        </div>
+        <span>{sortedForeignArticles.length} despachos sobre Argentina</span>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4" id="foreign-wire-grid">
+        {sortedForeignArticles.map((art) => (
+          <a
+            href={art.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="group flex flex-col justify-between p-4 rounded-xl border border-slate-200 dark:border-slate-800/80 bg-white dark:bg-slate-900/60 hover:border-slate-400 dark:hover:border-slate-600 transition-all hover:shadow-xs"
+          >
+            <div class="space-y-2">
+              <div class="flex items-center justify-between text-[11px] font-mono">
+                <span class="font-bold px-2 py-0.5 rounded bg-slate-100 dark:bg-slate-800 text-slate-800 dark:text-slate-200">
+                  {art.outletName}
+                </span>
+                <span class="text-slate-400">
+                  {art.publishedAt || 'Reciente'}
+                </span>
+              </div>
+              <h3 class="font-editorial text-base font-bold text-slate-900 dark:text-slate-100 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors line-clamp-3">
+                {art.title}
+              </h3>
+              {art.snippet && (
+                <p class="text-xs text-slate-600 dark:text-slate-400 line-clamp-3 leading-relaxed">
+                  {art.snippet}
+                </p>
+              )}
+            </div>
+            <div class="mt-4 pt-2 border-t border-slate-100 dark:border-slate-800/50 flex items-center justify-between text-[11px] font-mono text-slate-400 group-hover:text-slate-700 dark:group-hover:text-slate-300">
+              <span>Leer en {art.outletName}</span>
+              <span class="transition-transform group-hover:translate-x-0.5">↗</span>
+            </div>
+          </a>
+        ))}
+      </div>
+    </div>
+  </div>
+
+  <!-- VIEW 4: Monitor de Promesas de Campaña 2027 -->
+  <div id="view-promesas" class="view-content space-y-6 hidden">
     <!-- SECTION 3: Monitor de Promesas Electorales 2027 -->
-    <section id="monitor-promesas" class="space-y-6 pt-6 border-t border-slate-200 dark:border-slate-800">
+    <section id="monitor-promesas" class="space-y-6">
       <!-- Section Header & Metrics Dashboard Bento -->
       <div class="flex flex-col lg:flex-row lg:items-end justify-between gap-6 border-b border-slate-200 dark:border-slate-800 pb-5">
         <div class="space-y-2 max-w-2xl">
@@ -379,165 +566,6 @@ const activeBanner = await getActiveCivicBanner('home_top');
         </p>
       </div>
     </section>
-
-    <!-- SECTION 4: Metodología, Independencia y Fuentes RSS -->
-    <section id="metodologia" class="bg-slate-50 dark:bg-[#0D111A] border border-slate-200 dark:border-slate-800/90 rounded-2xl p-6 sm:p-8 space-y-5">
-      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-200 dark:border-slate-800 pb-3">
-        <div class="flex items-center gap-2 text-xs font-mono font-bold uppercase tracking-widest text-slate-800 dark:text-slate-200">
-          <svg class="w-4 h-4 text-slate-600 dark:text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-          </svg>
-          <span>Declaración de Independencia y Metodología de Auditoría</span>
-        </div>
-        <a 
-          href="/metodologia" 
-          class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-900 text-white dark:bg-white dark:text-slate-900 text-xs font-mono font-bold hover:opacity-90 transition-opacity self-start sm:self-auto shadow-sm"
-        >
-          <span>Ver Metodología Completa & 31 Medios</span>
-          <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
-          </svg>
-        </a>
-      </div>
-
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-xs text-slate-600 dark:text-slate-400 font-sans leading-relaxed">
-        <div class="space-y-1.5">
-          <h4 class="font-bold text-slate-900 dark:text-slate-100 font-mono text-[11px] uppercase">
-            1. Agregación RSS Oficial (31 Redacciones)
-          </h4>
-          <p>
-            No realizamos scraping invasivo ni intervenimos los contenidos. Toda la información proviene de los canales RSS públicos y oficiales sindicados directamente por Clarín, La Nación, Infobae, TN, Ámbito, El Cronista, Perfil, elDiarioAR, Crónica, BAE, Cenital, La Izquierda Diario, El Economista, La Derecha Diario, Financial Times, El País, CNN, BBC Mundo, France 24, Le Monde, DW y agencias globales.
-          </p>
-        </div>
-
-        <div class="space-y-1.5">
-          <h4 class="font-bold text-slate-900 dark:text-slate-100 font-mono text-[11px] uppercase">
-            2. Análisis de Encuadres por IA
-          </h4>
-          <p>
-            Los resúmenes de contraste son generados de manera automatizada mediante modelos de lenguaje analizando la selección de adjetivos, omisiones temáticas y encuadre del titular, sin adherencia a ninguna fuerza política partidaria.
-          </p>
-        </div>
-
-        <div class="space-y-1.5">
-          <h4 class="font-bold text-slate-900 dark:text-slate-100 font-mono text-[11px] uppercase">
-            3. Espectro y Transparencia
-          </h4>
-          <p>
-            La plataforma computa de manera determinística la distribución del espectro editorial en base a las notas publicadas por cada redacción, contrastando encuadres oficialistas, fácticos y opositores para empoderar al lector.
-          </p>
-        </div>
-      </div>
-    </section>
-  </div>
-
-  <!-- VIEW 2: Último Momento (Chronological full wire feed) -->
-  <div id="view-ultimo-momento" class="view-content space-y-6 hidden">
-    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-200 dark:border-slate-800 pb-3">
-      <div>
-        <div class="flex items-center gap-2 text-xs font-mono text-slate-500 dark:text-slate-400">
-          <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-          <span class="font-bold text-slate-900 dark:text-slate-100 uppercase tracking-wider">Noticias de Redacción en Vivo</span>
-        </div>
-        <h2 class="font-editorial text-2xl sm:text-3xl font-bold text-slate-950 dark:text-white">
-          Minuto a Minuto: Flujo Cronológico de Noticias
-        </h2>
-      </div>
-      <span class="text-xs font-mono text-slate-500 dark:text-slate-400">Sincronización en tiempo real</span>
-    </div>
-
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-4" id="live-feed-full-list">
-      {fullLiveFeedArticles.map((article) => (
-        <div class="live-item" data-text={`${article.title} ${article.snippet} ${article.outletName}`}>
-          <LiveFeedItem article={article} />
-        </div>
-      ))}
-    </div>
-  </div>
-
-  <!-- VIEW 3: Mirada Exterior (International coverage) -->
-  <div id="view-mirada-exterior" class="view-content space-y-10 hidden">
-    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-200 dark:border-slate-800 pb-3">
-      <div>
-        <div class="flex items-center gap-2 text-xs font-mono text-slate-500 dark:text-slate-400">
-          <span class="w-2 h-2 rounded-full bg-slate-900 dark:bg-slate-100"></span>
-          <span class="font-bold text-slate-900 dark:text-slate-100 uppercase tracking-wider">Prensa Internacional</span>
-        </div>
-        <h2 class="font-editorial text-2xl sm:text-3xl font-bold text-slate-950 dark:text-white">
-          La Mirada de Afuera: Argentina en los Medios del Mundo
-        </h2>
-      </div>
-      <div class="flex flex-col sm:items-end text-xs font-mono text-slate-500 dark:text-slate-400">
-        <span class="text-emerald-600 dark:text-emerald-400 font-bold">● Cobertura internacional en tiempo real</span>
-        <span>Le Figaro • France 24 • BBC Mundo • El País • The Guardian • Expansión • Le Monde • Nikkei</span>
-      </div>
-    </div>
-
-    <!-- Section A: Cobertura Cruzada y Encuadres (Clusters) -->
-    {foreignStoriesToDisplay.length > 0 && (
-      <div class="space-y-4">
-        <div class="flex items-center justify-between text-xs font-mono text-slate-500 dark:text-slate-400 border-b border-slate-200 dark:border-slate-800 pb-2">
-          <span class="font-bold uppercase tracking-wider text-slate-900 dark:text-slate-100">
-            Grandes Encuadres Internacionales
-          </span>
-          <span>{foreignStoriesToDisplay.length} temas analizados</span>
-        </div>
-        <div class="grid grid-cols-1 gap-6" id="foreign-grid">
-          {foreignStoriesToDisplay.map((story) => (
-            <div class="story-item" data-category="Internacional" data-text={`${story.neutralHeadline} ${story.summary} ${story.articles.map((a: any) => a.title + ' ' + a.outletName).join(' ')}`}>
-              <StoryCard story={story} />
-            </div>
-          ))}
-        </div>
-      </div>
-    )}
-
-    <!-- Section B: Cable Internacional en Vivo (Feed individual de corresponsales) -->
-    <div class="space-y-4">
-      <div class="flex items-center justify-between text-xs font-mono text-slate-500 dark:text-slate-400 border-b border-slate-200 dark:border-slate-800 pb-2">
-        <div class="flex items-center gap-2">
-          <span class="w-2 h-2 rounded-full bg-blue-500 animate-pulse"></span>
-          <span class="font-bold uppercase tracking-wider text-slate-900 dark:text-slate-100">
-            Cable Internacional en Directo
-          </span>
-        </div>
-        <span>{sortedForeignArticles.length} despachos sobre Argentina</span>
-      </div>
-
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4" id="foreign-wire-grid">
-        {sortedForeignArticles.map((art) => (
-          <a
-            href={art.url}
-            target="_blank"
-            rel="noopener noreferrer"
-            class="group flex flex-col justify-between p-4 rounded-xl border border-slate-200 dark:border-slate-800/80 bg-white dark:bg-slate-900/60 hover:border-slate-400 dark:hover:border-slate-600 transition-all hover:shadow-xs"
-          >
-            <div class="space-y-2">
-              <div class="flex items-center justify-between text-[11px] font-mono">
-                <span class="font-bold px-2 py-0.5 rounded bg-slate-100 dark:bg-slate-800 text-slate-800 dark:text-slate-200">
-                  {art.outletName}
-                </span>
-                <span class="text-slate-400">
-                  {art.publishedAt || 'Reciente'}
-                </span>
-              </div>
-              <h3 class="font-editorial text-base font-bold text-slate-900 dark:text-slate-100 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors line-clamp-3">
-                {art.title}
-              </h3>
-              {art.snippet && (
-                <p class="text-xs text-slate-600 dark:text-slate-400 line-clamp-3 leading-relaxed">
-                  {art.snippet}
-                </p>
-              )}
-            </div>
-            <div class="mt-4 pt-2 border-t border-slate-100 dark:border-slate-800/50 flex items-center justify-between text-[11px] font-mono text-slate-400 group-hover:text-slate-700 dark:group-hover:text-slate-300">
-              <span>Leer en {art.outletName}</span>
-              <span class="transition-transform group-hover:translate-x-0.5">↗</span>
-            </div>
-          </a>
-        ))}
-      </div>
-    </div>
   </div>
 </Layout>
 
@@ -583,7 +611,7 @@ const activeBanner = await getActiveCivicBanner('home_top');
     });
   });
 
-  // --- Dynamic Lead Story Promotion & Category/Search Filtering ---
+  // --- Dynamic Lead Story Promotion & Category/Search Filtering with Pagination ---
   const leadSlot = document.getElementById('lead-story-slot');
   const grandOpeningHeader = document.getElementById('grand-opening-header');
   const secondarySection = document.getElementById('secondary-stories-section');
@@ -599,6 +627,14 @@ const activeBanner = await getActiveCivicBanner('home_top');
   const resetSearchBtn = document.getElementById('reset-search-btn');
   const newsEmptyState = document.getElementById('news-empty-state');
 
+  // Pagination elements
+  const storiesPagination = document.getElementById('stories-pagination');
+  const paginationRange = document.getElementById('pagination-range');
+  const paginationTotal = document.getElementById('pagination-total');
+  const paginationPrevBtn = document.getElementById('pagination-prev-btn') as HTMLButtonElement | null;
+  const paginationNextBtn = document.getElementById('pagination-next-btn') as HTMLButtonElement | null;
+  const paginationPages = document.getElementById('pagination-pages');
+
   const origLeadCard = document.getElementById('grand-opening-card-wrapper');
   const origSecondaryCards = secondaryGrid ? (Array.from(secondaryGrid.children) as HTMLElement[]) : [];
   const allStories = origLeadCard ? [origLeadCard, ...origSecondaryCards] : origSecondaryCards;
@@ -606,6 +642,8 @@ const activeBanner = await getActiveCivicBanner('home_top');
 
   let activeCategory = 'all';
   let activeSearchQuery = '';
+  let currentNewsPage = 1;
+  const NEWS_PAGE_SIZE = 6;
 
   function normalizeStr(str: string): string {
     return (str || '')
@@ -615,7 +653,52 @@ const activeBanner = await getActiveCivicBanner('home_top');
       .trim();
   }
 
-  function updateNewsLayout() {
+  function renderStoriesPagination(secondaryMatches: HTMLElement[]) {
+    if (!storiesPagination) return;
+    const totalMatches = secondaryMatches.length;
+
+    if (totalMatches <= NEWS_PAGE_SIZE) {
+      storiesPagination.classList.add('hidden');
+      storiesPagination.classList.remove('flex');
+      return;
+    }
+
+    storiesPagination.classList.remove('hidden');
+    storiesPagination.classList.add('flex');
+
+    const totalPages = Math.ceil(totalMatches / NEWS_PAGE_SIZE);
+    const startIdx = (currentNewsPage - 1) * NEWS_PAGE_SIZE;
+    const endIdx = Math.min(startIdx + NEWS_PAGE_SIZE, totalMatches);
+
+    if (paginationRange) paginationRange.textContent = `${startIdx + 1}-${endIdx}`;
+    if (paginationTotal) paginationTotal.textContent = `${totalMatches}`;
+    if (paginationPrevBtn) paginationPrevBtn.disabled = (currentNewsPage <= 1);
+    if (paginationNextBtn) paginationNextBtn.disabled = (currentNewsPage >= totalPages);
+
+    if (paginationPages) {
+      paginationPages.innerHTML = '';
+      for (let p = 1; p <= totalPages; p++) {
+        const pBtn = document.createElement('button');
+        pBtn.type = 'button';
+        pBtn.textContent = String(p);
+        pBtn.className = (p === currentNewsPage)
+          ? 'px-2.5 py-1 rounded-md bg-slate-900 dark:bg-white text-white dark:text-slate-900 font-bold transition-all cursor-pointer text-xs'
+          : 'px-2.5 py-1 rounded-md bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-all cursor-pointer text-xs';
+        pBtn.addEventListener('click', () => {
+          currentNewsPage = p;
+          updateNewsLayout(false);
+          secondarySection?.scrollIntoView({ behavior: 'smooth' });
+        });
+        paginationPages.appendChild(pBtn);
+      }
+    }
+  }
+
+  function updateNewsLayout(resetPage = false) {
+    if (resetPage) {
+      currentNewsPage = 1;
+    }
+
     const normQuery = normalizeStr(activeSearchQuery);
     const isCategoryFilter = activeCategory !== 'all';
     const isSearchFilter = normQuery.length > 0;
@@ -641,11 +724,9 @@ const activeBanner = await getActiveCivicBanner('home_top');
       return matchesCat && matchesSearch;
     });
 
-    // Hide non-matching stories
+    // Hide all stories by default before selective display
     allStories.forEach(card => {
-      if (!matchingStories.includes(card)) {
-        card.style.display = 'none';
-      }
+      card.style.display = 'none';
     });
 
     // State 1: Reset / No filters active
@@ -654,13 +735,27 @@ const activeBanner = await getActiveCivicBanner('home_top');
         leadSlot.appendChild(origLeadCard);
         origLeadCard.style.display = '';
       }
+
+      const secondaryMatches = origSecondaryCards;
+      const totalPages = Math.max(1, Math.ceil(secondaryMatches.length / NEWS_PAGE_SIZE));
+      if (currentNewsPage > totalPages) currentNewsPage = 1;
+
+      const startIdx = (currentNewsPage - 1) * NEWS_PAGE_SIZE;
+      const endIdx = startIdx + NEWS_PAGE_SIZE;
+      const pageCards = secondaryMatches.slice(startIdx, endIdx);
+
       if (secondaryGrid) {
         origSecondaryCards.forEach(card => {
-          secondaryGrid.appendChild(card);
-          card.style.display = '';
+          if (pageCards.includes(card)) {
+            secondaryGrid.appendChild(card);
+            card.style.display = '';
+          } else {
+            card.style.display = 'none';
+          }
         });
         secondaryGrid.className = 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 items-stretch';
       }
+
       if (grandOpeningHeader) grandOpeningHeader.style.display = '';
       if (secondarySection) secondarySection.style.display = '';
       if (secondaryHeading) secondaryHeading.textContent = 'Temas Destacados en Portada';
@@ -673,6 +768,8 @@ const activeBanner = await getActiveCivicBanner('home_top');
         newsSearchBanner.classList.remove('flex');
       }
       if (newsEmptyState) newsEmptyState.classList.add('hidden');
+
+      renderStoriesPagination(secondaryMatches);
       return;
     }
 
@@ -704,6 +801,10 @@ const activeBanner = await getActiveCivicBanner('home_top');
       if (origLeadCard) origLeadCard.style.display = 'none';
       if (grandOpeningHeader) grandOpeningHeader.style.display = 'none';
       if (secondarySection) secondarySection.style.display = 'none';
+      if (storiesPagination) {
+        storiesPagination.classList.add('hidden');
+        storiesPagination.classList.remove('flex');
+      }
       if (newsEmptyState) {
         newsEmptyState.classList.remove('hidden');
         const emptyTitle = newsEmptyState.querySelector('p');
@@ -729,12 +830,24 @@ const activeBanner = await getActiveCivicBanner('home_top');
     const secondaryMatches = matchingStories.slice(1);
     if (secondaryMatches.length > 0 && secondarySection && secondaryGrid) {
       secondarySection.style.display = '';
-      secondaryMatches.forEach(card => {
-        secondaryGrid.appendChild(card);
-        card.style.display = '';
+
+      const totalPages = Math.max(1, Math.ceil(secondaryMatches.length / NEWS_PAGE_SIZE));
+      if (currentNewsPage > totalPages) currentNewsPage = 1;
+
+      const startIdx = (currentNewsPage - 1) * NEWS_PAGE_SIZE;
+      const endIdx = startIdx + NEWS_PAGE_SIZE;
+      const pageCards = secondaryMatches.slice(startIdx, endIdx);
+
+      origSecondaryCards.forEach(card => {
+        if (pageCards.includes(card)) {
+          secondaryGrid.appendChild(card);
+          card.style.display = '';
+        } else {
+          card.style.display = 'none';
+        }
       });
 
-      if (secondaryMatches.length === 1) {
+      if (pageCards.length === 1) {
         secondaryGrid.className = 'grid grid-cols-1 md:grid-cols-2 gap-6 items-stretch';
       } else {
         secondaryGrid.className = 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 items-stretch';
@@ -745,18 +858,45 @@ const activeBanner = await getActiveCivicBanner('home_top');
           ? `Más coberturas en ${activeCategory} (${secondaryMatches.length})`
           : `Otras noticias encontradas (${secondaryMatches.length})`;
       }
+
+      renderStoriesPagination(secondaryMatches);
     } else {
-      // No extra stories -> hide secondary section cleanly
       if (secondarySection) {
         secondarySection.style.display = 'none';
+      }
+      if (storiesPagination) {
+        storiesPagination.classList.add('hidden');
+        storiesPagination.classList.remove('flex');
       }
     }
   }
 
+  // Pagination navigation listeners
+  if (paginationPrevBtn) {
+    paginationPrevBtn.addEventListener('click', () => {
+      if (currentNewsPage > 1) {
+        currentNewsPage--;
+        updateNewsLayout(false);
+        secondarySection?.scrollIntoView({ behavior: 'smooth' });
+      }
+    });
+  }
+
+  if (paginationNextBtn) {
+    paginationNextBtn.addEventListener('click', () => {
+      currentNewsPage++;
+      updateNewsLayout(false);
+      secondarySection?.scrollIntoView({ behavior: 'smooth' });
+    });
+  }
+
+  // Initial pagination application
+  updateNewsLayout(true);
+
   // Expose category filter function globally
   (window as any).politicheckFilterCategory = (category: string) => {
     activeCategory = category || 'all';
-    updateNewsLayout();
+    updateNewsLayout(true);
   };
 
   // Clear filter button logic
@@ -782,7 +922,7 @@ const activeBanner = await getActiveCivicBanner('home_top');
           mainTab.click();
         }
       }
-      updateNewsLayout();
+      updateNewsLayout(true);
     });
   }
 
@@ -790,22 +930,28 @@ const activeBanner = await getActiveCivicBanner('home_top');
     if (searchInput) {
       searchInput.value = '';
       activeSearchQuery = '';
-      updateNewsLayout();
+      updateNewsLayout(true);
     }
   };
 
   if (clearSearchBtn) clearSearchBtn.addEventListener('click', clearSearchHandler);
   if (resetSearchBtn) resetSearchBtn.addEventListener('click', clearSearchHandler);
 
-  // Check URL params (?q=... or ?sec=...) on load
+  // Check URL params (?q=... or ?sec=... or ?tab=...) on load
   const urlParams = new URLSearchParams(window.location.search);
   const qParam = urlParams.get('q');
   const secParam = urlParams.get('sec');
+  const tabParam = urlParams.get('tab');
+
+  if (tabParam) {
+    const matchingTab = document.querySelector<HTMLButtonElement>(`.tab-btn[data-tab="${tabParam}"]`);
+    if (matchingTab) matchingTab.click();
+  }
 
   if (qParam && searchInput) {
     searchInput.value = qParam;
     activeSearchQuery = qParam.trim();
-    updateNewsLayout();
+    updateNewsLayout(true);
   } else if (secParam) {
     const matchingNavBtn = document.querySelector<HTMLButtonElement>(`.nav-section-btn[data-nav-section="${secParam}"]`);
     if (matchingNavBtn) {
