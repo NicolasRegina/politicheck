@@ -14,11 +14,12 @@ import {
 import { getNewsClustersFromSupabase, getActiveCivicBanner } from '../services/supabase';
 import { getPromisesWithLiveVotes, getPromisesStats } from '../services/promises';
 import { getPolitician } from '../data/politicians';
+import { getOptimizedImageUrl } from '../utils/image';
 
 export const prerender = false;
 
-// Edge Cache: cache 30s at CDN, serve stale up to 60s while revalidating
-Astro.response.headers.set('Cache-Control', 'public, s-maxage=30, stale-while-revalidate=60');
+// Edge Cache: cache 120s at CDN, serve stale up to 600s while revalidating
+Astro.response.headers.set('Cache-Control', 'public, s-maxage=120, stale-while-revalidate=600');
 
 // Parallelize all initial database and cache requests for maximum TTFB speed
 const [
@@ -133,13 +134,14 @@ const foreignStoriesToDisplay = dynamicForeignStories;
 const sortedForeignArticles = [...liveForeignArticles].sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
 
 const leadStory = storiesToDisplay[0];
+const leadStoryPreload = leadStory?.imageUrl ? getOptimizedImageUrl(leadStory.imageUrl, 800, 75) : undefined;
 const secondaryStories = storiesToDisplay.slice(1);
 const liveRailArticles = liveArticles.slice(0, 6);
 const fullLiveFeedArticles = liveArticles.slice(0, 60);
 
 ---
 
-<Layout preloadImage={leadStory?.imageUrl} stories={storiesToDisplay} serverSyncIso={lastSyncIso}>
+<Layout preloadImage={leadStoryPreload} stories={storiesToDisplay} serverSyncIso={lastSyncIso}>
   <!-- VIEW 1: Tapa del Periódico (Lead story + live rail + secondary bento grid) -->
   <div id="view-temas-del-dia" class="view-content space-y-10">
     <!-- SECTION 1: Grand Apertura & Wire Rail (8 cols / 4 cols) -->

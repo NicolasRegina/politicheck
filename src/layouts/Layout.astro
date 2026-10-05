@@ -44,16 +44,19 @@ const absoluteImageUrl = image.startsWith('http') ? image : `https://www.politic
     <meta name="apple-mobile-web-app-title" content="Politicheck" />
     <meta name="generator" content={Astro.generator} />
     
+    <!-- Image CDN Preconnect for instantaneous mobile LCP -->
+    <link rel="preconnect" href="https://wsrv.nl" crossorigin />
+
     <!-- Editorial Web Fonts (Preconnected & Asynchronous Non-Blocking Load for instant FCP) -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link rel="preload" as="style" id="editorial-fonts" href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400..800;1,6..72,400..800&family=Inter:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" />
+    <link rel="preload" as="style" id="editorial-fonts" href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,600..800;1,6..72,600&family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700&family=JetBrains+Mono:wght@500&display=swap" />
     <script is:inline>
       const ef = document.getElementById('editorial-fonts');
       if (ef) ef.rel = 'stylesheet';
     </script>
     <noscript>
-      <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400..800;1,6..72,400..800&family=Inter:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" />
+      <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,600..800;1,6..72,600&family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700&family=JetBrains+Mono:wght@500&display=swap" />
     </noscript>
 
     {preloadImage && (
