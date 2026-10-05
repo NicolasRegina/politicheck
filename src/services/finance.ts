@@ -42,12 +42,34 @@ function saveCachedFinance(data: FinancialTickerData): void {
   } catch {}
 }
 
+let inMemoryFinance: FinancialTickerData | null = null;
+let lastFinanceFetchTime = 0;
+const FINANCE_CACHE_TTL = 15 * 60 * 1000; // 15 minutes
+
+let inMemoryWeather: WeatherData | null = null;
+let lastWeatherFetchTime = 0;
+const WEATHER_CACHE_TTL = 15 * 60 * 1000; // 15 minutes
+
 export async function fetchLiveFinancialData(): Promise<FinancialTickerData | null> {
+  const now = Date.now();
+  if (inMemoryFinance && now - lastFinanceFetchTime < FINANCE_CACHE_TTL) {
+    return inMemoryFinance;
+  }
+
   const cached = getCachedFinance();
+  if (cached && cached.lastUpdated) {
+    const age = now - new Date(cached.lastUpdated).getTime();
+    if (!isNaN(age) && age < FINANCE_CACHE_TTL) {
+      inMemoryFinance = cached;
+      lastFinanceFetchTime = now;
+      return cached;
+    }
+  }
 
   try {
     const res = await fetch('https://dolarapi.com/v1/dolares', {
-      headers: { Accept: 'application/json' }
+      headers: { Accept: 'application/json' },
+      signal: AbortSignal.timeout(3000)
     });
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
     const data: ExchangeRate[] = await res.json();
@@ -61,7 +83,9 @@ export async function fetchLiveFinancialData(): Promise<FinancialTickerData | nu
     // 1. Live Riesgo País
     let riesgoPais = cached?.riesgoPais ?? 628;
     try {
-      const rpRes = await fetch('https://api.argentinadatos.com/v1/finanzas/indices/riesgo-pais/ultimo');
+      const rpRes = await fetch('https://api.argentinadatos.com/v1/finanzas/indices/riesgo-pais/ultimo', {
+        signal: AbortSignal.timeout(2000)
+      });
       if (rpRes.ok) {
         const rpData = await rpRes.json();
         if (typeof rpData.valor === 'number') riesgoPais = rpData.valor;
@@ -71,7 +95,9 @@ export async function fetchLiveFinancialData(): Promise<FinancialTickerData | nu
     // 2. Live INDEC Monthly Inflation (IPC)
     let ipc = cached?.ipc ?? 1.7;
     try {
-      const ipcRes = await fetch('https://api.argentinadatos.com/v1/finanzas/indices/inflacion');
+      const ipcRes = await fetch('https://api.argentinadatos.com/v1/finanzas/indices/inflacion', {
+        signal: AbortSignal.timeout(2000)
+      });
       if (ipcRes.ok) {
         const ipcData = await ipcRes.json();
         if (Array.isArray(ipcData) && ipcData.length > 0) {
@@ -83,10 +109,12 @@ export async function fetchLiveFinancialData(): Promise<FinancialTickerData | nu
 
     const result: FinancialTickerData = { blue, oficial, mep, ccl, riesgoPais, ipc, lastUpdated };
     saveCachedFinance(result);
+    inMemoryFinance = result;
+    lastFinanceFetchTime = now;
     return result;
   } catch (err) {
     console.warn('[FinanceService] Could not fetch live dollar rates, using cached/fallback:', err);
-    return cached ?? {
+    const fallback = cached ?? {
       blue: 1555,
       oficial: 1545,
       mep: 1548,
@@ -95,18 +123,31 @@ export async function fetchLiveFinancialData(): Promise<FinancialTickerData | nu
       ipc: 1.7,
       lastUpdated: new Date().toISOString()
     };
+    inMemoryFinance = fallback;
+    lastFinanceFetchTime = now;
+    return fallback;
   }
 }
 
 export async function fetchLiveWeather(): Promise<WeatherData | null> {
+  const now = Date.now();
+  if (inMemoryWeather && now - lastWeatherFetchTime < WEATHER_CACHE_TTL) {
+    return inMemoryWeather;
+  }
+
   try {
-    const res = await fetch('https://api.open-meteo.com/v1/forecast?latitude=-34.6132&longitude=-58.3772&current_weather=true');
+    const res = await fetch('https://api.open-meteo.com/v1/forecast?latitude=-34.6132&longitude=-58.3772&current_weather=true', {
+      signal: AbortSignal.timeout(2500)
+    });
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
     const data = await res.json();
     const temp = Math.round(data.current_weather.temperature);
-    return { temperature: temp, conditionText: 'Buenos Aires' };
+    const result: WeatherData = { temperature: temp, conditionText: 'Buenos Aires' };
+    inMemoryWeather = result;
+    lastWeatherFetchTime = now;
+    return result;
   } catch (err) {
     console.warn('[WeatherService] Could not fetch live weather, using fallback:', err);
-    return null;
+    return inMemoryWeather ?? { temperature: 20, conditionText: 'Buenos Aires' };
   }
 }

@@ -5,7 +5,14 @@ import { detectBreakingNews } from '../services/breaking';
 import { getCachedClusteredStories } from '../services/ai/clustering';
 import { getLastSyncTimestampAsync } from '../services/rss/sync';
 
-// Fetch initial data at build/render time
+interface Props {
+  stories?: any[];
+  serverSyncIso?: string | null;
+}
+
+const { stories: propStories, serverSyncIso: propSyncIso } = Astro.props;
+
+// Fetch initial data at build/render time (Memory-cached with 15m TTL)
 const finance = await fetchLiveFinancialData();
 const weather = await fetchLiveWeather();
 
@@ -25,14 +32,17 @@ const serverDateFormatted = new Intl.DateTimeFormat('es-AR', {
   year: 'numeric'
 }).format(now);
 
-// Detect active breaking news strictly from real clustered stories
-const { getNewsClustersFromSupabase } = await import('../services/supabase');
-const cloudStories = (await getNewsClustersFromSupabase(1440)) || [];
-const cachedStories = cloudStories.length > 0 ? cloudStories : getCachedClusteredStories();
+// Detect active breaking news strictly from real clustered stories (Use prop if provided)
+let cachedStories = propStories;
+if (!cachedStories || cachedStories.length === 0) {
+  const { getNewsClustersFromSupabase } = await import('../services/supabase');
+  const cloudStories = (await getNewsClustersFromSupabase(1440)) || [];
+  cachedStories = cloudStories.length > 0 ? cloudStories : getCachedClusteredStories();
+}
 const breakingAlert = detectBreakingNews(cachedStories);
 
-// Get real server sync timestamp directly from cloud cache
-const serverSyncIso = (await getLastSyncTimestampAsync()) || new Date().toISOString();
+// Get real server sync timestamp directly from cloud cache (Use prop if provided)
+const serverSyncIso = propSyncIso || (await getLastSyncTimestampAsync()) || new Date().toISOString();
 ---
 
 <header class="sticky top-0 z-50 bg-white/95 dark:bg-[#0A0E17]/95 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 transition-colors duration-200 shadow-xs">

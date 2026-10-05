@@ -97,6 +97,8 @@ const displayTimestamp = (story.updatedAt && story.updatedAt !== 'Reciente')
                   loading="eager"
                   fetchpriority="high"
                   decoding="async"
+                  width="800"
+                  height="450"
                   referrerpolicy="no-referrer"
                   onerror="this.closest('.story-img-wrapper')?.style.setProperty('display', 'none');"
                   class="w-full h-full object-cover object-center"
@@ -130,6 +132,8 @@ const displayTimestamp = (story.updatedAt && story.updatedAt !== 'Reciente')
                   alt={story.neutralHeadline} 
                   loading="lazy"
                   decoding="async"
+                  width="400"
+                  height="225"
                   referrerpolicy="no-referrer"
                   onerror="this.closest('.story-img-wrapper')?.style.setProperty('display', 'none');"
                   class="w-full h-full object-cover object-center"

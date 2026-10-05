@@ -197,6 +197,23 @@
   - Si los clústeres en la nube superan las 12 horas de antigüedad pero existen artículos RSS del día, SSR ejecuta automáticamente la clusterización con Gemini para regenerar la portada sin esperar un cron externo.
   - Corrección del parámetro de consulta de clústeres recientes en `/api/rss/sync` (`{ maxAgeMinutes: 60 }`), eliminando la confusión entre minutos y días en la comprobación de frescura.
 
+---
+
+### ✅ Tarea 14: Optimización Extrema de Performance Móvil (Core Web Vitals — FCP, LCP y TTFB) — [COMPLETADA]
+- [x] **Eliminación del Bloqueo de Renderizado por Tipografías Google Fonts:**
+  - Carga asíncrona no bloqueante de Google Fonts (`preload` + cambio dinámico a `stylesheet` y fallback `noscript`).
+  - El navegador pinta el texto de inmediato con fuentes del sistema, abatiendo el First Contentful Paint (FCP) a valores verdes.
+- [x] **Paralelización de Consultas SSR y Eliminación de Duplicados:**
+  - En `index.astro`, todas las consultas iniciales a la base de datos (promesas de campaña, artículos en vivo, clústeres de noticias, timestamp de sincronización y banner cívico) se ejecutan concurrentemente con `Promise.all`.
+  - Pasaje directo de clústeres y timestamp a `<Header />` a través de props, eliminando 2 consultas duplicadas a Supabase por cada petición.
+- [x] **Caché en Memoria para Cotizaciones y Clima (`src/services/finance.ts`):**
+  - Implementación de TTL de 15 minutos en memoria para cotizaciones del dólar, riesgo país, inflación y clima de Buenos Aires con timeouts estrictos (2-3s).
+  - Eliminación de 4 peticiones HTTP externas bloqueantes en cada carga de página.
+- [x] **Aceleración de LCP y Estabilidad Visual (CLS):**
+  - Preload prioritario en `<head>` de la fotografía de apertura (`<link rel="preload" as="image" href={preloadImage} fetchpriority="high">`).
+  - Atributos explícitos de `width` y `height` en todas las imágenes de portadas y feeds para eliminar saltos de maquetación (CLS: 0).
+
+
 
 ---
 

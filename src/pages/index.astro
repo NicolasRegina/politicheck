@@ -20,16 +20,23 @@ export const prerender = false;
 // Edge Cache: cache 30s at CDN, serve stale up to 60s while revalidating
 Astro.response.headers.set('Cache-Control', 'public, s-maxage=30, stale-while-revalidate=60');
 
-// Fetch live dynamic campaign promises with real citizen votes from Supabase
-const allPromises = await getPromisesWithLiveVotes();
+// Parallelize all initial database and cache requests for maximum TTFB speed
+const [
+  allPromises,
+  liveArticles,
+  cloudClusters,
+  lastSyncIso,
+  activeBanner
+] = await Promise.all([
+  getPromisesWithLiveVotes(),
+  getCachedArticlesAsync(),
+  getNewsClustersFromSupabase(1440),
+  getLastSyncTimestampAsync(),
+  getActiveCivicBanner('home_top')
+]);
+
 const promisesStats = getPromisesStats(allPromises);
 const uniqueCandidates = Array.from(new Set(allPromises.map(p => p.candidate)));
-
-// Fetch live articles cached from Supabase or official RSS feeds (No mocks)
-const liveArticles = await getCachedArticlesAsync();
-
-// Load clustered stories dynamically (Check Supabase cloud first, fallback to cached local)
-const cloudClusters = await getNewsClustersFromSupabase(1440);
 const cachedClusters = getCachedClusteredStories();
 
 // Separate national vs foreign clusters from Supabase
@@ -37,7 +44,6 @@ const nationalCloudClusters = cloudClusters ? cloudClusters.filter(c => c.catego
 const foreignCloudClusters = cloudClusters ? cloudClusters.filter(c => c.category === 'Internacional' || c.kicker?.includes('MIRADA EXTERIOR')) : [];
 
 // Trigger background server sync if feeds are older than 15 minutes OR if clusters are older than 60 minutes (self-healing fallback)
-const lastSyncIso = await getLastSyncTimestampAsync();
 const isFeedStale = !lastSyncIso || (Date.now() - new Date(lastSyncIso).getTime() > 15 * 60 * 1000);
 const areClustersStale = !nationalCloudClusters.length || (
   cloudClusters && cloudClusters[0]?.updated_at && (Date.now() - new Date(cloudClusters[0].updated_at).getTime() > 60 * 60 * 1000)
@@ -131,11 +137,9 @@ const secondaryStories = storiesToDisplay.slice(1);
 const liveRailArticles = liveArticles.slice(0, 6);
 const fullLiveFeedArticles = liveArticles.slice(0, 60);
 
-// Active Civic / Sponsor Banner
-const activeBanner = await getActiveCivicBanner('home_top');
 ---
 
-<Layout>
+<Layout preloadImage={leadStory?.imageUrl} stories={storiesToDisplay} serverSyncIso={lastSyncIso}>
   <!-- VIEW 1: Tapa del Periódico (Lead story + live rail + secondary bento grid) -->
   <div id="view-temas-del-dia" class="view-content space-y-10">
     <!-- SECTION 1: Grand Apertura & Wire Rail (8 cols / 4 cols) -->

@@ -11,6 +11,9 @@ interface Props {
   image?: string;
   canonicalUrl?: string;
   ogType?: 'website' | 'article';
+  preloadImage?: string;
+  stories?: any[];
+  serverSyncIso?: string | null;
 }
 
 const { 
@@ -18,7 +21,10 @@ const {
   description = "Plataforma cívica independiente para comparar el sesgo y encuadre entre medios de noticias en Argentina y auditar compromisos electorales.",
   image = "/images/social/twitter_banner.jpg",
   canonicalUrl = "https://www.politicheck.com.ar",
-  ogType = "website"
+  ogType = "website",
+  preloadImage,
+  stories,
+  serverSyncIso
 } = Astro.props;
 
 // Ensure absolute image url for Social Media previews
@@ -38,10 +44,21 @@ const absoluteImageUrl = image.startsWith('http') ? image : `https://www.politic
     <meta name="apple-mobile-web-app-title" content="Politicheck" />
     <meta name="generator" content={Astro.generator} />
     
-    <!-- Editorial Web Fonts (Preconnected for instant performance) -->
+    <!-- Editorial Web Fonts (Preconnected & Asynchronous Non-Blocking Load for instant FCP) -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400..800;1,6..72,400..800&family=Inter:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+    <link rel="preload" as="style" id="editorial-fonts" href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400..800;1,6..72,400..800&family=Inter:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" />
+    <script is:inline>
+      const ef = document.getElementById('editorial-fonts');
+      if (ef) ef.rel = 'stylesheet';
+    </script>
+    <noscript>
+      <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400..800;1,6..72,400..800&family=Inter:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" />
+    </noscript>
+
+    {preloadImage && (
+      <link rel="preload" as="image" href={preloadImage} fetchpriority="high" />
+    )}
     {import.meta.env.DEV && (
       <link rel="stylesheet" href="/src/styles/global.css" />
     )}
@@ -126,7 +143,7 @@ const absoluteImageUrl = image.startsWith('http') ? image : `https://www.politic
     </script>
   </head>
   <body class="min-h-screen flex flex-col bg-[#F8FAFC] dark:bg-[#090D16] text-slate-900 dark:text-slate-100 antialiased selection:bg-slate-300 dark:selection:bg-slate-700 selection:text-slate-900 dark:selection:text-white transition-colors duration-200">
-    <Header />
+    <Header stories={stories} serverSyncIso={serverSyncIso} />
     <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 py-6 sm:py-8">
       <slot />
     </main>
