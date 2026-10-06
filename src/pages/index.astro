@@ -135,13 +135,19 @@ const sortedForeignArticles = [...liveForeignArticles].sort((a, b) => (b.timesta
 
 const leadStory = storiesToDisplay[0];
 const leadStoryPreload = leadStory?.imageUrl ? getOptimizedImageUrl(leadStory.imageUrl, 800, 75) : undefined;
+const leadStoryPreloadMobile = leadStory?.imageUrl ? getOptimizedImageUrl(leadStory.imageUrl, 480, 70) : undefined;
 const secondaryStories = storiesToDisplay.slice(1);
 const liveRailArticles = liveArticles.slice(0, 6);
 const fullLiveFeedArticles = liveArticles.slice(0, 60);
 
 ---
 
-<Layout preloadImage={leadStoryPreload} stories={storiesToDisplay} serverSyncIso={lastSyncIso}>
+<Layout 
+  preloadImage={leadStoryPreload} 
+  preloadImageMobile={leadStoryPreloadMobile}
+  stories={storiesToDisplay} 
+  serverSyncIso={lastSyncIso}
+>
   <!-- VIEW 1: Tapa del Periódico (Lead story + live rail + secondary bento grid) -->
   <div id="view-temas-del-dia" class="view-content space-y-10">
     <!-- SECTION 1: Grand Apertura & Wire Rail (8 cols / 4 cols) -->

@@ -11,6 +11,7 @@ interface Props {
 const { story } = Astro.props;
 
 const optimizedLeadImageUrl = story.imageUrl ? getOptimizedImageUrl(story.imageUrl, 800, 75) : '';
+const optimizedLeadMobileImageUrl = story.imageUrl ? getOptimizedImageUrl(story.imageUrl, 480, 70) : '';
 const optimizedSecondaryImageUrl = story.imageUrl ? getOptimizedImageUrl(story.imageUrl, 400, 70) : '';
 
 // Persuasive viral copy calculation (optimized strictly <= 280 chars for standard X accounts)
@@ -97,6 +98,8 @@ const displayTimestamp = (story.updatedAt && story.updatedAt !== 'Reciente')
               <div class="relative overflow-hidden rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-100 dark:bg-slate-900 aspect-video max-h-[360px] sm:max-h-[460px]">
                 <img 
                   src={optimizedLeadImageUrl} 
+                  srcset={optimizedLeadMobileImageUrl ? `${optimizedLeadMobileImageUrl} 480w, ${optimizedLeadImageUrl} 800w` : undefined}
+                  sizes="(max-width: 640px) 100vw, 800px"
                   data-original-src={story.imageUrl}
                   alt={story.neutralHeadline} 
                   loading="eager"

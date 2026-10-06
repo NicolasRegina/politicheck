@@ -12,6 +12,7 @@ interface Props {
   canonicalUrl?: string;
   ogType?: 'website' | 'article';
   preloadImage?: string;
+  preloadImageMobile?: string;
   stories?: any[];
   serverSyncIso?: string | null;
 }
@@ -23,6 +24,7 @@ const {
   canonicalUrl = "https://www.politicheck.com.ar",
   ogType = "website",
   preloadImage,
+  preloadImageMobile,
   stories,
   serverSyncIso
 } = Astro.props;
@@ -60,7 +62,14 @@ const absoluteImageUrl = image.startsWith('http') ? image : `https://www.politic
     </noscript>
 
     {preloadImage && (
-      <link rel="preload" as="image" href={preloadImage} fetchpriority="high" />
+      <link 
+        rel="preload" 
+        as="image" 
+        href={preloadImage}
+        imagesrcset={preloadImageMobile ? `${preloadImageMobile} 480w, ${preloadImage} 800w` : undefined}
+        imagesizes={preloadImageMobile ? '(max-width: 640px) 100vw, 800px' : undefined}
+        fetchpriority="high" 
+      />
     )}
     {import.meta.env.DEV && (
       <link rel="stylesheet" href="/src/styles/global.css" />
