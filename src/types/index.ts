@@ -2,6 +2,17 @@ export type OutletCategory = 'nacional' | 'internacional';
 
 export type BaselineLeaning = 'oficialismo' | 'centro_datos' | 'oposicion';
 
+// Ground News Methodology Types
+export type Ideology = 'izquierda' | 'centro_izquierda' | 'centro' | 'centro_derecha' | 'derecha';
+export type FactualityRating = 'muy_alta' | 'alta' | 'mixta';
+export type FundingType = 'privado_corporativo' | 'sindical_partidario' | 'publico_estatal' | 'independiente_suscripcion';
+
+export interface OutletOwnership {
+  group: string;               // e.g., "Grupo Clarín", "Grupo Octubre", "S.A. La Nación"
+  fundingType: FundingType;
+  countryOrigin: string;
+}
+
 export interface Outlet {
   id: string;
   name: string;
@@ -10,6 +21,27 @@ export interface Outlet {
   baselineLeaning: BaselineLeaning;
   logoUrl?: string;
   websiteUrl: string;
+}
+
+export interface OutletMeta {
+  id: string;
+  name: string;
+  code: string;
+  category: OutletCategory;
+  country: string;
+  flag: string;
+  baselineLeaning: BaselineLeaning;
+
+  // Ground News Triangulation Layer
+  ideology: Ideology;
+  factuality: FactualityRating;
+  ownership: OutletOwnership;
+  sourceAuditRef: string;
+
+  editorialProfile: string;
+  rssFeedUrl: string;
+  websiteUrl: string;
+  badgeClass: string;
 }
 
 export interface Article {

@@ -1,461 +1,50 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import { OUTLETS_REGISTRY } from '../utils/outlets';
+import type { OutletMeta, Ideology, FactualityRating, FundingType } from '../types';
 
-// Metadata enriquecida de los 31 medios monitoreados
-export interface OutletDetail {
-  id: string;
-  name: string;
-  code: string;
-  category: 'nacional' | 'internacional';
-  country: string;
-  flag: string;
-  baselineLeaning: 'oficialismo' | 'centro_datos' | 'oposicion';
-  editorialProfile: string;
-  rssFeedUrl: string;
-  websiteUrl: string;
-  badgeClass: string;
-}
+export type OutletDetail = OutletMeta;
 
-const OUTLETS_CATALOG: OutletDetail[] = [
-  // 1. Clarín
-  {
-    id: 'clarin',
-    name: 'Clarín',
-    code: 'CLARÍN',
-    category: 'nacional',
-    country: 'Argentina',
-    flag: '🇦🇷',
-    baselineLeaning: 'centro_datos',
-    editorialProfile: 'Decano de la prensa gráfica argentina, de alcance masivo y perfil generalista. Cobertura centrada en economía, política e impacto tarifario con fuentes plurales de consulta.',
-    rssFeedUrl: 'https://www.clarin.com/rss/politica/',
-    websiteUrl: 'https://www.clarin.com',
-    badgeClass: 'bg-emerald-100 text-emerald-950 dark:bg-emerald-950/70 dark:text-emerald-300 border-emerald-300 dark:border-emerald-800'
-  },
-  // 2. La Nación
-  {
-    id: 'lanacion',
-    name: 'La Nación',
-    code: 'LA NACIÓN',
-    category: 'nacional',
-    country: 'Argentina',
-    flag: '🇦🇷',
-    baselineLeaning: 'oficialismo',
-    editorialProfile: 'Diario histórico de tradición republicana y liberal clásico. Tiende a valorar favorablemente la disciplina fiscal, las reformas desregulatorias y las metas pro-mercado.',
-    rssFeedUrl: 'https://www.lanacion.com.ar/arc/outboundfeeds/rss/?outputType=xml',
-    websiteUrl: 'https://www.lanacion.com.ar',
-    badgeClass: 'bg-purple-100 text-purple-950 dark:bg-purple-950/70 dark:text-purple-300 border-purple-300 dark:border-purple-800'
-  },
-  // 3. Infobae
-  {
-    id: 'infobae',
-    name: 'Infobae',
-    code: 'INFOBAE',
-    category: 'nacional',
-    country: 'Argentina',
-    flag: '🇦🇷',
-    baselineLeaning: 'centro_datos',
-    editorialProfile: 'Medio digital nativo líder en el mundo hispanohablante. Dinámica informativa ágil de última hora y tribuna de opinión que integra a analistas de todo el arco político.',
-    rssFeedUrl: 'https://www.infobae.com/arc/outboundfeeds/rss/?outputType=xml',
-    websiteUrl: 'https://www.infobae.com',
-    badgeClass: 'bg-emerald-100 text-emerald-950 dark:bg-emerald-950/70 dark:text-emerald-300 border-emerald-300 dark:border-emerald-800'
-  },
-  // 4. Todo Noticias (TN)
-  {
-    id: 'tn',
-    name: 'Todo Noticias (TN)',
-    code: 'TN',
-    category: 'nacional',
-    country: 'Argentina',
-    flag: '🇦🇷',
-    baselineLeaning: 'oficialismo',
-    editorialProfile: 'Canal y portal continuo de noticias. Enfoque prioritario en seguridad ciudadana, actividad parlamentaria y avances del plan macroeconómico oficial.',
-    rssFeedUrl: 'https://tn.com.ar/rss.xml',
-    websiteUrl: 'https://tn.com.ar',
-    badgeClass: 'bg-purple-100 text-purple-950 dark:bg-purple-950/70 dark:text-purple-300 border-purple-300 dark:border-purple-800'
-  },
-  // 5. Página 12
-  {
-    id: 'pagina12',
-    name: 'Página 12',
-    code: 'PÁGINA 12',
-    category: 'nacional',
-    country: 'Argentina',
-    flag: '🇦🇷',
-    baselineLeaning: 'oposicion',
-    editorialProfile: 'Periódico insignia de la centro-izquierda y el progresismo nacional. Enfoque crítico y exhaustivo sobre el costo social del ajuste, derechos humanos y medidas laborales.',
-    rssFeedUrl: 'https://www.pagina12.com.ar/rss/portada.xml',
-    websiteUrl: 'https://www.pagina12.com.ar',
-    badgeClass: 'bg-amber-100 text-amber-950 dark:bg-amber-950/70 dark:text-amber-300 border-amber-300 dark:border-amber-800'
-  },
-  // 6. Ámbito Financiero
-  {
-    id: 'ambito',
-    name: 'Ámbito Financiero',
-    code: 'ÁMBITO',
-    category: 'nacional',
-    country: 'Argentina',
-    flag: '🇦🇷',
-    baselineLeaning: 'oposicion',
-    editorialProfile: 'Especializado en finanzas, mercados y macroeconomía. Sigue con agudeza técnica el frente cambiario, la deuda externa, la actividad productiva y los gobernadores del interior.',
-    rssFeedUrl: 'https://www.ambito.com/rss/pages/home.xml',
-    websiteUrl: 'https://www.ambito.com',
-    badgeClass: 'bg-amber-100 text-amber-950 dark:bg-amber-950/70 dark:text-amber-300 border-amber-300 dark:border-amber-800'
-  },
-  // 7. El Cronista
-  {
-    id: 'cronista',
-    name: 'El Cronista',
-    code: 'EL CRONISTA',
-    category: 'nacional',
-    country: 'Argentina',
-    flag: '🇦🇷',
-    baselineLeaning: 'centro_datos',
-    editorialProfile: 'Publicación de negocios y finanzas orientada al sector corporativo y bursátil. Riguroso seguimiento numérico de cotizaciones, balances del BCRA e indicadores de actividad.',
-    rssFeedUrl: 'https://www.cronista.com/files/rss/news.xml',
-    websiteUrl: 'https://www.cronista.com',
-    badgeClass: 'bg-emerald-100 text-emerald-950 dark:bg-emerald-950/70 dark:text-emerald-300 border-emerald-300 dark:border-emerald-800'
-  },
-  // 8. Diario Perfil
-  {
-    id: 'perfil',
-    name: 'Perfil',
-    code: 'PERFIL',
-    category: 'nacional',
-    country: 'Argentina',
-    flag: '🇦🇷',
-    baselineLeaning: 'centro_datos',
-    editorialProfile: 'Fundado por Jorge Fontevecchia. Periodismo de autor, entrevistas de profundidad y análisis equidistante con constante cuestionamiento a las hegemonías de turno.',
-    rssFeedUrl: 'https://www.perfil.com/feed',
-    websiteUrl: 'https://www.perfil.com',
-    badgeClass: 'bg-emerald-100 text-emerald-950 dark:bg-emerald-950/70 dark:text-emerald-300 border-emerald-300 dark:border-emerald-800'
-  },
-  // 9. elDiarioAR
-  {
-    id: 'eldiarioar',
-    name: 'elDiarioAR',
-    code: 'ELDIARIO.AR',
-    category: 'nacional',
-    country: 'Argentina',
-    flag: '🇦🇷',
-    baselineLeaning: 'oposicion',
-    editorialProfile: 'Medio digital independiente asociado a elDiario.es. Foco en investigación de fondo, justicia independiente, impacto ambiental y consecuencias sociales de las políticas públicas.',
-    rssFeedUrl: 'https://www.eldiarioar.com/rss/',
-    websiteUrl: 'https://www.eldiarioar.com',
-    badgeClass: 'bg-amber-100 text-amber-950 dark:bg-amber-950/70 dark:text-amber-300 border-amber-300 dark:border-amber-800'
-  },
-  // 10. Crónica
-  {
-    id: 'cronica',
-    name: 'Crónica',
-    code: 'CRÓNICA',
-    category: 'nacional',
-    country: 'Argentina',
-    flag: '🇦🇷',
-    baselineLeaning: 'centro_datos',
-    editorialProfile: 'Voz histórica del sentir popular argentino. Lenguaje llano y directo sobre precios en la calle, transporte, jubilaciones y reclamos vecinales.',
-    rssFeedUrl: 'https://www.cronica.com.ar/feed/',
-    websiteUrl: 'https://www.cronica.com.ar',
-    badgeClass: 'bg-emerald-100 text-emerald-950 dark:bg-emerald-950/70 dark:text-emerald-300 border-emerald-300 dark:border-emerald-800'
-  },
-  // 11. BAE Negocios
-  {
-    id: 'baenegocios',
-    name: 'BAE Negocios',
-    code: 'BAE NEGOCIOS',
-    category: 'nacional',
-    country: 'Argentina',
-    flag: '🇦🇷',
-    baselineLeaning: 'oposicion',
-    editorialProfile: 'Periódico económico enfocado en la industria nacional, Pymes, comercio interior y el movimiento obrero organizado.',
-    rssFeedUrl: 'https://www.baenegocios.com/feed/',
-    websiteUrl: 'https://www.baenegocios.com',
-    badgeClass: 'bg-amber-100 text-amber-950 dark:bg-amber-950/70 dark:text-amber-300 border-amber-300 dark:border-amber-800'
-  },
-  // 12. La Izquierda Diario
-  {
-    id: 'izquierdadiario',
-    name: 'La Izquierda Diario',
-    code: 'IZQUIERDA DIARIO',
-    category: 'nacional',
-    country: 'Argentina',
-    flag: '🇦🇷',
-    baselineLeaning: 'oposicion',
-    editorialProfile: 'Medio de difusión de la izquierda socialista y de los trabajadores. Crítica frontal al pago de la deuda al FMI, a la flexibilización laboral y al orden capitalista.',
-    rssFeedUrl: 'https://www.laizquierdadiario.com/spip.php?page=backend',
-    websiteUrl: 'https://www.laizquierdadiario.com',
-    badgeClass: 'bg-amber-100 text-amber-950 dark:bg-amber-950/70 dark:text-amber-300 border-amber-300 dark:border-amber-800'
-  },
-  // 13. Cenital
-  {
-    id: 'cenital',
-    name: 'Cenital',
-    code: 'CENITAL',
-    category: 'nacional',
-    country: 'Argentina',
-    flag: '🇦🇷',
-    baselineLeaning: 'centro_datos',
-    editorialProfile: 'Medio digital con newsletters temáticos y ensayos analíticos. Aborda los debates estructurales del país con profundidad contextual y solvencia académica.',
-    rssFeedUrl: 'https://cenital.com/feed/',
-    websiteUrl: 'https://cenital.com',
-    badgeClass: 'bg-emerald-100 text-emerald-950 dark:bg-emerald-950/70 dark:text-emerald-300 border-emerald-300 dark:border-emerald-800'
-  },
-  // 14. El Economista
-  {
-    id: 'eleconomista',
-    name: 'El Economista',
-    code: 'EL ECONOMISTA',
-    category: 'nacional',
-    country: 'Argentina',
-    flag: '🇦🇷',
-    baselineLeaning: 'centro_datos',
-    editorialProfile: 'Periódico técnico que releva balances de coyuntura macroeconómica, comercio exterior, metas con organismos y expectativas del sector privado.',
-    rssFeedUrl: 'https://eleconomista.com.ar/feed/',
-    websiteUrl: 'https://eleconomista.com.ar',
-    badgeClass: 'bg-emerald-100 text-emerald-950 dark:bg-emerald-950/70 dark:text-emerald-300 border-emerald-300 dark:border-emerald-800'
-  },
-  // 15. La Derecha Diario
-  {
-    id: 'derechadiario',
-    name: 'La Derecha Diario',
-    code: 'LA DERECHA DIARIO',
-    category: 'nacional',
-    country: 'Argentina',
-    flag: '🇦🇷',
-    baselineLeaning: 'oficialismo',
-    editorialProfile: 'Portal digital de ideario libertario afín al gobierno nacional. Promueve activamente el achicamiento estatal, las reformas de libre mercado y la desregulación total.',
-    rssFeedUrl: 'https://derechadiario.com.ar/rss/cat/politica',
-    websiteUrl: 'https://derechadiario.com.ar',
-    badgeClass: 'bg-purple-100 text-purple-950 dark:bg-purple-950/70 dark:text-purple-300 border-purple-300 dark:border-purple-800'
-  },
-  // 16. Financial Times
-  {
-    id: 'ft',
-    name: 'Financial Times',
-    code: 'FINANCIAL TIMES',
-    category: 'internacional',
-    country: 'Reino Unido',
-    flag: '🇬🇧',
-    baselineLeaning: 'centro_datos',
-    editorialProfile: 'Referente financiero internacional de la City de Londres. Analiza con precisión la solvencia de las reservas, el plan cambiario y la confianza de los bonistas externos.',
-    rssFeedUrl: 'https://www.ft.com',
-    websiteUrl: 'https://www.ft.com',
-    badgeClass: 'bg-emerald-100 text-emerald-950 dark:bg-emerald-950/70 dark:text-emerald-300 border-emerald-300 dark:border-emerald-800'
-  },
-  // 17. El País
-  {
-    id: 'elpais',
-    name: 'El País',
-    code: 'EL PAÍS',
-    category: 'internacional',
-    country: 'España',
-    flag: '🇪🇸',
-    baselineLeaning: 'oposicion',
-    editorialProfile: 'Diario global de centro-izquierda en español. Posee redacción en Buenos Aires y suele enfatizar los debates sobre derechos sociales y polarización política.',
-    rssFeedUrl: 'https://feeds.elpais.com/mrss-s/pages/ep/site/elpais.com/section/argentina/portada',
-    websiteUrl: 'https://elpais.com',
-    badgeClass: 'bg-amber-100 text-amber-950 dark:bg-amber-950/70 dark:text-amber-300 border-amber-300 dark:border-amber-800'
-  },
-  // 18. CNN en Español
-  {
-    id: 'cnn',
-    name: 'CNN en Español',
-    code: 'CNN',
-    category: 'internacional',
-    country: 'Estados Unidos',
-    flag: '🇺🇸',
-    baselineLeaning: 'centro_datos',
-    editorialProfile: 'Cadena de alcance continental. Reportes en vivo y cobertura balanceada de sucesos políticos, conferencias de prensa y resoluciones gubernamentales.',
-    rssFeedUrl: 'https://cnnespanol.cnn.com',
-    websiteUrl: 'https://cnnespanol.cnn.com',
-    badgeClass: 'bg-emerald-100 text-emerald-950 dark:bg-emerald-950/70 dark:text-emerald-300 border-emerald-300 dark:border-emerald-800'
-  },
-  // 19. BBC News Mundo
-  {
-    id: 'bbcmundo',
-    name: 'BBC News Mundo',
-    code: 'BBC MUNDO',
-    category: 'internacional',
-    country: 'Reino Unido',
-    flag: '🇬🇧',
-    baselineLeaning: 'centro_datos',
-    editorialProfile: 'Servicio público británico. Reportajes de contexto, verificación de hechos y crónicas humanas sobre la economía familiar y la realidad social en Argentina.',
-    rssFeedUrl: 'https://feeds.bbci.co.uk/mundo/rss.xml',
-    websiteUrl: 'https://www.bbc.com/mundo',
-    badgeClass: 'bg-emerald-100 text-emerald-950 dark:bg-emerald-950/70 dark:text-emerald-300 border-emerald-300 dark:border-emerald-800'
-  },
-  // 20. France 24 en Español
-  {
-    id: 'france24',
-    name: 'France 24',
-    code: 'FRANCE 24',
-    category: 'internacional',
-    country: 'Francia',
-    flag: '🇫🇷',
-    baselineLeaning: 'centro_datos',
-    editorialProfile: 'Medio público internacional de Francia. Sigue las relaciones bilaterales, el comercio del Mercosur con la Unión Europea y el impacto regional del Cono Sur.',
-    rssFeedUrl: 'https://www.france24.com/es/am%C3%A9rica-latina/rss',
-    websiteUrl: 'https://www.france24.com/es/',
-    badgeClass: 'bg-emerald-100 text-emerald-950 dark:bg-emerald-950/70 dark:text-emerald-300 border-emerald-300 dark:border-emerald-800'
-  },
-  // 21. Le Monde
-  {
-    id: 'lemonde',
-    name: 'Le Monde',
-    code: 'LE MONDE',
-    category: 'internacional',
-    country: 'Francia',
-    flag: '🇫🇷',
-    baselineLeaning: 'oposicion',
-    editorialProfile: 'Voz referente del pensamiento europeo de centro-izquierda. Cobertura crítica de los cambios sociopolíticos y la polarización institucional en Argentina.',
-    rssFeedUrl: 'https://www.lemonde.fr/international/rss_full.xml',
-    websiteUrl: 'https://www.lemonde.fr',
-    badgeClass: 'bg-amber-100 text-amber-950 dark:bg-amber-950/70 dark:text-amber-300 border-amber-300 dark:border-amber-800'
-  },
-  // 22. Le Figaro
-  {
-    id: 'lefigaro',
-    name: 'Le Figaro',
-    code: 'LE FIGARO',
-    category: 'internacional',
-    country: 'Francia',
-    flag: '🇫🇷',
-    baselineLeaning: 'centro_datos',
-    editorialProfile: 'Diario francés de línea conservadora y liberal. Sigue de cerca las transformaciones de mercado y las inversiones energéticas en Argentina.',
-    rssFeedUrl: 'https://www.lefigaro.fr/rss/figaro_international.xml',
-    websiteUrl: 'https://www.lefigaro.fr',
-    badgeClass: 'bg-emerald-100 text-emerald-950 dark:bg-emerald-950/70 dark:text-emerald-300 border-emerald-300 dark:border-emerald-800'
-  },
-  // 23. El Mundo (España)
-  {
-    id: 'elmundo',
-    name: 'El Mundo',
-    code: 'EL MUNDO',
-    category: 'internacional',
-    country: 'España',
-    flag: '🇪🇸',
-    baselineLeaning: 'oficialismo',
-    editorialProfile: 'Periódico español de centro-derecha liberal. Tiende a destacar con tono positivo los avances en superávit fiscal y reformas liberales del Ejecutivo argentino.',
-    rssFeedUrl: 'https://e00-elmundo.uecdn.es/elmundo/rss/internacional.xml',
-    websiteUrl: 'https://www.elmundo.es',
-    badgeClass: 'bg-purple-100 text-purple-950 dark:bg-purple-950/70 dark:text-purple-300 border-purple-300 dark:border-purple-800'
-  },
-  // 24. La Vanguardia
-  {
-    id: 'lavanguardia',
-    name: 'La Vanguardia',
-    code: 'LA VANGUARDIA',
-    category: 'internacional',
-    country: 'España',
-    flag: '🇪🇸',
-    baselineLeaning: 'centro_datos',
-    editorialProfile: 'Diario centrista de Barcelona. Enfoque medido y ponderado de la política iberoamericana y los lazos culturales y comerciales de España con el país.',
-    rssFeedUrl: 'https://www.lavanguardia.com/rss/internacional.xml',
-    websiteUrl: 'https://www.lavanguardia.com',
-    badgeClass: 'bg-emerald-100 text-emerald-950 dark:bg-emerald-950/70 dark:text-emerald-300 border-emerald-300 dark:border-emerald-800'
-  },
-  // 25. Expansión
-  {
-    id: 'expansion',
-    name: 'Expansión',
-    code: 'EXPANSIÓN',
-    category: 'internacional',
-    country: 'España',
-    flag: '🇪🇸',
-    baselineLeaning: 'centro_datos',
-    editorialProfile: 'Diario de economía y negocios de España. Monitoreo constante del desempeño de empresas cotizantes y el clima de negocios en el Cono Sur.',
-    rssFeedUrl: 'https://e00-expansion.uecdn.es/rss/latinoamerica.xml',
-    websiteUrl: 'https://www.expansion.com',
-    badgeClass: 'bg-emerald-100 text-emerald-950 dark:bg-emerald-950/70 dark:text-emerald-300 border-emerald-300 dark:border-emerald-800'
-  },
-  // 26. The Guardian
-  {
-    id: 'theguardian',
-    name: 'The Guardian',
-    code: 'THE GUARDIAN',
-    category: 'internacional',
-    country: 'Reino Unido',
-    flag: '🇬🇧',
-    baselineLeaning: 'oposicion',
-    editorialProfile: 'Prensa británica de raíz progresista. Cobertura crítica de recortes en salud, ciencia, educación y reclamos de movimientos sociales en Argentina.',
-    rssFeedUrl: 'https://www.theguardian.com/world/americas/rss',
-    websiteUrl: 'https://www.theguardian.com',
-    badgeClass: 'bg-amber-100 text-amber-950 dark:bg-amber-950/70 dark:text-amber-300 border-amber-300 dark:border-amber-800'
-  },
-  // 27. The New York Times
-  {
-    id: 'nyt',
-    name: 'The New York Times',
-    code: 'NY TIMES',
-    category: 'internacional',
-    country: 'Estados Unidos',
-    flag: '🇺🇸',
-    baselineLeaning: 'centro_datos',
-    editorialProfile: 'Periódico estadounidense de alcance global. Ensayos en profundidad sobre la política exterior, el alineamiento estratégico y la situación monetaria del país.',
-    rssFeedUrl: 'https://rss.nytimes.com/services/xml/rss/nyt/Americas.xml',
-    websiteUrl: 'https://www.nytimes.com',
-    badgeClass: 'bg-emerald-100 text-emerald-950 dark:bg-emerald-950/70 dark:text-emerald-300 border-emerald-300 dark:border-emerald-800'
-  },
-  // 28. DW Español
-  {
-    id: 'dw',
-    name: 'DW Español',
-    code: 'DEUTSCHE WELLE',
-    category: 'internacional',
-    country: 'Alemania',
-    flag: '🇩🇪',
-    baselineLeaning: 'centro_datos',
-    editorialProfile: 'Radiotelevisión pública federal alemana. Fact-checking estricto, ecología, transición energética y potencial del gas y litio argentino.',
-    rssFeedUrl: 'https://rss.dw.com/xml/rss-sp-all',
-    websiteUrl: 'https://www.dw.com/es',
-    badgeClass: 'bg-emerald-100 text-emerald-950 dark:bg-emerald-950/70 dark:text-emerald-300 border-emerald-300 dark:border-emerald-800'
-  },
-  // 29. Nikkei Asia
-  {
-    id: 'nikkeiasia',
-    name: 'Nikkei Asia',
-    code: 'NIKKEI ASIA',
-    category: 'internacional',
-    country: 'Japón',
-    flag: '🇯🇵',
-    baselineLeaning: 'centro_datos',
-    editorialProfile: 'Publicación económica líder de Tokio. Monitoreo de cadenas globales de valor, demanda de commodities y comercio del Asia-Pacífico con Sudamérica.',
-    rssFeedUrl: 'https://asia.nikkei.com/rss/feed/nar',
-    websiteUrl: 'https://asia.nikkei.com',
-    badgeClass: 'bg-emerald-100 text-emerald-950 dark:bg-emerald-950/70 dark:text-emerald-300 border-emerald-300 dark:border-emerald-800'
-  },
-  // 30. The Japan Times
-  {
-    id: 'japantimes',
-    name: 'The Japan Times',
-    code: 'JAPAN TIMES',
-    category: 'internacional',
-    country: 'Japón',
-    flag: '🇯🇵',
-    baselineLeaning: 'centro_datos',
-    editorialProfile: 'Diario en inglés de Tokio. Análisis geopolítico del G20, relaciones bilaterales y estabilidad financiera de economías emergentes.',
-    rssFeedUrl: 'https://www.japantimes.co.jp/feed/',
-    websiteUrl: 'https://www.japantimes.co.jp',
-    badgeClass: 'bg-emerald-100 text-emerald-950 dark:bg-emerald-950/70 dark:text-emerald-300 border-emerald-300 dark:border-emerald-800'
-  },
-  // 31. Xinhua News
-  {
-    id: 'xinhua',
-    name: 'Xinhua News',
-    code: 'XINHUA',
-    category: 'internacional',
-    country: 'China',
-    flag: '🇨🇳',
-    baselineLeaning: 'centro_datos',
-    editorialProfile: 'Agencia oficial de noticias de Pekín. Seguimiento continuo de la relación bilateral comercial, exportaciones de soja y carne, y swaps financieros con el BCRA.',
-    rssFeedUrl: 'http://www.xinhuanet.com/english/rss/worldrss.xml',
-    websiteUrl: 'http://www.xinhuanet.com',
-    badgeClass: 'bg-emerald-100 text-emerald-950 dark:bg-emerald-950/70 dark:text-emerald-300 border-emerald-300 dark:border-emerald-800'
-  }
-];
+const OUTLETS_CATALOG: OutletMeta[] = Object.values(OUTLETS_REGISTRY);
 
 const totalOutlets = OUTLETS_CATALOG.length;
 const nationalCount = OUTLETS_CATALOG.filter(o => o.category === 'nacional').length;
 const foreignCount = OUTLETS_CATALOG.filter(o => o.category === 'internacional').length;
+
+const FUNDING_LABELS: Record<FundingType, string> = {
+  privado_corporativo: 'Corporativo / Privado',
+  sindical_partidario: 'Sindical / Partidario',
+  publico_estatal: 'Público / Estatal',
+  independiente_suscripcion: 'Independiente / Suscripción',
+};
+
+const IDEOLOGY_LABELS: Record<Ideology, string> = {
+  izquierda: 'Izquierda',
+  centro_izquierda: 'Centro-Izquierda',
+  centro: 'Centro',
+  centro_derecha: 'Centro-Derecha',
+  derecha: 'Derecha',
+};
+
+const IDEOLOGY_BADGES: Record<Ideology, string> = {
+  izquierda: 'bg-rose-100 text-rose-800 dark:bg-rose-950/70 dark:text-rose-300 border-rose-300 dark:border-rose-800',
+  centro_izquierda: 'bg-amber-100 text-amber-800 dark:bg-amber-950/70 dark:text-amber-300 border-amber-300 dark:border-amber-800',
+  centro: 'bg-emerald-100 text-emerald-800 dark:bg-emerald-950/70 dark:text-emerald-300 border-emerald-300 dark:border-emerald-800',
+  centro_derecha: 'bg-sky-100 text-sky-800 dark:bg-sky-950/70 dark:text-sky-300 border-sky-300 dark:border-sky-800',
+  derecha: 'bg-indigo-100 text-indigo-800 dark:bg-indigo-950/70 dark:text-indigo-300 border-indigo-300 dark:border-indigo-800',
+};
+
+const FACTUALITY_LABELS: Record<FactualityRating, string> = {
+  muy_alta: 'Muy Alta',
+  alta: 'Alta',
+  mixta: 'Mixta',
+};
+
+const FACTUALITY_BADGES: Record<FactualityRating, string> = {
+  muy_alta: 'bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 border-emerald-500/30',
+  alta: 'bg-blue-500/10 text-blue-700 dark:text-blue-300 border-blue-500/30',
+  mixta: 'bg-amber-500/10 text-amber-700 dark:text-amber-300 border-amber-500/30',
+};
 ---
 
 <Layout 
@@ -666,7 +255,7 @@ const foreignCount = OUTLETS_CATALOG.filter(o => o.category === 'internacional')
       </div>
     </section>
 
-    <!-- SECTION 3: CATÁLOGO DE LOS 31 MEDIOS -->
+    <!-- SECTION 3: CATÁLOGO DE LOS 31 MEDIOS (ESTÁNDAR GROUND NEWS) -->
     <section id="catalogo" class="scroll-mt-20 p-6 sm:p-8 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 space-y-8">
       <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div class="flex items-center gap-3">
@@ -678,17 +267,17 @@ const foreignCount = OUTLETS_CATALOG.filter(o => o.category === 'internacional')
               Catálogo de Medios Monitoreados ({totalOutlets})
             </h2>
             <p class="text-xs font-mono text-slate-500 dark:text-slate-400">
-              {nationalCount} redacciones nacionales y {foreignCount} periódicos internacionales de referencia
+              {nationalCount} redacciones nacionales y {foreignCount} periódicos internacionales bajo auditoría tripartita
             </p>
           </div>
         </div>
 
         <!-- Live Search Box for Outlets -->
-        <div class="relative w-full sm:w-72">
+        <div class="relative w-full sm:w-80">
           <input 
             type="search" 
             id="outlet-search-input" 
-            placeholder="Buscar por diario, país o sesgo..."
+            placeholder="Buscar por medio, dueño, sesgo, país..."
             class="w-full text-xs font-mono px-3 py-2 pl-8 rounded-xl bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-slate-900 dark:focus:ring-white transition"
           />
           <svg class="w-4 h-4 text-slate-400 absolute left-2.5 top-2.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -697,26 +286,105 @@ const foreignCount = OUTLETS_CATALOG.filter(o => o.category === 'internacional')
         </div>
       </div>
 
-      <!-- Filter Tabs -->
-      <div class="flex flex-wrap items-center gap-2 border-b border-slate-200 dark:border-slate-800 pb-3 text-xs font-mono">
-        <button 
-          class="outlet-tab-btn active px-3 py-1.5 rounded-lg bg-slate-900 text-white dark:bg-white dark:text-slate-950 font-semibold transition"
-          data-filter="all"
-        >
-          Todos ({totalOutlets})
-        </button>
-        <button 
-          class="outlet-tab-btn px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 transition"
-          data-filter="nacional"
-        >
-          🇦🇷 Nacionales ({nationalCount})
-        </button>
-        <button 
-          class="outlet-tab-btn px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 transition"
-          data-filter="internacional"
-        >
-          🌐 Mirada Exterior ({foreignCount})
-        </button>
+      <!-- Ground News Tripartite Standard Framework Info Banner -->
+      <div class="p-4 sm:p-5 rounded-xl bg-slate-50 dark:bg-slate-950/60 border border-slate-200 dark:border-slate-800 space-y-3">
+        <div class="flex items-center gap-2">
+          <span class="text-base">⚖️</span>
+          <h3 class="font-mono text-xs font-bold uppercase tracking-wider text-slate-900 dark:text-white">
+            Metodología Tripartita de Auditoría (Estándar Ground News)
+          </h3>
+        </div>
+        <p class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
+          Siguiendo el modelo de referencia global implementado por <em>Ground News</em>, Politicheck evalúa cada redacción integrando las bases de datos de <strong>AllSides</strong>, <strong>Media Bias/Fact Check (MBFC)</strong> y el <strong>Media Ownership Monitor (MOM / Reporteros Sin Fronteras)</strong> en tres ejes complementarios:
+        </p>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-3 pt-1 text-xs font-mono">
+          <div class="p-3 rounded-lg bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800/80 space-y-1">
+            <span class="font-bold text-slate-900 dark:text-slate-100 flex items-center gap-1.5">
+              <span>📐</span> 1. Ideología & Sesgo
+            </span>
+            <p class="text-[11px] text-slate-500 dark:text-slate-400 leading-normal">
+              Posición editorial en escala AllSides/MBFC de 5 puntos (Izquierda a Derecha) ponderada con el escenario argentino.
+            </p>
+          </div>
+          <div class="p-3 rounded-lg bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800/80 space-y-1">
+            <span class="font-bold text-slate-900 dark:text-slate-100 flex items-center gap-1.5">
+              <span>🛡️</span> 2. Calidad Factual
+            </span>
+            <p class="text-[11px] text-slate-500 dark:text-slate-400 leading-normal">
+              Nivel de rigor periodístico y respaldo documental (Muy Alta, Alta o Mixta) según auditorías de verificación y políticas de rectificación de errores.
+            </p>
+          </div>
+          <div class="p-3 rounded-lg bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800/80 space-y-1">
+            <span class="font-bold text-slate-900 dark:text-slate-100 flex items-center gap-1.5">
+              <span>🏢</span> 3. Propiedad y Control
+            </span>
+            <p class="text-[11px] text-slate-500 dark:text-slate-400 leading-normal">
+              Transparencia corporativa sobre grupos de medios, accionistas mayoritarios y tipo de financiamiento según el Media Ownership Monitor.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Multi-Filter Toolbar -->
+      <div class="space-y-3 border-b border-slate-200 dark:border-slate-800 pb-4">
+        <!-- Category Tabs -->
+        <div class="flex flex-wrap items-center justify-between gap-3 text-xs font-mono">
+          <div class="flex flex-wrap items-center gap-2">
+            <button 
+              class="outlet-cat-btn active px-3 py-1.5 rounded-lg bg-slate-900 text-white dark:bg-white dark:text-slate-950 font-semibold transition"
+              data-filter="all"
+            >
+              Todos ({totalOutlets})
+            </button>
+            <button 
+              class="outlet-cat-btn px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 transition"
+              data-filter="nacional"
+            >
+              🇦🇷 Nacionales ({nationalCount})
+            </button>
+            <button 
+              class="outlet-cat-btn px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 transition"
+              data-filter="internacional"
+            >
+              🌐 Internacionales ({foreignCount})
+            </button>
+          </div>
+
+          <div class="text-[11px] font-mono text-slate-500 dark:text-slate-400">
+            Mostrando <span id="visible-outlets-count" class="font-bold text-slate-900 dark:text-white">{totalOutlets}</span> de {totalOutlets} medios
+          </div>
+        </div>
+
+        <!-- Secondary Filters: Factualidad & Ideología -->
+        <div class="flex flex-wrap items-center gap-3 pt-1 text-xs font-mono">
+          <div class="flex items-center gap-2">
+            <label for="outlet-factuality-filter" class="text-slate-500 dark:text-slate-400 text-[11px]">🛡️ Factualidad:</label>
+            <select 
+              id="outlet-factuality-filter"
+              class="px-2.5 py-1 text-xs font-mono rounded-lg bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-200 focus:outline-none focus:ring-1 focus:ring-slate-900 dark:focus:ring-white"
+            >
+              <option value="all">Todas</option>
+              <option value="muy_alta">Muy Alta</option>
+              <option value="alta">Alta</option>
+              <option value="mixta">Mixta</option>
+            </select>
+          </div>
+
+          <div class="flex items-center gap-2">
+            <label for="outlet-ideology-filter" class="text-slate-500 dark:text-slate-400 text-[11px]">📐 Ideología:</label>
+            <select 
+              id="outlet-ideology-filter"
+              class="px-2.5 py-1 text-xs font-mono rounded-lg bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-200 focus:outline-none focus:ring-1 focus:ring-slate-900 dark:focus:ring-white"
+            >
+              <option value="all">Todas</option>
+              <option value="izquierda">Izquierda</option>
+              <option value="centro_izquierda">Centro-Izquierda</option>
+              <option value="centro">Centro</option>
+              <option value="centro_derecha">Centro-Derecha</option>
+              <option value="derecha">Derecha</option>
+            </select>
+          </div>
+        </div>
       </div>
 
       <!-- Outlets Grid -->
@@ -728,29 +396,73 @@ const foreignCount = OUTLETS_CATALOG.filter(o => o.category === 'internacional')
           
           return (
             <article 
-              class="outlet-card p-4 rounded-xl bg-slate-50 dark:bg-slate-950/70 border border-slate-200 dark:border-slate-800 flex flex-col justify-between space-y-3 transition-all hover:border-slate-400 dark:hover:border-slate-600"
+              class="outlet-card p-4 rounded-xl bg-slate-50 dark:bg-slate-950/70 border border-slate-200 dark:border-slate-800 flex flex-col justify-between space-y-3.5 transition-all hover:border-slate-400 dark:hover:border-slate-600 shadow-sm"
               data-name={outlet.name.toLowerCase()}
               data-code={outlet.code.toLowerCase()}
               data-country={outlet.country.toLowerCase()}
               data-category={outlet.category}
               data-leaning={outlet.baselineLeaning}
+              data-ideology={outlet.ideology}
+              data-factuality={outlet.factuality}
+              data-group={outlet.ownership.group.toLowerCase()}
+              data-funding={outlet.ownership.fundingType}
             >
-              <div class="space-y-2">
-                <div class="flex items-center justify-between gap-2">
-                  <div class="flex items-center gap-1.5">
-                    <span class="text-base" title={outlet.country}>{outlet.flag}</span>
-                    <h4 class="font-bold text-slate-950 dark:text-white font-mono text-sm tracking-tight">
-                      {outlet.name}
-                    </h4>
+              <div class="space-y-3">
+                <!-- Header: Flag + Name + Leaning Badge -->
+                <div class="flex items-start justify-between gap-2">
+                  <div class="flex items-center gap-2">
+                    <span class="text-xl" title={outlet.country}>{outlet.flag}</span>
+                    <div>
+                      <h4 class="font-bold text-slate-950 dark:text-white font-mono text-sm tracking-tight leading-snug">
+                        {outlet.name}
+                      </h4>
+                      <span class="text-[10px] font-mono text-slate-400 dark:text-slate-500 uppercase">{outlet.country}</span>
+                    </div>
                   </div>
-                  <span class={`text-[10px] font-mono font-semibold px-2 py-0.5 rounded border ${outlet.badgeClass}`}>
+                  <span class={`text-[10px] font-mono font-bold px-2 py-0.5 rounded border whitespace-nowrap ${outlet.badgeClass}`}>
                     {leaningLabel}
                   </span>
                 </div>
 
+                <!-- Tripartite Badges: Ideology & Factuality -->
+                <div class="flex flex-wrap items-center gap-1.5 pt-0.5">
+                  <span class={`text-[10px] font-mono font-medium px-2 py-0.5 rounded-md border ${IDEOLOGY_BADGES[outlet.ideology]}`}>
+                    📐 {IDEOLOGY_LABELS[outlet.ideology]}
+                  </span>
+                  <span class={`text-[10px] font-mono font-medium px-2 py-0.5 rounded-md border ${FACTUALITY_BADGES[outlet.factuality]}`}>
+                    🛡️ {FACTUALITY_LABELS[outlet.factuality]}
+                  </span>
+                </div>
+
+                <!-- Ownership & Corporate Structure -->
+                <div class="p-2.5 rounded-lg bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800/80 space-y-1 text-[11px] font-mono">
+                  <div class="flex items-center justify-between text-slate-600 dark:text-slate-400">
+                    <span class="text-slate-400 dark:text-slate-500">🏢 Grupo/Dueño:</span>
+                    <span class="font-semibold text-slate-900 dark:text-slate-200 text-right truncate max-w-[160px]" title={outlet.ownership.group}>
+                      {outlet.ownership.group}
+                    </span>
+                  </div>
+                  <div class="flex items-center justify-between text-slate-600 dark:text-slate-400">
+                    <span class="text-slate-400 dark:text-slate-500">💼 Propiedad:</span>
+                    <span class="text-slate-800 dark:text-slate-300">
+                      {FUNDING_LABELS[outlet.ownership.fundingType]}
+                    </span>
+                  </div>
+                </div>
+
+                <!-- Editorial Profile -->
                 <p class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
                   {outlet.editorialProfile}
                 </p>
+
+                <!-- Independent Audit Citation -->
+                <div class="text-[10px] font-mono text-slate-500 dark:text-slate-400 flex items-start gap-1 bg-slate-100/60 dark:bg-slate-900/40 p-2 rounded-md border border-slate-200/50 dark:border-slate-800/50">
+                  <span class="text-slate-400">⚖️</span>
+                  <div class="leading-tight">
+                    <span class="font-semibold text-slate-700 dark:text-slate-300">Auditoría: </span>
+                    <span>{outlet.sourceAuditRef}</span>
+                  </div>
+                </div>
               </div>
 
               <!-- RSS & Web Links -->
@@ -787,7 +499,7 @@ const foreignCount = OUTLETS_CATALOG.filter(o => o.category === 'internacional')
 
       <!-- No Results Message -->
       <div id="no-outlets-found" class="hidden p-8 text-center text-slate-500 dark:text-slate-400 font-mono text-xs">
-        No se encontraron medios que coincidan con la búsqueda.
+        No se encontraron medios que coincidan con los criterios seleccionados.
       </div>
     </section>
 
@@ -952,11 +664,16 @@ const foreignCount = OUTLETS_CATALOG.filter(o => o.category === 'internacional')
 <script is:inline>
   document.addEventListener('DOMContentLoaded', () => {
     const searchInput = document.getElementById('outlet-search-input');
-    const tabButtons = document.querySelectorAll('.outlet-tab-btn');
+    const catButtons = document.querySelectorAll('.outlet-cat-btn');
+    const factualityFilter = document.getElementById('outlet-factuality-filter');
+    const ideologyFilter = document.getElementById('outlet-ideology-filter');
     const outletCards = document.querySelectorAll('.outlet-card');
     const noResultsMsg = document.getElementById('no-outlets-found');
+    const countDisplay = document.getElementById('visible-outlets-count');
 
     let currentCategory = 'all';
+    let currentFactuality = 'all';
+    let currentIdeology = 'all';
     let searchQuery = '';
 
     function filterOutlets() {
@@ -968,21 +685,32 @@ const foreignCount = OUTLETS_CATALOG.filter(o => o.category === 'internacional')
         const country = card.getAttribute('data-country') || '';
         const category = card.getAttribute('data-category') || '';
         const leaning = card.getAttribute('data-leaning') || '';
+        const ideology = card.getAttribute('data-ideology') || '';
+        const factuality = card.getAttribute('data-factuality') || '';
+        const group = card.getAttribute('data-group') || '';
 
         const matchesCategory = currentCategory === 'all' || category === currentCategory;
+        const matchesFactuality = currentFactuality === 'all' || factuality === currentFactuality;
+        const matchesIdeology = currentIdeology === 'all' || ideology === currentIdeology;
         const matchesSearch = !searchQuery || 
           name.includes(searchQuery) || 
           code.includes(searchQuery) || 
-          country.includes(searchQuery) ||
-          leaning.includes(searchQuery);
+          country.includes(searchQuery) || 
+          leaning.includes(searchQuery) ||
+          ideology.includes(searchQuery) ||
+          group.includes(searchQuery);
 
-        if (matchesCategory && matchesSearch) {
+        if (matchesCategory && matchesFactuality && matchesIdeology && matchesSearch) {
           card.classList.remove('hidden');
           visibleCount++;
         } else {
           card.classList.add('hidden');
         }
       });
+
+      if (countDisplay) {
+        countDisplay.textContent = visibleCount;
+      }
 
       if (noResultsMsg) {
         if (visibleCount === 0) {
@@ -1000,9 +728,9 @@ const foreignCount = OUTLETS_CATALOG.filter(o => o.category === 'internacional')
       });
     }
 
-    tabButtons.forEach(btn => {
+    catButtons.forEach(btn => {
       btn.addEventListener('click', () => {
-        tabButtons.forEach(b => {
+        catButtons.forEach(b => {
           b.classList.remove('active', 'bg-slate-900', 'text-white', 'dark:bg-white', 'dark:text-slate-950');
           b.classList.add('bg-slate-100', 'text-slate-700', 'dark:bg-slate-800', 'dark:text-slate-300');
         });
@@ -1014,5 +742,19 @@ const foreignCount = OUTLETS_CATALOG.filter(o => o.category === 'internacional')
         filterOutlets();
       });
     });
+
+    if (factualityFilter) {
+      factualityFilter.addEventListener('change', (e) => {
+        currentFactuality = e.target.value;
+        filterOutlets();
+      });
+    }
+
+    if (ideologyFilter) {
+      ideologyFilter.addEventListener('change', (e) => {
+        currentIdeology = e.target.value;
+        filterOutlets();
+      });
+    }
   });
 </script>
