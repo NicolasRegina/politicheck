@@ -220,6 +220,22 @@
 
 ---
 
+### ✅ Tarea 15: Integración de Metodología Ground News (Sesgo, Propiedad y Factualidad) — [COMPLETADA]
+- [x] **Evolución del Esquema de Dominio (`src/types/index.ts`):**
+  - Tipado de Ideología (`Ideology`): escala de 5 puntos (`izquierda`, `centro_izquierda`, `centro`, `centro_derecha`, `derecha`).
+  - Calificación de Factualidad (`FactualityRating`): `muy_alta`, `alta`, `mixta` basada en rigor documental y políticas de rectificación.
+  - Estructura Corporativa (`OutletOwnership` y `FundingType`): `privado_corporativo`, `sindical_partidario`, `publico_estatal`, `independiente_suscripcion`.
+  - Preservación estricta de compatibilidad de `baselineLeaning` (`oficialismo`, `centro_datos`, `oposicion`) sin regresiones en clusterización o barras de espectro.
+- [x] **Enriquecimiento del Registro de 31 Medios (`src/utils/outlets.ts`):**
+  - Mapeo fáctico exhaustivo de los 15 medios nacionales (Clarín, La Nación, Infobae, TN, Página 12, Ámbito, El Cronista, Perfil, elDiarioAR, Crónica, BAE, La Izquierda Diario, Cenital, El Economista, La Derecha Diario) y los 16 internacionales (Financial Times, El País, CNN, BBC Mundo, France 24, Le Monde, Le Figaro, El Mundo, La Vanguardia, Expansión, The Guardian, NY Times, DW, Nikkei Asia, Japan Times, Xinhua).
+  - Fuentes de auditoría externa citadas explícitamente: AllSides, Media Bias/Fact Check (MBFC) y Media Ownership Monitor (MOM / Reporteros Sin Fronteras).
+- [x] **Refactorización de la Página de Metodología (`src/pages/metodologia.astro`):**
+  - Eliminación de 435 líneas de catálogo duplicado; importación directa de `OUTLETS_REGISTRY` (`DRY`).
+  - Nueva tarjeta visual de medios con badges de ideología y factualidad, bloque de estructura corporativa (grupo y tipo de propiedad), perfil editorial, cita de auditoría independiente y enlaces directos al feed RSS y web.
+  - Barra de herramientas con filtros combinados en tiempo real (categoría: nacional/internacional, factualidad: muy alta/alta/mixta, ideología: 5 polos) y búsqueda dinámica de texto completo.
+
+---
+
 ### ⏳ Tarea 10: Foro Cívico de Debate & Sala de Chat Electoral en Vivo (Backlog) — [PENDIENTE]
 - [ ] **Sala de Chat Electoral en Vivo (Live Stream Chat):**
   - Chat en tiempo real durante debates presidenciales, discursos de apertura de sesiones y noches de conteo electoral.

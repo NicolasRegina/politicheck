@@ -27,8 +27,20 @@ Empresa periodística o portal de noticias con una línea editorial y trayectori
 _Evitar_: Diario, periódico, blog, canal.
 
 **Sesgo Editorial de Base (Baseline Leaning)**:
-Posicionamiento político/ideológico histórico de un Medio en el espectro (oficialismo, oposición, centro-derecha, centro-izquierda, etc.).
-_Evitar_: Ideología, partido, bandera.
+Posicionamiento político/editorial contextual en el escenario argentino (`oficialismo`, `centro_datos`, `oposicion`).
+_Evitar_: Bandera partidaria absoluta.
+
+**Ideología (Ideology)**:
+Clasificación en escala internacional de 5 puntos (`izquierda`, `centro_izquierda`, `centro`, `centro_derecha`, `derecha`) sustentada en calificaciones de AllSides y Media Bias/Fact Check (MBFC).
+
+**Calidad Factual (Factuality Rating)**:
+Nivel de rigor periodístico, respaldo documental y política de rectificación de errores (`muy_alta`, `alta`, `mixta`) auditado por MBFC.
+
+**Estructura de Propiedad (Outlet Ownership)**:
+Grupo económico controlante, país matriz y tipo de financiamiento (`privado_corporativo`, `sindical_partidario`, `publico_estatal`, `independiente_suscripcion`) relevado por el Media Ownership Monitor (MOM / Reporteros Sin Fronteras).
+
+**Auditoría Tripartita (Ground News Methodology)**:
+Triangulación simultánea e independiente de Sesgo Ideológico, Calidad Factual y Propiedad Financiera para cada uno de los 31 medios monitoreados.
 
 **Encuadre (Framing)**:
 El ángulo, tono y foco específico que un Medio elige para titular y cubrir una Noticia puntual.
