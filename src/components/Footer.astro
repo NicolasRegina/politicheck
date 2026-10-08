@@ -64,6 +64,16 @@ const outletsList = Object.values(OUTLETS_REGISTRY);
       <div class="flex flex-wrap items-center gap-4">
         <button 
           type="button" 
+          onclick="window.openPwaInstallPrompt?.()" 
+          class="hover:text-slate-900 dark:hover:text-white transition-colors flex items-center gap-1 cursor-pointer font-medium"
+          title="Instalar la aplicación en tu celular o computadora"
+        >
+          <span>📲</span>
+          <span class="underline">Instalar App</span>
+        </button>
+        <span>•</span>
+        <button 
+          type="button" 
           onclick="window.subscribeToMorningDigest?.()" 
           class="hover:text-slate-900 dark:hover:text-white transition-colors flex items-center gap-1 cursor-pointer"
           title="Recibir alerta matutina con el resumen de tapas a las 8:00 AM"

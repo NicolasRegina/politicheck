@@ -1,5 +1,5 @@
 ---
-// PwaBanner.astro: Service worker registration, offline indicator, and PWA install prompt
+// PwaBanner.astro: Service worker registration, offline indicator, and adaptive PWA install prompt
 import BrandLogo from './BrandLogo.astro';
 ---
 
@@ -12,49 +12,131 @@ import BrandLogo from './BrandLogo.astro';
   <span>Modo Sin Conexión: Visualizando noticias guardadas en caché local.</span>
 </div>
 
-<!-- Discreet PWA Install Banner -->
+<!-- Backdrop Overlay for Mobile Bottom Sheet (Subtle tap-to-dismiss) -->
+<div 
+  id="pwa-backdrop" 
+  class="hidden fixed inset-0 z-40 bg-slate-950/40 backdrop-blur-xs transition-opacity duration-300 opacity-0 sm:hidden"
+  aria-hidden="true"
+></div>
+
+<!-- Adaptive PWA Install Sheet / Card -->
 <aside 
   id="pwa-install-banner" 
-  class="hidden fixed bottom-6 left-6 z-40 max-w-sm p-4 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-2xl space-y-3 transition-all duration-300"
+  class="fixed inset-x-0 bottom-0 sm:inset-x-auto sm:bottom-6 sm:left-6 z-50 w-full sm:max-w-md p-5 sm:p-5 rounded-t-3xl sm:rounded-2xl bg-white/98 dark:bg-slate-900/98 backdrop-blur-md border-t sm:border border-slate-200 dark:border-slate-800 shadow-2xl transition-all duration-300 ease-out transform translate-y-full opacity-0 pointer-events-none"
   aria-label="Instalar aplicación web de Politicheck"
 >
-  <div class="flex items-start justify-between gap-2">
-    <div class="flex items-center gap-2.5">
-      <BrandLogo size={36} />
+  <!-- Mobile Drag / Bottom Sheet Pill Indicator -->
+  <div class="w-12 h-1 rounded-full bg-slate-300 dark:bg-slate-700 mx-auto mb-3 sm:hidden" aria-hidden="true"></div>
+
+  <!-- Header: Brand + Title + Dismiss -->
+  <div class="flex items-start justify-between gap-3">
+    <div class="flex items-center gap-3">
+      <BrandLogo size={38} />
       <div>
-        <h4 class="font-bold text-slate-950 dark:text-white font-mono text-xs">
-          Instalar Politicheck
-        </h4>
-        <p class="text-[11px] text-slate-500 dark:text-slate-400">
-          Acceso instantáneo sin conexión y pantalla completa
+        <div class="flex items-center gap-1.5">
+          <h4 class="font-bold text-slate-950 dark:text-white font-mono text-sm tracking-tight" id="pwa-title-text">
+            Instalar Politicheck
+          </h4>
+          <span class="px-1.5 py-0.5 rounded text-[9px] font-mono font-bold bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800">
+            PWA
+          </span>
+        </div>
+        <p class="text-xs text-slate-500 dark:text-slate-400 mt-0.5 leading-snug" id="pwa-subtitle-text">
+          Acceso instantáneo, sin conexión y en pantalla completa
         </p>
       </div>
     </div>
     <button 
       type="button" 
       id="pwa-dismiss-btn" 
-      class="text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 p-1 text-xs font-bold"
+      class="text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 p-1.5 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
       aria-label="Cerrar aviso de instalación"
     >
-      ✕
+      <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+      </svg>
     </button>
   </div>
 
-  <div class="flex items-center gap-2 pt-1 font-mono text-xs">
-    <button 
-      type="button" 
-      id="pwa-install-btn" 
-      class="flex-1 py-1.5 px-3 rounded-lg bg-slate-900 hover:bg-slate-800 text-white dark:bg-white dark:hover:bg-slate-100 dark:text-slate-950 font-bold transition-colors text-center"
-    >
-      Instalar App
-    </button>
-    <button 
-      type="button" 
-      id="pwa-later-btn" 
-      class="py-1.5 px-2.5 rounded-lg border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-300 transition-colors"
-    >
-      Más tarde
-    </button>
+  <!-- VIEW 1: Android / Chromium / Desktop (One-click native install) -->
+  <div id="pwa-android-view" class="space-y-3 pt-3">
+    <div class="grid grid-cols-3 gap-2 text-[10px] font-mono text-slate-600 dark:text-slate-400 py-1">
+      <div class="p-2 rounded-lg bg-slate-50 dark:bg-slate-800/60 border border-slate-200/80 dark:border-slate-800 text-center">
+        <span class="block text-sm mb-0.5">⚡</span>
+        <span class="font-semibold text-slate-800 dark:text-slate-200">1 Toque</span>
+        <span class="block text-[9px] text-slate-400">Acceso veloz</span>
+      </div>
+      <div class="p-2 rounded-lg bg-slate-50 dark:bg-slate-800/60 border border-slate-200/80 dark:border-slate-800 text-center">
+        <span class="block text-sm mb-0.5">📴</span>
+        <span class="font-semibold text-slate-800 dark:text-slate-200">Offline</span>
+        <span class="block text-[9px] text-slate-400">Caché local</span>
+      </div>
+      <div class="p-2 rounded-lg bg-slate-50 dark:bg-slate-800/60 border border-slate-200/80 dark:border-slate-800 text-center">
+        <span class="block text-sm mb-0.5">🛡️</span>
+        <span class="font-semibold text-slate-800 dark:text-slate-200">0 Pauta</span>
+        <span class="block text-[9px] text-slate-400">Sin publicidad</span>
+      </div>
+    </div>
+
+    <div class="flex items-center gap-2 pt-1 font-mono text-xs">
+      <button 
+        type="button" 
+        id="pwa-install-btn" 
+        class="flex-1 py-2.5 px-4 rounded-xl bg-slate-900 hover:bg-slate-800 text-white dark:bg-white dark:hover:bg-slate-100 dark:text-slate-950 font-bold transition-all shadow-md text-center flex items-center justify-center gap-1.5 cursor-pointer active:scale-98"
+      >
+        <span>📲</span>
+        <span>Instalar App</span>
+      </button>
+      <button 
+        type="button" 
+        id="pwa-later-btn" 
+        class="py-2.5 px-3.5 rounded-xl border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-300 font-medium transition-colors cursor-pointer"
+      >
+        Más tarde
+      </button>
+    </div>
+  </div>
+
+  <!-- VIEW 2: iOS / Safari Guide (2-step visual walkthrough) -->
+  <div id="pwa-ios-view" class="hidden space-y-3 pt-3">
+    <div class="p-3 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-800 space-y-2.5 text-xs font-mono">
+      <div class="flex items-start gap-2.5">
+        <span class="flex items-center justify-center w-6 h-6 rounded-lg bg-blue-500/10 text-blue-600 dark:text-blue-400 font-bold text-xs shrink-0 mt-0.5 border border-blue-500/20">
+          1
+        </span>
+        <div class="leading-relaxed text-slate-700 dark:text-slate-300 text-[11px]">
+          Tocá el botón <strong class="text-slate-950 dark:text-white">Compartir</strong> 
+          <span class="inline-flex items-center justify-center px-1.5 py-0.5 rounded bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 align-middle text-blue-500 font-bold text-[10px] mx-0.5">
+            <svg class="w-3.5 h-3.5 inline" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
+            </svg>
+          </span>
+          en la barra inferior de Safari.
+        </div>
+      </div>
+
+      <div class="flex items-start gap-2.5">
+        <span class="flex items-center justify-center w-6 h-6 rounded-lg bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 font-bold text-xs shrink-0 mt-0.5 border border-emerald-500/20">
+          2
+        </span>
+        <div class="leading-relaxed text-slate-700 dark:text-slate-300 text-[11px]">
+          Deslizá hacia abajo y seleccioná <strong class="text-slate-950 dark:text-white">"Agregar a pantalla de inicio"</strong> 
+          <span class="inline-flex items-center justify-center px-1.5 py-0.5 rounded bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 align-middle text-emerald-500 font-bold text-[10px] mx-0.5">
+            ➕
+          </span>.
+        </div>
+      </div>
+    </div>
+
+    <div class="flex items-center gap-2 pt-1 font-mono text-xs">
+      <button 
+        type="button" 
+        id="pwa-ios-done-btn" 
+        class="w-full py-2.5 px-4 rounded-xl bg-slate-900 hover:bg-slate-800 text-white dark:bg-white dark:hover:bg-slate-100 dark:text-slate-950 font-bold transition-all shadow-md text-center cursor-pointer active:scale-98"
+      >
+        Entendido
+      </button>
+    </div>
   </div>
 </aside>
 
@@ -63,7 +145,6 @@ import BrandLogo from './BrandLogo.astro';
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
       navigator.serviceWorker.register('/sw.js').then((reg) => {
-        // Check for updates
         reg.onupdatefound = () => {
           const installingWorker = reg.installing;
           if (installingWorker) {
@@ -93,42 +174,137 @@ import BrandLogo from './BrandLogo.astro';
   window.addEventListener('offline', updateOnlineStatus);
   updateOnlineStatus();
 
-  // PWA Install Prompt handling
-  let deferredPrompt = null;
-  const pwaBanner = document.getElementById('pwa-install-banner');
-  const installBtn = document.getElementById('pwa-install-btn');
-  const dismissBtn = document.getElementById('pwa-dismiss-btn');
-  const laterBtn = document.getElementById('pwa-later-btn');
+  // PWA Adaptive Installation Logic
+  (function initPwaInstall() {
+    let deferredPrompt = null;
+    const banner = document.getElementById('pwa-install-banner');
+    const backdrop = document.getElementById('pwa-backdrop');
+    const installBtn = document.getElementById('pwa-install-btn');
+    const dismissBtn = document.getElementById('pwa-dismiss-btn');
+    const laterBtn = document.getElementById('pwa-later-btn');
+    const iosDoneBtn = document.getElementById('pwa-ios-done-btn');
+    const androidView = document.getElementById('pwa-android-view');
+    const iosView = document.getElementById('pwa-ios-view');
 
-  const isDismissed = sessionStorage.getItem('politicheck-pwa-dismissed');
-
-  window.addEventListener('beforeinstallprompt', (e) => {
-    // Prevent the mini-infobar from appearing on mobile
-    e.preventDefault();
-    deferredPrompt = e;
-
-    if (!isDismissed && pwaBanner) {
-      pwaBanner.classList.remove('hidden');
+    // Standalone check (already installed / launched from home screen)
+    function isAppStandalone() {
+      return window.matchMedia('(display-mode: standalone)').matches || 
+             (window.navigator && window.navigator.standalone === true);
     }
-  });
 
-  if (installBtn) {
-    installBtn.addEventListener('click', async () => {
-      if (!deferredPrompt) return;
-      deferredPrompt.prompt();
-      await deferredPrompt.userChoice;
-      deferredPrompt = null;
-      if (pwaBanner) pwaBanner.classList.add('hidden');
+    // Platform detection (iOS Safari vs Android / Chromium)
+    function isIosDevice() {
+      const ua = navigator.userAgent.toLowerCase();
+      return /iphone|ipad|ipod/.test(ua) || (Boolean(navigator.maxTouchPoints && navigator.maxTouchPoints > 2) && /macintosh/.test(ua));
+    }
+
+    // Check if dismissed and within 3-day cooldown
+    function isCoolingDown() {
+      const dismissedUntil = localStorage.getItem('politicheck-pwa-dismissed-until');
+      if (!dismissedUntil) return false;
+      return Date.now() < parseInt(dismissedUntil, 10);
+    }
+
+    function showBanner(force = false) {
+      if (!banner) return;
+      if (isAppStandalone()) {
+        if (force && typeof window.showPoliticheckToast === 'function') {
+          window.showPoliticheckToast('App ya instalada', 'Politicheck ya está ejecutándose en modo nativo.', '📲');
+        }
+        return;
+      }
+
+      if (!force && isCoolingDown()) {
+        return;
+      }
+
+      const isIos = isIosDevice();
+      if (isIos) {
+        if (androidView) androidView.classList.add('hidden');
+        if (iosView) iosView.classList.remove('hidden');
+      } else {
+        if (androidView) androidView.classList.remove('hidden');
+        if (iosView) iosView.classList.add('hidden');
+      }
+
+      // Display animations
+      if (backdrop) {
+        backdrop.classList.remove('hidden');
+        requestAnimationFrame(() => {
+          backdrop.classList.remove('opacity-0');
+          backdrop.classList.add('opacity-100');
+        });
+      }
+
+      banner.classList.remove('translate-y-full', 'opacity-0', 'pointer-events-none');
+      banner.classList.add('translate-y-0', 'opacity-100', 'pointer-events-auto');
+    }
+
+    function hideBanner(saveCooldown = true) {
+      if (!banner) return;
+
+      if (saveCooldown) {
+        // 3 days cooldown: 3 * 24 * 60 * 60 * 1000 = 259,200,000 ms
+        const cooldownTimestamp = Date.now() + (3 * 24 * 60 * 60 * 1000);
+        localStorage.setItem('politicheck-pwa-dismissed-until', cooldownTimestamp.toString());
+      }
+
+      banner.classList.remove('translate-y-0', 'opacity-100', 'pointer-events-auto');
+      banner.classList.add('translate-y-full', 'opacity-0', 'pointer-events-none');
+
+      if (backdrop) {
+        backdrop.classList.remove('opacity-100');
+        backdrop.classList.add('opacity-0');
+        setTimeout(() => {
+          backdrop.classList.add('hidden');
+        }, 300);
+      }
+    }
+
+    // Capture beforeinstallprompt event (Android / Chromium)
+    window.addEventListener('beforeinstallprompt', (e) => {
+      e.preventDefault();
+      deferredPrompt = e;
     });
-  }
 
-  function dismissPwaBanner() {
-    sessionStorage.setItem('politicheck-pwa-dismissed', 'true');
-    if (pwaBanner) pwaBanner.classList.add('hidden');
-  }
+    // Install button click handler
+    if (installBtn) {
+      installBtn.addEventListener('click', async () => {
+        if (deferredPrompt) {
+          deferredPrompt.prompt();
+          const choiceResult = await deferredPrompt.userChoice;
+          if (choiceResult && choiceResult.outcome === 'accepted') {
+            localStorage.setItem('politicheck-pwa-installed', 'true');
+          }
+          deferredPrompt = null;
+          hideBanner(true);
+        } else {
+          // If browser didn't fire beforeinstallprompt yet (or already installed)
+          if (typeof window.showPoliticheckToast === 'function') {
+            window.showPoliticheckToast('Instalar Politicheck', 'Tocá el menú de tu navegador (⋮) y seleccioná "Instalar aplicación" o "Agregar a la pantalla principal".', '📲');
+          }
+          hideBanner(true);
+        }
+      });
+    }
 
-  if (dismissBtn) dismissBtn.addEventListener('click', dismissPwaBanner);
-  if (laterBtn) laterBtn.addEventListener('click', dismissPwaBanner);
+    if (dismissBtn) dismissBtn.addEventListener('click', () => hideBanner(true));
+    if (laterBtn) laterBtn.addEventListener('click', () => hideBanner(true));
+    if (iosDoneBtn) iosDoneBtn.addEventListener('click', () => hideBanner(true));
+    if (backdrop) backdrop.addEventListener('click', () => hideBanner(true));
+
+    // Expose global trigger for header button or footer link
+    window.openPwaInstallPrompt = function() {
+      showBanner(true);
+    };
+
+    // Auto-prompt after 3 seconds of reading (if not standalone and not in cooldown)
+    if (!isAppStandalone() && !isCoolingDown()) {
+      setTimeout(() => {
+        showBanner(false);
+      }, 3000);
+    }
+  })();
 
   // Morning Digest Notification Subscription
   window.subscribeToMorningDigest = async function() {
