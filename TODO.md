@@ -236,6 +236,21 @@
 
 ---
 
+### ✅ Tarea 16: Flujo Adaptativo Móvil de Recomendación e Instalación PWA — [COMPLETADA]
+- [x] **Detección Inteligente por Plataforma (Android vs. iOS):**
+  - Android / Chromium: integración con `beforeinstallprompt` para disparar el diálogo nativo del sistema operativo en 1 solo clic.
+  - iOS / Safari: detección de WebKit y despliegue de una guía visual interactiva con los 2 pasos exactos (Compartir ⎋ -> "Agregar a pantalla de inicio" ➕).
+  - Standalone: silenciamiento 100% automático si la aplicación ya se ejecuta instalada en pantalla completa (`display-mode: standalone` o `navigator.standalone`).
+- [x] **Diseño Ergonómico de Bottom Sheet:**
+  - Componente [`PwaBanner.astro`](src/components/PwaBanner.astro) rediseñado como *Bottom Sheet* accesible para el pulgar en móviles y tarjeta fija en desktop.
+  - Temporizador suave de 3 segundos para no interrumpir la lectura inicial de titulares.
+  - Respaldo de descarte con ventana de enfriamiento de 3 días (`politicheck-pwa-dismissed-until` en `localStorage`).
+- [x] **Acceso Permanente a Demanda:**
+  - Botón *"📲 Instalar App"* persistente en la cabecera [`Header.astro`](src/components/Header.astro) y pie de página [`Footer.astro`](src/components/Footer.astro).
+  - Función global `window.openPwaInstallPrompt()` para invocar la guía en cualquier momento ignorando el enfriamiento temporal.
+
+---
+
 ### ⏳ Tarea 10: Foro Cívico de Debate & Sala de Chat Electoral en Vivo (Backlog) — [PENDIENTE]
 - [ ] **Sala de Chat Electoral en Vivo (Live Stream Chat):**
   - Chat en tiempo real durante debates presidenciales, discursos de apertura de sesiones y noches de conteo electoral.
