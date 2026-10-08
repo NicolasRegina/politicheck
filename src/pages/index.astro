@@ -1404,21 +1404,14 @@ const fullLiveFeedArticles = liveArticles.slice(0, 60);
     });
   });
 
-  // --- Dynamic Live News Auto-Refresh with Scroll Preservation ---
-  // Only execute on Portada ('/' or '/index.html'), NEVER on /historia/:id
+  // --- Dynamic Live News Auto-Refresh (Polite Notification, Zero Intrusive Reloads) ---
   if (window.location.pathname === '/' || window.location.pathname === '' || window.location.pathname.endsWith('/index.html')) {
-    let initialSyncTimestamp: string | null = null;
-    let initialLeadStoryId: string | null = null;
+    let knownSyncTimestamp: string | null = null;
+    let knownLeadStoryId: string | null = null;
     let hasAlertShown = false;
 
-    // Grab current server sync timestamp from header if present
-    const syncTimeEl = document.getElementById('sync-time-ago');
-    if (syncTimeEl) {
-      initialSyncTimestamp = syncTimeEl.getAttribute('data-server-sync') || null;
-    }
-
-    // Auto-refresh interval (every 45 seconds)
-    const REFRESH_INTERVAL_MS = 45 * 1000;
+    // Check interval: every 60 seconds
+    const REFRESH_INTERVAL_MS = 60 * 1000;
 
     async function checkForNewsUpdates() {
       // If user is navigating away or in subpage like /historia/:id, abort
@@ -1433,56 +1426,46 @@ const fullLiveFeedArticles = liveArticles.slice(0, 60);
         const data = await res.json();
         if (!data.success) return;
 
-        // Dynamic Breaking News Update
+        // Dynamic Breaking News Update (in-place DOM update, no reload)
         if (data.breakingAlert && typeof (window as any).updateBreakingNewsBanner === 'function') {
           (window as any).updateBreakingNewsBanner(data.breakingAlert);
         }
 
-        // Initialize baseline if not set yet
-        if (!initialSyncTimestamp && data.lastSyncTimestamp) {
-          initialSyncTimestamp = data.lastSyncTimestamp;
-        }
-        if (!initialLeadStoryId && data.leadStoryId) {
-          initialLeadStoryId = data.leadStoryId;
+        // On the very first check, record the current live timestamp as baseline
+        if (!knownSyncTimestamp) {
+          knownSyncTimestamp = data.lastSyncTimestamp || data.timestamp;
+          knownLeadStoryId = data.leadStoryId;
+          return;
         }
 
-        // Check: If a sync occurred on the server (Vercel Cron or server self-healing)
-        const syncTimestampChanged = initialSyncTimestamp && data.lastSyncTimestamp && (data.lastSyncTimestamp !== initialSyncTimestamp);
-        const leadStoryChanged = initialLeadStoryId && data.leadStoryId && (data.leadStoryId !== initialLeadStoryId);
+        // On subsequent checks, detect if new stories were published
+        const syncTimestampChanged = data.lastSyncTimestamp && (data.lastSyncTimestamp !== knownSyncTimestamp);
+        const leadStoryChanged = data.leadStoryId && (data.leadStoryId !== knownLeadStoryId);
 
         if (syncTimestampChanged || leadStoryChanged) {
-          triggerLiveRefresh();
+          // Update baseline so we don't spam
+          knownSyncTimestamp = data.lastSyncTimestamp || data.timestamp;
+          knownLeadStoryId = data.leadStoryId;
+          showFloatingNewsAlert();
         }
       } catch (err) {
         // Silent network fallback
       }
     }
 
-    function triggerLiveRefresh() {
+    function showFloatingNewsAlert() {
       if (hasAlertShown) return;
       hasAlertShown = true;
 
-      // If user is at or near the top of the page (general browsing), refresh automatically!
-      if (window.scrollY < 250) {
-        const currentY = window.scrollY;
-        sessionStorage.setItem('politicheck_restore_scroll', currentY.toString());
-        window.location.reload();
-      } else {
-        // If user is scrolled down reading an article or auditing a promise, show polite floating pill
-        showFloatingNewsAlert();
-      }
-    }
-
-    function showFloatingNewsAlert() {
       let alertEl = document.getElementById('live-news-update-pill');
       if (!alertEl) {
         alertEl = document.createElement('div');
         alertEl.id = 'live-news-update-pill';
-        alertEl.className = 'fixed bottom-6 right-6 z-50 flex items-center gap-3 px-4 py-2.5 rounded-2xl bg-slate-900 text-white dark:bg-slate-100 dark:text-slate-950 font-mono text-xs font-bold shadow-2xl border border-slate-700 dark:border-slate-300 transition-all transform translate-y-0 animate-bounce cursor-pointer';
+        alertEl.className = 'fixed bottom-20 sm:bottom-6 right-4 sm:right-6 z-40 flex items-center gap-2.5 px-3.5 py-2 rounded-2xl bg-slate-950 text-white dark:bg-white dark:text-slate-950 font-mono text-xs font-bold shadow-2xl border border-slate-700 dark:border-slate-300 transition-all transform translate-y-0 cursor-pointer animate-fade-in';
         alertEl.innerHTML = `
-          <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-ping"></span>
-          <span>🔴 Hay noticias y aperturas de tapa nuevas</span>
-          <button class="ml-2 px-2.5 py-1 rounded bg-slate-800 dark:bg-slate-200 text-[10px] text-white dark:text-slate-900 font-bold hover:underline">Actualizar ahora</button>
+          <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
+          <span>Noticias nuevas disponibles</span>
+          <button type="button" class="ml-1 px-2 py-0.5 rounded bg-emerald-600 text-white text-[10px] font-bold hover:bg-emerald-500 transition-colors">Actualizar</button>
         `;
         
         alertEl.addEventListener('click', () => {
@@ -1491,20 +1474,11 @@ const fullLiveFeedArticles = liveArticles.slice(0, 60);
           window.location.reload();
         });
 
-        // Also if user scrolls back up near the top, auto-refresh
-        window.addEventListener('scroll', () => {
-          if (window.scrollY < 200) {
-            const currentY = window.scrollY;
-            sessionStorage.setItem('politicheck_restore_scroll', currentY.toString());
-            window.location.reload();
-          }
-        }, { passive: true });
-
         document.body.appendChild(alertEl);
       }
     }
 
-    // Restore scroll position after a reload
+    // Restore scroll position after a manual reload if requested
     const restoreScroll = sessionStorage.getItem('politicheck_restore_scroll');
     if (restoreScroll) {
       sessionStorage.removeItem('politicheck_restore_scroll');
@@ -1514,8 +1488,8 @@ const fullLiveFeedArticles = liveArticles.slice(0, 60);
       }
     }
 
-    // Check after 3 seconds, then poll every REFRESH_INTERVAL_MS
-    setTimeout(checkForNewsUpdates, 3000);
+    // First check after 30 seconds of reading, then every 60 seconds
+    setTimeout(checkForNewsUpdates, 30000);
     setInterval(checkForNewsUpdates, REFRESH_INTERVAL_MS);
   }
 </script>
