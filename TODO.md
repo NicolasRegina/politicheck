@@ -255,11 +255,14 @@
 - [x] **Investigación de Nicho & Topical Cluster:**
   - Definición del cluster *Ecosistema de Medios en Argentina: Dueños, Sesgo y Credibilidad* (Pillar Page + 10 clusters satélite).
   - Keyword research de alta intención (`quien es el dueño de clarin`, `quien es el dueño de la nacion`, `sesgo de los medios en argentina`).
-- [x] **Generación de la Primera Pieza de Contenido (Long-Form 2.000+ palabras):**
-  - Artículo exhaustivo [`docs/seo/articulos/01-quien-es-el-dueno-de-clarin.md`](docs/seo/articulos/01-quien-es-el-dueno-de-clarin.md) con desglose accionario de Grupo Clarín S.A., esquema corporativo de GC Dominio, análisis de encuadre (*framing*) y preguntas frecuentes.
-  - Objetivo de Posición 0 (Featured Snippet) en Google con respuesta inversa directa en las primeras 100 palabras.
-- [x] **Ficha Técnica & Calendario Editorial de 12 Semanas:**
-  - Documento [`docs/seo/01-clarin-tecnico-y-calendario.md`](docs/seo/01-clarin-tecnico-y-calendario.md) con Meta tags, Open Graph, Schema.org estructurado (`Article` + `FAQPage` JSON-LD) y cronograma de publicaciones.
+- [x] **Publicación de Investigaciones Monográficas (`/guias`):**
+  - Sección editorial `/guias` con Bento Grid minimalista y filtros dinámicos por categoría.
+  - Guía 01 publicada: *¿Quién es el dueño de Clarín?* (`/guias/quien-es-el-dueno-de-clarin`).
+  - Guía 02 publicada: *¿Quién es el dueño de La Nación?* (`/guias/quien-es-el-dueno-de-la-nacion`).
+  - Lector editorial longform con schemas estructurados JSON-LD (`Article` + `FAQPage`), lead box de respuesta directa para Google Posición 0 y prerenderizado estático.
+- [x] **Generación Dinámica de `sitemap.xml` para Indexación en Google:**
+  - Endpoint prerenderizado [`src/pages/sitemap.xml.ts`](src/pages/sitemap.xml.ts) que compila automáticamente URLs con metadatos de prioridad y frecuencia: portada (`1.0`), `/guias` (`0.9`), guías monográficas publicadas (`0.9`), `/metodologia` (`0.8`), 16 promesas auditadas de candidatos (`0.7`) e historias activas del día (`0.8`).
+  - Eliminación de XML estático obsoleto y sincronización nativa con `public/robots.txt`.
 
 ---
 
