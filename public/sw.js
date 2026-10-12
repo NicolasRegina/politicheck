@@ -3,6 +3,7 @@ const CACHE_NAME = 'politicheck-v1.0';
 const PRECACHE_URLS = [
   '/',
   '/metodologia',
+  '/guias',
   '/terminos',
   '/manifest.json',
   '/favicon.svg',
@@ -12,11 +13,15 @@ const PRECACHE_URLS = [
 // Install Event: precache core shell
 self.addEventListener('install', (event) => {
   event.waitUntil(
-    caches.open(CACHE_NAME).then((cache) => {
-      return cache.addAll(PRECACHE_URLS).catch((err) => {
+    (async () => {
+      try {
+        const cache = await caches.open(CACHE_NAME);
+        await cache.addAll(PRECACHE_URLS);
+      } catch (err) {
         console.warn('[SW] Precache partial error:', err);
-      });
-    }).then(() => self.skipWaiting())
+      }
+      await self.skipWaiting();
+    })()
   );
 });
 

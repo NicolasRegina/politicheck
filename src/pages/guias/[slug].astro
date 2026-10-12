@@ -312,12 +312,18 @@ const faqSchema = guia.faq.length > 0 ? {
     if (copyBtn && copyText) {
       copyBtn.addEventListener('click', () => {
         const url = copyBtn.getAttribute('data-url') || window.location.href;
-        navigator.clipboard.writeText(url).then(() => {
-          copyText.textContent = 'Enlace copiado';
-          setTimeout(() => {
-            copyText.textContent = 'Copiar enlace';
-          }, 2500);
-        });
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(url).then(() => {
+            copyText.textContent = 'Enlace copiado';
+            setTimeout(() => {
+              copyText.textContent = 'Copiar enlace';
+            }, 2500);
+          }).catch(() => {
+            window.prompt('Copiá este enlace para compartir:', url);
+          });
+        } else {
+          window.prompt('Copiá este enlace para compartir:', url);
+        }
       });
     }
   }
