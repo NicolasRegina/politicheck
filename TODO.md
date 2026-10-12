@@ -267,6 +267,23 @@
 
 ---
 
+### ✅ Tarea 18: Pillar Page del Cluster de Medios (`/guias/mapa-de-medios-argentina`) & Enlazado Bidireccional — [COMPLETADA]
+- [x] **Redacción y Estructura Editorial de la Pillar Page:**
+  - Guía central de más de 2.800 palabras documentando la anatomía completa del ecosistema periodístico argentino en [`docs/seo/articulos/00-mapa-del-ecosistema-de-medios-argentina.md`](docs/seo/articulos/00-mapa-del-ecosistema-de-medios-argentina.md).
+  - Integración en [`src/data/guias.ts`](src/data/guias.ts) con slug evergreen `/guias/mapa-de-medios-argentina` (sin `-2026`), status `publicado` y rol de Hero Guide en `/guias`.
+  - Radiografía de conglomerados económicos: Grupo Clarín, Grupo América, Grupo Indalo, Grupo Octubre, La Nación S.A., Editorial Perfil, Medios Estatales y Modelos Independientes por suscripción.
+  - Gran Tabla Comparativa de las 31 redacciones monitoreadas con grupo, modelo de negocio, espectro ideológico, calificación de factualidad y enlace al informe individual o metodología.
+- [x] **Enlazado Bidireccional de Topic Cluster:**
+  - Banner en [`src/pages/guias/[slug].astro`](src/pages/guias/[slug].astro) para que todas las investigaciones satélites enlacen al Pilar Master y viceversa.
+  - Callout contextual en la Sección 03 de [`src/pages/metodologia.astro`](src/pages/metodologia.astro) guiando a los lectores hacia el Mapa Integral.
+  - Tarjeta de Hero en [`src/pages/guias/index.astro`](src/pages/guias/index.astro) destacando el kicker de *Pilar Central • Observatorio de Medios*.
+- [x] **SEO Técnico y Validación:**
+  - Datos estructurados JSON-LD (`Article` + `FAQPage`) optimizados para Google Featured Snippet.
+  - Prerenderizado estático verificado en `dist/client/guias/mapa-de-medios-argentina/index.html` e inclusión automática en `/sitemap.xml`.
+  - `npx astro check` pasando con 0 errores y 0 warnings.
+
+---
+
 ### 🚀 Tarea 10: Foro Cívico de Debate & Sala de Chat Electoral en Vivo — [EN PROGRESO]
 - [x] **Sala de Chat Electoral en Vivo (Live Stream Chat):**
   - Chat en tiempo real durante debates presidenciales, discursos y coberturas electorales.

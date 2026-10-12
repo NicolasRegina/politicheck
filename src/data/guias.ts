@@ -42,6 +42,336 @@ export interface GuiaArticle {
 
 export const GUIAS_ARTICLES: GuiaArticle[] = [
   {
+    slug: 'mapa-de-medios-argentina',
+    title: 'Mapa del Ecosistema de Medios en Argentina: Grupos Económicos, Propiedad y Sesgo',
+    subtitle: 'Radiografía completa de los 31 medios monitoreados: conglomerados corporativos, medios sindicales, estatales e independientes por suscripción.',
+    kicker: 'Pilar Central • Observatorio de Medios',
+    category: 'metodologia',
+    categoryLabel: 'Ecosistema de Medios',
+    publishedAt: '12 de Octubre, 2026',
+    updatedAt: '12 de Octubre, 2026',
+    isoPublishedAt: '2026-10-12T00:00:00Z',
+    isoUpdatedAt: '2026-10-12T00:00:00Z',
+    readTimeMinutes: 12,
+    author: 'Equipo de Datos de Politicheck',
+    outletName: 'Observatorio Politicheck',
+    faqTitle: 'Preguntas Frecuentes sobre el Mapa de Medios en Argentina',
+    excerpt: 'La guía integral sobre la estructura de propiedad, financiamiento y sesgo editorial de los principales conglomerados periodísticos y medios independientes de Argentina.',
+    heroImageUrl: 'https://images.unsplash.com/photo-1504711434969-e33886168f5c?auto=format&fit=crop&w=1200&q=80',
+    imageCaption: 'Redacciones, estudios audiovisuales y grupos de comunicación que configuran la agenda pública nacional.',
+    status: 'publicado',
+    sources: [
+      'Media Ownership Monitor (MOM / Reporteros Sin Fronteras)',
+      'AllSides & Media Bias/Fact Check (MBFC)',
+      'Boletín Oficial de la República Argentina',
+      'Comscore MMX',
+      'Comisión Nacional de Valores (CNV)'
+    ],
+    metaTitle: 'Mapa de Medios en Argentina: Grupos Económicos, Dueños y Sesgo',
+    metaDescription: 'Radiografía completa del ecosistema de medios en Argentina: Grupo Clarín, La Nación, Infobae, Indalo, Octubre, medios independientes, financiamiento y sesgo editorial.',
+    canonicalUrl: 'https://www.politicheck.com.ar/guias/mapa-de-medios-argentina',
+    targetSnippet: 'El ecosistema de medios en Argentina se articula en torno a conglomerados privados concentrados (Clarín, La Nación, Infobae, Indalo, América), el sector sindical-partidario (Octubre), los medios públicos estatales y una creciente red de nativos digitales independientes financiados por membresías y suscripciones (Cenital, elDiarioAR).',
+    faq: [
+      {
+        question: '¿Cuáles son los principales grupos de medios en Argentina?',
+        answer: 'Los principales conglomerados privados son Grupo Clarín (Clarín, TN, Mitre), Grupo La Nación (La Nación, LN+), TXH Medios (Infobae), Grupo Indalo (C5N, Ámbito), Grupo América (América TV, A24, La Red) y Editorial Perfil (Perfil, Noticias, Net TV). En el sector sindical destaca Grupo Octubre (Página 12, Canal 9).'
+      },
+      {
+        question: '¿Cómo impactó la eliminación de la pauta publicitaria oficial en 2024?',
+        answer: 'La reducción a $0 del presupuesto publicitario del Estado Nacional forzó a los medios a acelerar muros de pago digitales (Clarín y La Nación), apostar al volumen global de publicidad programática (Infobae) o desarrollar comunidades de socios por membresía (Cenital y elDiarioAR).'
+      },
+      {
+        question: '¿Qué medios en Argentina son propiedad de sindicatos u organizaciones gremiales?',
+        answer: 'El caso más relevante es Grupo Octubre, presidido por Víctor Santa María (secretario general de SUTERH), que gestiona el diario Página 12, Canal 9, la señal de noticias IP, la radio AM 750 y la revista Caras y Caretas.'
+      },
+      {
+        question: '¿Cómo clasifica Politicheck el sesgo de las redacciones?',
+        answer: 'Politicheck triangula la auditoría internacional de AllSides y Media Bias/Fact Check con un algoritmo matemático continuo que mide la prominencia de portada, adjetivación y omisiones temáticas sobre los hechos del día, calculando porcentajes objetivos de Oficialismo, Centro-Datos y Oposición.'
+      },
+      {
+        question: '¿Qué diferencia a los nuevos medios independientes por suscripción?',
+        answer: 'Proyectos como Cenital y elDiarioAR prescinden de estructuras corporativas masivas y financiamiento estatal, sosteniéndose mediante suscripciones directas de sus lectores y newsletters de análisis especializado.'
+      }
+    ],
+    content: {
+      leadHtml: `<p class="text-base sm:text-lg leading-relaxed text-slate-800 dark:text-slate-200">
+        Comprender <strong>quiénes son los dueños de los medios de comunicación</strong> y cómo se financian es un requisito indispensable para interpretar la cobertura de cualquier acontecimiento público. En Argentina, la agenda periodística no surge en el vacío: está moldeada por intereses corporativos, disputas regulatorias y modelos de negocio en plena transformación. Esta investigación analiza la arquitectura de propiedad, los accionistas clave y el posicionamiento editorial de las <strong>31 redacciones nacionales e internacionales</strong> monitoreadas por el observatorio de Politicheck.
+      </p>`,
+      sections: [
+        {
+          id: 'de-la-convergencia-al-fin-de-la-pauta',
+          title: '1. De la Convergencia Infocomunicacional al Fin de la Pauta Oficial',
+          bodyHtml: `<p>El sistema mediático argentino se distingue por uno de los niveles más altos de concentración de propiedad de América Latina, según reportes sistemáticos del <strong>Media Ownership Monitor</strong> (Reporteros Sin Fronteras). Esta estructura atravesó dos etapas decisivas:</p>
+          <div class="my-4 grid grid-cols-1 md:grid-cols-2 gap-4 text-xs sm:text-sm font-sans">
+            <div class="p-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-[#0C101A]">
+              <div class="font-bold text-slate-900 dark:text-white mb-1">📡 La Convergencia (1990–2018)</div>
+              <p class="text-slate-600 dark:text-slate-400">Los diarios tradicionales se integraron horizontal y verticalmente con canales de televisión abierta, señales de noticias de cable, emisoras de radio y redes de telecomunicaciones (banda ancha y telefonía móvil), conformando holdings multiplataforma con capacidad de fijación de agenda total.</p>
+            </div>
+            <div class="p-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-[#0C101A]">
+              <div class="font-bold text-slate-900 dark:text-white mb-1">📉 El Shock de Pauta Cero (2024–2026)</div>
+              <p class="text-slate-600 dark:text-slate-400">La suspensión de la pauta publicitaria del Estado Nacional impulsada por la administración de Javier Milei extinguió un subsidio indirecto vital para decenas de empresas periodísticas, forzando un viraje drástico hacia suscripciones digitales, eventos corporativos y subastas programáticas globales.</p>
+            </div>
+          </div>`
+        },
+        {
+          id: 'conglomerados-corporativos-privados',
+          title: '2. Los Conglomerados Corporativos Privados: El Núcleo de la Concentración',
+          bodyHtml: `<p>Seis grandes grupos privados controlan la mayor porción del encendido televisivo, la audiencia radial y el tráfico web de noticias en el país:</p>
+          <div class="space-y-4 my-4 text-xs sm:text-sm font-sans">
+            <!-- Grupo Clarín -->
+            <div class="p-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-[#0C101A] space-y-2">
+              <div class="flex items-center justify-between">
+                <span class="font-bold text-sm text-slate-900 dark:text-white">1. Grupo Clarín S.A.</span>
+                <a href="/guias/quien-es-el-dueno-de-clarin" class="text-xs font-mono font-semibold text-sky-600 dark:text-sky-400 hover:underline">Ver investigación monográfica →</a>
+              </div>
+              <p class="text-slate-600 dark:text-slate-400"><strong>Controlantes:</strong> Héctor Magnetto, José Antonio Aranda, Lucio Pagliaro y herederos de Ernestina Herrera de Noble (GC Dominio S.A.). El Estado retiene 8,9% (FGS/ANSES).</p>
+              <p class="text-slate-600 dark:text-slate-400"><strong>Activos centrales:</strong> Diario Clarín, Olé, Todo Noticias (TN), Canal 13 (Artear), Radio Mitre, La 100 y participación estratégica en Telecom/Flow.</p>
+              <p class="text-slate-600 dark:text-slate-400"><strong>Encuadre Politicheck:</strong> Centro-Derecha institucional y pro-mercado.</p>
+            </div>
+
+            <!-- Grupo La Nación -->
+            <div class="p-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-[#0C101A] space-y-2">
+              <div class="flex items-center justify-between">
+                <span class="font-bold text-sm text-slate-900 dark:text-white">2. Grupo La Nación (S.A. La Nación)</span>
+                <a href="/guias/quien-es-el-dueno-de-la-nacion" class="text-xs font-mono font-semibold text-sky-600 dark:text-sky-400 hover:underline">Ver investigación monográfica →</a>
+              </div>
+              <p class="text-slate-600 dark:text-slate-400"><strong>Controlantes:</strong> Familia Saguier (MNMS Holding / Fernán Saguier).</p>
+              <p class="text-slate-600 dark:text-slate-400"><strong>Activos centrales:</strong> Diario La Nación, canal de noticias LN+, revistas temáticas y división de agronegocios (Expoagro).</p>
+              <p class="text-slate-600 dark:text-slate-400"><strong>Encuadre Politicheck:</strong> Derecha liberal-conservadora republicana.</p>
+            </div>
+
+            <!-- Infobae -->
+            <div class="p-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-[#0C101A] space-y-2">
+              <div class="flex items-center justify-between">
+                <span class="font-bold text-sm text-slate-900 dark:text-white">3. TXH Medios / Infobae</span>
+                <a href="/guias/quien-es-el-dueno-de-infobae" class="text-xs font-mono font-semibold text-sky-600 dark:text-sky-400 hover:underline">Ver investigación monográfica →</a>
+              </div>
+              <p class="text-slate-600 dark:text-slate-400"><strong>Controlante:</strong> Daniel Hadad.</p>
+              <p class="text-slate-600 dark:text-slate-400"><strong>Activos centrales:</strong> Infobae Argentina y corresponsalías panregionales autónomas en México, Colombia, España, Perú y Miami. Acceso 100% abierto sin muro de pago.</p>
+              <p class="text-slate-600 dark:text-slate-400"><strong>Encuadre Politicheck:</strong> Centro / Centro-Derecha institucional y atlántico.</p>
+            </div>
+
+            <!-- Grupo Indalo -->
+            <div class="p-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-[#0C101A] space-y-2">
+              <div class="flex items-center justify-between">
+                <span class="font-bold text-sm text-slate-900 dark:text-white">4. Grupo Indalo</span>
+                <span class="px-2 py-0.5 rounded text-[10px] font-mono font-semibold bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/20">Investigación en curso</span>
+              </div>
+              <p class="text-slate-600 dark:text-slate-400"><strong>Controlantes:</strong> Cristóbal López y Fabián De Sousa.</p>
+              <p class="text-slate-600 dark:text-slate-400"><strong>Activos centrales:</strong> Señal de noticias C5N, diario económico Ámbito Financiero, Radio 10 (AM 710) y emisoras FM (Mega 98.3, Vale 97.5, Pop Radio).</p>
+              <p class="text-slate-600 dark:text-slate-400"><strong>Encuadre Politicheck:</strong> Centro-Izquierda / Oposición peronista y productivista.</p>
+            </div>
+
+            <!-- Grupo América -->
+            <div class="p-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-[#0C101A] space-y-2">
+              <div class="flex items-center justify-between">
+                <span class="font-bold text-sm text-slate-900 dark:text-white">5. Grupo América</span>
+                <span class="px-2 py-0.5 rounded text-[10px] font-mono font-semibold bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/20">Investigación en curso</span>
+              </div>
+              <p class="text-slate-600 dark:text-slate-400"><strong>Controlantes:</strong> Daniel Vila, José Luis Manzano y Claudio Belocopitt.</p>
+              <p class="text-slate-600 dark:text-slate-400"><strong>Activos centrales:</strong> América TV, canal de noticias A24, Radio La Red (AM 910) y El Cronista Comercial.</p>
+              <p class="text-slate-600 dark:text-slate-400"><strong>Encuadre Politicheck:</strong> Centro pragmático y coyuntural.</p>
+            </div>
+
+            <!-- Editorial Perfil -->
+            <div class="p-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-[#0C101A] space-y-2">
+              <div class="flex items-center justify-between">
+                <span class="font-bold text-sm text-slate-900 dark:text-white">6. Editorial Perfil</span>
+                <span class="px-2 py-0.5 rounded text-[10px] font-mono font-semibold bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/20">Investigación en curso</span>
+              </div>
+              <p class="text-slate-600 dark:text-slate-400"><strong>Fundador y Director:</strong> Jorge Fontevecchia.</p>
+              <p class="text-slate-600 dark:text-slate-400"><strong>Activos centrales:</strong> Diario Perfil, Revista Noticias, Caras, señal Net TV y Radio Perfil (FM 101.9).</p>
+              <p class="text-slate-600 dark:text-slate-400"><strong>Encuadre Politicheck:</strong> Centro analítico y periodismo de autor.</p>
+            </div>
+          </div>`
+        },
+        {
+          id: 'medios-sindicales-y-partidarios',
+          title: '3. Medios Sindicales, Cooperativos y Nuevas Expresiones Partidarias',
+          bodyHtml: `<p>Junto a los conglomerados corporativos, conviven empresas periodísticas gestionadas por sindicatos y plataformas partidarias directas:</p>
+          <div class="my-4 p-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-[#0C101A] space-y-3 text-xs sm:text-sm font-sans">
+            <div>
+              <div class="font-bold text-slate-900 dark:text-white mb-0.5">Grupo Octubre (Víctor Santa María / SUTERH)</div>
+              <p class="text-slate-600 dark:text-slate-400">Es el mayor conglomerado mediático de base sindical en la historia argentina. Opera el diario <em>Página 12</em>, <em>Canal 9</em> (Telearte), la señal informativa <em>IP Noticias</em>, <em>AM 750</em>, <em>Revista Caras y Caretas</em> y centros universitarios (UMET). Su línea editorial se inscribe en la Centro-Izquierda progresista, con fuerte foco en derechos laborales, derechos humanos y defensa del Estado.</p>
+            </div>
+            <div class="border-t border-slate-200 dark:border-slate-800 pt-3">
+              <div class="font-bold text-slate-900 dark:text-white mb-0.5">La Prensa Partidaria Digital</div>
+              <p class="text-slate-600 dark:text-slate-400">En los extremos del arco político, plataformas como <em>La Izquierda Diario</em> (Partido de los Trabajadores Socialistas / FIT-U) y <em>La Derecha Diario</em> (plataforma digital identificada con el movimiento libertario de Javier Milei) producen coberturas de fuerte combate ideológico con gran repercusión en redes sociales.</p>
+            </div>
+          </div>`
+        },
+        {
+          id: 'medios-digitales-independientes',
+          title: '4. Nativos Digitales por Suscripción y Periodismo de Autor',
+          bodyHtml: `<p>Para contrarrestar la polarización y la precarización informativa, emergieron redacciones sostenidas directamente por comunidades de lectores:</p>
+          <ul class="list-disc pl-5 space-y-2 my-3 text-xs sm:text-sm text-slate-700 dark:text-slate-300">
+            <li><strong>Cenital (Iván Schargrodsky):</strong> Modelo financiado por membresías voluntarias ("Me Cenital"). Desarrolla newsletters temáticas de alta densidad analítica sobre economía, geopolítica, energía y política doméstica.</li>
+            <li><strong>elDiarioAR:</strong> Filial argentina asociada a <em>elDiario.es</em> de España. Se financia mediante socios que pagan una cuota mensual para mantener la información abierta y sin compromisos empresariales.</li>
+            <li><strong>El Economista:</strong> Publicación especializada con más de 70 años de trayectoria que analiza coyuntura financiera, inflación, reservas del BCRA y políticas macroeconómicas.</li>
+          </ul>`
+        },
+        {
+          id: 'medios-publicos-estatales',
+          title: '5. Los Medios Públicos y Estatales: Reestructuración y Redefinición',
+          bodyHtml: `<p>El sector público experimentó transformaciones radicales a partir de 2024:</p>
+          <div class="my-4 grid grid-cols-1 md:grid-cols-3 gap-3 text-xs sm:text-sm font-sans">
+            <div class="p-3.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-[#0C101A]">
+              <div class="font-bold text-slate-900 dark:text-white mb-1">📺 TV Pública (Canal 7)</div>
+              <p class="text-slate-600 dark:text-slate-400 text-xs">Señal abierta pionera. Reorganización de programación orientada a eventos deportivos de interés nacional y reducción de emisiones informativas en vivo.</p>
+            </div>
+            <div class="p-3.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-[#0C101A]">
+              <div class="font-bold text-slate-900 dark:text-white mb-1">📻 Radio Nacional</div>
+              <p class="text-slate-600 dark:text-slate-400 text-xs">Red federal con 49 repetidoras que garantiza cobertura y comunicación institucional en parajes remotos de frontera y zonas rurales.</p>
+            </div>
+            <div class="p-3.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-[#0C101A]">
+              <div class="font-bold text-slate-900 dark:text-white mb-1">🏛️ Agencia Télam / APes</div>
+              <p class="text-slate-600 dark:text-slate-400 text-xs">La agencia fundada en 1945 fue clausurada en 2024 y reconvertida en una estructura reducida de publicidad y servicios de prensa oficiales.</p>
+            </div>
+          </div>`
+        },
+        {
+          id: 'la-mirada-exterior',
+          title: '6. La Mirada Exterior: La Prensa Internacional sobre Argentina',
+          bodyHtml: `<p>Para evitar el aislamiento del debate doméstico, Politicheck monitorea 16 redacciones globales de primer nivel:</p>
+          <div class="my-4 p-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-[#0C101A] space-y-2 text-xs sm:text-sm font-sans">
+            <p><strong>El País (España):</strong> Cobertura exhaustiva de la política latinoamericana desde sus redacciones de Madrid y Buenos Aires.</p>
+            <p><strong>Financial Times (Reino Unido):</strong> El pulso de los inversores de Wall Street y la City de Londres sobre las reformas de mercado, la deuda soberana y el régimen cambiario.</p>
+            <p><strong>BBC Mundo & France 24:</strong> Periodismo explicativo y de contexto social libre de pasiones partidarias locales.</p>
+            <p><strong>The Guardian & Le Monde:</strong> Enfoques críticos sobre derechos sociales, preservación ambiental y políticas de desregulación estatal.</p>
+          </div>`
+        },
+        {
+          id: 'tabla-comparativa-31-medios',
+          title: '7. Matriz de Auditoría Tripartita (31 Medios Monitoreados)',
+          bodyHtml: `<p>A continuación se resume la matriz de auditoría cruzada que Politicheck aplica de forma continua sobre los medios que integran la plataforma:</p>
+          <div class="my-4 overflow-x-auto border border-slate-200 dark:border-slate-800 rounded-xl">
+            <table class="w-full text-left text-xs font-sans">
+              <thead class="bg-slate-100 dark:bg-slate-900 font-mono text-[11px] uppercase tracking-wider text-slate-600 dark:text-slate-400 border-b border-slate-200 dark:border-slate-800">
+                <tr>
+                  <th class="p-3">Medio</th>
+                  <th class="p-3">Holding / Propietario</th>
+                  <th class="p-3">Propiedad</th>
+                  <th class="p-3">Ideología</th>
+                  <th class="p-3">Factualidad</th>
+                  <th class="p-3">Monografía</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-slate-200 dark:divide-slate-800 text-slate-700 dark:text-slate-300">
+                <tr>
+                  <td class="p-3 font-bold text-slate-900 dark:text-white">Clarín</td>
+                  <td class="p-3">Grupo Clarín S.A.</td>
+                  <td class="p-3">Corporativo</td>
+                  <td class="p-3"><span class="px-2 py-0.5 rounded text-[10px] font-mono bg-blue-500/10 text-blue-600 dark:text-blue-400">Centro-Derecha</span></td>
+                  <td class="p-3">Alta</td>
+                  <td class="p-3"><a href="/guias/quien-es-el-dueno-de-clarin" class="text-sky-600 dark:text-sky-400 font-mono text-[11px] hover:underline">Ver Guía →</a></td>
+                </tr>
+                <tr>
+                  <td class="p-3 font-bold text-slate-900 dark:text-white">La Nación</td>
+                  <td class="p-3">S.A. La Nación (Saguier)</td>
+                  <td class="p-3">Corporativo</td>
+                  <td class="p-3"><span class="px-2 py-0.5 rounded text-[10px] font-mono bg-blue-500/10 text-blue-600 dark:text-blue-400">Derecha</span></td>
+                  <td class="p-3">Alta</td>
+                  <td class="p-3"><a href="/guias/quien-es-el-dueno-de-la-nacion" class="text-sky-600 dark:text-sky-400 font-mono text-[11px] hover:underline">Ver Guía →</a></td>
+                </tr>
+                <tr>
+                  <td class="p-3 font-bold text-slate-900 dark:text-white">Infobae</td>
+                  <td class="p-3">TXH Medios (Hadad)</td>
+                  <td class="p-3">Corporativo</td>
+                  <td class="p-3"><span class="px-2 py-0.5 rounded text-[10px] font-mono bg-blue-500/10 text-blue-600 dark:text-blue-400">Centro-Derecha</span></td>
+                  <td class="p-3">Alta</td>
+                  <td class="p-3"><a href="/guias/quien-es-el-dueno-de-infobae" class="text-sky-600 dark:text-sky-400 font-mono text-[11px] hover:underline">Ver Guía →</a></td>
+                </tr>
+                <tr>
+                  <td class="p-3 font-bold text-slate-900 dark:text-white">Página 12</td>
+                  <td class="p-3">Grupo Octubre (SUTERH)</td>
+                  <td class="p-3">Sindical</td>
+                  <td class="p-3"><span class="px-2 py-0.5 rounded text-[10px] font-mono bg-red-500/10 text-red-600 dark:text-red-400">Izquierda</span></td>
+                  <td class="p-3">Mixta</td>
+                  <td class="p-3 text-slate-400 font-mono text-[11px]">En curso</td>
+                </tr>
+                <tr>
+                  <td class="p-3 font-bold text-slate-900 dark:text-white">Ámbito Financiero</td>
+                  <td class="p-3">Grupo Indalo</td>
+                  <td class="p-3">Corporativo</td>
+                  <td class="p-3"><span class="px-2 py-0.5 rounded text-[10px] font-mono bg-amber-500/10 text-amber-600 dark:text-amber-400">Centro-Izquierda</span></td>
+                  <td class="p-3">Alta</td>
+                  <td class="p-3 text-slate-400 font-mono text-[11px]">En curso</td>
+                </tr>
+                <tr>
+                  <td class="p-3 font-bold text-slate-900 dark:text-white">El Cronista</td>
+                  <td class="p-3">Grupo América</td>
+                  <td class="p-3">Corporativo</td>
+                  <td class="p-3"><span class="px-2 py-0.5 rounded text-[10px] font-mono bg-emerald-500/10 text-emerald-600 dark:text-emerald-400">Centro</span></td>
+                  <td class="p-3">Muy Alta</td>
+                  <td class="p-3 text-slate-400 font-mono text-[11px]">En curso</td>
+                </tr>
+                <tr>
+                  <td class="p-3 font-bold text-slate-900 dark:text-white">Diario Perfil</td>
+                  <td class="p-3">Editorial Perfil</td>
+                  <td class="p-3">Corporativo</td>
+                  <td class="p-3"><span class="px-2 py-0.5 rounded text-[10px] font-mono bg-emerald-500/10 text-emerald-600 dark:text-emerald-400">Centro</span></td>
+                  <td class="p-3">Alta</td>
+                  <td class="p-3 text-slate-400 font-mono text-[11px]">En curso</td>
+                </tr>
+                <tr>
+                  <td class="p-3 font-bold text-slate-900 dark:text-white">elDiarioAR</td>
+                  <td class="p-3">elDiario.es & Periodistas</td>
+                  <td class="p-3">Suscripción</td>
+                  <td class="p-3"><span class="px-2 py-0.5 rounded text-[10px] font-mono bg-amber-500/10 text-amber-600 dark:text-amber-400">Centro-Izquierda</span></td>
+                  <td class="p-3">Muy Alta</td>
+                  <td class="p-3 text-slate-400 font-mono text-[11px]">En curso</td>
+                </tr>
+                <tr>
+                  <td class="p-3 font-bold text-slate-900 dark:text-white">Cenital</td>
+                  <td class="p-3">Iván Schargrodsky / Socios</td>
+                  <td class="p-3">Membresía</td>
+                  <td class="p-3"><span class="px-2 py-0.5 rounded text-[10px] font-mono bg-emerald-500/10 text-emerald-600 dark:text-emerald-400">Centro</span></td>
+                  <td class="p-3">Muy Alta</td>
+                  <td class="p-3 text-slate-400 font-mono text-[11px]">En curso</td>
+                </tr>
+                <tr>
+                  <td class="p-3 font-bold text-slate-900 dark:text-white">El Economista</td>
+                  <td class="p-3">Medios Económicos S.A.</td>
+                  <td class="p-3">Corporativo</td>
+                  <td class="p-3"><span class="px-2 py-0.5 rounded text-[10px] font-mono bg-emerald-500/10 text-emerald-600 dark:text-emerald-400">Centro</span></td>
+                  <td class="p-3">Muy Alta</td>
+                  <td class="p-3 text-slate-400 font-mono text-[11px]">En curso</td>
+                </tr>
+                <tr>
+                  <td class="p-3 font-bold text-slate-900 dark:text-white">Financial Times</td>
+                  <td class="p-3">Nikkei Inc. (Japón)</td>
+                  <td class="p-3">Internacional</td>
+                  <td class="p-3"><span class="px-2 py-0.5 rounded text-[10px] font-mono bg-emerald-500/10 text-emerald-600 dark:text-emerald-400">Centro</span></td>
+                  <td class="p-3">Muy Alta</td>
+                  <td class="p-3"><a href="/metodologia" class="text-sky-600 dark:text-sky-400 font-mono text-[11px] hover:underline">Metodología →</a></td>
+                </tr>
+                <tr>
+                  <td class="p-3 font-bold text-slate-900 dark:text-white">El País</td>
+                  <td class="p-3">Grupo PRISA (España)</td>
+                  <td class="p-3">Internacional</td>
+                  <td class="p-3"><span class="px-2 py-0.5 rounded text-[10px] font-mono bg-amber-500/10 text-amber-600 dark:text-amber-400">Centro-Izquierda</span></td>
+                  <td class="p-3">Muy Alta</td>
+                  <td class="p-3"><a href="/metodologia" class="text-sky-600 dark:text-sky-400 font-mono text-[11px] hover:underline">Metodología →</a></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>`
+        },
+        {
+          id: 'metodologia-politicheck',
+          title: '8. Cómo audita Politicheck el Sesgo de Cobertura en Tiempo Real',
+          bodyHtml: `<p>A diferencia de los monitores tradicionales que emiten veredictos subjetivos, Politicheck procesa de manera automatizada las portadas de los 31 diarios cada 60 minutos mediante modelos avanzados de procesamiento del lenguaje natural (Google Gemini):</p>
+          <div class="my-4 p-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-[#0C101A] space-y-2 text-xs sm:text-sm font-sans">
+            <p><strong>1. Clustering de Hechos Centrales:</strong> Agrupa todas las notas que cubren exactamente el mismo acontecimiento, contrastando hasta 8 redacciones en simultáneo.</p>
+            <p><strong>2. Barra de Espectro Editorial:</strong> Calcula determinísticamente el porcentaje de encuadre correspondiente a <em>Oficialismo</em>, <em>Centro-Datos</em> y <em>Oposición</em> ponderando la jerarquía visual de la noticia en la portada de cada diario.</p>
+            <p><strong>3. Independencia Absoluta ($0 de pauta):</strong> La plataforma se financia exclusivamente de forma cívica, garantizando neutralidad algorítmica y apego estricto a las fuentes primarias.</p>
+          </div>
+          <p>Para conocer la fórmula matemática y las fuentes de datos, consultá nuestra <a href="/metodologia" class="text-sky-600 dark:text-sky-400 font-semibold hover:underline">Página Institucional de Metodología</a>.</p>`
+        }
+      ]
+    }
+  },
+  {
     slug: 'quien-es-el-dueno-de-clarin',
     title: '¿Quién es el Dueño de Clarín? Estructura del Grupo, Accionistas y Línea Editorial',
     subtitle: 'Radiografía societaria y periodística de Grupo Clarín S.A.: quiénes integran GC Dominio S.A., empresas controladas y cómo se audita su sesgo informativo.',
@@ -488,31 +818,6 @@ export const GUIAS_ARTICLES: GuiaArticle[] = [
         }
       ]
     }
-  },
-  {
-    slug: 'mapa-de-medios-argentina-2026',
-    title: 'Mapa del Ecosistema de Medios en Argentina: Grupos Económicos y Sesgo (2026)',
-    subtitle: 'Guía integral de los 31 medios monitoreados: conglomerados corporativos, medios sindicales, estatales e independientes por suscripción.',
-    kicker: 'Pilar • Mapa General',
-    category: 'metodologia',
-    categoryLabel: 'Metodología',
-    publishedAt: 'Próximamente',
-    updatedAt: 'Octubre 2026',
-    isoPublishedAt: '2026-10-26T00:00:00Z',
-    isoUpdatedAt: '2026-10-26T00:00:00Z',
-    readTimeMinutes: 10,
-    author: 'Equipo Editorial de Politicheck',
-    outletName: 'Observatorio Politicheck',
-    faqTitle: 'Preguntas Frecuentes sobre el Mapa de Medios',
-    excerpt: 'La guía definitiva para comprender cómo se financian y alinean ideológicamente las 31 principales redacciones de Argentina y el mundo.',
-    status: 'proximamente',
-    sources: ['AllSides', 'MBFC', 'Reporteros Sin Fronteras', 'Politicheck'],
-    metaTitle: 'Mapa de Medios en Argentina 2026: Grupos, Dueños y Sesgo Editorial',
-    metaDescription: 'La guía más completa sobre los grupos de medios en Argentina: Clarín, La Nación, Indalo, Octubre, medios independientes y su financiamiento.',
-    canonicalUrl: 'https://www.politicheck.com.ar/guias/mapa-de-medios-argentina-2026',
-    targetSnippet: 'El ecosistema de medios en Argentina se divide entre holdings corporativos privados, grupos sindical-partidarios, medios públicos estatales y nuevos medios independientes de suscripción.',
-    faq: [],
-    content: { leadHtml: '', sections: [] }
   }
 ];
 
