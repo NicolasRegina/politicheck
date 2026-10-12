@@ -121,6 +121,15 @@ const serverSyncIso = propSyncIso || (await getLastSyncTimestampAsync()) || new 
         <a href="/metodologia" class="hidden sm:inline hover:text-slate-900 dark:hover:text-slate-100 transition-colors underline underline-offset-2">
           Metodología
         </a>
+        <span class="text-slate-300 dark:text-slate-700 hidden sm:inline">•</span>
+        <button 
+          type="button" 
+          onclick="if(typeof window.openLiveChat === 'function') window.openLiveChat('debate-electoral');"
+          class="hidden sm:inline-flex items-center gap-1.5 hover:text-slate-900 dark:hover:text-slate-100 transition-colors underline underline-offset-2 cursor-pointer font-medium"
+        >
+          <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+          <span>Chat Electoral</span>
+        </button>
       </div>
     </div>
   </div>
@@ -243,6 +252,15 @@ const serverSyncIso = propSyncIso || (await getLastSyncTimestampAsync()) || new 
         >
           <span>Guías & Medios</span>
         </a>
+        <span class="text-slate-300 dark:text-slate-700">•</span>
+        <button 
+          type="button" 
+          onclick="if(typeof window.openLiveChat === 'function') window.openLiveChat('debate-electoral');"
+          class="px-2.5 py-1 rounded bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-slate-100 hover:bg-slate-200 dark:hover:bg-slate-800 transition-colors whitespace-nowrap inline-flex items-center gap-1.5 cursor-pointer font-semibold"
+        >
+          <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-ping"></span>
+          <span>Chat en Vivo</span>
+        </button>
       </nav>
 
       <!-- Search Bar & View Switcher (Streamlined Controls) -->

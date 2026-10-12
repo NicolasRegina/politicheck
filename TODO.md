@@ -266,11 +266,15 @@
 
 ---
 
-### ⏳ Tarea 10: Foro Cívico de Debate & Sala de Chat Electoral en Vivo (Backlog) — [PENDIENTE]
-- [ ] **Sala de Chat Electoral en Vivo (Live Stream Chat):**
-  - Chat en tiempo real durante debates presidenciales, discursos de apertura de sesiones y noches de conteo electoral.
-  - Implementación con Supabase Realtime (WebSockets) y control de spam (rate-limiting de mensajes por minuto).
-  - Herramientas de moderación en vivo para administradores y moderadores (silenciar, banear por IP/cuenta, borrado de mensajes de odio o bots).
+### 🚀 Tarea 10: Foro Cívico de Debate & Sala de Chat Electoral en Vivo — [EN PROGRESO]
+- [x] **Sala de Chat Electoral en Vivo (Live Stream Chat):**
+  - Chat en tiempo real durante debates presidenciales, discursos y coberturas electorales.
+  - Implementación con Supabase Realtime (WebSockets) y control de spam (rate-limiting por IP/Hash y ventana de 3.5s).
+  - Canales por defecto: `#debate-electoral` (Live), `#general` y `#economia-datos`.
+  - Herramientas de moderación en vivo para administradores y moderadores (`pin`, `unpin`, `delete` vía `/api/chat/moderate`).
+  - Componente minimalista [`src/components/LiveChat.astro`](src/components/LiveChat.astro) con lanzador flotante, navegación por canales, avisos fijados (Pinned Notices) y fallback resiliente sin credenciales.
+  - Migración SQL en [`supabase/migrations/20261012_live_electoral_chat.sql`](supabase/migrations/20261012_live_electoral_chat.sql).
+  - Integración en [`src/components/Header.astro`](src/components/Header.astro) y [`src/layouts/Layout.astro`](src/layouts/Layout.astro).
 - [ ] **Foro Cívico de Contraste Ciudadano:**
   - Hilos de debate asociados a cada historia clusterizada de portada.
   - Sistema de reputación ciudadana y argumentos fundamentados (con cita de fuentes obligatoria para combatir fake news).

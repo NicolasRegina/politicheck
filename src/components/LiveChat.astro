@@ -1,0 +1,404 @@
+---
+// LiveChat.astro: Sala de Chat Electoral en Vivo y Foro Cívico
+import BrandLogo from './BrandLogo.astro';
+---
+
+<!-- Floating Chat Launcher Trigger Button -->
+<div class="fixed bottom-5 right-5 z-40" id="live-chat-launcher-container">
+  <button 
+    type="button" 
+    id="open-live-chat-btn" 
+    class="group inline-flex items-center gap-2.5 px-4 py-2.5 rounded-full bg-slate-950 dark:bg-white text-white dark:text-slate-950 border border-slate-800 dark:border-slate-200 shadow-xl hover:scale-105 active:scale-95 transition-all duration-200 font-mono text-xs font-bold cursor-pointer"
+    aria-label="Abrir Sala de Debate Cívico en Vivo"
+  >
+    <span class="relative flex h-2 w-2">
+      <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+      <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+    </span>
+    <span class="tracking-tight">Chat en Vivo</span>
+    <span class="px-1.5 py-0.2 rounded-full bg-slate-800 dark:bg-slate-200 text-slate-300 dark:text-slate-700 text-[10px] font-mono" id="chat-launcher-unread">
+      Debate
+    </span>
+  </button>
+</div>
+
+<!-- Backdrop Overlay for Mobile Bottom Sheet -->
+<div 
+  id="chat-backdrop" 
+  class="hidden fixed inset-0 z-40 bg-slate-950/40 backdrop-blur-xs transition-opacity duration-300 opacity-0 sm:hidden"
+  aria-hidden="true"
+></div>
+
+<!-- Chat Modal / Drawer Container -->
+<aside 
+  id="live-chat-panel" 
+  class="hidden fixed inset-x-0 bottom-0 sm:inset-x-auto sm:bottom-6 sm:right-6 z-50 w-full sm:w-[410px] h-[85vh] sm:h-[600px] flex-col rounded-t-3xl sm:rounded-2xl bg-white dark:bg-[#0A0E17] border border-slate-200 dark:border-slate-800 shadow-2xl transition-all duration-300 ease-out transform translate-y-full opacity-0 font-sans"
+  aria-label="Ventana de Chat Cívico en Vivo"
+>
+  <!-- Mobile Drag Bar -->
+  <div class="w-12 h-1 rounded-full bg-slate-300 dark:bg-slate-700 mx-auto mt-2.5 mb-1 sm:hidden" aria-hidden="true"></div>
+
+  <!-- Header Section -->
+  <header class="p-3.5 sm:p-4 border-b border-slate-200 dark:border-slate-800/90 flex items-center justify-between gap-2 shrink-0 bg-slate-50/70 dark:bg-[#0F1420]/80 rounded-t-3xl sm:rounded-t-2xl">
+    <div class="flex items-center gap-2.5">
+      <div class="relative">
+        <BrandLogo size={26} />
+        <span class="absolute -bottom-0.5 -right-0.5 w-2 h-2 rounded-full bg-emerald-500 border border-white dark:border-slate-900"></span>
+      </div>
+      <div>
+        <div class="flex items-center gap-2">
+          <h3 class="font-editorial text-base sm:text-lg font-bold text-slate-950 dark:text-white leading-none">
+            Debate Cívico en Vivo
+          </h3>
+          <span class="px-1.5 py-0.5 rounded text-[9px] font-mono font-bold bg-emerald-100 text-emerald-800 dark:bg-emerald-950/80 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800 uppercase">
+            Live
+          </span>
+        </div>
+        <p class="text-[11px] font-mono text-slate-500 dark:text-slate-400 mt-0.5">
+          Politicheck • Contrastes & Opinión
+        </p>
+      </div>
+    </div>
+
+    <!-- Actions (Minimize, Close) -->
+    <div class="flex items-center gap-1">
+      <button 
+        type="button" 
+        id="close-chat-btn" 
+        class="text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 p-1.5 rounded-lg hover:bg-slate-200/50 dark:hover:bg-slate-800 transition-colors cursor-pointer"
+        aria-label="Cerrar ventana de chat"
+      >
+        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+        </svg>
+      </button>
+    </div>
+  </header>
+
+  <!-- Channel Navigation Tabs -->
+  <nav class="flex items-center gap-1.5 px-3 py-2 border-b border-slate-100 dark:border-slate-800/80 overflow-x-auto text-[11px] font-mono shrink-0 bg-white dark:bg-[#0A0E17]" id="chat-channel-tabs">
+    <button 
+      type="button" 
+      class="channel-tab-btn active px-2.5 py-1 rounded-lg border border-slate-950 dark:border-white bg-slate-950 dark:bg-white text-white dark:text-slate-950 font-bold transition-all whitespace-nowrap cursor-pointer"
+      data-channel="debate-electoral"
+    >
+      🔴 #debate-electoral
+    </button>
+    <button 
+      type="button" 
+      class="channel-tab-btn px-2.5 py-1 rounded-lg border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 font-medium transition-all whitespace-nowrap cursor-pointer"
+      data-channel="general"
+    >
+      #general
+    </button>
+    <button 
+      type="button" 
+      class="channel-tab-btn px-2.5 py-1 rounded-lg border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 font-medium transition-all whitespace-nowrap cursor-pointer"
+      data-channel="economia-datos"
+    >
+      #economia-datos
+    </button>
+  </nav>
+
+  <!-- Pinned Announcement Box (Subtle Editorial Notice) -->
+  <div id="chat-pinned-box" class="hidden px-3.5 py-2 bg-amber-50/80 dark:bg-amber-950/20 border-b border-amber-200/80 dark:border-amber-900/40 text-xs font-sans text-amber-950 dark:text-amber-200 flex items-start gap-2 shrink-0">
+    <span class="text-sm shrink-0 mt-0.5">📌</span>
+    <div class="flex-1 min-w-0">
+      <div class="font-mono text-[10px] font-bold text-amber-800 dark:text-amber-400 uppercase tracking-wider">Aviso de Moderación:</div>
+      <p id="chat-pinned-content" class="text-[11px] leading-tight line-clamp-2 mt-0.5"></p>
+    </div>
+  </div>
+
+  <!-- Messages Scroll Area -->
+  <div 
+    id="chat-messages-container" 
+    class="flex-1 p-3.5 space-y-3 overflow-y-auto min-h-0 text-xs font-sans bg-slate-50/40 dark:bg-[#070A12]/40"
+  >
+    <!-- Message placeholders populated via JS -->
+    <div class="text-center py-8 text-slate-400 dark:text-slate-500 font-mono text-[11px]" id="chat-loading-placeholder">
+      Cargando mensajes del debate...
+    </div>
+  </div>
+
+  <!-- Footer Input Area -->
+  <footer class="p-3 border-t border-slate-200 dark:border-slate-800/90 bg-white dark:bg-[#0A0E17] shrink-0 space-y-2">
+    <!-- User Alias Strip -->
+    <div class="flex items-center justify-between text-[11px] font-mono text-slate-500 dark:text-slate-400">
+      <div class="flex items-center gap-1.5">
+        <span>Tu alias:</span>
+        <input 
+          type="text" 
+          id="chat-alias-input" 
+          maxlength="25" 
+          value="Ciudadano"
+          placeholder="Nombre o alias" 
+          class="px-1.5 py-0.5 rounded border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900 text-slate-800 dark:text-slate-200 font-medium focus:outline-hidden focus:border-slate-400 dark:focus:border-slate-600 text-[11px]"
+        />
+      </div>
+      <span id="chat-char-counter" class="text-slate-400 text-[10px]">0/300</span>
+    </div>
+
+    <!-- Message Form -->
+    <form id="chat-send-form" class="flex items-center gap-2">
+      <input 
+        type="text" 
+        id="chat-msg-input" 
+        maxlength="300"
+        autocomplete="off"
+        placeholder="Escribí tu comentario o contrastá una fuente..." 
+        class="flex-1 px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900 text-slate-900 dark:text-slate-100 placeholder-slate-400 text-xs focus:outline-hidden focus:border-slate-900 dark:focus:border-white transition-all"
+      />
+      <button 
+        type="submit" 
+        id="chat-submit-btn" 
+        class="px-3.5 py-2 rounded-xl bg-slate-950 dark:bg-white text-white dark:text-slate-950 font-mono text-xs font-bold hover:bg-slate-800 dark:hover:bg-slate-200 active:scale-95 transition-all disabled:opacity-50 cursor-pointer shrink-0"
+      >
+        <span>Enviar</span>
+      </button>
+    </form>
+    <div id="chat-feedback-msg" class="hidden text-[10px] font-mono text-rose-500"></div>
+  </footer>
+</aside>
+
+<script>
+  let currentChannel = 'debate-electoral';
+  let pollInterval: any = null;
+  let isPanelOpen = false;
+
+  const panel = document.getElementById('live-chat-panel');
+  const backdrop = document.getElementById('chat-backdrop');
+  const launcher = document.getElementById('open-live-chat-btn');
+  const launcherContainer = document.getElementById('live-chat-launcher-container');
+  const closeBtn = document.getElementById('close-chat-btn');
+  const container = document.getElementById('chat-messages-container');
+  const form = document.getElementById('chat-send-form');
+  const msgInput = document.getElementById('chat-msg-input') as HTMLInputElement | null;
+  const aliasInput = document.getElementById('chat-alias-input') as HTMLInputElement | null;
+  const charCounter = document.getElementById('chat-char-counter');
+  const feedbackMsg = document.getElementById('chat-feedback-msg');
+  const tabs = document.querySelectorAll('.channel-tab-btn');
+  const pinnedBox = document.getElementById('chat-pinned-box');
+  const pinnedContent = document.getElementById('chat-pinned-content');
+
+  // Load alias from localStorage
+  const savedAlias = localStorage.getItem('politicheck_chat_alias');
+  if (savedAlias && aliasInput) {
+    aliasInput.value = savedAlias;
+  }
+
+  aliasInput?.addEventListener('input', () => {
+    if (aliasInput.value.trim()) {
+      localStorage.setItem('politicheck_chat_alias', aliasInput.value.trim());
+    }
+  });
+
+  msgInput?.addEventListener('input', () => {
+    if (charCounter && msgInput) {
+      charCounter.textContent = `${msgInput.value.length}/300`;
+    }
+  });
+
+  function openChat(channel?: string) {
+    if (channel) {
+      switchChannel(channel);
+    }
+    isPanelOpen = true;
+    panel?.classList.remove('hidden');
+    backdrop?.classList.remove('hidden');
+    launcherContainer?.classList.add('hidden');
+    setTimeout(() => {
+      panel?.classList.remove('translate-y-full', 'opacity-0');
+      panel?.classList.add('translate-y-0', 'opacity-100');
+      backdrop?.classList.remove('opacity-0');
+      backdrop?.classList.add('opacity-100');
+      msgInput?.focus();
+    }, 10);
+    fetchMessages();
+    startPolling();
+  }
+
+  function closeChat() {
+    isPanelOpen = false;
+    panel?.classList.add('translate-y-full', 'opacity-0');
+    panel?.classList.remove('translate-y-0', 'opacity-100');
+    backdrop?.classList.add('opacity-0');
+    backdrop?.classList.remove('opacity-100');
+    setTimeout(() => {
+      panel?.classList.add('hidden');
+      backdrop?.classList.add('hidden');
+      launcherContainer?.classList.remove('hidden');
+    }, 300);
+    stopPolling();
+  }
+
+  launcher?.addEventListener('click', () => openChat());
+  closeBtn?.addEventListener('click', closeChat);
+  backdrop?.addEventListener('click', closeChat);
+
+  // Global window method for invoking chat from any button or component
+  (window as any).openLiveChat = openChat;
+
+  function switchChannel(channelId: string) {
+    currentChannel = channelId;
+    tabs.forEach((tab) => {
+      const isTarget = tab.getAttribute('data-channel') === channelId;
+      if (isTarget) {
+        tab.classList.add('active', 'border-slate-950', 'dark:border-white', 'bg-slate-950', 'dark:bg-white', 'text-white', 'dark:text-slate-950', 'font-bold');
+        tab.classList.remove('border-slate-200', 'dark:border-slate-800', 'text-slate-600', 'dark:text-slate-400', 'font-medium');
+      } else {
+        tab.classList.remove('active', 'border-slate-950', 'dark:border-white', 'bg-slate-950', 'dark:bg-white', 'text-white', 'dark:text-slate-950', 'font-bold');
+        tab.classList.add('border-slate-200', 'dark:border-slate-800', 'text-slate-600', 'dark:text-slate-400', 'font-medium');
+      }
+    });
+    fetchMessages();
+  }
+
+  tabs.forEach((tab) => {
+    tab.addEventListener('click', () => {
+      const ch = tab.getAttribute('data-channel');
+      if (ch) switchChannel(ch);
+    });
+  });
+
+  async function fetchMessages() {
+    try {
+      const res = await fetch(`/api/chat/messages?channel=${encodeURIComponent(currentChannel)}`);
+      const data = await res.json();
+      if (data && data.success && Array.isArray(data.messages)) {
+        renderMessages(data.messages);
+      }
+    } catch (err) {
+      console.warn('[Chat Client] Error fetching messages:', err);
+    }
+  }
+
+  function escapeHtml(text: string) {
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
+  }
+
+  function formatTime(iso: string) {
+    try {
+      const d = new Date(iso);
+      return d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    } catch {
+      return '';
+    }
+  }
+
+  function renderMessages(messages: any[]) {
+    if (!container) return;
+
+    // Check pinned message
+    const pinned = messages.find(m => m.is_pinned && !m.is_deleted);
+    if (pinned && pinnedBox && pinnedContent) {
+      pinnedBox.classList.remove('hidden');
+      pinnedContent.textContent = `${pinned.sender_name}: ${pinned.content}`;
+    } else if (pinnedBox) {
+      pinnedBox.classList.add('hidden');
+    }
+
+    if (messages.length === 0) {
+      container.innerHTML = `
+        <div class="text-center py-12 text-slate-400 dark:text-slate-500 font-mono text-xs space-y-1">
+          <p>No hay mensajes en este canal todavía.</p>
+          <p class="text-[10px]">¡Sé el primero en aportar un dato o contraste!</p>
+        </div>
+      `;
+      return;
+    }
+
+    const isNearBottom = container.scrollHeight - container.scrollTop - container.clientHeight < 80;
+
+    container.innerHTML = messages.map((m) => {
+      const isOfficial = ['superadmin', 'admin', 'moderator'].includes(m.sender_role);
+      const roleBadge = isOfficial 
+        ? `<span class="px-1 py-0.2 rounded text-[9px] font-mono font-bold bg-sky-100 text-sky-800 dark:bg-sky-950 dark:text-sky-300 border border-sky-300 dark:border-sky-800">Oficial</span>`
+        : '';
+      const pinBadge = m.is_pinned 
+        ? `<span class="text-[10px] text-amber-500" title="Mensaje fijado">📌</span>`
+        : '';
+
+      return `
+        <div class="space-y-1 group ${m.is_pinned ? 'p-2 rounded-xl bg-amber-50/50 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-900/40' : ''}">
+          <div class="flex items-center justify-between gap-1 text-[11px] font-mono text-slate-500 dark:text-slate-400">
+            <div class="flex items-center gap-1.5 font-bold text-slate-800 dark:text-slate-200 truncate">
+              <span>${escapeHtml(m.sender_name)}</span>
+              ${roleBadge}
+              ${pinBadge}
+            </div>
+            <span class="text-[10px] text-slate-400 shrink-0">${formatTime(m.created_at)}</span>
+          </div>
+          <div class="text-xs text-slate-800 dark:text-slate-200 leading-relaxed break-words pl-0.5">
+            ${escapeHtml(m.content)}
+          </div>
+        </div>
+      `;
+    }).join('');
+
+    if (isNearBottom) {
+      container.scrollTop = container.scrollHeight;
+    }
+  }
+
+  form?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    if (!msgInput || !aliasInput) return;
+
+    const content = msgInput.value.trim();
+    const senderName = aliasInput.value.trim() || 'Ciudadano';
+
+    if (!content) return;
+
+    const submitBtn = document.getElementById('chat-submit-btn') as HTMLButtonElement | null;
+    if (submitBtn) submitBtn.disabled = true;
+
+    try {
+      const res = await fetch('/api/chat/messages', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          channelId: currentChannel,
+          content,
+          senderName
+        })
+      });
+
+      const data = await res.json();
+      if (!res.ok || !data.success) {
+        if (feedbackMsg) {
+          feedbackMsg.textContent = data.error || 'Error al enviar mensaje.';
+          feedbackMsg.classList.remove('hidden');
+          setTimeout(() => feedbackMsg.classList.add('hidden'), 4000);
+        }
+      } else {
+        msgInput.value = '';
+        if (charCounter) charCounter.textContent = '0/300';
+        fetchMessages();
+      }
+    } catch (err: any) {
+      if (feedbackMsg) {
+        feedbackMsg.textContent = 'Error de conexión. Reintentando...';
+        feedbackMsg.classList.remove('hidden');
+        setTimeout(() => feedbackMsg.classList.add('hidden'), 3000);
+      }
+    } finally {
+      if (submitBtn) submitBtn.disabled = false;
+    }
+  });
+
+  function startPolling() {
+    stopPolling();
+    pollInterval = setInterval(() => {
+      if (isPanelOpen) fetchMessages();
+    }, 4000);
+  }
+
+  function stopPolling() {
+    if (pollInterval) {
+      clearInterval(pollInterval);
+      pollInterval = null;
+    }
+  }
+</script>

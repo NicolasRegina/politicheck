@@ -1,4 +1,5 @@
 import { createClient } from '@supabase/supabase-js';
+import type { ChatChannel, ChatMessage } from '../types';
 
 const supabaseUrl = import.meta.env?.SUPABASE_URL || process.env.SUPABASE_URL || import.meta.env?.PUBLIC_SUPABASE_URL || process.env.PUBLIC_SUPABASE_URL;
 const supabaseKey = import.meta.env?.SUPABASE_ANON_KEY || process.env.SUPABASE_ANON_KEY || import.meta.env?.PUBLIC_SUPABASE_ANON_KEY || process.env.PUBLIC_SUPABASE_ANON_KEY;
@@ -719,4 +720,215 @@ export async function updateUserRole(
     return { success: false, error: err.message };
   }
 }
+
+// ========================================================
+// LIVE ELECTORAL CHAT & CIVIC FORUM SERVICE
+// ========================================================
+
+export const DEFAULT_CHAT_CHANNELS: ChatChannel[] = [
+  {
+    id: 'general',
+    name: 'Debate Ciudadano General',
+    description: 'Intercambio abierto de noticias y encuadres del día',
+    is_active: true,
+    is_live: false
+  },
+  {
+    id: 'debate-electoral',
+    name: 'Sala Electoral en Vivo',
+    description: 'Transmisión simultánea durante debates y coberturas clave',
+    is_active: true,
+    is_live: true
+  },
+  {
+    id: 'economia-datos',
+    name: 'Economía & Reformas',
+    description: 'Análisis de inflación, reservas, presupuesto y medidas',
+    is_active: true,
+    is_live: false
+  }
+];
+
+// Fallback in-memory messages for dev/offline resilience
+const fallbackMessages: Record<string, ChatMessage[]> = {
+  'general': [
+    {
+      id: 'mock-1',
+      channel_id: 'general',
+      sender_name: 'Moderación Politicheck',
+      sender_role: 'admin',
+      content: '¡Bienvenidos al espacio de debate cívico en vivo! Mantené el respeto y fundamentá con fuentes.',
+      is_pinned: true,
+      is_deleted: false,
+      created_at: new Date(Date.now() - 3600000).toISOString()
+    }
+  ],
+  'debate-electoral': [
+    {
+      id: 'mock-2',
+      channel_id: 'debate-electoral',
+      sender_name: 'Observatorio Electoral',
+      sender_role: 'superadmin',
+      content: 'Sala especial activa para el seguimiento en directo de debates y anuncios de campaña.',
+      is_pinned: true,
+      is_deleted: false,
+      created_at: new Date(Date.now() - 1800000).toISOString()
+    }
+  ]
+};
+
+/**
+ * Fetch active chat channels
+ */
+export async function getChatChannels(client = supabase): Promise<ChatChannel[]> {
+  if (!client) return DEFAULT_CHAT_CHANNELS;
+
+  try {
+    const { data, error } = await client
+      .from('chat_channels')
+      .select('*')
+      .eq('is_active', true)
+      .order('is_live', { ascending: false });
+
+    if (error || !data || data.length === 0) {
+      return DEFAULT_CHAT_CHANNELS;
+    }
+    return data as ChatChannel[];
+  } catch {
+    return DEFAULT_CHAT_CHANNELS;
+  }
+}
+
+/**
+ * Fetch messages for a specific channel
+ */
+export async function getChatMessages(
+  channelId: string,
+  limit = 50,
+  client = supabase
+): Promise<ChatMessage[]> {
+  if (!client) {
+    return (fallbackMessages[channelId] || []).filter(m => !m.is_deleted);
+  }
+
+  try {
+    const { data, error } = await client
+      .from('chat_messages')
+      .select('*')
+      .eq('channel_id', channelId)
+      .eq('is_deleted', false)
+      .order('created_at', { ascending: true })
+      .limit(limit);
+
+    if (error) {
+      console.warn('[Chat Service] Error fetching messages:', error.message);
+      return (fallbackMessages[channelId] || []).filter(m => !m.is_deleted);
+    }
+
+    return (data || []) as ChatMessage[];
+  } catch (err: any) {
+    console.error('[Chat Service] Exception fetching messages:', err.message);
+    return (fallbackMessages[channelId] || []).filter(m => !m.is_deleted);
+  }
+}
+
+/**
+ * Send a new chat message
+ */
+export async function sendChatMessage(
+  channelId: string,
+  content: string,
+  senderName: string,
+  senderRole: 'superadmin' | 'admin' | 'moderator' | 'user' = 'user',
+  ipHash?: string,
+  client = supabase
+): Promise<{ success: boolean; message?: ChatMessage; error?: string }> {
+  const sanitizedContent = content.trim().slice(0, 300);
+  const sanitizedName = senderName.trim().slice(0, 40) || 'Ciudadano';
+
+  if (!sanitizedContent) {
+    return { success: false, error: 'El mensaje no puede estar vacío.' };
+  }
+
+  if (!client) {
+    const newMsg: ChatMessage = {
+      id: `local-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`,
+      channel_id: channelId,
+      sender_name: sanitizedName,
+      sender_role: senderRole,
+      content: sanitizedContent,
+      is_pinned: false,
+      is_deleted: false,
+      ip_hash: ipHash,
+      created_at: new Date().toISOString()
+    };
+    if (!fallbackMessages[channelId]) fallbackMessages[channelId] = [];
+    fallbackMessages[channelId].push(newMsg);
+    return { success: true, message: newMsg };
+  }
+
+  try {
+    const { data, error } = await client
+      .from('chat_messages')
+      .insert({
+        channel_id: channelId,
+        content: sanitizedContent,
+        sender_name: sanitizedName,
+        sender_role: senderRole,
+        ip_hash: ipHash,
+        is_pinned: false,
+        is_deleted: false
+      })
+      .select()
+      .single();
+
+    if (error) {
+      return { success: false, error: error.message };
+    }
+
+    return { success: true, message: data as ChatMessage };
+  } catch (err: any) {
+    return { success: false, error: err.message };
+  }
+}
+
+/**
+ * Moderate a message (delete or pin)
+ */
+export async function moderateChatMessage(
+  messageId: string,
+  action: 'delete' | 'pin' | 'unpin',
+  client = supabase
+): Promise<{ success: boolean; error?: string }> {
+  if (!client) {
+    for (const ch in fallbackMessages) {
+      const msg = fallbackMessages[ch].find(m => m.id === messageId);
+      if (msg) {
+        if (action === 'delete') msg.is_deleted = true;
+        if (action === 'pin') msg.is_pinned = true;
+        if (action === 'unpin') msg.is_pinned = false;
+        return { success: true };
+      }
+    }
+    return { success: true };
+  }
+
+  try {
+    const updatePayload: Record<string, any> = {};
+    if (action === 'delete') updatePayload.is_deleted = true;
+    if (action === 'pin') updatePayload.is_pinned = true;
+    if (action === 'unpin') updatePayload.is_pinned = false;
+
+    const { error } = await client
+      .from('chat_messages')
+      .update(updatePayload)
+      .eq('id', messageId);
+
+    if (error) return { success: false, error: error.message };
+    return { success: true };
+  } catch (err: any) {
+    return { success: false, error: err.message };
+  }
+}
+
 

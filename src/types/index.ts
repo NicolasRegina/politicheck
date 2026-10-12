@@ -113,3 +113,26 @@ export interface CampaignPromise {
   votes?: CitizenVotes;
 }
 
+export interface ChatChannel {
+  id: string;
+  name: string;
+  description?: string;
+  is_active: boolean;
+  is_live: boolean;
+  created_at?: string;
+}
+
+export interface ChatMessage {
+  id: string;
+  channel_id: string;
+  user_id?: string | null;
+  sender_name: string;
+  sender_role: 'superadmin' | 'admin' | 'moderator' | 'user';
+  content: string;
+  is_pinned: boolean;
+  is_deleted: boolean;
+  deleted_by?: string | null;
+  ip_hash?: string | null;
+  created_at: string;
+}
+
