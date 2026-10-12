@@ -155,10 +155,10 @@ export const GUIAS_ARTICLES: GuiaArticle[] = [
             <div class="p-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-[#0C101A] space-y-2">
               <div class="flex items-center justify-between">
                 <span class="font-bold text-sm text-slate-900 dark:text-white">4. Grupo Indalo</span>
-                <span class="px-2 py-0.5 rounded text-[10px] font-mono font-semibold bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/20">Investigación en curso</span>
+                <a href="/guias/quien-es-el-dueno-de-ambito-financiero" class="text-xs font-mono font-semibold text-sky-600 dark:text-sky-400 hover:underline">Ver investigación monográfica →</a>
               </div>
               <p class="text-slate-600 dark:text-slate-400"><strong>Controlantes:</strong> Cristóbal López y Fabián De Sousa.</p>
-              <p class="text-slate-600 dark:text-slate-400"><strong>Activos centrales:</strong> Señal de noticias C5N, diario económico Ámbito Financiero, Radio 10 (AM 710) y emisoras FM (Mega 98.3, Vale 97.5, Pop Radio).</p>
+              <p class="text-slate-600 dark:text-slate-400"><strong>Activos centrales:</strong> Diario económico Ámbito Financiero, señal de noticias C5N, Radio 10 (AM 710) y emisoras FM (Mega 98.3, Vale 97.5, Pop Radio).</p>
               <p class="text-slate-600 dark:text-slate-400"><strong>Encuadre Politicheck:</strong> Centro-Izquierda / Oposición peronista y productivista.</p>
             </div>
 
@@ -295,7 +295,7 @@ export const GUIAS_ARTICLES: GuiaArticle[] = [
                   <td class="p-3">Corporativo</td>
                   <td class="p-3"><span class="px-2 py-0.5 rounded text-[10px] font-mono bg-amber-500/10 text-amber-600 dark:text-amber-400">Centro-Izquierda</span></td>
                   <td class="p-3">Alta</td>
-                  <td class="p-3 text-slate-400 font-mono text-[11px]">En curso</td>
+                  <td class="p-3"><a href="/guias/quien-es-el-dueno-de-ambito-financiero" class="text-sky-600 dark:text-sky-400 font-mono text-[11px] hover:underline">Ver Guía →</a></td>
                 </tr>
                 <tr>
                   <td class="p-3 font-bold text-slate-900 dark:text-white">El Cronista</td>
@@ -814,6 +814,158 @@ export const GUIAS_ARTICLES: GuiaArticle[] = [
             <p><strong>Economía:</strong> Cobertura favorable a la inversión privada, equilibrio fiscal y desregulación económica.</p>
             <p><strong>Geopolítica Continental:</strong> Clara alineación con la política exterior de Estados Unidos, Israel y la Unión Europea, con un encuadre severamente crítico de los regímenes de Venezuela, Nicaragua y Cuba.</p>
             <p><strong>Optimización SEO y Virales:</strong> Alto volumen de artículos de estilo de vida, salud, bienestar, policiales y tendencias para sostener su caudal de tráfico masivo.</p>
+          </div>`
+        }
+      ]
+    }
+  },
+  {
+    slug: 'quien-es-el-dueno-de-ambito-financiero',
+    title: '¿Quién es el Dueño de Ámbito Financiero y C5N? Cristóbal López, Grupo Indalo y Línea Editorial',
+    subtitle: 'Historia de la venta de Julio Ramos, la consolidación de Indalo Media, las causas judiciales y el rol del diario económico en el ecosistema de medios.',
+    kicker: 'Monografía • Grupo Indalo',
+    category: 'propiedad',
+    categoryLabel: 'Propiedad & Grupos',
+    publishedAt: '12 de Octubre, 2026',
+    updatedAt: '12 de Octubre, 2026',
+    isoPublishedAt: '2026-10-12T00:00:00Z',
+    isoUpdatedAt: '2026-10-12T00:00:00Z',
+    readTimeMinutes: 9,
+    author: 'Equipo de Datos de Politicheck',
+    outletName: 'Ámbito Financiero / C5N',
+    faqTitle: 'Preguntas Frecuentes sobre Ámbito Financiero y Grupo Indalo',
+    excerpt: 'Radiografía corporativa de Editorial Amfin S.A. y el Grupo Indalo: Cristóbal López, Fabián De Sousa, la causa Oil Combustibles y su posicionamiento editorial en Politicheck.',
+    heroImageUrl: 'https://images.unsplash.com/photo-1590283603385-17ffb3a7f29f?auto=format&fit=crop&w=1200&q=80',
+    imageCaption: 'Ámbito Financiero fue fundado en 1976 por Julio Ramos como el diario de referencia de la City porteña antes de su adquisición por el Grupo Indalo.',
+    status: 'publicado',
+    sources: [
+      'Inspección General de Justicia (IGJ)',
+      'Media Ownership Monitor (MOM / Reporteros Sin Fronteras)',
+      'Fallo del Tribunal Oral Federal N° 3 (Causa Oil Combustibles)',
+      'Comscore MMX Multi-Platform'
+    ],
+    metaTitle: '¿Quién es el Dueño de Ámbito Financiero y C5N? Cristóbal López y Grupo Indalo',
+    metaDescription: 'Conocé quiénes son los dueños de Ámbito Financiero y C5N: la historia de Grupo Indalo, Cristóbal López, Fabián De Sousa, las causas judiciales y su línea editorial.',
+    canonicalUrl: 'https://www.politicheck.com.ar/guias/quien-es-el-dueno-de-ambito-financiero',
+    targetSnippet: 'Ámbito Financiero y C5N pertenecen al Grupo Indalo, conglomerado empresarial controlado por Cristóbal López y Fabián De Sousa a través de South Media Investments y Editorial Amfin S.A.',
+    faq: [
+      {
+        question: '¿Quién es el dueño de Ámbito Financiero hoy?',
+        answer: 'El dueño mayoritario de Ámbito Financiero es el Grupo Indalo, holding empresarial conducido en partes iguales por los empresarios Cristóbal López y Fabián De Sousa a través de la firma South Media Investments y Editorial Amfin S.A.'
+      },
+      {
+        question: '¿A quién le pertenecía Ámbito Financiero originalmente?',
+        answer: 'Fue fundado el 9 de diciembre de 1976 por el periodista Julio A. Ramos, quien lo dirigió hasta su muerte en 2006. En 2008 fue vendido a Orlando Vignatti y Raúl Moneta, y en febrero de 2015 pasó a manos del Grupo Indalo.'
+      },
+      {
+        question: '¿Qué otros medios integran el Grupo Indalo además de Ámbito?',
+        answer: 'El holding controla la señal de noticias C5N, las emisoras radiales Radio 10 (AM 710), Pop Radio 101.5, Mega 98.3, Vale 97.5 y One 103.7, y el portal informativo minutouno.com.'
+      },
+      {
+        question: '¿En qué estado quedó la causa judicial de Oil Combustibles?',
+        answer: 'En diciembre de 2021, el Tribunal Oral Federal N° 3 absolvió a Cristóbal López y Fabián De Sousa al concluir que los planes de facilidades fiscales otorgados por AFIP no constituyeron un delito de defraudación penal. La quiebra fue levantada y los empresarios retomaron la administración de todas sus compañías.'
+      },
+      {
+        question: '¿Cuál es la línea editorial de Ámbito Financiero en Politicheck?',
+        answer: 'Politicheck lo clasifica con sesgo de Centro-Izquierda / Heterodoxo en materia de análisis político y macroeconómico, pero con Factualidad Alta en su seguimiento de cotizaciones bursátiles, mercados cambiarios y estadísticas de la City porteña.'
+      }
+    ],
+    content: {
+      leadHtml: `<p>El diario económico <strong>Ámbito Financiero</strong> y el canal de noticias <strong>C5N</strong> pertenecen al conglomerado empresarial argentino <strong>Grupo Indalo</strong>, controlado en partes iguales por los empresarios <strong>Cristóbal López</strong> y <strong>Fabián De Sousa</strong>. El diario fue adquirido en febrero de 2015 a través de la compra del paquete mayoritario de <strong>Editorial Amfin S.A.</strong> al empresario Orlando Vignatti, mientras que C5N y su paquete de radios fueron adquiridos previamente en 2012 a Daniel Hadad.</p>`,
+      sections: [
+        {
+          id: 'era-julio-ramos',
+          title: '1. El Origen de Ámbito Financiero: La era de Julio Ramos y la City porteña',
+          bodyHtml: `<p>El 9 de diciembre de 1976, el periodista <strong>Julio Alberto Ramos</strong> lanzó el primer ejemplar de <strong>Ámbito Financiero</strong> en formato tabloide y en su característico papel color salmón/amarillo, emulando la tradición gráfica del <em>Financial Times</em> británico:</p>
+          <div class="my-4 p-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-[#0C101A] space-y-2 text-xs sm:text-sm font-sans">
+            <p><strong>Información para la Toma de Decisiones:</strong> El diario se transformó en la biblia de la City bancaria al sistematizar cotizaciones del dólar en casas de cambio, tasas interbancarias, balances corporativos y operaciones de granos.</p>
+            <p><strong>"Charlas de Quincho":</strong> Sección dominical emblemática donde Ramos y sus cronistas filtraban almuerzos de directorio, conspiraciones de gabinete y rumores de pasillos judiciales bajo diálogos informales de alto impacto político.</p>
+            <p><strong>Línea Inicial:</strong> Durante tres décadas, el diario defendió posturas liberal-conservadoras y de desregulación económica, confrontando fuertemente tanto con ministros de turno como con la cúpula del Grupo Clarín.</p>
+          </div>`
+        },
+        {
+          id: 'adquisicion-indalo',
+          title: '2. De la Sucesión Familiar a la Venta al Grupo Indalo (2008–2015)',
+          bodyHtml: `<p>Tras el fallecimiento de Julio Ramos en noviembre de 2006, la empresa <strong>Editorial Amfin S.A.</strong> atravesó dos etapas societarias decisivas:</p>
+          <ul class="list-disc pl-5 space-y-2 my-3 text-xs sm:text-sm text-slate-700 dark:text-slate-300">
+            <li><strong>La etapa de Orlando Vignatti (2008–2015):</strong> El empresario santafesino (titular del diario <em>La Capital</em> de Rosario) adquirió el control del medio junto al banquero Raúl Moneta, intentando expandir su circulación en el interior y modernizar el portal web en medio de crecientes tensiones de liquidez.</li>
+            <li><strong>La Compra de Grupo Indalo (Febrero de 2015):</strong> Cristóbal López y Fabián De Sousa adquirieron inicialmente el 60% de Editorial Amfin S.A. (además de <em>Editorial Chaco</em> y <em>El Patagónico</em>) y luego elevaron su tenencia al <strong>81%</strong>, completando el desembarco del holding en la prensa gráfica económica.</li>
+          </ul>`
+        },
+        {
+          id: 'ecosistema-indalo-media',
+          title: '3. Radiografía Corporativa: El Ecosistema de Medios de Grupo Indalo',
+          bodyHtml: `<p>Bajo la sociedad matriz <strong>South Media Investments</strong>, la división de medios de Indalo nuclea una de las redes informativas de mayor penetración nacional:</p>
+          <div class="my-4 overflow-x-auto border border-slate-200 dark:border-slate-800 rounded-xl">
+            <table class="w-full text-left text-xs font-sans">
+              <thead class="bg-slate-100 dark:bg-slate-900 font-mono text-[11px] uppercase tracking-wider text-slate-600 dark:text-slate-400 border-b border-slate-200 dark:border-slate-800">
+                <tr>
+                  <th class="p-3">Unidad de Medios</th>
+                  <th class="p-3">Formato / Cobertura</th>
+                  <th class="p-3">Origen</th>
+                  <th class="p-3">Orientación Editorial</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-slate-200 dark:divide-slate-800 text-slate-700 dark:text-slate-300">
+                <tr>
+                  <td class="p-3 font-bold text-slate-900 dark:text-white">Ámbito Financiero</td>
+                  <td class="p-3">Diario impreso y ambito.com</td>
+                  <td class="p-3">Compra a Amfin (2015)</td>
+                  <td class="p-3">Centro-Izquierda / Heterodoxia Desarrollista</td>
+                </tr>
+                <tr>
+                  <td class="p-3 font-bold text-slate-900 dark:text-white">C5N</td>
+                  <td class="p-3">Señal de TV por cable 24/7</td>
+                  <td class="p-3">Compra a Hadad (2012)</td>
+                  <td class="p-3">Oposición peronista / Progresismo</td>
+                </tr>
+                <tr>
+                  <td class="p-3 font-bold text-slate-900 dark:text-white">Radio 10 (AM 710)</td>
+                  <td class="p-3">Amplitud modulada</td>
+                  <td class="p-3">Compra a Hadad (2012)</td>
+                  <td class="p-3">Centro-Izquierda / Interés Popular</td>
+                </tr>
+                <tr>
+                  <td class="p-3 font-bold text-slate-900 dark:text-white">Mega 98.3 / Pop 101.5 / Vale / One</td>
+                  <td class="p-3">Red de cadenas FM</td>
+                  <td class="p-3">Compra a Hadad (2012)</td>
+                  <td class="p-3">Música y Magazine Cultural</td>
+                </tr>
+                <tr>
+                  <td class="p-3 font-bold text-slate-900 dark:text-white">minutouno.com</td>
+                  <td class="p-3">Portal de noticias digital</td>
+                  <td class="p-3">Compra en 2012</td>
+                  <td class="p-3">Generalista / Tendencias</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <p class="text-xs text-slate-500 font-mono">Composición accionaria del holding: Cristóbal López (50%) y Fabián De Sousa (50%).</p>`
+        },
+        {
+          id: 'conflicto-oil-combustibles',
+          title: '4. El Conflicto Judicial de Oil Combustibles y la Absolución del TOF 3',
+          bodyHtml: `<p>Entre 2016 y 2021, la estabilidad de las redacciones de Indalo estuvo bajo extrema incertidumbre judicial a raíz de la causa penal por el Impuesto a la Transferencia de Combustibles (ITC):</p>
+          <div class="my-4 p-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-[#0C101A] space-y-3 text-xs sm:text-sm font-sans">
+            <div>
+              <strong>La Acusación de AFIP (2016):</strong> El organismo recaudador denunció que la petrolera <em>Oil Combustibles</em> retuvo fondos del ITC para financiar la compra de medios y activos comerciales.
+            </div>
+            <div>
+              <strong>Prisión Preventiva e Intento de Venta (2017–2019):</strong> Los empresarios fueron detenidos con prisión preventiva durante casi dos años y la justicia frenó la venta del grupo de medios al fondo OP Investments debido a la inhibición general de bienes y la quiebra judicial de la petrolera.
+            </div>
+            <div>
+              <strong>Veredicto Absolutorio del TOF 3 (Diciembre 2021):</strong> El Tribunal Oral Federal N° 3 absolvió por mayoría a Cristóbal López y Fabián De Sousa al dictaminar que los planes de facilidades de pago otorgados por el Estado no encuadraban en el delito penal de defraudación fraudulenta, levantándose posteriormente la quiebra y restituyendo el control directo del grupo.
+            </div>
+          </div>`
+        },
+        {
+          id: 'linea-editorial-politicheck',
+          title: '5. Línea Editorial y Análisis de Encuadre en Politicheck',
+          bodyHtml: `<p>En las auditorías continuas de Politicheck, Ámbito Financiero muestra un comportamiento editorial con rasgos propios dentro de su conglomerado:</p>
+          <div class="my-4 p-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-[#0C101A] space-y-2 text-xs sm:text-sm font-sans">
+            <p><strong>Factualidad Alta en Mercados:</strong> A diferencia de coberturas de opinión pura, las secciones de mercados financieros, bonos, tasas del BCRA y cotizaciones del dólar mantienen rigor documental estricto y consulta a operadores de la City.</p>
+            <p><strong>Heterodoxia Desarrollista:</strong> El enfoque macroeconómico del diario suele priorizar el impacto del ajuste sobre la industria local, el empleo asalariado y el poder adquisitivo frente a los esquemas de ajuste ortodoxo.</p>
+            <p><strong>Diferencia de Tono con C5N:</strong> Mientras C5N apela a un lenguaje de televisión abierta de alta confrontación política contra el gobierno libertario, <em>ambito.com</em> conserva un perfil analítico de lectura corporativa transversal.</p>
           </div>`
         }
       ]
