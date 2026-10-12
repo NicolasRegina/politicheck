@@ -99,8 +99,46 @@ Usuario supremo del sistema (`contacto@politicheck.com.ar`). Capacidad exclusiva
 Gestor editorial y publicitario. Puede administrar banners de patrocinio, previsualizar y sindicar contenido a X/Twitter, forzar sincronizaciones RSS y moderar reportes. No puede alterar perfiles de otros administradores.
 
 **Moderador (Moderator)**:
-Rol futuro orientado al control de mensajes en el chat electoral en vivo y foro cívico.
+Rol orientado al control y saneamiento de contenidos en la sala electoral en vivo y debates cívicos de historias.
 
 **Ciudadano / Usuario (User)**:
 Participante democrático habilitado para votar en el Promesómetro, comentar en debates y contrastar fuentes sin recolección abusiva de datos personales.
+
+---
+
+### Foro y Debate Cívico
+
+**Debate Cívico de Historia (Story Forum)**:
+Espacio de deliberación ciudadana anclado exclusivamente a cada Historia (`/historia/:id`), diseñado para analizar y contrastar la cobertura periodística de los medios.
+_Evitar_: Sección de comentarios, muro de opiniones, caja de quejas.
+
+**Comentario Raíz (Root Comment)**:
+Aporte ciudadano principal que inicia un hilo argumental sobre el acontecimiento o la cobertura de los medios.
+_Evitar_: Post, publicación suelta.
+
+**Respuesta Anidada (Reply)**:
+Intervención secundaria de segundo nivel que replica o amplía directamente un Comentario Raíz específico.
+_Evitar_: Subcomentario, hilo infinito.
+
+**Puntuación de Relevancia Cívica (Karma Score)**:
+Métrica resultante de la diferencia entre votos a favor (▲) y en contra (▼) emitidos por los ciudadanos sobre cada comentario.
+_Evitar_: Likes, pulgares arriba.
+
+**Participante Cívico (Civic Participant)**:
+Ciudadano que interviene en el debate identificado mediante un Alias público con huella criptográfica anónima (`ip_hash`) o cuenta autenticada con insignia verificada.
+_Evitar_: Usuario anónimo sin control, troll.
+
+**Huella Cívica de Votación (Voter Hash)**:
+Identificador criptográfico anónimo (SHA-256 de IP + UserAgent + sal institucional) que garantiza el principio cívico de un voto por ciudadano sobre cada comentario sin exigir registro obligatorio.
+_Evitar_: Cookie de sesión, ID rastreable.
+
+**Comentario Colapsado (Collapsed Comment)**:
+Estado visual en el que un comentario con Puntuación de Relevancia negativa inferior a -5 o múltiples reportes se repliega con advertencia comunitaria para preservar la calidad del debate.
+_Evitar_: Comentario censurado, post shadowbaneado.
+
+**Enlace de Fuente Verificable (Source Link)**:
+Hipervínculo externo aportado por un participante hacia documentación oficial, boletines o redacciones auditadas, procesado con atributos de seguridad (`rel="nofollow"`).
+_Evitar_: Link de spam, autopromoción.
+
+
 

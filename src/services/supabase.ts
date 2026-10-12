@@ -1,5 +1,5 @@
 import { createClient } from '@supabase/supabase-js';
-import type { ChatChannel, ChatMessage } from '../types';
+import type { ChatChannel, ChatMessage, ForumComment, ForumAuthorRole } from '../types';
 
 const supabaseUrl = import.meta.env?.SUPABASE_URL || process.env.SUPABASE_URL || import.meta.env?.PUBLIC_SUPABASE_URL || process.env.PUBLIC_SUPABASE_URL;
 const supabaseKey = import.meta.env?.SUPABASE_ANON_KEY || process.env.SUPABASE_ANON_KEY || import.meta.env?.PUBLIC_SUPABASE_ANON_KEY || process.env.PUBLIC_SUPABASE_ANON_KEY;
@@ -930,5 +930,458 @@ export async function moderateChatMessage(
     return { success: false, error: err.message };
   }
 }
+
+// ========================================================
+// 🏛️ STORY CIVIC FORUM SERVICE (DEBATE CÍVICO DE HISTORIAS)
+// ========================================================
+
+// Fallback in-memory storage for offline/dev environments
+const fallbackForumComments: Record<string, ForumComment[]> = {};
+const fallbackForumVotes: Map<string, 1 | -1> = new Map();
+
+/**
+ * Fetch and assemble hierarchical forum comments for a story (Roots + Nested Replies)
+ */
+export async function getForumComments(
+  storyId: string,
+  sort: 'top' | 'newest' | 'debated' = 'top',
+  voterHash?: string,
+  client = supabase
+): Promise<ForumComment[]> {
+  if (!client) {
+    const list = fallbackForumComments[storyId] || [];
+    return buildForumTree(list, sort, voterHash);
+  }
+
+  try {
+    // 1. Fetch comments for this story
+    const { data: comments, error } = await client
+      .from('forum_comments')
+      .select('*')
+      .eq('story_id', storyId)
+      .order('created_at', { ascending: true });
+
+    if (error || !comments) {
+      console.warn('[Forum Service] Error fetching comments:', error?.message);
+      const list = fallbackForumComments[storyId] || [];
+      return buildForumTree(list, sort, voterHash);
+    }
+
+    // 2. Fetch voter's existing votes if voterHash provided
+    let userVotesMap = new Map<string, 1 | -1>();
+    if (voterHash) {
+      const commentIds = comments.map(c => c.id);
+      if (commentIds.length > 0) {
+        const { data: votes } = await client
+          .from('forum_votes')
+          .select('comment_id, vote_value')
+          .in('comment_id', commentIds)
+          .eq('voter_hash', voterHash);
+
+        if (votes) {
+          for (const v of votes) {
+            userVotesMap.set(v.comment_id, v.vote_value as 1 | -1);
+          }
+        }
+      }
+    }
+
+    // 3. Attach user vote to comments
+    const commentsWithVote: ForumComment[] = comments.map(c => ({
+      ...c,
+      user_vote: (userVotesMap.get(c.id) || 0) as 1 | -1 | 0,
+      content: c.is_deleted ? '⚖️ [Aporte eliminado por infringir las normas de convivencia cívica]' : c.content
+    }));
+
+    return buildForumTree(commentsWithVote, sort, voterHash);
+  } catch (err: any) {
+    console.error('[Forum Service] Exception fetching comments:', err.message);
+    const list = fallbackForumComments[storyId] || [];
+    return buildForumTree(list, sort, voterHash);
+  }
+}
+
+/**
+ * Helper to build 2-level hierarchical comment tree with custom sorting
+ */
+function buildForumTree(
+  flatList: ForumComment[],
+  sort: 'top' | 'newest' | 'debated',
+  voterHash?: string
+): ForumComment[] {
+  const rootComments: ForumComment[] = [];
+  const repliesMap = new Map<string, ForumComment[]>();
+
+  for (const item of flatList) {
+    const itemCopy = { ...item };
+    if (voterHash && fallbackForumVotes.size > 0 && !itemCopy.user_vote) {
+      itemCopy.user_vote = (fallbackForumVotes.get(`${itemCopy.id}::${voterHash}`) || 0) as 1 | -1 | 0;
+    }
+
+    if (!itemCopy.parent_id) {
+      itemCopy.replies = [];
+      rootComments.push(itemCopy);
+    } else {
+      const parentId = itemCopy.parent_id;
+      if (!repliesMap.has(parentId)) {
+        repliesMap.set(parentId, []);
+      }
+      repliesMap.get(parentId)!.push(itemCopy);
+    }
+  }
+
+  // Attach replies to roots and sort replies chronologically
+  for (const root of rootComments) {
+    const replies = repliesMap.get(root.id) || [];
+    replies.sort((a, b) => new Date(a.created_at).getTime() - new Date(b.created_at).getTime());
+    root.replies = replies;
+  }
+
+  // Sort root comments based on selected mode
+  rootComments.sort((a, b) => {
+    // Pinned comments always on top
+    if (a.is_pinned !== b.is_pinned) {
+      return a.is_pinned ? -1 : 1;
+    }
+
+    if (sort === 'newest') {
+      return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
+    }
+
+    if (sort === 'debated') {
+      const repliesCountA = a.replies?.length || 0;
+      const repliesCountB = b.replies?.length || 0;
+      if (repliesCountA !== repliesCountB) {
+        return repliesCountB - repliesCountA;
+      }
+      return b.karma_score - a.karma_score;
+    }
+
+    // Default: 'top' (Relevancia cívica por Karma)
+    if (a.karma_score !== b.karma_score) {
+      return b.karma_score - a.karma_score;
+    }
+    return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
+  });
+
+  return rootComments;
+}
+
+/**
+ * Post a new forum comment (Root comment or nested reply)
+ */
+export async function postForumComment(
+  params: {
+    storyId: string;
+    parentId?: string | null;
+    content: string;
+    authorName: string;
+    authorRole?: ForumAuthorRole;
+    ipHash?: string;
+    userId?: string | null;
+  },
+  client = supabase
+): Promise<{ success: boolean; comment?: ForumComment; error?: string }> {
+  const { storyId, parentId, content, authorName, authorRole = 'user', ipHash, userId } = params;
+
+  const isReply = Boolean(parentId);
+  const maxLength = isReply ? 350 : 600;
+  const sanitizedContent = content.trim();
+  const sanitizedName = authorName.trim().slice(0, 40) || 'Ciudadano';
+
+  if (!sanitizedContent) {
+    return { success: false, error: 'El aporte no puede estar vacío.' };
+  }
+
+  if (sanitizedContent.length > maxLength) {
+    return { 
+      success: false, 
+      error: `El aporte supera el límite de ${maxLength} caracteres (${isReply ? 'respuesta' : 'comentario raíz'}).` 
+    };
+  }
+
+  if (!client) {
+    const newComment: ForumComment = {
+      id: `forum-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`,
+      story_id: storyId,
+      parent_id: parentId || null,
+      user_id: userId || null,
+      author_name: sanitizedName,
+      author_role: authorRole,
+      content: sanitizedContent,
+      ip_hash: ipHash || null,
+      karma_score: 0,
+      upvotes: 0,
+      downvotes: 0,
+      report_count: 0,
+      is_pinned: false,
+      is_deleted: false,
+      is_collapsed: false,
+      created_at: new Date().toISOString(),
+      replies: []
+    };
+
+    if (!fallbackForumComments[storyId]) fallbackForumComments[storyId] = [];
+    fallbackForumComments[storyId].push(newComment);
+    return { success: true, comment: newComment };
+  }
+
+  try {
+    const { data, error } = await client
+      .from('forum_comments')
+      .insert({
+        story_id: storyId,
+        parent_id: parentId || null,
+        user_id: userId || null,
+        author_name: sanitizedName,
+        author_role: authorRole,
+        content: sanitizedContent,
+        ip_hash: ipHash || null,
+        karma_score: 0,
+        upvotes: 0,
+        downvotes: 0,
+        report_count: 0,
+        is_pinned: false,
+        is_deleted: false,
+        is_collapsed: false
+      })
+      .select()
+      .single();
+
+    if (error) {
+      return { success: false, error: error.message };
+    }
+
+    return { success: true, comment: data as ForumComment };
+  } catch (err: any) {
+    return { success: false, error: err.message };
+  }
+}
+
+/**
+ * Cast or toggle a civic vote (▲ Upvote or ▼ Downvote) on a comment
+ */
+export async function voteForumComment(
+  params: {
+    commentId: string;
+    voterHash: string;
+    voteValue: 1 | -1;
+  },
+  client = supabase
+): Promise<{ success: boolean; voteValue: 1 | -1 | 0; karma_score: number; upvotes: number; downvotes: number; error?: string }> {
+  const { commentId, voterHash, voteValue } = params;
+
+  if (!client) {
+    const voteKey = `${commentId}::${voterHash}`;
+    const currentVote = fallbackForumVotes.get(voteKey) || 0;
+    let nextVote: 1 | -1 | 0 = voteValue;
+
+    if (currentVote === voteValue) {
+      // Toggle off
+      fallbackForumVotes.delete(voteKey);
+      nextVote = 0;
+    } else {
+      fallbackForumVotes.set(voteKey, voteValue);
+      nextVote = voteValue;
+    }
+
+    // Find in memory
+    for (const sId in fallbackForumComments) {
+      const c = fallbackForumComments[sId].find(item => item.id === commentId);
+      if (c) {
+        if (currentVote === 1) c.upvotes = Math.max(0, c.upvotes - 1);
+        if (currentVote === -1) c.downvotes = Math.max(0, c.downvotes - 1);
+        if (nextVote === 1) c.upvotes += 1;
+        if (nextVote === -1) c.downvotes += 1;
+        c.karma_score = c.upvotes - c.downvotes;
+        if (c.karma_score <= -5) c.is_collapsed = true;
+        return {
+          success: true,
+          voteValue: nextVote,
+          karma_score: c.karma_score,
+          upvotes: c.upvotes,
+          downvotes: c.downvotes
+        };
+      }
+    }
+
+    return { success: true, voteValue: nextVote, karma_score: nextVote, upvotes: nextVote === 1 ? 1 : 0, downvotes: nextVote === -1 ? 1 : 0 };
+  }
+
+  try {
+    // 1. Fetch existing vote for this comment and voter hash
+    const { data: existingVote, error: fetchErr } = await client
+      .from('forum_votes')
+      .select('id, vote_value')
+      .eq('comment_id', commentId)
+      .eq('voter_hash', voterHash)
+      .maybeSingle();
+
+    if (fetchErr) {
+      console.warn('[Forum Service] Warning fetching existing vote:', fetchErr.message);
+    }
+
+    let finalVote: 1 | -1 | 0 = voteValue;
+
+    if (existingVote) {
+      if (existingVote.vote_value === voteValue) {
+        // Toggle off: remove vote
+        const { error: delErr } = await client
+          .from('forum_votes')
+          .delete()
+          .eq('id', existingVote.id);
+
+        if (delErr) throw delErr;
+        finalVote = 0;
+      } else {
+        // Switch vote
+        const { error: updErr } = await client
+          .from('forum_votes')
+          .update({ vote_value: voteValue })
+          .eq('id', existingVote.id);
+
+        if (updErr) throw updErr;
+        finalVote = voteValue;
+      }
+    } else {
+      // Insert new vote
+      const { error: insErr } = await client
+        .from('forum_votes')
+        .insert({
+          comment_id: commentId,
+          voter_hash: voterHash,
+          vote_value: voteValue
+        });
+
+      if (insErr) throw insErr;
+      finalVote = voteValue;
+    }
+
+    // 2. Query updated comment karma (calculated by DB trigger)
+    const { data: updatedComment, error: commentErr } = await client
+      .from('forum_comments')
+      .select('karma_score, upvotes, downvotes')
+      .eq('id', commentId)
+      .single();
+
+    if (commentErr || !updatedComment) {
+      return {
+        success: true,
+        voteValue: finalVote,
+        karma_score: finalVote,
+        upvotes: finalVote === 1 ? 1 : 0,
+        downvotes: finalVote === -1 ? 1 : 0
+      };
+    }
+
+    return {
+      success: true,
+      voteValue: finalVote,
+      karma_score: updatedComment.karma_score,
+      upvotes: updatedComment.upvotes,
+      downvotes: updatedComment.downvotes
+    };
+  } catch (err: any) {
+    console.error('[Forum Service] Error recording forum vote:', err.message);
+    return { success: false, voteValue: 0, karma_score: 0, upvotes: 0, downvotes: 0, error: err.message };
+  }
+}
+
+/**
+ * Moderate a forum comment (delete, pin, unpin, collapse, uncollapse)
+ */
+export async function moderateForumComment(
+  commentId: string,
+  action: 'delete' | 'pin' | 'unpin' | 'collapse' | 'uncollapse',
+  client = supabase
+): Promise<{ success: boolean; error?: string }> {
+  if (!client) {
+    for (const sId in fallbackForumComments) {
+      const c = fallbackForumComments[sId].find(item => item.id === commentId);
+      if (c) {
+        if (action === 'delete') c.is_deleted = true;
+        if (action === 'pin') c.is_pinned = true;
+        if (action === 'unpin') c.is_pinned = false;
+        if (action === 'collapse') c.is_collapsed = true;
+        if (action === 'uncollapse') c.is_collapsed = false;
+        return { success: true };
+      }
+    }
+    return { success: true };
+  }
+
+  try {
+    const updatePayload: Record<string, any> = {
+      updated_at: new Date().toISOString()
+    };
+    if (action === 'delete') updatePayload.is_deleted = true;
+    if (action === 'pin') updatePayload.is_pinned = true;
+    if (action === 'unpin') updatePayload.is_pinned = false;
+    if (action === 'collapse') updatePayload.is_collapsed = true;
+    if (action === 'uncollapse') updatePayload.is_collapsed = false;
+
+    const { error } = await client
+      .from('forum_comments')
+      .update(updatePayload)
+      .eq('id', commentId);
+
+    if (error) return { success: false, error: error.message };
+    return { success: true };
+  } catch (err: any) {
+    return { success: false, error: err.message };
+  }
+}
+
+/**
+ * Report a comment. Automatically collapses when 3 or more reports are accumulated.
+ */
+export async function reportForumComment(
+  commentId: string,
+  client = supabase
+): Promise<{ success: boolean; reportCount: number; isCollapsed: boolean; error?: string }> {
+  if (!client) {
+    for (const sId in fallbackForumComments) {
+      const c = fallbackForumComments[sId].find(item => item.id === commentId);
+      if (c) {
+        c.report_count += 1;
+        if (c.report_count >= 3) c.is_collapsed = true;
+        return { success: true, reportCount: c.report_count, isCollapsed: c.is_collapsed };
+      }
+    }
+    return { success: true, reportCount: 1, isCollapsed: false };
+  }
+
+  try {
+    // 1. Fetch current report count
+    const { data: current, error: fetchErr } = await client
+      .from('forum_comments')
+      .select('report_count, is_collapsed')
+      .eq('id', commentId)
+      .single();
+
+    if (fetchErr || !current) {
+      return { success: false, reportCount: 0, isCollapsed: false, error: fetchErr?.message || 'Comentario no encontrado.' };
+    }
+
+    const nextCount = (current.report_count || 0) + 1;
+    const nextCollapsed = nextCount >= 3 ? true : current.is_collapsed;
+
+    const { error: updErr } = await client
+      .from('forum_comments')
+      .update({
+        report_count: nextCount,
+        is_collapsed: nextCollapsed,
+        updated_at: new Date().toISOString()
+      })
+      .eq('id', commentId);
+
+    if (updErr) return { success: false, reportCount: current.report_count, isCollapsed: current.is_collapsed, error: updErr.message };
+
+    return { success: true, reportCount: nextCount, isCollapsed: nextCollapsed };
+  } catch (err: any) {
+    return { success: false, reportCount: 0, isCollapsed: false, error: err.message };
+  }
+}
+
 
 

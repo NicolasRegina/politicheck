@@ -288,7 +288,7 @@
 
 ---
 
-### 🚀 Tarea 10: Foro Cívico de Debate & Sala de Chat Electoral en Vivo — [EN PROGRESO]
+### ✅ Tarea 10: Foro Cívico de Debate & Sala de Chat Electoral en Vivo — [COMPLETADA]
 - [x] **Sala de Chat Electoral en Vivo (Live Stream Chat):**
   - Chat en tiempo real durante debates presidenciales, discursos y coberturas electorales.
   - Implementación con Supabase Realtime (WebSockets) y control de spam (rate-limiting por IP/Hash y ventana de 3.5s).
@@ -297,9 +297,17 @@
   - Componente minimalista [`src/components/LiveChat.astro`](src/components/LiveChat.astro) con lanzador flotante, navegación por canales, avisos fijados (Pinned Notices) y fallback resiliente sin credenciales.
   - Migración SQL en [`supabase/migrations/20261012_live_electoral_chat.sql`](supabase/migrations/20261012_live_electoral_chat.sql).
   - Integración en [`src/components/Header.astro`](src/components/Header.astro) y [`src/layouts/Layout.astro`](src/layouts/Layout.astro).
-- [ ] **Foro Cívico de Contraste Ciudadano:**
-  - Hilos de debate asociados a cada historia clusterizada de portada.
-  - Sistema de reputación ciudadana y argumentos fundamentados (con cita de fuentes obligatoria para combatir fake news).
-  - Roles de usuario: solo usuarios registrados pueden comentar y votar positivamente argumentos de valor cívico.
+- [x] **Debate Cívico de Historia (Story Forum) en `/historia/[id]`:**
+  - Anclaje exclusivo a cada Historia clusterizada (`/historia/:id`) con botón de salto suave en la cabecera/barra de compartir.
+  - Identidad cívica híbrida: Alias con huella criptográfica (`ip_hash`) para participación sin fricción + opción de login Supabase Auth con badge de Ciudadano Verificado.
+  - Hilos en 2 niveles (Comentario Raíz de hasta 600 caracteres + Respuestas anidadas de hasta 350 caracteres) sin desbordamiento móvil.
+  - Puntuación de Relevancia Cívica / Karma Score conmutable (▲ Upvote / ▼ Downvote) auditado en `forum_votes` por `voter_hash`.
+  - Trigger transaccional PostgreSQL en [`supabase/migrations/20261012_story_civic_debates.sql`](supabase/migrations/20261012_story_civic_debates.sql) para recálculo atómico de karma y auto-colapso comunitario (karma <= -5 o 3 reportes).
+  - Endpoints `/api/forum/comments`, `/api/forum/vote` y `/api/forum/moderate` con filtro anti-insultos y limitación de tasa (rate limiting).
+  - Componente [`src/components/StoryCivicForum.astro`](src/components/StoryCivicForum.astro) con renderizado SSR inicial, enlaces automáticos de fuentes y actualización reactiva.
+- [ ] **Escalado a Salón Central de Debates Cívicos (`/debates`) [ROADMAP FASE 2]:**
+  - Espacio centralizado para debatir los temas más calientes del ciclo electoral y discusiones ciudadanas transversales.
+
+
 
 

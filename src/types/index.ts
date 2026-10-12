@@ -136,3 +136,37 @@ export interface ChatMessage {
   created_at: string;
 }
 
+export type ForumAuthorRole = 'superadmin' | 'admin' | 'moderator' | 'verified' | 'user';
+
+export interface ForumComment {
+  id: string;
+  story_id: string;
+  parent_id?: string | null;
+  user_id?: string | null;
+  author_name: string;
+  author_role: ForumAuthorRole;
+  content: string;
+  ip_hash?: string | null;
+  karma_score: number;
+  upvotes: number;
+  downvotes: number;
+  report_count: number;
+  is_pinned: boolean;
+  is_deleted: boolean;
+  deleted_by?: string | null;
+  is_collapsed: boolean;
+  created_at: string;
+  updated_at?: string;
+  replies?: ForumComment[];
+  user_vote?: 1 | -1 | 0;
+}
+
+export interface ForumVote {
+  id?: string;
+  comment_id: string;
+  voter_hash: string;
+  vote_value: 1 | -1;
+  created_at?: string;
+}
+
+

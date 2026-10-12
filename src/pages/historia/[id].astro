@@ -2,6 +2,7 @@
 import Layout from '../../layouts/Layout.astro';
 import SpectrumBar from '../../components/SpectrumBar.astro';
 import HeadlineComparison from '../../components/HeadlineComparison.astro';
+import StoryCivicForum from '../../components/StoryCivicForum.astro';
 import { getStoryClusterByIdAsync } from '../../services/ai/clustering';
 import { getOptimizedImageUrl } from '../../utils/image';
 
@@ -113,6 +114,13 @@ const viralShareText = story
             <span>✈️ Telegram</span>
           </a>
 
+          <a 
+            href="#debate-civico"
+            class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-700 font-mono text-xs font-semibold transition-all cursor-pointer"
+          >
+            <span>💬 Debate Cívico</span>
+          </a>
+
           <button 
             type="button"
             id="copy-story-link-btn"
@@ -191,7 +199,11 @@ const viralShareText = story
 
         <HeadlineComparison articles={story.articles} storyId={story.id} isLeadStory={true} />
       </section>
+
+      <!-- Story Civic Forum: Ciudadanía, Contraste de Fuentes & Deliberación -->
+      <StoryCivicForum storyId={story.id} storyTitle={story.neutralHeadline} />
     </article>
+
   ) : (
     <div class="max-w-xl mx-auto text-center py-24 space-y-4">
       <div class="text-4xl">📰</div>
