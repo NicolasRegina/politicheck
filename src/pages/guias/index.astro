@@ -7,6 +7,7 @@ export const prerender = true;
 const publishedGuides = GUIAS_ARTICLES.filter(g => g.status === 'publicado');
 const upcomingGuides = GUIAS_ARTICLES.filter(g => g.status === 'proximamente');
 const heroGuide = publishedGuides[0];
+const otherPublishedGuides = publishedGuides.slice(1);
 ---
 
 <Layout 
@@ -128,6 +129,70 @@ const heroGuide = publishedGuides[0];
             </div>
           )}
         </article>
+      )}
+
+      <!-- OTHER PUBLISHED GUIDES GRID -->
+      {otherPublishedGuides.length > 0 && (
+        <div class="space-y-4">
+          <div class="flex items-center justify-between border-b border-slate-200 dark:border-slate-800 pb-2">
+            <h3 class="font-mono text-xs font-bold uppercase tracking-wider text-slate-800 dark:text-slate-200">
+              Investigaciones Publicadas
+            </h3>
+            <span class="text-[11px] font-mono text-slate-400">{publishedGuides.length} disponibles</span>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {otherPublishedGuides.map((guide) => (
+              <article 
+                class="guia-card bg-white dark:bg-[#0F1420] border border-slate-200 dark:border-slate-800/90 rounded-2xl p-6 flex flex-col justify-between space-y-4 transition-all hover:border-slate-300 dark:hover:border-slate-700 shadow-xs"
+                data-category={guide.category}
+              >
+                <div class="space-y-3">
+                  <div class="flex items-center justify-between gap-2 border-b border-slate-100 dark:border-slate-800/80 pb-2">
+                    <span class="px-2.5 py-0.5 rounded-full bg-sky-50 dark:bg-sky-950/60 border border-sky-200 dark:border-sky-800 text-sky-800 dark:text-sky-300 text-[10px] font-mono font-bold tracking-wider uppercase">
+                      {guide.categoryLabel}
+                    </span>
+                    <span class="font-mono text-[11px] text-slate-400">{guide.readTimeMinutes} min de lectura</span>
+                  </div>
+
+                  {guide.heroImageUrl && (
+                    <a href={`/guias/${guide.slug}`} class="group block relative overflow-hidden rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-100 dark:bg-slate-900 aspect-video max-h-[200px]">
+                      <img 
+                        src={guide.heroImageUrl} 
+                        alt={guide.title} 
+                        class="w-full h-full object-cover object-center transition-transform duration-300 group-hover:scale-105"
+                        loading="lazy"
+                      />
+                    </a>
+                  )}
+
+                  <h3 class="font-editorial text-xl font-bold text-slate-950 dark:text-white leading-snug">
+                    <a href={`/guias/${guide.slug}`} class="hover:text-blue-900 dark:hover:text-blue-300 transition-colors">
+                      {guide.title}
+                    </a>
+                  </h3>
+
+                  <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-300 font-sans leading-relaxed line-clamp-3">
+                    {guide.subtitle}
+                  </p>
+                </div>
+
+                <div class="pt-3 border-t border-slate-100 dark:border-slate-800/80 flex items-center justify-between">
+                  <a 
+                    href={`/guias/${guide.slug}`}
+                    class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-slate-950 hover:bg-slate-800 dark:bg-white dark:hover:bg-slate-100 text-white dark:text-slate-950 font-mono text-xs font-bold transition-all shadow-xs"
+                  >
+                    <span>Leer investigación</span>
+                    <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                    </svg>
+                  </a>
+                  <span class="text-xs font-mono text-slate-400">Actualizado: {guide.updatedAt}</span>
+                </div>
+              </article>
+            ))}
+          </div>
+        </div>
       )}
 
       <!-- SECONDARY BENTO GRID: Upcoming Cluster Articles -->

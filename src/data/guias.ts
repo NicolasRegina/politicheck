@@ -194,24 +194,154 @@ export const GUIAS_ARTICLES: GuiaArticle[] = [
   },
   {
     slug: 'quien-es-el-dueno-de-la-nacion',
-    title: '¿Quién es el Dueño de La Nación? Grupo Saguier, Accionistas y Tradición Centenaria',
-    subtitle: 'La historia societaria de S.A. La Nación: de los descendientes de Bartolomé Mitre al control de la familia Saguier, el canal LN+ y su perfil conservador institucional.',
+    title: '¿Quién es el Dueño de La Nación? Familia Saguier, Accionistas y Tradición Centenaria',
+    subtitle: 'La historia societaria de S.A. La Nación: de los descendientes de Bartolomé Mitre al control de la familia Saguier (MNMS Holding), el canal LN+ y su perfil conservador institucional.',
     kicker: 'Cuaderno 02 • Estructura de Medios',
     category: 'propiedad',
     categoryLabel: 'Propiedad & Grupos',
-    publishedAt: 'Próximamente',
-    updatedAt: 'Octubre 2026',
-    readTimeMinutes: 6,
+    publishedAt: '12 de Octubre, 2026',
+    updatedAt: '12 de Octubre, 2026',
+    readTimeMinutes: 7,
     author: 'Equipo de Datos de Politicheck',
-    excerpt: 'Análisis societario de S.A. La Nación, controlado por la familia Saguier (MNMS Holding), su incursión televisiva con LN+ y su posicionamiento en el espectro político argentino.',
-    status: 'proximamente',
-    sources: ['Inspección General de Justicia (IGJ)', 'Media Ownership Monitor', 'AllSides'],
+    excerpt: 'El diario La Nación y la señal LN+ pertenecen a S.A. La Nación, con control mayoritario de la familia Saguier a través de MNMS Holding.',
+    heroImageUrl: 'https://images.unsplash.com/photo-1504711434969-e33886168f5c?auto=format&fit=crop&w=1200&q=80',
+    imageCaption: 'Fundado en 1870 por Bartolomé Mitre, La Nación es el segundo periódico más antiguo con circulación continua en el país.',
+    status: 'publicado',
+    sources: [
+      'Inspección General de Justicia (IGJ Argentina)',
+      'Media Ownership Monitor (MOM / Reporteros Sin Fronteras)',
+      'AllSides & Media Bias/Fact Check (MBFC)'
+    ],
     metaTitle: '¿Quién es el Dueño de La Nación? Familia Saguier y Accionistas (2026)',
-    metaDescription: 'Descubrí quién controla Diario La Nación y la señal LN+: accionistas principales, la familia Saguier y su línea editorial.',
+    metaDescription: 'Descubrí quién controla Diario La Nación y la señal LN+: accionistas principales, la familia Saguier, historia societaria y su línea editorial.',
     canonicalUrl: 'https://www.politicheck.com.ar/guias/quien-es-el-dueno-de-la-nacion',
-    targetSnippet: 'El diario La Nación pertenece a S.A. La Nación, controlada mayoritariamente por la familia Saguier a través de MNMS Holding.',
-    faq: [],
-    content: { leadHtml: '', sections: [] }
+    targetSnippet: 'El diario La Nación y la señal LN+ pertenecen a S.A. La Nación, controlada mayoritariamente por la familia Saguier (a través de MNMS Holding), descendientes de Josefina Mitre, junto a inversores privados del ámbito financiero.',
+    faq: [
+      {
+        question: '¿Quién es el dueño de Diario La Nación y LN+?',
+        answer: 'Pertenecen a la empresa S.A. La Nación. La mayoría accionaria está en manos de la familia Saguier a través de la sociedad MNMS Holding, presidida por Julio César Saguier, con Fernán Saguier como director periodístico.'
+      },
+      {
+        question: '¿Mauricio Macri es dueño o accionista de La Nación?',
+        answer: 'En los registros formales de accionistas presentados ante los organismos oficiales (IGJ) no figura Mauricio Macri como titular de acciones. Tanto el expresidente como el directorio de La Nación han desmentido categóricamente su participación societaria formal, aunque se ha debatido públicamente el rol de inversores privados en el crecimiento de la señal LN+.'
+      },
+      {
+        question: '¿Clarín y La Nación son del mismo grupo económico?',
+        answer: 'No. Son empresas completamente independientes y competidoras. La Nación pertenece a la familia Saguier y Clarín al Grupo Clarín S.A. Solo comparten participación societaria en empresas auxiliares como la fabricante Papel Prensa S.A. y la feria agropecuaria Expoagro.'
+      },
+      {
+        question: '¿Dónde puedo comparar las noticias de La Nación con otros diarios?',
+        answer: 'En Politicheck (www.politicheck.com.ar), donde podés comparar en tiempo real el encuadre de La Nación con Clarín, Infobae, Página 12 y más de 30 medios con una barra tricolor de distribución de sesgo editorial.'
+      }
+    ],
+    content: {
+      leadHtml: `<p class="text-base sm:text-lg leading-relaxed text-slate-800 dark:text-slate-200">
+        <strong>¿Quién es el dueño de La Nación?</strong> El diario La Nación y la señal televisiva LN+ pertenecen a la empresa <strong>S.A. La Nación</strong>. El control accionario mayoritario y la conducción estratégica están en manos de la <strong>familia Saguier</strong> (a través de la sociedad MNMS Holding), emparentada con la familia fundadora del prócer <strong>Bartolomé Mitre</strong>. El directorio está encabezado por los hermanos <strong>Julio César</strong>, <strong>Fernán</strong> y <strong>Luis Saguier</strong>, junto a un consorcio de accionistas privados e inversores institucionales vinculados a las finanzas y el agro.
+      </p>
+      <p class="text-sm sm:text-base leading-relaxed text-slate-700 dark:text-slate-300">
+        Fundado en 1870, La Nación es el segundo periódico más antiguo de la Argentina con circulación continua y una de las instituciones periodísticas más influyentes en la conformación de la opinión pública nacional.
+      </p>`,
+      sections: [
+        {
+          id: 'composicion-accionaria',
+          title: '1. Composición Accionaria: De los Mitre al control de la familia Saguier',
+          bodyHtml: `<p>Durante más de un siglo, el control de La Nación estuvo reservado de forma casi exclusiva a los descendientes directos de Bartolomé Mitre. Sin embargo, en las últimas tres décadas, la dispersión hereditaria y la necesidad de capitalización derivaron en una reestructuración societaria profunda.</p>
+          <p>De acuerdo con los registros de la <strong>Inspección General de Justicia (IGJ)</strong> y los relevamientos del <strong>Media Ownership Monitor (MOM / Reporteros Sin Fronteras)</strong>, la propiedad se divide en tres bloques principales:</p>
+          
+          <div class="overflow-x-auto my-6 border border-slate-200 dark:border-slate-800 rounded-xl">
+            <table class="w-full text-left text-xs font-sans">
+              <thead class="bg-slate-100 dark:bg-slate-900/80 font-mono text-[11px] text-slate-700 dark:text-slate-300 uppercase tracking-wider border-b border-slate-200 dark:border-slate-800">
+                <tr>
+                  <th class="p-3 sm:p-4">Accionista / Sociedad</th>
+                  <th class="p-3 sm:p-4 text-center">Participación Est.</th>
+                  <th class="p-3 sm:p-4">Rol y Función Corporativa</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-slate-100 dark:divide-slate-800/80 text-slate-700 dark:text-slate-300">
+                <tr class="hover:bg-slate-50 dark:hover:bg-slate-900/40">
+                  <td class="p-3 sm:p-4 font-semibold text-slate-900 dark:text-white">MNMS Holding (Familia Saguier)<br><span class="text-[10px] text-slate-500 font-normal">Julio César, Fernán y Luis Saguier</span></td>
+                  <td class="p-3 sm:p-4 font-mono font-bold text-center text-slate-950 dark:text-slate-100">>65%</td>
+                  <td class="p-3 sm:p-4">Mayoría de control, presidencia del directorio y orientación editorial e institucional.</td>
+                </tr>
+                <tr class="hover:bg-slate-50 dark:hover:bg-slate-900/40">
+                  <td class="p-3 sm:p-4 font-semibold text-slate-900 dark:text-white">Descendientes Familia Mitre<br><span class="text-[10px] text-slate-500 font-normal">Ramas familiares históricas</span></td>
+                  <td class="p-3 sm:p-4 font-mono font-bold text-center text-slate-950 dark:text-slate-100">~15%</td>
+                  <td class="p-3 sm:p-4">Participación accionaria minoritaria y pasiva sin intervención ejecutiva diaria.</td>
+                </tr>
+                <tr class="hover:bg-slate-50 dark:hover:bg-slate-900/40">
+                  <td class="p-3 sm:p-4 font-semibold text-slate-900 dark:text-white">Inversores Privados & Fideicomisos<br><span class="text-[10px] text-slate-500 font-normal">Aportes financieros para LN+</span></td>
+                  <td class="p-3 sm:p-4 font-mono font-bold text-center text-slate-950 dark:text-slate-100">~20%</td>
+                  <td class="p-3 sm:p-4">Inversores institucionales del sector agropecuario, financiero y audiovisual.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <h4 class="font-editorial text-lg font-bold text-slate-950 dark:text-white mt-4 mb-2">Los referentes de la conducción</h4>
+          <p class="text-sm text-slate-700 dark:text-slate-300 mb-2">Los hermanos Saguier son bisnietos de Bartolomé Mitre a través de su hija Josefina Mitre. Tras consolidar su posición en los años 90:</p>
+          <ul class="space-y-2 list-disc pl-5 text-sm text-slate-700 dark:text-slate-300">
+            <li><strong>Julio César Saguier:</strong> Presidente del directorio de S.A. La Nación y responsable de las decisiones institucionales y estratégicas.</li>
+            <li><strong>Fernán Saguier:</strong> Director periodístico de Diario La Nación, a cargo de la línea informativa gráfica, digital y proyectos de investigación.</li>
+            <li><strong>Luis Saguier:</strong> Directivo enfocado en diversificación comercial, eventos corporativos y nuevos negocios.</li>
+          </ul>`
+        },
+        {
+          id: 'ecosistema-de-negocios',
+          title: '2. El Ecosistema de Negocios: Más allá del papel impreso',
+          bodyHtml: `<p>La Nación ha diversificado sustancialmente sus fuentes de ingresos, transformándose de una editora tradicional en una compañía integral de medios, contenidos, gastronomía y entretenimiento en vivo:</p>
+          
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 my-6">
+            <div class="p-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-[#0F1420]">
+              <div class="text-xs font-mono font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-2">Prensa & Televisión</div>
+              <ul class="space-y-1 text-sm text-slate-800 dark:text-slate-200 font-medium">
+                <li>• Diario La Nación y LaNacion.com.ar</li>
+                <li>• Señal de televisión y streaming LN+</li>
+                <li>• Revista Rolling Stone Argentina</li>
+                <li>• Revistas Lugares, Ohlalá! y Living</li>
+              </ul>
+            </div>
+            <div class="p-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-[#0F1420]">
+              <div class="text-xs font-mono font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-2">Entretenimiento & Agro</div>
+              <ul class="space-y-1 text-sm text-slate-800 dark:text-slate-200 font-medium">
+                <li>• Concesión Movistar Arena (CABA)</li>
+                <li>• Co-propiedad de Expoagro (con Clarín)</li>
+                <li>• Club LA NACION (programa de fidelización)</li>
+                <li>• Participación en Papel Prensa S.A.</li>
+              </ul>
+            </div>
+          </div>`
+        },
+        {
+          id: 'linea-editorial-y-sesgo',
+          title: '3. ¿Qué línea editorial tiene La Nación? Auditoría de Sesgo e Ideología',
+          bodyHtml: `<p>En la metodología de auditoría cruzada de Politicheck basada en <strong>AllSides</strong> y <strong>Media Bias/Fact Check (MBFC)</strong>, La Nación se ubica en las siguientes coordenadas:</p>
+          <ul class="space-y-3 my-4 text-sm text-slate-700 dark:text-slate-300">
+            <li class="flex items-start gap-2">
+              <span class="inline-block w-2 h-2 rounded-full bg-sky-500 mt-2 shrink-0"></span>
+              <div><strong>Sesgo Editorial de Base:</strong> Clasificado como <em>Derecha / Centro-Derecha</em>. Línea institucionalista, republicana y conservadora en lo cultural, defensora de la libre empresa, el sector agroexportador y la integración comercial con Occidente.</div>
+            </li>
+            <li class="flex items-start gap-2">
+              <span class="inline-block w-2 h-2 rounded-full bg-emerald-500 mt-2 shrink-0"></span>
+              <div><strong>Calidad Factual:</strong> Calificada como <em>Alta</em>. Sus investigaciones cuentan con acreditación documental rigurosa y un cuerpo de columnistas de referencia en economía, política exterior y análisis judicial.</div>
+            </li>
+            <li class="flex items-start gap-2">
+              <span class="inline-block w-2 h-2 rounded-full bg-slate-500 mt-2 shrink-0"></span>
+              <div><strong>Modelo de Financiamiento:</strong> <em>Privado Corporativo</em>. Apoyado en una base masiva de suscriptores digitales (Club LA NACION y muros de pago), publicidad comercial y el negocio del entretenimiento.</div>
+            </li>
+          </ul>`
+        },
+        {
+          id: 'caso-macri-ln-mas',
+          title: '4. ¿Mauricio Macri es dueño de La Nación o de LN+?',
+          bodyHtml: `<p>Uno de los interrogantes más recurrentes en el debate político argentino es si el expresidente <strong>Mauricio Macri</strong> posee acciones en La Nación o en su señal televisiva LN+.</p>
+          <div class="my-4 p-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-[#0C101A] space-y-2 text-xs sm:text-sm font-sans">
+            <p><strong>Lo que indican los registros societarios:</strong> En los expedientes oficiales presentados ante la Inspección General de Justicia no figura Mauricio Macri como accionista formal de S.A. La Nación. La titularidad mayoritaria corresponde a la familia Saguier (MNMS Holding).</p>
+            <p><strong>El origen de las versiones:</strong> Surgieron a partir de 2021 con la incorporación de figuras periodísticas afines al espacio de Juntos por el Cambio en horario central de LN+, lo que motivó señalamientos de sectores opositores.</p>
+            <p><strong>Desmentida oficial:</strong> Tanto el directorio de La Nación presidido por Julio César Saguier como el propio expresidente han desmentido formalmente cualquier participación accionaria en la compañía.</p>
+          </div>`
+        }
+      ]
+    }
   },
   {
     slug: 'quien-es-el-dueno-de-infobae',
