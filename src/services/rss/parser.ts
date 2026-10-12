@@ -84,6 +84,69 @@ function extractImageUrl(itemXml: string): string | undefined {
   return rawUrl ? optimizeMediaImageUrl(rawUrl, 800) : undefined;
 }
 
+// Filter out non-civic/non-political content (sports fixtures, entertainment gossip, horoscopes, or foreign non-Argentine local hubs)
+export function isEditorialRelevantArticle(
+  rawLink: string,
+  title: string,
+  snippet: string,
+  category: 'nacional' | 'internacional' = 'nacional'
+): boolean {
+  const lowerUrl = (rawLink || '').toLowerCase();
+  const lowerTitle = (title || '').toLowerCase();
+  const lowerText = `${lowerTitle} ${(snippet || '').toLowerCase()}`;
+
+  // 1. Exclude non-journalistic/sports/entertainment sections
+  const blacklistedUrlSegments = [
+    '/deportes/',
+    '/futbol/',
+    '/teleshow/',
+    '/espectaculos/',
+    '/farandula/',
+    '/famosos/',
+    '/horoscopo/',
+    '/zodiaco/',
+    '/virales/',
+    '/tendencias/',
+    '/recetas/',
+    '/gaming/',
+    '/videojuegos/',
+    '/celebrities/'
+  ];
+
+  if (blacklistedUrlSegments.some(seg => lowerUrl.includes(seg))) {
+    return false;
+  }
+
+  // 2. For Argentine national outlets (e.g. Infobae global firehose), exclude foreign local hubs
+  if (category === 'nacional') {
+    const foreignCountryPaths = [
+      'infobae.com/peru/',
+      'infobae.com/mexico/',
+      'infobae.com/colombia/',
+      'infobae.com/espana/',
+      'infobae.com/america/deportes/'
+    ];
+    if (foreignCountryPaths.some(path => lowerUrl.includes(path))) {
+      return false;
+    }
+  }
+
+  // 3. Exclude sports match summaries and tournament fixtures
+  const sportsMatchPatterns = [
+    /\b(vs\.?|contra|enfrenta a|visita a|recibe a)\b/i,
+    /\b(minuto a minuto|en vivo hoy:? minuto a minuto)\b/i,
+    /\b(liga 1|copa libertadores|copa sudamericana|torneo clausura|torneo apertura|champions league|premier league|la liga)\b/i,
+    /\b(tabla de posiciones|goleadores|alineaciones|resumen y goles)\b/i
+  ];
+
+  const sportsKeywords = ['partido', 'goles', 'gol', 'torneo', 'estadio', 'apuestas', 'penales', 'dt '];
+  if (sportsMatchPatterns.some(pat => pat.test(lowerTitle)) && sportsKeywords.some(k => lowerText.includes(k))) {
+    return false;
+  }
+
+  return true;
+}
+
 export async function parseFeed(config: RssFeedConfig, timeoutMs = 8000): Promise<Article[]> {
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), timeoutMs);
@@ -132,8 +195,12 @@ export async function parseFeed(config: RssFeedConfig, timeoutMs = 8000): Promis
         articleTimestamp = Date.now() - (i * 5 * 60 * 1000);
       }
 
-      // Validate minimum editorial requirements
-      if (title.length > 10 && rawLink.startsWith('http')) {
+      // Validate minimum editorial requirements and topical relevance
+      if (
+        title.length > 10 &&
+        rawLink.startsWith('http') &&
+        isEditorialRelevantArticle(rawLink, title, snippet, config.category)
+      ) {
         const id = `art-${config.outletId}-${Math.abs(title.split('').reduce((a, b) => ((a << 5) - a) + b.charCodeAt(0), 0))}`;
         
         articles.push({

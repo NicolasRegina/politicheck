@@ -187,8 +187,44 @@ const ARGENTINA_KEYWORDS = [
 ];
 
 function isRelevantToArgentina(title, snippet) {
-  const text = `${title} ${snippet}`.toLowerCase();
+  const text = `${title || ''} ${snippet || ''}`.toLowerCase();
   return ARGENTINA_KEYWORDS.some(k => text.includes(k));
+}
+
+function isEditorialRelevantArticle(rawLink, title, snippet, category = 'nacional') {
+  const lowerUrl = (rawLink || '').toLowerCase();
+  const lowerTitle = (title || '').toLowerCase();
+  const lowerText = `${lowerTitle} ${(snippet || '').toLowerCase()}`;
+
+  const blacklistedUrlSegments = [
+    '/deportes/', '/futbol/', '/teleshow/', '/espectaculos/', '/farandula/',
+    '/famosos/', '/horoscopo/', '/zodiaco/', '/virales/', '/tendencias/',
+    '/recetas/', '/gaming/', '/videojuegos/', '/celebrities/'
+  ];
+
+  if (blacklistedUrlSegments.some(seg => lowerUrl.includes(seg))) return false;
+
+  if (category === 'nacional') {
+    const foreignCountryPaths = [
+      'infobae.com/peru/', 'infobae.com/mexico/', 'infobae.com/colombia/',
+      'infobae.com/espana/', 'infobae.com/america/deportes/'
+    ];
+    if (foreignCountryPaths.some(path => lowerUrl.includes(path))) return false;
+  }
+
+  const sportsMatchPatterns = [
+    /\b(vs\.?|contra|enfrenta a|visita a|recibe a)\b/i,
+    /\b(minuto a minuto|en vivo hoy:? minuto a minuto)\b/i,
+    /\b(liga 1|copa libertadores|copa sudamericana|torneo clausura|torneo apertura|champions league|premier league|la liga)\b/i,
+    /\b(tabla de posiciones|goleadores|alineaciones|resumen y goles)\b/i
+  ];
+
+  const sportsKeywords = ['partido', 'goles', 'gol', 'torneo', 'estadio', 'apuestas', 'penales', 'dt '];
+  if (sportsMatchPatterns.some(pat => pat.test(lowerTitle)) && sportsKeywords.some(k => lowerText.includes(k))) {
+    return false;
+  }
+
+  return true;
 }
 
 async function parseFeed(config) {
@@ -234,7 +270,7 @@ async function parseFeed(config) {
         articleTimestamp = Date.now() - (i * 5 * 60 * 1000);
       }
 
-      if (title.length > 10 && rawLink.startsWith('http')) {
+      if (title.length > 10 && rawLink.startsWith('http') && isEditorialRelevantArticle(rawLink, title, snippet, config.category)) {
         const id = `art-${config.outletId}-${Math.abs(title.split('').reduce((a, b) => ((a << 5) - a) + b.charCodeAt(0), 0))}`;
         articles.push({
           id,

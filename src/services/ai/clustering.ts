@@ -3,6 +3,12 @@ import path from 'node:path';
 import type { Article, StoryCluster, SpectrumBreakdown } from '../../types';
 import { saveNewsClustersToSupabase, getNewsClustersFromSupabase } from '../supabase';
 import { OUTLETS_REGISTRY } from '../../utils/outlets';
+import { isEditorialRelevantArticle } from '../rss/parser';
+
+function isSportsOrIrrelevant(a: Article): boolean {
+  if (!a) return true;
+  return !isEditorialRelevantArticle(a.url || '', a.title || '', a.snippet || '', 'nacional');
+}
 
 const CLUSTERED_STORIES_FILE = path.resolve(process.cwd(), 'src/data/clustered_stories.json');
 const FOREIGN_CLUSTERED_STORIES_FILE = path.resolve(process.cwd(), 'src/data/foreign_clusters.json');
@@ -430,14 +436,14 @@ ${JSON.stringify(candidateArticles.map(a => ({ id: a.id, medio: a.outletName, ti
           }
         }
 
-        // Pick best journalistic photo among the cluster
-        const leadImgArticle = clusterArticles.find(a => Boolean(a.imageUrl));
-      const fallbackImg = c.category === 'Economía' 
-        ? '/images/regalias.jpg' 
-        : c.category === 'Sociedad' 
-          ? '/images/universidad.jpg' 
-          : '/images/malvinas.jpg';
-      const imageUrl = leadImgArticle?.imageUrl || fallbackImg;
+        // Pick best journalistic photo among the cluster (filtering out sports or irrelevant content)
+        const leadImgArticle = clusterArticles.find(a => Boolean(a.imageUrl && !isSportsOrIrrelevant(a)));
+        const fallbackImg = c.category === 'Economía' 
+          ? '/images/regalias.jpg' 
+          : c.category === 'Sociedad' 
+            ? '/images/universidad.jpg' 
+            : '/images/malvinas.jpg';
+        const imageUrl = leadImgArticle?.imageUrl || fallbackImg;
 
       // Calculate spectrum deterministically from participating articles and their outlets
       let ofi = 0;
@@ -561,7 +567,7 @@ function ruleBasedClustering(articles: Article[]): StoryCluster[] {
     },
     {
       kicker: 'EDUCACIÓN PÚBLICA • CONFLICTO SALARIAL',
-      keywords: ['universitario', 'docente', 'marcha federal', 'conadu', 'financiamiento'],
+      keywords: ['universidades', 'universitaria', 'universitarias', 'presupuesto universitario', 'docentes universitarios', 'paro universitario', 'marcha federal', 'conadu', 'financiamiento universitario'],
       category: 'Sociedad',
       neutralHeadline: 'Federaciones universitarias convocan a paro nacional de 72 horas y ratifican nueva Marcha Federal',
       summary: 'Los gremios docentes y no docentes resolvieron medidas de fuerza en demanda de la aplicación de la Ley de Financiamiento y recomposición de partidas salariales.',
@@ -585,12 +591,17 @@ function ruleBasedClustering(articles: Article[]): StoryCluster[] {
 
   topics.forEach((topic, idx) => {
     const matchingArticles = articles.filter(a => {
+      if (isSportsOrIrrelevant(a)) return false;
       const text = `${a.title} ${a.snippet}`.toLowerCase();
       return topic.keywords.some(k => text.includes(k));
     });
 
     if (matchingArticles.length > 0) {
-      const leadImg = matchingArticles.find(a => Boolean(a.imageUrl))?.imageUrl || topic.defaultImage;
+      const leadImgArticle = matchingArticles.find(a => Boolean(a.imageUrl && !isSportsOrIrrelevant(a)));
+      const leadImg = leadImgArticle?.imageUrl || topic.defaultImage;
+      const leadCaption = leadImgArticle?.imageUrl
+        ? `Cobertura periodística de ${leadImgArticle.outletName}.`
+        : topic.defaultCaption;
 
       // Select 1 top article per distinct outlet to maximize diversity across newsrooms
       const uniqueOutletArticles: Article[] = [];
@@ -638,7 +649,7 @@ function ruleBasedClustering(articles: Article[]): StoryCluster[] {
         updatedAt: selectedArticles[0]?.publishedAt || 'Reciente',
         timestamp: clusterTimestamp,
         imageUrl: leadImg,
-        imageCaption: topic.defaultCaption,
+        imageCaption: leadCaption,
         spectrum: {
           oficialismoPct: ofiPct,
           centroDatosPct: centroPct,
@@ -805,7 +816,7 @@ Devuelve EXCLUSIVAMENTE un objeto JSON válido con esta estructura:
         .map(id => articleMap.get(id))
         .filter((a): a is Article => Boolean(a));
 
-      const leadImgArticle = clusterArticles.find(a => Boolean(a.imageUrl));
+      const leadImgArticle = clusterArticles.find(a => Boolean(a.imageUrl && !isSportsOrIrrelevant(a)));
       const imageUrl = leadImgArticle?.imageUrl || '/images/macri-milei.jpg';
 
       let ofi = 0, centro = 0, opo = 0;
@@ -906,12 +917,13 @@ function ruleBasedForeignClustering(articles: Article[]): StoryCluster[] {
 
   topics.forEach((topic, idx) => {
     const matchingArticles = articles.filter(a => {
+      if (isSportsOrIrrelevant(a)) return false;
       const text = `${a.title} ${a.snippet}`.toLowerCase();
       return topic.keywords.some(k => text.includes(k));
     });
 
     if (matchingArticles.length > 0) {
-      const leadImg = matchingArticles.find(a => Boolean(a.imageUrl))?.imageUrl || topic.defaultImage;
+      const leadImg = matchingArticles.find(a => Boolean(a.imageUrl && !isSportsOrIrrelevant(a)))?.imageUrl || topic.defaultImage;
 
       // Select up to 1 article per distinct outlet
       const uniqueOutletArticles: Article[] = [];
