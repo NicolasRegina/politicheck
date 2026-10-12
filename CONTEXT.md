@@ -47,7 +47,9 @@ El ángulo, tono y foco específico que un Medio elige para titular y cubrir una
 _Evitar_: Bajada, intención, manipulación.
 
 **Historia (Story Cluster)**:
-Agrupación de múltiples Noticias de distintos Medios que cubren exactamente el mismo acontecimiento, sintetizada con un titular neutral y un desglose del espectro de cobertura.
+Agrupación de múltiples Noticias de distintos Medios que cubren exactamente el mismo acontecimiento, sintetizada con un titular neutral y un desglose del espectro de cobertura. Se presenta en dos niveles de profundidad:
+- **Ficha Ejecutiva de Historia (Story Card)**: Representación sintética y ligera en Portada que resume el acontecimiento mediante titular neutral, imagen de prensa, síntesis breve y barra de espectro editorial.
+- **Análisis Completo de Historia (Full Story View)**: Vista monográfica detallada (`/historia/:id`) que expone el dictamen de encuadres por IA, la comparativa cruzada de titulares por diario, filtros por sesgo y enlaces directos a las fuentes.
 _Evitar_: Tema, hilo, nota agrupada.
 
 **Noticia (Article)**:
