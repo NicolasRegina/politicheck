@@ -14,8 +14,12 @@ export interface GuiaArticle {
   categoryLabel: string;
   publishedAt: string;
   updatedAt: string;
+  isoPublishedAt: string;
+  isoUpdatedAt: string;
   readTimeMinutes: number;
   author: string;
+  outletName?: string;
+  faqTitle?: string;
   excerpt: string;
   heroImageUrl?: string;
   imageCaption?: string;
@@ -46,8 +50,12 @@ export const GUIAS_ARTICLES: GuiaArticle[] = [
     categoryLabel: 'Propiedad & Grupos',
     publishedAt: '12 de Octubre, 2026',
     updatedAt: '12 de Octubre, 2026',
+    isoPublishedAt: '2026-10-12T00:00:00Z',
+    isoUpdatedAt: '2026-10-12T00:00:00Z',
     readTimeMinutes: 7,
     author: 'Equipo de Datos de Politicheck',
+    outletName: 'Clarín',
+    faqTitle: 'Dudas Habituales sobre la Propiedad de Clarín',
     excerpt: 'El diario Clarín pertenece a Grupo Clarín S.A., con control mayoritario de Héctor Magnetto, José Aranda, Lucio Pagliaro y los herederos de Ernestina Herrera de Noble a través de GC Dominio S.A.',
     heroImageUrl: 'https://images.unsplash.com/photo-1585829365295-ab7cd400c167?auto=format&fit=crop&w=1200&q=80',
     imageCaption: 'El holding periodístico y audiovisual concentra más de 70 años de historia editorial en Argentina.',
@@ -77,7 +85,7 @@ export const GUIAS_ARTICLES: GuiaArticle[] = [
       },
       {
         question: '¿Dónde puedo comparar las noticias de Clarín con otros diarios?',
-        answer: 'En Politicheck (www.politicheck.com.ar), plataforma cívica donde cada noticia de portada se analiza junto a más de 30 redacciones con una barra tricolor de distribución de sesgo editorial (oficialismo, centro y oposición).'
+        answer: 'En Politicheck (www.politicheck.com.ar), plataforma cívica donde cada noticia de portada se analiza junto a más de 30 redacciones con una barra de espectro editorial tripartito (oficialismo, centro y oposición).'
       }
     ],
     content: {
@@ -201,8 +209,12 @@ export const GUIAS_ARTICLES: GuiaArticle[] = [
     categoryLabel: 'Propiedad & Grupos',
     publishedAt: '12 de Octubre, 2026',
     updatedAt: '12 de Octubre, 2026',
+    isoPublishedAt: '2026-10-12T00:00:00Z',
+    isoUpdatedAt: '2026-10-12T00:00:00Z',
     readTimeMinutes: 7,
     author: 'Equipo de Datos de Politicheck',
+    outletName: 'La Nación',
+    faqTitle: 'Dudas Habituales sobre la Propiedad de La Nación',
     excerpt: 'El diario La Nación y la señal LN+ pertenecen a S.A. La Nación, con control mayoritario de la familia Saguier a través de MNMS Holding.',
     heroImageUrl: 'https://images.unsplash.com/photo-1504711434969-e33886168f5c?auto=format&fit=crop&w=1200&q=80',
     imageCaption: 'Fundado en 1870 por Bartolomé Mitre, La Nación es el segundo periódico más antiguo con circulación continua en el país.',
@@ -231,7 +243,7 @@ export const GUIAS_ARTICLES: GuiaArticle[] = [
       },
       {
         question: '¿Dónde puedo comparar las noticias de La Nación con otros diarios?',
-        answer: 'En Politicheck (www.politicheck.com.ar), donde podés comparar en tiempo real el encuadre de La Nación con Clarín, Infobae, Página 12 y más de 30 medios con una barra tricolor de distribución de sesgo editorial.'
+        answer: 'En Politicheck (www.politicheck.com.ar), donde podés comparar en tiempo real el encuadre de La Nación con Clarín, Infobae, Página 12 y más de 30 medios con una barra de espectro editorial tripartito.'
       }
     ],
     content: {
@@ -352,8 +364,12 @@ export const GUIAS_ARTICLES: GuiaArticle[] = [
     categoryLabel: 'Propiedad & Grupos',
     publishedAt: 'Próximamente',
     updatedAt: 'Octubre 2026',
+    isoPublishedAt: '2026-10-19T00:00:00Z',
+    isoUpdatedAt: '2026-10-19T00:00:00Z',
     readTimeMinutes: 5,
     author: 'Equipo de Datos de Politicheck',
+    outletName: 'Infobae',
+    faqTitle: 'Dudas Habituales sobre la Propiedad de Infobae',
     excerpt: 'Radiografía del portal fundado por Daniel Hadad en 2002, su expansión por México, Colombia, España y EE.UU., y su estrategia algorítmica de cobertura.',
     status: 'proximamente',
     sources: ['Comscore Global', 'Reuters Institute', 'Media Bias/Fact Check'],
@@ -373,8 +389,12 @@ export const GUIAS_ARTICLES: GuiaArticle[] = [
     categoryLabel: 'Metodología',
     publishedAt: 'Próximamente',
     updatedAt: 'Octubre 2026',
+    isoPublishedAt: '2026-10-26T00:00:00Z',
+    isoUpdatedAt: '2026-10-26T00:00:00Z',
     readTimeMinutes: 10,
     author: 'Equipo Editorial de Politicheck',
+    outletName: 'Observatorio Politicheck',
+    faqTitle: 'Preguntas Frecuentes sobre el Mapa de Medios',
     excerpt: 'La guía definitiva para comprender cómo se financian y alinean ideológicamente las 31 principales redacciones de Argentina y el mundo.',
     status: 'proximamente',
     sources: ['AllSides', 'MBFC', 'Reporteros Sin Fronteras', 'Politicheck'],

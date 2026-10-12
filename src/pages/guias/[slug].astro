@@ -42,8 +42,8 @@ const articleSchema = {
       "url": "https://www.politicheck.com.ar/icons/icon-512x512.png"
     }
   },
-  "datePublished": "2026-10-12T00:00:00Z",
-  "dateModified": "2026-10-12T00:00:00Z"
+  "datePublished": guia.isoPublishedAt,
+  "dateModified": guia.isoUpdatedAt
 };
 
 const faqSchema = guia.faq.length > 0 ? {
@@ -217,7 +217,7 @@ const faqSchema = guia.faq.length > 0 ? {
         <span>Compará las noticias de hoy en tiempo real</span>
       </div>
       <p class="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
-        En Politicheck podés auditar en este mismo instante cómo titula Clarín cada noticia relevante frente a La Nación, Infobae, Página 12 y más de 30 redacciones con una barra tricolor de sesgo editorial.
+        En Politicheck podés auditar en este mismo instante cómo titula {guia.outletName || 'este medio'} cada noticia relevante frente a más de 30 redacciones con una barra de espectro editorial tripartito en tiempo real.
       </p>
       <div>
         <a 
@@ -240,7 +240,7 @@ const faqSchema = guia.faq.length > 0 ? {
             Preguntas Frecuentes
           </div>
           <h3 class="font-editorial text-2xl sm:text-3xl font-bold text-slate-950 dark:text-white">
-            Dudas Habituales sobre la Propiedad de Clarín
+            {guia.faqTitle || `Dudas Habituales sobre ${guia.outletName || guia.title}`}
           </h3>
         </div>
 
