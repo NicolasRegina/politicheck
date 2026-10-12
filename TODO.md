@@ -251,6 +251,18 @@
 
 ---
 
+### ✅ Tarea 17: Motor de Contenido SEO & Estrategia de Crecimiento Orgánico (Cluster de Medios) — [COMPLETADA]
+- [x] **Investigación de Nicho & Topical Cluster:**
+  - Definición del cluster *Ecosistema de Medios en Argentina: Dueños, Sesgo y Credibilidad* (Pillar Page + 10 clusters satélite).
+  - Keyword research de alta intención (`quien es el dueño de clarin`, `quien es el dueño de la nacion`, `sesgo de los medios en argentina`).
+- [x] **Generación de la Primera Pieza de Contenido (Long-Form 2.000+ palabras):**
+  - Artículo exhaustivo [`docs/seo/articulos/01-quien-es-el-dueno-de-clarin.md`](docs/seo/articulos/01-quien-es-el-dueno-de-clarin.md) con desglose accionario de Grupo Clarín S.A., esquema corporativo de GC Dominio, análisis de encuadre (*framing*) y preguntas frecuentes.
+  - Objetivo de Posición 0 (Featured Snippet) en Google con respuesta inversa directa en las primeras 100 palabras.
+- [x] **Ficha Técnica & Calendario Editorial de 12 Semanas:**
+  - Documento [`docs/seo/01-clarin-tecnico-y-calendario.md`](docs/seo/01-clarin-tecnico-y-calendario.md) con Meta tags, Open Graph, Schema.org estructurado (`Article` + `FAQPage` JSON-LD) y cronograma de publicaciones.
+
+---
+
 ### ⏳ Tarea 10: Foro Cívico de Debate & Sala de Chat Electoral en Vivo (Backlog) — [PENDIENTE]
 - [ ] **Sala de Chat Electoral en Vivo (Live Stream Chat):**
   - Chat en tiempo real durante debates presidenciales, discursos de apertura de sesiones y noches de conteo electoral.
