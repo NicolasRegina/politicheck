@@ -259,6 +259,7 @@
   - Sección editorial `/guias` con Bento Grid minimalista y filtros dinámicos por categoría.
   - Guía 01 publicada: *¿Quién es el dueño de Clarín?* (`/guias/quien-es-el-dueno-de-clarin`).
   - Guía 02 publicada: *¿Quién es el dueño de La Nación?* (`/guias/quien-es-el-dueno-de-la-nacion`).
+  - Guía 03 publicada: *¿Quién es el dueño de Infobae?* (`/guias/quien-es-el-dueno-de-infobae`).
   - Lector editorial longform con schemas estructurados JSON-LD (`Article` + `FAQPage`), lead box de respuesta directa para Google Posición 0 y prerenderizado estático.
 - [x] **Generación Dinámica de `sitemap.xml` para Indexación en Google:**
   - Endpoint prerenderizado [`src/pages/sitemap.xml.ts`](src/pages/sitemap.xml.ts) que compila automáticamente URLs con metadatos de prioridad y frecuencia: portada (`1.0`), `/guias` (`0.9`), guías monográficas publicadas (`0.9`), `/metodologia` (`0.8`), 16 promesas auditadas de candidatos (`0.7`) e historias activas del día (`0.8`).

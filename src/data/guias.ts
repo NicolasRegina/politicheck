@@ -362,23 +362,132 @@ export const GUIAS_ARTICLES: GuiaArticle[] = [
     kicker: 'Cuaderno 03 • Estructura de Medios',
     category: 'propiedad',
     categoryLabel: 'Propiedad & Grupos',
-    publishedAt: 'Próximamente',
-    updatedAt: 'Octubre 2026',
-    isoPublishedAt: '2026-10-19T00:00:00Z',
-    isoUpdatedAt: '2026-10-19T00:00:00Z',
-    readTimeMinutes: 5,
+    publishedAt: '12 de Octubre, 2026',
+    updatedAt: '12 de Octubre, 2026',
+    isoPublishedAt: '2026-10-12T00:00:00Z',
+    isoUpdatedAt: '2026-10-12T00:00:00Z',
+    readTimeMinutes: 8,
     author: 'Equipo de Datos de Politicheck',
     outletName: 'Infobae',
     faqTitle: 'Dudas Habituales sobre la Propiedad de Infobae',
-    excerpt: 'Radiografía del portal fundado por Daniel Hadad en 2002, su expansión por México, Colombia, España y EE.UU., y su estrategia algorítmica de cobertura.',
-    status: 'proximamente',
-    sources: ['Comscore Global', 'Reuters Institute', 'Media Bias/Fact Check'],
-    metaTitle: '¿Quién es el Dueño de Infobae? Daniel Hadad y Finanzas (2026)',
-    metaDescription: 'Quién es el propietario de Infobae, cómo se financia el medio digital de Daniel Hadad y cuál es su línea editorial.',
+    excerpt: 'El portal Infobae pertenece al periodista y empresario Daniel Hadad, quien lo fundó en 2002 como un medio nativo digital sin edición de papel.',
+    heroImageUrl: 'https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=1200&q=80',
+    imageCaption: 'Fundado en Buenos Aires en 2002, Infobae consolidó redacciones en 6 países y lidera el tráfico digital en idioma español.',
+    status: 'publicado',
+    sources: [
+      'Comscore Global Media Metrix Multi-Platform',
+      'Reuters Institute for the Study of Journalism (Oxford)',
+      'Media Ownership Monitor (MOM / Reporteros Sin Fronteras)',
+      'AllSides & Media Bias/Fact Check (MBFC)'
+    ],
+    metaTitle: '¿Quién es el Dueño de Infobae? Daniel Hadad y Modelo (2026)',
+    metaDescription: 'Descubrí quién es el dueño de Infobae: Daniel Hadad, su estructura societaria, cómo se financia sin muro de pago y cuál es su línea editorial.',
     canonicalUrl: 'https://www.politicheck.com.ar/guias/quien-es-el-dueno-de-infobae',
-    targetSnippet: 'Infobae pertenece al empresario y periodista Daniel Hadad, quien lo fundó en 2002 y lidera su expansión por Iberoamérica.',
-    faq: [],
-    content: { leadHtml: '', sections: [] }
+    targetSnippet: 'El portal Infobae pertenece en su totalidad al periodista y empresario Daniel Hadad, quien lo fundó en 2002. Opera como un medio nativo digital sin rotativas de papel, con redacciones activas en Argentina, México, Colombia, España, Perú y Estados Unidos.',
+    faq: [
+      {
+        question: '¿Quién es el dueño del portal Infobae?',
+        answer: 'Infobae pertenece en su totalidad al periodista y empresario argentino Daniel Hadad a través de las sociedades Infobae América y TXH Medios, ejerciendo la presidencia ejecutiva y la conducción editorial.'
+      },
+      {
+        question: '¿Infobae es un medio argentino o extranjero?',
+        answer: 'Nació en Argentina en 2002 con sede fundacional en Buenos Aires, pero hoy opera como una red panregional con redacciones autónomas en Ciudad de México, Bogotá, Madrid, Lima y Miami.'
+      },
+      {
+        question: '¿Mauricio Macri o fondos extranjeros tienen acciones en Infobae?',
+        answer: 'No. No existen registros societarios de participación de Mauricio Macri ni de fondos de Wall Street. Daniel Hadad ha manifestado en reiteradas oportunidades que mantiene la compañía 100% privada para preservar la agilidad de decisión.'
+      },
+      {
+        question: '¿Cómo se financia Infobae si todas sus notas son gratuitas?',
+        answer: 'Se financia mediante subastas de publicidad programática masiva (Google Ad Manager / RTB), patrocinios corporativos y facturación diversificada en divisas (dólares y euros), sin muros de pago por suscripción.'
+      },
+      {
+        question: '¿Dónde puedo comparar las noticias de Infobae con Clarín y La Nación?',
+        answer: 'En Politicheck (www.politicheck.com.ar), donde podés auditar en tiempo real cómo titula Infobae frente a más de 30 redacciones con una barra de espectro editorial tripartito.'
+      }
+    ],
+    content: {
+      leadHtml: `<p class="text-base sm:text-lg leading-relaxed text-slate-800 dark:text-slate-200">
+        <strong>¿Quién es el dueño de Infobae?</strong> El portal de noticias Infobae pertenece en su totalidad al periodista y empresario argentino <strong>Daniel Hadad</strong>, quien lo fundó en el año 2002. A diferencia de conglomerados tradicionales como Grupo Clarín o S.A. La Nación, Infobae nació como un medio <strong>100% nativo digital</strong>, sin edición impresa en papel. Hadad conserva el control accionario absoluto y la presidencia ejecutiva del grupo matriz (Infobae América / TXH Medios), con redacciones periodísticas propias en <strong>Argentina, México, Colombia, España, Perú y Estados Unidos (Miami)</strong>.
+      </p>
+      <p class="text-sm sm:text-base leading-relaxed text-slate-700 dark:text-slate-300">
+        Su modelo representa el caso más exitoso de internacionalización de un medio digital nacido en el Cono Sur: un portal de acceso libre que compite de igual a igual en métricas de tráfico global frente a gigantes centenarios.
+      </p>`,
+      sections: [
+        {
+          id: 'origen-sociedad',
+          title: '1. El Origen de Infobae: De la venta de C5N y Radio 10 al imperio digital',
+          bodyHtml: `<p>A comienzos de la década de 2000, Daniel Hadad era uno de los empresarios audiovisuales más influyentes de la Argentina. Su conglomerado incluía la histórica <strong>Radio 10</strong> (líder absoluta de audiencia en AM), las emisoras FM Mega 98.3, Pop Radio y Vale 97.5, el canal de aire Canal 9 (vendido posteriormente a Albavisión) y la señal de cable <strong>C5N</strong>, creada en 2007 para competir frente a TN.</p>
+          <p>En abril de 2012, en un escenario de fuerte polarización política y presiones regulatorias, Hadad concretó un movimiento estratégico decisivo: <strong>vendió la totalidad de sus radios y el canal C5N al Grupo Indalo</strong> (Cristóbal López y Fabián De Sousa).</p>
+          <p>Sin embargo, en el acuerdo de venta Hadad fijó una condición innegociable: <strong>se quedó exclusivamente con Infobae</strong>. Mientras el resto del mercado trataba a internet como un subproducto de bajo costo, Hadad reinvirtió el capital de la transacción en tecnología cloud, ingenieros de datos y periodistas digitales.</p>`
+        },
+        {
+          id: 'estructura-y-modelo-de-negocio',
+          title: '2. Estructura Societaria y Finanzas: ¿Quién financia a Infobae?',
+          bodyHtml: `<p>A diferencia de Grupo Clarín (que cotiza en bolsa con acciones públicas) o La Nación (propiedad de un consorcio familiar multigeneracional), Infobae es una sociedad de control cerrado y personalista.</p>
+          <p>De acuerdo con los relevamientos del <strong>Media Ownership Monitor (MOM / Reporteros Sin Fronteras)</strong> y el <strong>Reuters Institute (Universidad de Oxford)</strong>, la estructura societaria se sintetiza en el siguiente esquema:</p>
+          
+          <div class="overflow-x-auto my-6 border border-slate-200 dark:border-slate-800 rounded-xl">
+            <table class="w-full text-left text-xs font-sans">
+              <thead class="bg-slate-100 dark:bg-slate-900/80 font-mono text-[11px] text-slate-700 dark:text-slate-300 uppercase tracking-wider border-b border-slate-200 dark:border-slate-800">
+                <tr>
+                  <th class="p-3">Entidad / Accionista</th>
+                  <th class="p-3">Rol Societario</th>
+                  <th class="p-3">Participación</th>
+                  <th class="p-3">Sede Operativa</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-slate-100 dark:divide-slate-800/80 text-slate-700 dark:text-slate-300">
+                <tr class="bg-white dark:bg-slate-900/40 font-medium">
+                  <td class="p-3 font-semibold text-slate-900 dark:text-white">Daniel Hadad</td>
+                  <td class="p-3">Fundador, CEO y Presidente Ejecutivo</td>
+                  <td class="p-3 font-mono font-bold text-sky-700 dark:text-sky-400">~100%</td>
+                  <td class="p-3">Buenos Aires / Miami</td>
+                </tr>
+                <tr>
+                  <td class="p-3 font-semibold">Infobae América / TXH Medios</td>
+                  <td class="p-3">Holding paraguas regional</td>
+                  <td class="p-3 font-mono">100% filial</td>
+                  <td class="p-3">Delaware (EE.UU.) y CABA</td>
+                </tr>
+                <tr class="bg-slate-50/50 dark:bg-slate-900/20">
+                  <td class="p-3 font-semibold">Inversores Externos / Fondos</td>
+                  <td class="p-3">Sin participación registrada</td>
+                  <td class="p-3 font-mono">0%</td>
+                  <td class="p-3">Compañía de capital cerrado</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          
+          <p><strong>¿Cómo monetiza sin cobrar suscripción?</strong> Infobae opera con un modelo de acceso 100% libre. Su financiamiento descansa sobre subastas de publicidad programática (Google Ad Manager / RTB), patrocinios corporativos y branded content en múltiples monedas (dólares, euros, pesos mexicanos y colombianos), lo que le otorga resiliencia frente a las fluctuaciones cambiarias de Argentina.</p>`
+        },
+        {
+          id: 'expansion-panregional',
+          title: '3. La Expansión Panregional: El medio en español más leído del mundo',
+          bodyHtml: `<p>El rasgo que diferencia a Infobae de otros portales es su arquitectura descentralizada. En lugar de limitarse a exportar noticias argentinas, montó redacciones con periodistas locales en cada mercado:</p>
+          <ul class="list-disc pl-5 space-y-1 my-3 text-xs sm:text-sm">
+            <li><strong>Infobae Argentina:</strong> Sede central en el barrio porteño de Palermo, con más de 200 redactores y mesa audiovisual continua.</li>
+            <li><strong>Infobae México (2019):</strong> Disputa los primeros puestos de audiencia con El Universal y Reforma.</li>
+            <li><strong>Infobae Colombia:</strong> Cobertura de política, economía y orden público en Bogotá y Medellín.</li>
+            <li><strong>Infobae España (2023):</strong> Desembarco en Madrid para disputar audiencia frente a El País y El Mundo.</li>
+            <li><strong>Infobae América (Miami):</strong> Foco en el voto latino en EE.UU., geopolítica continental y derechos humanos en Cuba y Venezuela.</li>
+          </ul>
+          <p>Según auditorías de <strong>Comscore MMX</strong>, el portal promedia entre <strong>45 y 55 millones de usuarios únicos mensuales</strong> en todo el planeta.</p>`
+        },
+        {
+          id: 'encuadre-y-framing',
+          title: '4. Línea Editorial y Análisis de Encuadre (Framing) en Politicheck',
+          bodyHtml: `<p>En las auditorías de encuadre de Politicheck, Infobae se sitúa habitualmente en el <strong>Centro / Centro-Derecha institucional</strong>, caracterizado por:</p>
+          <div class="my-4 p-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-[#0C101A] space-y-2 text-xs sm:text-sm font-sans">
+            <p><strong>Política Argentina:</strong> No responde a una bandera partidaria unívoca. Suele mantener un tono pragmático, con amplio espacio a ministros del gobierno libertario y referentes opositores, privilegiando el minuto a minuto y los entretelones de poder.</p>
+            <p><strong>Economía:</strong> Cobertura favorable a la inversión privada, equilibrio fiscal y desregulación económica.</p>
+            <p><strong>Geopolítica Continental:</strong> Clara alineación con la política exterior de Estados Unidos, Israel y la Unión Europea, con un encuadre severamente crítico de los regímenes de Venezuela, Nicaragua y Cuba.</p>
+            <p><strong>Optimización SEO y Virales:</strong> Alto volumen de artículos de estilo de vida, salud, bienestar, policiales y tendencias para sostener su caudal de tráfico masivo.</p>
+          </div>`
+        }
+      ]
+    }
   },
   {
     slug: 'mapa-de-medios-argentina-2026',
