@@ -202,7 +202,18 @@ function isEditorialRelevantArticle(rawLink, title, snippet, category = 'naciona
     '/recetas/', '/gaming/', '/videojuegos/', '/celebrities/'
   ];
 
-  if (blacklistedUrlSegments.some(seg => lowerUrl.includes(seg))) return false;
+  const institutionalOverrideKeywords = [
+    'gobierno', 'milei', 'justicia', 'ley', 'dnu', 'afa', 'igj', 'sad',
+    'sociedades anonimas', 'casa rosada', 'denuncia', 'juez', 'congreso',
+    'causa', 'arancel', 'incaa', 'fondos', 'campeon del mundo', 'campeón del mundo',
+    'duelo nacional', 'luto'
+  ];
+
+  const hasInstitutionalAngle = institutionalOverrideKeywords.some(k => lowerText.includes(k));
+
+  if (blacklistedUrlSegments.some(seg => lowerUrl.includes(seg))) {
+    if (!hasInstitutionalAngle) return false;
+  }
 
   if (category === 'nacional') {
     const foreignCountryPaths = [

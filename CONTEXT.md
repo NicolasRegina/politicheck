@@ -56,6 +56,12 @@ _Evitar_: Tema, hilo, nota agrupada.
 Publicación individual proveniente del feed RSS oficial de un Medio, con titular, fecha, autor, resumen breve y enlace a la fuente original.
 _Evitar_: Post, publicación, nota completa.
 
+**Intersección Institucional (Institutional Intersection)**:
+Acontecimiento originado en el ámbito deportivo, cultural o social que adquiere relevancia cívica verificable por involucrar directamente a poderes del Estado, marcos regulatorios, causas judiciales o controversias de política pública (ej. Sociedades Anónimas Deportivas en clubes, financiamiento audiovisual, resoluciones de la IGJ/ARCA). Se audita con el espectro editorial político estándar dentro de las secciones `Sociedad` o `Política`.
+
+**Conmoción Nacional (National Impact Event)**:
+Acontecimiento extraordinario de interés público masivo que, aun sin un actor político directo, alcanza consenso simultáneo de cobertura en 4 o más redacciones nacionales (ej. hitos mundiales de selecciones nacionales, catástrofes o duelo oficial decretado).
+
 ---
 
 ### Candidatos y Promesas (Fase 2)

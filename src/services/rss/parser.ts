@@ -95,7 +95,7 @@ export function isEditorialRelevantArticle(
   const lowerTitle = (title || '').toLowerCase();
   const lowerText = `${lowerTitle} ${(snippet || '').toLowerCase()}`;
 
-  // 1. Exclude non-journalistic/sports/entertainment sections
+  // 1. Exclude non-journalistic/sports/entertainment sections UNLESS there is a verified institutional/civic intersection (ADR 0006)
   const blacklistedUrlSegments = [
     '/deportes/',
     '/futbol/',
@@ -113,8 +113,19 @@ export function isEditorialRelevantArticle(
     '/celebrities/'
   ];
 
+  const institutionalOverrideKeywords = [
+    'gobierno', 'milei', 'justicia', 'ley', 'dnu', 'afa', 'igj', 'sad',
+    'sociedades anonimas', 'casa rosada', 'denuncia', 'juez', 'congreso',
+    'causa', 'arancel', 'incaa', 'fondos', 'campeon del mundo', 'campeón del mundo',
+    'duelo nacional', 'luto'
+  ];
+
+  const hasInstitutionalAngle = institutionalOverrideKeywords.some(k => lowerText.includes(k));
+
   if (blacklistedUrlSegments.some(seg => lowerUrl.includes(seg))) {
-    return false;
+    if (!hasInstitutionalAngle) {
+      return false;
+    }
   }
 
   // 2. For Argentine national outlets (e.g. Infobae global firehose), exclude foreign local hubs
@@ -131,7 +142,7 @@ export function isEditorialRelevantArticle(
     }
   }
 
-  // 3. Exclude sports match summaries and tournament fixtures
+  // 3. Always exclude sports match summaries and tournament fixtures (even with keywords)
   const sportsMatchPatterns = [
     /\b(vs\.?|contra|enfrenta a|visita a|recibe a)\b/i,
     /\b(minuto a minuto|en vivo hoy:? minuto a minuto)\b/i,

@@ -308,18 +308,23 @@ REGLAS DE ORO OBLIGATORIAS:
    - REGLA CLAVE PARA DISCURSOS O EVENTOS (ej. Coloquio de IDEA o acto oficial): Si la noticia central es una alocución o discurso, TODAS las notas agrupadas DEBEN ser coberturas de esa misma disertación. Si un diario titula con una frase particular (ej. Kicillof, elecciones 2027 o riesgo país), indícalo en "specificFocus", pero NUNCA mezcles noticias sobre otros acontecimientos ajenos que hayan ocurrido en otro ámbito.
    - NO agrupes noticias solo porque compartan una palabra genérica. Si un artículo no trata del suceso específico central, descártalo.
 
-3. VARIEDAD TEMÁTICA Y NÚMERO DE HISTORIAS (OBLIGATORIO):
+3. CRITERIO EDITORIAL PARA DEPORTES Y CULTURA (ADR 0006):
+   - Descarta terminantemente notas de partidos deportivos de rutina, fixtures, resultados de juego y farándula.
+   - SOLO admite noticias deportivas o culturales si involucran un cruce institucional directo (conflicto con el Gobierno, AFA/SAD, causas judiciales, regulación o financiamiento público) o conmoción nacional de interés público masivo.
+   - En caso de admitirlas, clasifícalas siempre bajo la categoría "Sociedad" o "Política".
+
+4. VARIEDAD TEMÁTICA Y NÚMERO DE HISTORIAS (OBLIGATORIO):
    Debes generar obligatoriamente entre 4 y 6 clusters/historias diferentes y equilibradas:
    - Al menos 1 o 2 historias de "Política" (ej. declaraciones del gobierno, Congreso, internas políticas, relaciones internacionales).
    - Al menos 1 o 2 historias de "Economía" (ej. actividad económica, recesión, dólar, deuda, reservas, inflación).
    - Al menos 1 historia de "Sociedad", "Educación" o "Justicia" (ej. causas judiciales, universidades, reclamos salariales, seguridad).
    El primer cluster del array ("clusters[0]") será la Gran Apertura de Tapa de mayor trascendencia e impacto nacional.
 
-4. Escribe un titular neutral ("neutralHeadline") estrictamente factual, sin adjetivos tendenciosos.
-5. Redacta un dictamen comparativo de encuadres ("aiComparisonNotice") que explique con rigor periodístico: qué priorizó cada redacción en su titular y qué omitió.
-6. En "articles", devuelve un arreglo de objetos con "id" y un "specificFocus" sintético de 3 a 7 palabras que explique el encuadre o frase elegida por ese diario (ej: "Cruces a la oposición y fallo de la Corte", "Advertencia electoral sobre 2027", "Tono electoral y riesgo país").
-7. Clasifica la categoría ("Política", "Economía", "Sociedad", "Justicia" o "Internacional").
-8. Estima la distribución del espectro editorial (oficialismoPct, centroDatosPct, oposicionPct) sumando el 100%.
+5. Escribe un titular neutral ("neutralHeadline") estrictamente factual, sin adjetivos tendenciosos.
+6. Redacta un dictamen comparativo de encuadres ("aiComparisonNotice") que explique con rigor periodístico: qué priorizó cada redacción en su titular y qué omitió.
+7. En "articles", devuelve un arreglo de objetos con "id" y un "specificFocus" sintético de 3 a 7 palabras que explique el encuadre o frase elegida por ese diario (ej: "Cruces a la oposición y fallo de la Corte", "Advertencia electoral sobre 2027", "Tono electoral y riesgo país").
+8. Clasifica la categoría ("Política", "Economía", "Sociedad", "Justicia" o "Internacional").
+9. Estima la distribución del espectro editorial (oficialismoPct, centroDatosPct, oposicionPct) sumando el 100%.
 
 Responde ÚNICAMENTE en formato JSON con la siguiente estructura:
 {
