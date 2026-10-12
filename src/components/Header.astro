@@ -174,18 +174,20 @@ const serverSyncIso = propSyncIso || (await getLastSyncTimestampAsync()) || new 
           <button 
             type="button" 
             onclick="window.openPwaInstallPrompt?.()"
-            class="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-emerald-50 hover:bg-emerald-100 dark:bg-emerald-950/50 dark:hover:bg-emerald-900/60 border border-emerald-200 dark:border-emerald-800/80 text-emerald-800 dark:text-emerald-300 text-xs font-mono font-bold transition-all cursor-pointer shadow-2xs"
+            class="inline-flex items-center justify-center gap-1.5 h-8 px-2.5 rounded-lg bg-emerald-50 hover:bg-emerald-100 dark:bg-emerald-950/50 dark:hover:bg-emerald-900/60 border border-emerald-200 dark:border-emerald-800/80 text-emerald-800 dark:text-emerald-300 text-[11px] font-mono font-semibold transition-all cursor-pointer shadow-2xs"
             title="Instalar Politicheck en tu celular o computadora"
             aria-label="Instalar aplicación Politicheck"
           >
-            <span>📲</span>
-            <span class="text-[11px] font-semibold">Instalar App</span>
+            <svg class="w-3.5 h-3.5 text-emerald-700 dark:text-emerald-400 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+            </svg>
+            <span>Instalar App</span>
           </button>
 
           <!-- Theme Toggle Button -->
           <button 
             type="button" 
-            class="theme-toggle flex items-center justify-center gap-2 px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 dark:bg-slate-900 dark:hover:bg-slate-800 border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 text-xs font-mono transition-colors cursor-pointer"
+            class="theme-toggle inline-flex items-center justify-center h-8 w-8 rounded-lg bg-slate-100 hover:bg-slate-200 dark:bg-slate-900 dark:hover:bg-slate-800 border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 transition-colors cursor-pointer"
             aria-label="Alternar modo claro y oscuro"
             title="Alternar entre modo papel (claro) y nocturno (oscuro)"
           >
@@ -238,29 +240,12 @@ const serverSyncIso = propSyncIso || (await getLastSyncTimestampAsync()) || new 
           Sociedad
         </button>
         <span class="text-slate-300 dark:text-slate-700">•</span>
-        <button 
-          type="button" 
-          data-nav-section="promesas" 
-          class="nav-section-btn px-2.5 py-1 rounded bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-slate-100 hover:bg-slate-200 dark:hover:bg-slate-800 transition-colors whitespace-nowrap cursor-pointer"
-        >
-          Promesas 2027
-        </button>
-        <span class="text-slate-300 dark:text-slate-700">•</span>
         <a 
           href="/guias" 
           class="px-2.5 py-1 rounded bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-slate-100 hover:bg-slate-200 dark:hover:bg-slate-800 transition-colors whitespace-nowrap inline-flex items-center gap-1"
         >
           <span>Guías & Medios</span>
         </a>
-        <span class="text-slate-300 dark:text-slate-700">•</span>
-        <button 
-          type="button" 
-          onclick="if(typeof window.openLiveChat === 'function') window.openLiveChat('debate-electoral');"
-          class="px-2.5 py-1 rounded bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-slate-100 hover:bg-slate-200 dark:hover:bg-slate-800 transition-colors whitespace-nowrap inline-flex items-center gap-1.5 cursor-pointer font-semibold"
-        >
-          <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-ping"></span>
-          <span>Chat en Vivo</span>
-        </button>
       </nav>
 
       <!-- Search Bar & View Switcher (Streamlined Controls) -->
@@ -430,14 +415,6 @@ const serverSyncIso = propSyncIso || (await getLastSyncTimestampAsync()) || new 
       });
       btn.classList.add('text-slate-950', 'dark:text-white', 'font-bold');
       btn.classList.remove('text-slate-700', 'dark:text-slate-300');
-
-      if (targetSec === 'promesas') {
-        const promesasTab = document.querySelector<HTMLButtonElement>('[data-tab="promesas"]');
-        if (promesasTab) {
-          promesasTab.click();
-        }
-        return;
-      }
 
       // Switch to main view
       const mainTab = document.querySelector<HTMLButtonElement>('[data-tab="temas-del-dia"]');

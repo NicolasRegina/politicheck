@@ -166,7 +166,7 @@ export const GUIAS_ARTICLES: GuiaArticle[] = [
             <div class="p-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-[#0C101A] space-y-2">
               <div class="flex items-center justify-between">
                 <span class="font-bold text-sm text-slate-900 dark:text-white">5. Grupo América</span>
-                <span class="px-2 py-0.5 rounded text-[10px] font-mono font-semibold bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/20">Investigación en curso</span>
+                <a href="/guias/quien-es-el-dueno-de-grupo-america-el-cronista" class="text-xs font-mono font-semibold text-sky-600 dark:text-sky-400 hover:underline">Ver investigación monográfica →</a>
               </div>
               <p class="text-slate-600 dark:text-slate-400"><strong>Controlantes:</strong> Daniel Vila, José Luis Manzano y Claudio Belocopitt.</p>
               <p class="text-slate-600 dark:text-slate-400"><strong>Activos centrales:</strong> América TV, canal de noticias A24, Radio La Red (AM 910) y El Cronista Comercial.</p>
@@ -177,7 +177,7 @@ export const GUIAS_ARTICLES: GuiaArticle[] = [
             <div class="p-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-[#0C101A] space-y-2">
               <div class="flex items-center justify-between">
                 <span class="font-bold text-sm text-slate-900 dark:text-white">6. Editorial Perfil</span>
-                <span class="px-2 py-0.5 rounded text-[10px] font-mono font-semibold bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/20">Investigación en curso</span>
+                <a href="/guias/quien-es-el-dueno-de-editorial-perfil" class="text-xs font-mono font-semibold text-sky-600 dark:text-sky-400 hover:underline">Ver investigación monográfica →</a>
               </div>
               <p class="text-slate-600 dark:text-slate-400"><strong>Fundador y Director:</strong> Jorge Fontevecchia.</p>
               <p class="text-slate-600 dark:text-slate-400"><strong>Activos centrales:</strong> Diario Perfil, Revista Noticias, Caras, señal Net TV y Radio Perfil (FM 101.9).</p>
@@ -191,7 +191,10 @@ export const GUIAS_ARTICLES: GuiaArticle[] = [
           bodyHtml: `<p>Junto a los conglomerados corporativos, conviven empresas periodísticas gestionadas por sindicatos y plataformas partidarias directas:</p>
           <div class="my-4 p-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-[#0C101A] space-y-3 text-xs sm:text-sm font-sans">
             <div>
-              <div class="font-bold text-slate-900 dark:text-white mb-0.5">Grupo Octubre (Víctor Santa María / SUTERH)</div>
+              <div class="flex items-center justify-between">
+                <span class="font-bold text-slate-900 dark:text-white mb-0.5">Grupo Octubre (Víctor Santa María / SUTERH)</span>
+                <a href="/guias/quien-es-el-dueno-de-pagina-12" class="text-xs font-mono font-semibold text-sky-600 dark:text-sky-400 hover:underline">Ver investigación monográfica →</a>
+              </div>
               <p class="text-slate-600 dark:text-slate-400">Es el mayor conglomerado mediático de base sindical en la historia argentina. Opera el diario <em>Página 12</em>, <em>Canal 9</em> (Telearte), la señal informativa <em>IP Noticias</em>, <em>AM 750</em>, <em>Revista Caras y Caretas</em> y centros universitarios (UMET). Su línea editorial se inscribe en la Centro-Izquierda progresista, con fuerte foco en derechos laborales, derechos humanos y defensa del Estado.</p>
             </div>
             <div class="border-t border-slate-200 dark:border-slate-800 pt-3">
@@ -287,7 +290,7 @@ export const GUIAS_ARTICLES: GuiaArticle[] = [
                   <td class="p-3">Sindical</td>
                   <td class="p-3"><span class="px-2 py-0.5 rounded text-[10px] font-mono bg-red-500/10 text-red-600 dark:text-red-400">Izquierda</span></td>
                   <td class="p-3">Mixta</td>
-                  <td class="p-3 text-slate-400 font-mono text-[11px]">En curso</td>
+                  <td class="p-3"><a href="/guias/quien-es-el-dueno-de-pagina-12" class="text-sky-600 dark:text-sky-400 font-mono text-[11px] hover:underline">Ver Guía →</a></td>
                 </tr>
                 <tr>
                   <td class="p-3 font-bold text-slate-900 dark:text-white">Ámbito Financiero</td>
@@ -303,7 +306,7 @@ export const GUIAS_ARTICLES: GuiaArticle[] = [
                   <td class="p-3">Corporativo</td>
                   <td class="p-3"><span class="px-2 py-0.5 rounded text-[10px] font-mono bg-emerald-500/10 text-emerald-600 dark:text-emerald-400">Centro</span></td>
                   <td class="p-3">Muy Alta</td>
-                  <td class="p-3 text-slate-400 font-mono text-[11px]">En curso</td>
+                  <td class="p-3"><a href="/guias/quien-es-el-dueno-de-grupo-america-el-cronista" class="text-sky-600 dark:text-sky-400 font-mono text-[11px] hover:underline">Ver Guía →</a></td>
                 </tr>
                 <tr>
                   <td class="p-3 font-bold text-slate-900 dark:text-white">Diario Perfil</td>
@@ -311,7 +314,7 @@ export const GUIAS_ARTICLES: GuiaArticle[] = [
                   <td class="p-3">Corporativo</td>
                   <td class="p-3"><span class="px-2 py-0.5 rounded text-[10px] font-mono bg-emerald-500/10 text-emerald-600 dark:text-emerald-400">Centro</span></td>
                   <td class="p-3">Alta</td>
-                  <td class="p-3 text-slate-400 font-mono text-[11px]">En curso</td>
+                  <td class="p-3"><a href="/guias/quien-es-el-dueno-de-editorial-perfil" class="text-sky-600 dark:text-sky-400 font-mono text-[11px] hover:underline">Ver Guía →</a></td>
                 </tr>
                 <tr>
                   <td class="p-3 font-bold text-slate-900 dark:text-white">elDiarioAR</td>
@@ -967,6 +970,256 @@ export const GUIAS_ARTICLES: GuiaArticle[] = [
             <p><strong>Heterodoxia Desarrollista:</strong> El enfoque macroeconómico del diario suele priorizar el impacto del ajuste sobre la industria local, el empleo asalariado y el poder adquisitivo frente a los esquemas de ajuste ortodoxo.</p>
             <p><strong>Diferencia de Tono con C5N:</strong> Mientras C5N apela a un lenguaje de televisión abierta de alta confrontación política contra el gobierno libertario, <em>ambito.com</em> conserva un perfil analítico de lectura corporativa transversal.</p>
           </div>`
+        }
+      ]
+    }
+  },
+  {
+    slug: 'quien-es-el-dueno-de-grupo-america-el-cronista',
+    title: '¿Quién es el Dueño de Grupo América y El Cronista? Daniel Vila, José Luis Manzano y Claudio Belocopitt',
+    subtitle: 'El surgimiento en Cuyo, la expansión nacional con América TV y A24, la entrada de Swiss Medical y la compra del decano económico El Cronista.',
+    kicker: 'Monografía • Grupo América',
+    category: 'propiedad',
+    categoryLabel: 'Propiedad & Grupos',
+    publishedAt: '12 de Octubre, 2026',
+    updatedAt: '12 de Octubre, 2026',
+    isoPublishedAt: '2026-10-12T00:00:00Z',
+    isoUpdatedAt: '2026-10-12T00:00:00Z',
+    readTimeMinutes: 9,
+    author: 'Equipo de Datos de Politicheck',
+    outletName: 'Grupo América / El Cronista',
+    faqTitle: 'Preguntas Frecuentes sobre Grupo América y El Cronista',
+    excerpt: 'Radiografía de Grupo América: Daniel Vila, José Luis Manzano, Claudio Belocopitt, la compra de El Cronista Comercial en 2021 y su encuadre en Politicheck.',
+    heroImageUrl: 'https://images.unsplash.com/photo-1585829365295-ab7cd400c167?auto=format&fit=crop&w=1200&q=80',
+    imageCaption: 'Grupo América es el tercer conglomerado de medios más influyente del país, operando América TV, A24, Radio La Red y El Cronista Comercial.',
+    status: 'publicado',
+    sources: [
+      'Ente Nacional de Comunicaciones (ENACOM)',
+      'Media Ownership Monitor (MOM / Reporteros Sin Fronteras)',
+      'Inspección General de Justicia (IGJ)',
+      'Balances Corporativos de El Cronista Comercial S.A.'
+    ],
+    metaTitle: '¿Quién es el Dueño de Grupo América y El Cronista? Daniel Vila y Manzano',
+    metaDescription: 'Descubrí quiénes son los dueños de Grupo América y El Cronista: Daniel Vila, José Luis Manzano, Claudio Belocopitt, América TV, A24 y su sesgo editorial.',
+    canonicalUrl: 'https://www.politicheck.com.ar/guias/quien-es-el-dueno-de-grupo-america-el-cronista',
+    targetSnippet: 'Grupo América es controlado por Daniel Vila y José Luis Manzano, junto a Claudio Belocopitt (Swiss Medical, 40% en TV). Opera América TV, A24, Radio La Red y El Cronista Comercial.',
+    faq: [
+      {
+        question: '¿Quién es el dueño de América TV y A24?',
+        answer: 'América TV y A24 pertenecen a Grupo América, cuyos principales accionistas son Daniel Vila, José Luis Manzano e ingresó en 2017 Claudio Belocopitt (presidente de Swiss Medical) con el 40% del paquete accionario de la división televisiva.'
+      },
+      {
+        question: '¿A quién le pertenece el diario El Cronista Comercial?',
+        answer: 'El Cronista Comercial pertenece a Grupo América, que adquirió el 100% de sus acciones en julio de 2021 a Francisco De Narváez.'
+      },
+      {
+        question: '¿Qué rol tiene José Luis Manzano en Grupo América?',
+        answer: 'José Luis Manzano es socio fundador e histórico accionista de Grupo América a través de Integra Capital, combinando su presencia en medios con inversiones de gran escala en energía (Edenor), petróleo (Phoenix Global Resources) y litio.'
+      },
+      {
+        question: '¿Cuál es la línea editorial de El Cronista en Politicheck?',
+        answer: 'Politicheck lo clasifica con calificación de Factualidad Muy Alta y sesgo de Centro Fáctico Pro-Mercado, destacándose por su riguroso seguimiento de variables económicas, cotizaciones financieras y normativas tributarias.'
+      }
+    ],
+    content: {
+      leadHtml: `<p><strong>Grupo América</strong> es un conglomerado multimedios argentino controlado principalmente por los empresarios <strong>Daniel Vila</strong> y <strong>José Luis Manzano</strong>, a quienes se sumó en 2017 el empresario <strong>Claudio Belocopitt</strong> (presidente de Swiss Medical Group, con el 40% de la división de televisión). El grupo opera los canales <strong>América TV</strong> y <strong>A24</strong>, la emisora <strong>Radio La Red (AM 910)</strong> y el diario económico <strong>El Cronista Comercial</strong> (adquirido en julio de 2021 a Francisco De Narváez).</p>`,
+      sections: [
+        {
+          id: 'origen-cuyo-supercanal',
+          title: '1. El Origen en Cuyo: De Supercanal a la Expansión Porteña',
+          bodyHtml: `<p>A mediados de los años 80, <strong>Daniel Vila</strong> inició la expansión familiar en Mendoza a través del diario <em>Uno</em> y la operadora de cable <strong>Supercanal</strong>. En la década de 1990, se sumó como socio estratégico <strong>José Luis Manzano</strong> (ex ministro del Interior de Carlos Menem), conformando <em>Grupo Uno</em>:</p>
+          <div class="my-4 p-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-[#0C101A] space-y-2 text-xs sm:text-sm font-sans">
+            <p><strong>Desembarco Porteño (2000–2002):</strong> Adquirió Radio La Red (AM 910), tomó el control de América TV (Canal 2) y creó la señal de noticias de cable A24.</p>
+            <p><strong>Entrada de Claudio Belocopitt (2017):</strong> El titular de Swiss Medical Group adquirió el 40% del paquete accionario de América TV y A24, inyectando capital estratégico a la división audiovisual.</p>
+          </div>`
+        },
+        {
+          id: 'adquisicion-el-cronista',
+          title: '2. La Adquisición de El Cronista Comercial (2021)',
+          bodyHtml: `<p>En julio de 2021, Grupo América cerró la compra del 100% de <strong>El Cronista Comercial</strong> y sus portales asociados (<em>cronista.com</em>, <em>Apertura</em>) al empresario Francisco De Narváez:</p>
+          <ul class="list-disc pl-5 space-y-2 my-3 text-xs sm:text-sm text-slate-700 dark:text-slate-300">
+            <li><strong>El Decano de la Prensa Económica:</strong> Fundado en 1908 por Antonio Martín Giménez, es el diario económico en circulación continua más antiguo de la Argentina.</li>
+            <li><strong>Valor Estratégico Digital:</strong> Aportó a Grupo América uno de los portales de finanzas de mayor audiencia del país, con liderazgo en cotizaciones del dólar blue, dólar MEP, balances corporativos y comercio exterior.</li>
+          </ul>`
+        },
+        {
+          id: 'activos-y-radiografia',
+          title: '3. Radiografía de Activos de Grupo América',
+          bodyHtml: `<p>El holding cuenta con una fuerte presencia multiplataforma:</p>
+          <div class="my-4 overflow-x-auto border border-slate-200 dark:border-slate-800 rounded-xl">
+            <table class="w-full text-left text-xs font-sans">
+              <thead class="bg-slate-100 dark:bg-slate-900 font-mono text-[11px] uppercase tracking-wider text-slate-600 dark:text-slate-400 border-b border-slate-200 dark:border-slate-800">
+                <tr>
+                  <th class="p-3">Unidad</th>
+                  <th class="p-3">Plataforma</th>
+                  <th class="p-3">Orientación Editorial</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-slate-200 dark:divide-slate-800 text-slate-700 dark:text-slate-300">
+                <tr>
+                  <td class="p-3 font-bold text-slate-900 dark:text-white">El Cronista</td>
+                  <td class="p-3">Diario impreso y cronista.com</td>
+                  <td class="p-3">Centro Fáctico / Pro-Mercado Institucional</td>
+                </tr>
+                <tr>
+                  <td class="p-3 font-bold text-slate-900 dark:text-white">América TV</td>
+                  <td class="p-3">Canal de TV abierta (Canal 2 CABA)</td>
+                  <td class="p-3">Centro pragmático / Actualidad y Espectáculos</td>
+                </tr>
+                <tr>
+                  <td class="p-3 font-bold text-slate-900 dark:text-white">A24</td>
+                  <td class="p-3">Señal de noticias 24/7 en cable</td>
+                  <td class="p-3">Debate político / Coyuntural</td>
+                </tr>
+                <tr>
+                  <td class="p-3 font-bold text-slate-900 dark:text-white">Radio La Red (AM 910)</td>
+                  <td class="p-3">Amplitud modulada y repetidoras</td>
+                  <td class="p-3">Fútbol, deportes y periodismo popular</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>`
+        },
+        {
+          id: 'linea-editorial-politicheck',
+          title: '4. Línea Editorial y Análisis de Encuadre en Politicheck',
+          bodyHtml: `<p>En las auditorías de Politicheck, Grupo América se caracteriza por su flexibilidad editorial coyuntural, con una separación profesional muy marcada en <strong>El Cronista</strong>, clasificado con <strong>Factualidad Muy Alta</strong> gracias a la precisión de sus métricas bursátiles, normativas del BCRA y datos del sector productivo.</p>`
+        }
+      ]
+    }
+  },
+  {
+    slug: 'quien-es-el-dueno-de-pagina-12',
+    title: '¿Quién es el Dueño de Página 12 e IP Noticias? Víctor Santa María, SUTERH y Grupo Octubre',
+    subtitle: 'El diario fundado en 1987 por Lanata y Tiffenberg, la adquisición sindical de 2016 y la creación de un holding multiplataforma con Canal 9 y AM 750.',
+    kicker: 'Monografía • Grupo Octubre',
+    category: 'propiedad',
+    categoryLabel: 'Propiedad & Grupos',
+    publishedAt: '12 de Octubre, 2026',
+    updatedAt: '12 de Octubre, 2026',
+    isoPublishedAt: '2026-10-12T00:00:00Z',
+    isoUpdatedAt: '2026-10-12T00:00:00Z',
+    readTimeMinutes: 10,
+    author: 'Equipo de Datos de Politicheck',
+    outletName: 'Página 12 / Grupo Octubre',
+    faqTitle: 'Preguntas Frecuentes sobre Página 12 y Grupo Octubre',
+    excerpt: 'Radiografía de Página 12 y Grupo Octubre: Víctor Santa María, SUTERH, Canal 9, IP Noticias, su línea editorial progresista y calificación en Politicheck.',
+    heroImageUrl: 'https://images.unsplash.com/photo-1504711434969-e33886168f5c?auto=format&fit=crop&w=1200&q=80',
+    imageCaption: 'Página 12 fue fundado en 1987 como símbolo de la contracultura periodística y adquirido en 2016 por el Grupo Octubre / SUTERH.',
+    status: 'publicado',
+    sources: [
+      'Inspección General de Justicia (IGJ)',
+      'Media Ownership Monitor (MOM / Reporteros Sin Fronteras)',
+      'Editorial La Página S.A. Balances',
+      'Comscore MMX'
+    ],
+    metaTitle: '¿Quién es el Dueño de Página 12? Víctor Santa María y Grupo Octubre',
+    metaDescription: 'Conocé quién es el dueño de Página 12 e IP Noticias: Víctor Santa María, el gremio de encargados de edificios SUTERH, Canal 9 y su línea editorial.',
+    canonicalUrl: 'https://www.politicheck.com.ar/guias/quien-es-el-dueno-de-pagina-12',
+    targetSnippet: 'Página 12 e IP Noticias pertenecen al Grupo Octubre, administrado por el sindicato de encargados de edificios (SUTERH) y presidido por el dirigente Víctor Santa María.',
+    faq: [
+      {
+        question: '¿Quién es el dueño de Página 12?',
+        answer: 'Página 12 pertenece al Grupo Octubre, conglomerado administrado por el gremio de encargados de edificios (SUTERH) y presidido por el dirigente sindical Víctor Santa María a través de la Fundación Octubre y Editorial La Página S.A.'
+      },
+      {
+        question: '¿Quién fundó originalmente Página 12?',
+        answer: 'Fue fundado el 26 de mayo de 1987 por los periodistas Jorge Lanata y Ernesto Tiffenberg junto al empresario cinematográfico Fernando Sokolowicz.'
+      },
+      {
+        question: '¿Qué medios pertenecen al Grupo Octubre además de Página 12?',
+        answer: 'El grupo opera Canal 9 (TV abierta), la señal de cable IP Noticias, las radios AM 750, Aspen 102.3 y Like 97.1, la histórica revista Caras y Caretas y la plataforma Octubre TV.'
+      },
+      {
+        question: '¿Cómo clasifica Politicheck la línea editorial de Página 12?',
+        answer: 'Politicheck lo clasifica con un encuadre de Izquierda / Oposición Progresista, con fuerte foco en derechos humanos, reclamos sindicales, defensa de la universidad pública y crítica severa al programa de desregulación y ajuste fiscal libertario.'
+      }
+    ],
+    content: {
+      leadHtml: `<p>El diario <strong>Página 12</strong>, el canal de aire <strong>Canal 9</strong> (Telearte) y la señal de cable <strong>IP Noticias</strong> pertenecen al <strong>Grupo Octubre</strong>, conglomerado multimedios educativo y cultural administrado por el sindicato de encargados de edificios (<strong>SUTERH</strong>) y presidido por el dirigente <strong>Víctor Santa María</strong>. Página 12 fue adquirido en mayo de 2016 a través de Editorial La Página S.A.</p>`,
+      sections: [
+        {
+          id: 'origen-contracultura-lanata',
+          title: '1. El Origen de Página 12: Contracultura e Investigación (1987)',
+          bodyHtml: `<p>El 26 de mayo de 1987, bajo el gobierno de Raúl Alfonsín, los periodistas <strong>Jorge Lanata</strong> y <strong>Ernesto Tiffenberg</strong>, junto a <strong>Fernando Sokolowicz</strong>, fundaron <strong>Página 12</strong>. El diario revolucionó el periodismo argentino con tapas irónicas, sin fotografías directas y con investigaciones de alto calibre (los casos <em>Swiftgate</em> y <em>Yomagate</em>), consolidándose como la voz insigne de los derechos humanos y el pensamiento progresista.</p>`
+        },
+        {
+          id: 'adquisicion-grupo-octubre',
+          title: '2. La Adquisición por el Grupo Octubre (2016–Presente)',
+          bodyHtml: `<p>En mayo de 2016, el <strong>Grupo Octubre</strong> tomó el control formal de <strong>Editorial La Página S.A.</strong> Convirtió al medio en el eje gráfico de un holding sindical inédito que en 2020 incorporó a <strong>Canal 9</strong> (Telearte), <strong>IP Noticias</strong> y emisoras líderes como <strong>Aspen 102.3</strong> y <strong>AM 750</strong>.</p>`
+        },
+        {
+          id: 'linea-editorial-politicheck',
+          title: '3. Línea Editorial y Análisis de Encuadre en Politicheck',
+          bodyHtml: `<p>En Politicheck, Página 12 ocupa de forma consistente el polo de <strong>Izquierda / Oposición Progresista</strong>, con Factualidad <strong>Mixta</strong> debido a su adjetivación editorial militante, pero con amplio despliegue en problemáticas de empleo, salario real, jubilaciones y derechos civiles.</p>`
+        }
+      ]
+    }
+  },
+  {
+    slug: 'quien-es-el-dueno-de-editorial-perfil',
+    title: '¿Quién es el Dueño de Editorial Perfil? Jorge Fontevecchia, Noticias y Diario Perfil',
+    subtitle: 'La historia de la editorial fundada en 1976, la persecución dictatorial, el crimen de José Luis Cabezas y el modelo de diario analítico de fin de semana.',
+    kicker: 'Monografía • Editorial Perfil',
+    category: 'propiedad',
+    categoryLabel: 'Propiedad & Grupos',
+    publishedAt: '12 de Octubre, 2026',
+    updatedAt: '12 de Octubre, 2026',
+    isoPublishedAt: '2026-10-12T00:00:00Z',
+    isoUpdatedAt: '2026-10-12T00:00:00Z',
+    readTimeMinutes: 8,
+    author: 'Equipo de Datos de Politicheck',
+    outletName: 'Editorial Perfil',
+    faqTitle: 'Preguntas Frecuentes sobre Editorial Perfil',
+    excerpt: 'Radiografía de Editorial Perfil: Jorge Fontevecchia, Diario Perfil, Revista Noticias, Net TV, su modelo editorial de fin de semana y su posición en Politicheck.',
+    heroImageUrl: 'https://images.unsplash.com/photo-1495020689067-958852a7765e?auto=format&fit=crop&w=1200&q=80',
+    imageCaption: 'Editorial Perfil fue fundada en 1976 por Jorge Fontevecchia y su padre Alberto, destacándose por su periodismo de autor e investigación política.',
+    status: 'publicado',
+    sources: [
+      'Media Ownership Monitor (MOM / Reporteros Sin Fronteras)',
+      'Fallos Históricos de la Corte Interamericana de Derechos Humanos (Caso Fontevecchia)',
+      'Balances Comerciales de Editorial Perfil S.A.',
+      'Comscore MMX'
+    ],
+    metaTitle: '¿Quién es el Dueño de Editorial Perfil? Jorge Fontevecchia',
+    metaDescription: 'Descubrí quién es el dueño de Editorial Perfil, Diario Perfil y Revista Noticias: Jorge Fontevecchia, su historia, Net TV y su línea editorial independiente.',
+    canonicalUrl: 'https://www.politicheck.com.ar/guias/quien-es-el-dueno-de-editorial-perfil',
+    targetSnippet: 'Editorial Perfil pertenece a la familia Fontevecchia, fundada y presidida por el periodista Jorge Fontevecchia. Opera Diario Perfil, Revista Noticias, Caras y Net TV.',
+    faq: [
+      {
+        question: '¿Quién es el dueño de Editorial Perfil y Revista Noticias?',
+        answer: 'El dueño y CEO de Editorial Perfil es el periodista y editor Jorge Fontevecchia, quien fundó la compañía en 1976 junto a su padre Alberto Fontevecchia.'
+      },
+      {
+        question: '¿Por qué Diario Perfil sale como diario de fin de semana?',
+        answer: 'Tras un lanzamiento diario en 1998 que duró 84 días debido a una guerra de precios con otros medios, Fontevecchia lo relanzó en 2005 como un diario tabloide de fin de semana (sábados y domingos) enfocado en análisis conceptual, reflexión y ensayo, volcando las noticias de último momento a su portal web perfil.com.'
+      },
+      {
+        question: '¿A quién pertenece la señal de televisión Net TV?',
+        answer: 'Net TV es propiedad de Editorial Perfil en alianza de contenidos con la productora Kuarzo Entertainment Argentina (Martín Kweller).'
+      },
+      {
+        question: '¿Cómo califica Politicheck a Perfil?',
+        answer: 'Politicheck lo clasifica con un encuadre de Centro Analítico y Factualidad Alta, caracterizado por columnas de firmas ideológicamente contrapuestas y periodismo de investigación de contrapoder.'
+      }
+    ],
+    content: {
+      leadHtml: `<p><strong>Editorial Perfil</strong> es una compañía de medios argentina fundada y presidida por el periodista y editor <strong>Jorge Fontevecchia</strong>, junto a su padre Alberto Fontevecchia. La empresa opera el <strong>Diario Perfil</strong> (edición impresa de fin de semana y portal <code>perfil.com</code>), la revista política <strong>Noticias</strong>, la revista del espectáculo <strong>Caras</strong>, los canales de televisión abierta <strong>Net TV</strong> y <strong>Bravo TV</strong>, y la emisora <strong>Radio Perfil (FM 101.9)</strong>.</p>`,
+      sections: [
+        {
+          id: 'origen-dictadura-cabezas',
+          title: '1. De la Censura Dictatorial al Crimen de Cabezas',
+          bodyHtml: `<p>Fundada en 1976, la editorial sufrió reiteradas clausuras durante la dictadura militar. En la década de 1990, su revista insignia <strong>Noticias</strong> denunció casos resonantes de corrupción gubernamental y empresarial. El 25 de enero de 1997, su reportero gráfico <strong>José Luis Cabezas</strong> fue asesinado en Pinamar tras fotografiar a Alfredo Yabrán, marcando el hecho más trágico para la prensa en democracia.</p>`
+        },
+        {
+          id: 'modelo-fin-de-semana-net-tv',
+          title: '2. El Formato de Fin de Semana y la Llegada a la Televisión',
+          bodyHtml: `<p>En 2005, Fontevecchia relanzó <strong>Diario Perfil</strong> como un periódico de fin de semana (sábados y domingos) para privilegiar el análisis reposado y la reflexión profunda. En 2018 dio el salto a la televisión abierta digital con <strong>Net TV</strong> en alianza con Kuarzo Entertainment, seguido de <strong>Bravo TV</strong> y <strong>Radio Perfil</strong>.</p>`
+        },
+        {
+          id: 'linea-editorial-politicheck',
+          title: '3. Línea Editorial y Análisis de Encuadre en Politicheck',
+          bodyHtml: `<p>En Politicheck, Editorial Perfil se sitúa en el <strong>Centro Analítico</strong> con <strong>Factualidad Alta</strong>, distinguiéndose por publicar columnas de autores con visiones opuestas y entrevistas en profundidad sin alineamiento partidario orgánico.</p>`
         }
       ]
     }
