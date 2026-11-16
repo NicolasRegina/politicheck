@@ -1,14 +1,84 @@
 [
   {
-    "id": "story-ai-1",
+    "id": "story-el-oficialismo-acelera-la-estrategia-parlamentaria",
     "isLeadStory": true,
-    "kicker": "POLÍTICA Y ECONOMÍA",
-    "neutralHeadline": "El ministro Luis Caputo defendió la gestión económica y cruzó a la oposición de cara al escenario electoral",
+    "kicker": "TENSIÓN ELECTORAL Y LEGISLATIVA",
+    "neutralHeadline": "El oficialismo acelera la estrategia parlamentaria para tratar la suspensión de las PASO y el Presupuesto 2027 en medio de cortocircuitos con aliados",
     "category": "Política",
-    "summary": "Durante el CFO Summit, el ministro de Economía Luis Caputo ratificó el rumbo del Gobierno, cuestionó duramente al kirchnerismo y trazó proyecciones de cara al horizonte político. En paralelo, informes sectoriales y medios económicos reflejan la persistente caída en el consumo de los hogares y el debate sobre la sustentabilidad del modelo.",
-    "updatedAt": "10:59 hs",
-    "imageUrl": "https://statics.eleconomista.com.ar/2026/09/6abbd6ab8e8af.png",
-    "imageCaption": "Cobertura periodística de El Economista.",
+    "summary": "El Gobierno nacional impulsa una agenda legislativa clave para definir las primarias y las cuentas públicas del próximo año. La situación genera fricciones en el bloque oficialista y dudas sobre el apoyo de legisladores vinculados a Patricia Bullrich.",
+    "updatedAt": "23:31 hs",
+    "timestamp": 1794796291000,
+    "imageUrl": "https://www.clarin.com/img/2025/11/05/Gn2Uf8x2P_1200x630__1.jpg",
+    "imageCaption": "Cobertura periodística de Clarín.",
+    "spectrum": {
+      "oficialismoPct": 25,
+      "centroDatosPct": 75,
+      "oposicionPct": 0,
+      "totalOutlets": 4
+    },
+    "articles": [
+      {
+        "id": "art-perfil-2772658799",
+        "outletId": "perfil",
+        "outletName": "Perfil",
+        "title": "Semana clave: el oficialismo acelera en el Congreso por las PASO y el Presupuesto 2027",
+        "snippet": "Se viene un Supermartes en las dos cámaras. En la Cámara Alta el Gobierno asegura que podrá sacar un dictamen de mayoría para suspender las primarias. Si lo consigue deberá esperar una seman a para ll",
+        "url": "https://perfil.com/politica/semana-clave-el-oficialismo-acelera-en-el-congreso-por-las-paso-y-el-presupuesto-2027-a7Bkm6e0BEpG",
+        "publishedAt": "23:31 hs",
+        "timestamp": 1794796291000,
+        "imageUrl": "https://media.perfil.com/prod/images/gm_preview/244562b9370d-javier-milei-y-karina-milei-2198004.webp",
+        "specificFocus": "Aceleración parlamentaria de cara al Supermartes"
+      },
+      {
+        "id": "art-lanacion-2887979576",
+        "outletId": "lanacion",
+        "outletName": "La Nación",
+        "title": "El costo de la interna: diez diputados se irían con Bullrich si rompe con Milei y son claves para blindar los vetos",
+        "snippet": "Una ruptura de la senadora con el oficialismo podría dejar el bloque libertario por debajo de los 87 escaños que permiten sostener los vetos presidenciales",
+        "url": "https://www.lanacion.com.ar/politica/el-tercio-que-blinda-los-vetos-de-milei-y-que-bullrich-podria-romper-si-se-quiebra-su-vinculo-con-el-nid15112026/",
+        "publishedAt": "21:36 hs",
+        "timestamp": 1794789389000,
+        "imageUrl": "https://resizer.glanacion.com/resizer/v2/3BSWW5TZLFEWXBHM2A22WOJLZU.jpg?auth=42cad808a5272838ad8f668d67155bb518916c21bace26f0ceb4f10b67593926&amp;smart=true&amp;width=2000&amp;height=1333",
+        "specificFocus": "Riesgo de pérdida de votos para blindar vetos"
+      },
+      {
+        "id": "art-clarin-17024523857",
+        "outletId": "clarin",
+        "outletName": "Clarín",
+        "title": "\"Le quieren hacer una trampa\": el debate por las PASO reabre la interna entre Karina Milei y Bullrich",
+        "snippet": "En el entorno de la senadora creen que la secretaria general de la Presidencia apuró la convocatoria sin tener los votos y que intentarán responsabilizarla si fracasa la reforma electoral con el objet",
+        "url": "https://www.clarin.com/politica/quieren-hacer-trampa-debate-paso-reabre-interna-karina-milei-bullrich_0_3abKo2cJVK.html",
+        "publishedAt": "16:41 hs",
+        "timestamp": 1794771679000,
+        "imageUrl": "https://www.clarin.com/img/2025/11/05/Gn2Uf8x2P_1200x630__1.jpg",
+        "specificFocus": "Choque entre Karina Milei y Bullrich por las PASO"
+      },
+      {
+        "id": "art-eleconomista-9825117451",
+        "outletId": "eleconomista",
+        "outletName": "El Economista",
+        "title": "MILEI QUIERE ELIMINAR LAS PASO: Martín Menem presiona a Bullrich y pone un plazo de 15 días",
+        "snippet": "El presidente de la Cámara de Diputados aseguró que el oficialismo trabaja para reunir los votos necesarios y avanzar con la reforma electoral antes de fin de año. La definición depende de las negocia",
+        "url": "https://eleconomista.com.ar/politica/milei-quiere-eliminar-paso-martin-menem-presiona-bullrich-pone-plazo-15-dias-n99620",
+        "publishedAt": "12/11",
+        "timestamp": 1794496800000,
+        "imageUrl": "https://statics.eleconomista.com.ar/2026/11/6af5db5ba5e0f.jpg",
+        "specificFocus": "Plazo de quince días fijado por Martín Menem"
+      }
+    ],
+    "aiComparisonNotice": "Mientras Clarín e Infobae enfocan la disputa en la interna directa entre Karina Milei y la senadora Bullrich y el riesgo de pérdida de bancas, Perfil y BAE Negocios priorizan el cronograma del 'Supermartes' en el Congreso y los plazos fijados por Martín Menem."
+  },
+  {
+    "id": "story-el-papa-leon-xiv-concluye-su-paso-por-la-region-co",
+    "isLeadStory": false,
+    "kicker": "GIRA PAPAL EN SUDAMÉRICA",
+    "neutralHeadline": "El papa León XIV concluye su paso por la región con masivas misas y fuertes críticas a la explotación ambiental y social",
+    "category": "Sociedad",
+    "summary": "Tras su paso por la Argentina, el sumo pontífice continuó su gira por Perú, donde encabezó celebraciones multitudinarias y denunció la violencia contra líderes indígenas y el deterioro de la selva amazónica.",
+    "updatedAt": "21:13 hs",
+    "timestamp": 1794787980000,
+    "imageUrl": "https://static.eldiario.es/clip/59251af2-c3ef-4610-a41b-380a394bd9a0_16-9-discover-aspect-ratio_default_0.jpg",
+    "imageCaption": "Cobertura periodística de elDiarioAR.",
     "spectrum": {
       "oficialismoPct": 0,
       "centroDatosPct": 67,
@@ -17,240 +87,189 @@
     },
     "articles": [
       {
-        "id": "art-eleconomista-10742734953",
-        "outletId": "eleconomista",
-        "outletName": "El Economista",
-        "title": "Caputo admitió que se preparan para el peor escenario en 2027 y calificó a Kicillof de \"ANTICRISTO\"",
-        "snippet": "En el CFO Summit 2026, el ministro de Economía defendió los números de Milei, atacó al kirchnerismo y marcó la estrategia del Gobierno frente al año electoral. Dólar, impuestos, reservas y una definición que ya genera ru",
-        "url": "https://eleconomista.com.ar/economia/caputo-admitio-preparan-peor-escenario-2027-califico-kicillof-anticristo-n98493",
-        "publishedAt": "10:59 hs",
-        "timestamp": 1790690340000,
-        "imageUrl": "https://statics.eleconomista.com.ar/2026/09/6abbd6ab8e8af.png"
+        "id": "art-cronica-6092609608",
+        "outletId": "cronica",
+        "outletName": "Crónica",
+        "title": "León XIV rezó el Ángelus ante una multitud de fieles en Cusco",
+        "snippet": "En la recta final de su gira por Sudamérica, el Papa visitó la ciudad que se encuentra a 3.400 metros de altura. También estuvo en Pucallpa, en la región del Amazonas, donde reivindicó los reclamos de",
+        "url": "https://www.cronica.com.ar/mundo/leon-xiv-rezo-el-angelus-ante-una-multitud-de-fieles-en-cusco/",
+        "publishedAt": "21:13 hs",
+        "timestamp": 1794787980000,
+        "imageUrl": "https://www.cronica.com.ar/files/image/1734/1734503/6afa493e991c3_800_!.jpg?s=def34f60ea2def9e540e0d760260f462&amp;d=1794711600",
+        "specificFocus": "Multitudinario rezo del Ángelus en Cusco"
       },
       {
-        "id": "art-eldiarioar-15200898040",
+        "id": "art-eldiarioar-6461355452",
         "outletId": "eldiarioar",
         "outletName": "elDiarioAR",
-        "title": "El consumo de los hogares volvió a caer en agosto mientras Caputo aseguró que la economía va \"muy bien\"",
-        "snippet": "Según la Cámara Argentina de Comercio y Servicios, el gasto de las familias bajó 1,1% interanual y 0,8% frente a julio. El mismo día, el ministro de Economía celebró la compra de reservas, descartó una devaluación y volv",
-        "url": "https://www.eldiarioar.com/economia/consumo-hogares-volvio-caer-agosto-caputo-aseguro-economia_1_13547910.html",
-        "publishedAt": "Hace 59 min",
-        "timestamp": 1790696203000,
-        "imageUrl": "https://static.eldiario.es/clip/26112e5c-667e-42eb-a4e9-16754e860ad5_16-9-discover-aspect-ratio_default_0_x957y397.jpg"
+        "title": "En la Amazonía peruana, León XIV denunció el asesinato de líderes indígenas y la explotación de la selva",
+        "snippet": "Ante representantes de 21 pueblos originarios en Pucallpa, el papa dijo que las heridas de la región \"se han agravado\" y cuestionó que se la trate como \"una reserva de recursos para explotar\". Después",
+        "url": "https://www.eldiarioar.com/mundo/amazonia-peruana-leon-xiv-denuncio-asesinato-lideres-indigenas-explotacion-selva_1_13666319.html",
+        "publishedAt": "20:10 hs",
+        "timestamp": 1794784232000,
+        "imageUrl": "https://static.eldiario.es/clip/59251af2-c3ef-4610-a41b-380a394bd9a0_16-9-discover-aspect-ratio_default_0.jpg",
+        "specificFocus": "Denuncia de crímenes y explotación en la Amazonía"
       },
       {
-        "id": "art-elpais-6774029912",
-        "outletId": "elpais",
-        "outletName": "El País",
-        "title": "Una economía al borde de la recesión en Argentina",
-        "snippet": "La actividad está estancada por el freno del consumo, la inversión y el gasto público. Crecen las exportaciones, pero sin traccionar la producción y el empleo",
-        "url": "https://elpais.com/argentina/2026-09-29/una-economia-al-borde-de-la-recesion-en-argentina.html",
-        "publishedAt": "06:30 hs",
-        "timestamp": 1790674200000,
-        "imageUrl": "https://imagenes.elpais.com/resizer/v2/TS2BSBPS5VIIBOFUKWOL2ROZNE.jpg?auth=0d73d0dad200e58c2a74f6a7db99e597b5e6403100e4bdb915722d0877fc607e"
+        "id": "art-cenital-10880348671",
+        "outletId": "cenital",
+        "outletName": "Cenital",
+        "title": "El papa se fue después de una visita histórica",
+        "snippet": "Lo dijo León XIV en su misa más multitudinaria en lo que lleva de papado, en Luján, ante más de 3,5 millones de personas. Ya llegó a Perú.",
+        "url": "https://cenital.com/el-papa-se-fue-despues-de-una-visita-historica/",
+        "publishedAt": "12/11",
+        "timestamp": 1794482100000,
+        "imageUrl": "https://cenital.com/wp-content/uploads/2026/11/2026_11_261111024-scaled-1-1200x807.jpg",
+        "specificFocus": "Balance general y masividad del recorrido papal"
       }
     ],
-    "aiComparisonNotice": "El Cronista y El Economista destacaron las declaraciones punzantes de Caputo hacia la oposición y su análisis de cara al 2027. En contraste, elDiarioAR y El País priorizaron el informe sobre la caída del consumo interno en agosto y el contraste con el discurso oficialista."
+    "aiComparisonNotice": "elDiarioAR prioriza la condena papal al asesinato de dirigentes originarios en la Amazonía peruana, mientras que Crónica y Cenital resaltan la masividad de las convocatorias religiosas y el balance general de la visita."
   },
   {
-    "id": "story-ai-2",
+    "id": "story-advierten-sobre-el-impacto-de-la-suba-del-riesgo-p",
     "isLeadStory": false,
-    "kicker": "JUSTICIA Y CORRUPCIÓN",
-    "neutralHeadline": "Procesaron a exfuncionarios e intervinientes en una causa por presunta corrupción en OSPRERA",
-    "category": "Justicia",
-    "summary": "El juez federal Sebastián Casanello dictó el procesamiento de un exsocio de Martín Menem y de dos exinterventores en el marco de una investigación por supuesta administración fraudulenta y negociaciones incompatibles. La medida incluye un millonario embargo preventivo.",
-    "updatedAt": "Hace 2 min",
-    "imageUrl": "https://tn.com.ar/resizer/v2/A2WQEWC6RZHPJBBEZWSHGMFS6Q.jpg?auth=be4f9b2a06a9fd3825652f1206e6c1cedcefcf8a95b0b69bd160146734a51204",
-    "imageCaption": "Cobertura periodística de Todo Noticias (TN).",
+    "kicker": "ECONOMÍA Y MERCADOS",
+    "neutralHeadline": "Advierten sobre el impacto de la suba del riesgo país en el crédito corporativo y las reservas del Banco Central",
+    "category": "Economía",
+    "summary": "Informes económicos señalan que el encarecimiento del financiamiento externo y la menor adquisición de divisas frenan la actividad empresaria. En paralelo, analistas proyectan la evolución de la inflación y los próximos vencimientos de deuda.",
+    "updatedAt": "20:51 hs",
+    "timestamp": 1794786665000,
+    "imageUrl": "https://static.eldiario.es/clip/47e379bc-aa61-424e-99e5-9a7dbe085f4d_16-9-discover-aspect-ratio_default_0.jpg",
+    "imageCaption": "Cobertura periodística de elDiarioAR.",
     "spectrum": {
-      "oficialismoPct": 33,
-      "centroDatosPct": 67,
-      "oposicionPct": 0,
+      "oficialismoPct": 0,
+      "centroDatosPct": 33,
+      "oposicionPct": 67,
       "totalOutlets": 3
     },
     "articles": [
       {
-        "id": "art-tn-16913477697",
-        "outletId": "tn",
-        "outletName": "Todo Noticias (TN)",
-        "title": "Procesaron a un exsocio de Martín Menem y a dos exinterventores en una causa por presunta corrupción en OSPRERA",
-        "snippet": "El juez federal Sebastián Casanello los acusó de negociaciones incompatibles con la función pública y administración fraudulenta. Además, ordenó un embargo de 1000 millones de pesos.",
-        "url": "https://tn.com.ar/politica/2026/09/29/procesaron-a-un-exsocio-de-martin-menem-y-a-dos-exinterventores-en-una-causa-por-presunta-corrupcion-en-osprera/",
-        "publishedAt": "Hace 2 min",
-        "timestamp": 1790699619000,
-        "imageUrl": "https://tn.com.ar/resizer/v2/A2WQEWC6RZHPJBBEZWSHGMFS6Q.jpg?auth=be4f9b2a06a9fd3825652f1206e6c1cedcefcf8a95b0b69bd160146734a51204"
+        "id": "art-eldiarioar-7400243207",
+        "outletId": "eldiarioar",
+        "outletName": "elDiarioAR",
+        "title": "La suba del riesgo país no movió el dólar, pero ya frenó el crédito a las empresas y las compras de reservas",
+        "snippet": "Advierten que el financiamiento corporativo en dólares cayó 20% desde agosto y que el Banco Central compra menos de la mitad de divisas que en el primer semestre. El 9 de enero vencen US$4.300 millone",
+        "url": "https://www.eldiarioar.com/economia/suba-riesgo-pais-no-movio-dolar-freno-credito-empresas-compras-reservas_1_13666353.html",
+        "publishedAt": "20:51 hs",
+        "timestamp": 1794786665000,
+        "imageUrl": "https://static.eldiario.es/clip/47e379bc-aa61-424e-99e5-9a7dbe085f4d_16-9-discover-aspect-ratio_default_0.jpg",
+        "specificFocus": "Freno al crédito corporativo y menor compra de reservas"
       },
       {
-        "id": "art-perfil-6558190615",
-        "outletId": "perfil",
-        "outletName": "Perfil",
-        "title": "Marta Lastra: \"¿De qué transparencia hablan si faltan $158 mil millones en la Secretaría Nacional de Discapacidad?\"",
-        "snippet": "La abogada que impulsa amparos colectivos contra el Gobierno cuestionó la política oficialista hacia personas con discapacidad y puso el foco en la auditoría sobre la ex Andis y en la causa judicial que involucra a Diego",
-        "url": "https://www.perfil.com/noticias/cordoba/marta-lastra-de-que-transparencia-hablan-si-faltan-158-mil-millones-en-la-secretaria-nacional-de-discapacidad.phtml",
-        "publishedAt": "Hace 23 min",
-        "timestamp": 1790698365000,
-        "imageUrl": "https://fotos.perfil.com/2026/09/29/trim/540/304/marta-lastra-2336359.jpg"
+        "id": "art-baenegocios-13122817998",
+        "outletId": "baenegocios",
+        "outletName": "BAE Negocios",
+        "title": "JP Morgan ve un freno para Milei: la inflación no bajaría del 2% antes de 2027",
+        "snippet": "El banco de Wall Street advirtió que una mayor presión sobre el dólar podría empujar los precios por encima de ese nivel.",
+        "url": "https://www.baenegocios.com/economia/jp-morgan-ve-un-freno-para-milei-la-inflacion-no-bajaria-del-2-antes-de-2027/",
+        "publishedAt": "20:14 hs",
+        "timestamp": 1794784479000,
+        "imageUrl": "https://www.baenegocios.com/files/image/192/192726/694433a0009e1_800_!.jpg?s=44c659e59b6a06cef1f941f521b264e2&amp;d=1766026800",
+        "specificFocus": "Advertencia de JP Morgan sobre piso inflacionario"
       },
       {
-        "id": "art-eleconomista-18444112429",
-        "outletId": "eleconomista",
-        "outletName": "El Economista",
-        "title": "Demoledor diagnóstico de Poder Ciudadano: \"La corrupción sigue siendo una enfermedad endémica\"",
-        "snippet": "\"En los últimos años no solo no se ha avanzado en ninguna política específica destinada a incrementar la transparencia, sino que pareciera que buscamos ampliar la impunidad\", afirmó.",
-        "url": "https://eleconomista.com.ar/politica/demoledor-diagnostico-poder-ciudadano-la-corrupcion-sigue-siendo-una-enfermedad-endemica-n98494",
-        "publishedAt": "12:35 hs",
-        "timestamp": 1790696100000,
-        "imageUrl": "https://statics.eleconomista.com.ar/2026/09/6abbdc7e76644.png"
+        "id": "art-cronista-21746496643",
+        "outletId": "cronista",
+        "outletName": "El Cronista",
+        "title": "Milei se abraza a sus dogmas mientras la economía no da resultados, el mercado duda y cruje hasta la IA",
+        "snippet": "La confesión de Karp sobre el mundo IA y la reconfiguración de lazos entre los tecno-millonarios y la política. Las dificultades para corregir el plan local y qué ahoga el crecimiento",
+        "url": "https://www.cronista.com/economia-politica/milei-se-abraza-a-sus-dogmas-mientras-la-economia-no-da-resultados-el-mercado-duda-y-cruje-hasta-la-ia/",
+        "publishedAt": "16:46 hs",
+        "timestamp": 1794771972000,
+        "imageUrl": "https://www.cronista.com/resizer/v2/SMH2X23MB5C5DP5I2EPY6CPIO4.jpeg?auth=147146b84bfa0655b9569f434f439a8bddcdbe6b1c32d065f7de58eabc4fef08&amp;smart=true&amp;width=1280&amp;height=853",
+        "specificFocus": "Dudas del mercado sobre la sustentabilidad del plan"
       }
     ],
-    "aiComparisonNotice": "Todo Noticias (TN) focalizó en los nombres propios vinculados al poder político y el monto del embargo ordenado por la justicia federal. Los portales de análisis político general abordaron la causa como parte de un entramado más amplio de escrutinio sobre la gestión de recursos en obras sociales sindicales."
+    "aiComparisonNotice": "elDiarioAR destaca el freno directo sobre el crédito a empresas y la desacumulación de reservas, BAE Negocios pone el foco en las proyecciones inflacionarias de JP Morgan para 2027, y El Cronista vincula la desaceleración con los límites del plan económico oficial."
   },
   {
-    "id": "story-ai-3",
+    "id": "story-avanzan-las-investigaciones-judiciales-y-los-recla",
     "isLeadStory": false,
-    "kicker": "SOCIEDAD",
-    "neutralHeadline": "El Gobierno nacional advierte sobre la llegada del fenómeno climático 'Súper Niño' y sus impactos en la región",
-    "category": "Sociedad",
-    "summary": "El Servicio Meteorológico Nacional y distintas carteras del Estado informaron los preparativos y recomendaciones ante la llegada del fenómeno de El Niño. Las autoridades alertaron sobre el potencial incremento de precipitaciones y sus repercusiones en infraestructura, rutas y salud.",
-    "updatedAt": "Hace 1 min",
-    "imageUrl": "https://resizer.glanacion.com/resizer/v2/K6NH6CGJWZAUZBBCLG7V53RAV4.jpg?auth=3bc3496f4a9da1549bf182e37b0dc3c2dcf3c4d8ea8ac392363c1b05663cae57&amp;smart=true&amp;width=2000&amp;height=1333",
-    "imageCaption": "Cobertura periodística de La Nación.",
+    "kicker": "SEGURIDAD Y JUSTICIA",
+    "neutralHeadline": "Avanzan las investigaciones judiciales y los reclamos vecinales tras la explosión por fuga de gas en la provincia de Buenos Aires",
+    "category": "Justicia",
+    "summary": "La justicia local requirió medidas procesales y detenciones en el marco de la causa por el trágico escape de gas que dejó víctimas fatales y heridos. En paralelo, los vecinos realizaron cortes y protestas exigiendo respuestas a la empresa prestataria.",
+    "updatedAt": "21:02 hs",
+    "timestamp": 1794787346000,
+    "imageUrl": "https://e00-elmundo.uecdn.es/assets/multimedia/imagenes/2026/11/13/17946068770755.jpg",
+    "imageCaption": "Cobertura periodística de El Mundo.",
     "spectrum": {
       "oficialismoPct": 50,
-      "centroDatosPct": 50,
-      "oposicionPct": 0,
+      "centroDatosPct": 0,
+      "oposicionPct": 50,
       "totalOutlets": 2
     },
     "articles": [
       {
-        "id": "art-lanacion-22967434138",
-        "outletId": "lanacion",
-        "outletName": "La Nación",
-        "title": "Llega el Súper Niño: el Gobierno informó cómo prepararse y qué tener en cuenta ante un posible aumento de las lluvias",
-        "snippet": "Las autoridades nacionales advierten sobre el impacto de este fenómeno climático en la primavera; el Servicio Meteorológico Nacional pide extremar los cuidados para minimizar los riesgos",
-        "url": "https://www.lanacion.com.ar/sociedad/llega-el-super-nino-el-gobierno-informo-como-prepararse-y-que-tener-en-cuenta-ante-un-posible-nid28092026/",
-        "publishedAt": "Hace 1 min",
-        "timestamp": 1790699677000,
-        "imageUrl": "https://resizer.glanacion.com/resizer/v2/K6NH6CGJWZAUZBBCLG7V53RAV4.jpg?auth=3bc3496f4a9da1549bf182e37b0dc3c2dcf3c4d8ea8ac392363c1b05663cae57&amp;smart=true&amp;width=2000&amp;height=1333"
-      },
-      {
-        "id": "art-infobae-305308113",
-        "outletId": "infobae",
-        "outletName": "Infobae",
-        "title": "El número dos de la CAF alertó por el impacto del Super Niño en rutas, salud y producción",
-        "snippet": "Christain Asinelli vinculó las precipitaciones previstas con posibles inundaciones, dificultades para exportar y un escenario que coincide con la temporada de dengue",
-        "url": "https://www.infobae.com/economia/2026/09/29/el-numero-dos-de-la-caf-alerto-por-el-impacto-del-super-nino-en-rutas-salud-y-produccion/",
-        "publishedAt": "Hace 4 min",
-        "timestamp": 1790699482000,
-        "imageUrl": "https://www.infobae.com/resizer/v2/ELIJNXAMG5GUFJH6WJYL5QKROY.jpg?auth=24e4d3a6aaa2f456bc800d94217e07513c554d47c6c6721305beea56e87a4f08&amp;smart=true&amp;width=1280&amp;height=720"
-      }
-    ],
-    "aiComparisonNotice": "La Nación priorizó las recomendaciones oficiales de prevención ciudadana frente a las tormentas, mientras que Infobae aportó la mirada técnica de organismos internacionales sobre el impacto directo en la producción y la logística exportadora."
-  },
-  {
-    "id": "story-ai-4",
-    "isLeadStory": false,
-    "kicker": "SEGURIDAD Y CIUDAD",
-    "neutralHeadline": "La Policía de la Ciudad desalojó y recuperó un hotel en Constitución que llevaba dos décadas usurpado",
-    "category": "Sociedad",
-    "summary": "Un operativo conjunto de fuerzas de seguridad porteñas permitió recuperar el edificio del Hotel Montreal, ubicado en el barrio de Constitución, que se encontraba tomado ilegalmente desde hace más de 20 años y era explotado comercialmente por terceros.",
-    "updatedAt": "Hace 8 min",
-    "imageUrl": "https://www.cronica.com.ar/files/image/1714/1714941/6abbe780cb46e_800_!.jpg?s=bfac747fbaafb2b4e1d4c7d6a089a3ec&amp;d=",
-    "imageCaption": "Cobertura periodística de Crónica.",
-    "spectrum": {
-      "oficialismoPct": 0,
-      "centroDatosPct": 100,
-      "oposicionPct": 0,
-      "totalOutlets": 3
-    },
-    "articles": [
-      {
-        "id": "art-cronica-5159214749",
-        "outletId": "cronica",
-        "outletName": "Crónica",
-        "title": "La Ciudad recuperó un hotel de Constitución que estaba tomado hace 21 años y lo explotaban comercialmente",
-        "snippet": "El Hotel Montreal, ubicado en Luis Sáenz Peña 1723, estaba ocupado ilegalmente y sus ocupantes lo explotaban comercialmente. Hay una orden judicial para desalojar el edificio.",
-        "url": "https://www.cronica.com.ar/sociedad/la-ciudad-recupero-un-hotel-de-constitucion-que-estaba-tomado-hace-21-anos-y-lo-explotaban-comercialmente/",
-        "publishedAt": "Hace 8 min",
-        "timestamp": 1790699252000,
-        "imageUrl": "https://www.cronica.com.ar/files/image/1714/1714941/6abbe780cb46e_800_!.jpg?s=bfac747fbaafb2b4e1d4c7d6a089a3ec&amp;d="
-      },
-      {
-        "id": "art-baenegocios-10468699291",
-        "outletId": "baenegocios",
-        "outletName": "BAE Negocios",
-        "title": "La Policía de la Ciudad recuperó un hotel tomado desde hace 21 años y busca devolverlo a sus dueños",
-        "snippet": "Un operativo conjunto de la Ciudad permitió recuperar el edificio donde funcionaba el Hotel Montreal. El inmueble estaba ocupado desde 2005 y, según el Gobierno porteño, era explotado comercialmente por sus ocupantes.",
-        "url": "https://www.baenegocios.com/sociedad/la-policia-de-la-ciudad-recupero-hotel-tomado-desde-hace-21-anos-y-busca-devolverlo-a-sus-duenos/",
-        "publishedAt": "Hace 13 min",
-        "timestamp": 1790698980000,
-        "imageUrl": "https://www.baenegocios.com/files/image/355/355563/6abbe4a055620_800_!.jpg?s=3c4bf480520a0c133e75039bd901786c&amp;d="
-      },
-      {
-        "id": "art-clarin-26653462370",
-        "outletId": "clarin",
-        "outletName": "Clarín",
-        "title": "Condenaron a los asesinos de Lucía Carpanetto: una cita falsa, un ataque planificado desde la cárcel y un sicario por $ 150 mil",
-        "snippet": "La joven tenía 21 años cuando fue asesinada en diciembre de 2022 en Rosario. Dos hombres y una mujer recibieron las penas de 32, 28 y 15 años, respectivamente.",
-        "url": "https://www.clarin.com/policiales/condenaron-asesinos-lucia-carpanetto-cita-falsa-ataque-planificado-carcel-sicario-150-mil_0_2KHA2ASADH.html",
-        "publishedAt": "Hace 25 min",
-        "timestamp": 1790698231000,
-        "imageUrl": "https://www.clarin.com/img/2026/09/29/P0zGjHKxx_1200x630__1.jpg"
-      }
-    ],
-    "aiComparisonNotice": "Crónica y BAE Negocios destacaron el operativo policial y la restitución del inmueble a sus legítimos dueños, subrayando la duración de la toma ilegal y la intervención de la justicia para ordenar el desalojo."
-  },
-  {
-    "id": "story-ai-5",
-    "isLeadStory": false,
-    "kicker": "ECONOMÍA Y PRECIOS",
-    "neutralHeadline": "ANSES confirmó el calendario de pagos y un nuevo bono extraordinario para jubilados en octubre",
-    "category": "Economía",
-    "summary": "El organismo previsional detalló la implementación del adicional de $70.000 que se acreditará junto a los haberes del mes de octubre. La medida busca amortiguar el impacto inflacionario en los sectores de menores ingresos, en medio de cruces políticos sobre el poder adquisitivo.",
-    "updatedAt": "Hace 3 min",
-    "imageUrl": "https://www.cronista.com/resizer/v2/6QY6G4KGTZDI7OLEQZZRJ2UHEU.jpg?auth=e0d09fce8c849f0eb1027876a4574c11888e63c20cabdb80b171d9ad824b7d29&amp;smart=true&amp;width=1920&amp;height=1080",
-    "imageCaption": "Cobertura periodística de El Cronista.",
-    "spectrum": {
-      "oficialismoPct": 0,
-      "centroDatosPct": 67,
-      "oposicionPct": 33,
-      "totalOutlets": 3
-    },
-    "articles": [
-      {
-        "id": "art-cronista-3033342706",
-        "outletId": "cronista",
-        "outletName": "El Cronista",
-        "title": "ANSES pagará un bono de $ 70.000 en octubre: quiénes lo cobran y cómo se paga",
-        "snippet": "El adicional se acreditará junto con la prestación mensual y el monto dependerá de los haberes que perciba cada titular.",
-        "url": "https://www.cronista.com/economia-politica/anses-pagara-un-bono-de-70000-en-octubre-quienes-lo-cobran-y-como-se-paga/",
-        "publishedAt": "Hace 3 min",
-        "timestamp": 1790699553000,
-        "imageUrl": "https://www.cronista.com/resizer/v2/6QY6G4KGTZDI7OLEQZZRJ2UHEU.jpg?auth=e0d09fce8c849f0eb1027876a4574c11888e63c20cabdb80b171d9ad824b7d29&amp;smart=true&amp;width=1920&amp;height=1080"
-      },
-      {
-        "id": "art-baenegocios-8499250568",
-        "outletId": "baenegocios",
-        "outletName": "BAE Negocios",
-        "title": "Sin bono en octubre: un grupo de jubilados no cobra el extra de $70.000",
-        "snippet": "El organismo previsional determinó el requisito para que los jubilados cobren el bono completo en octubre",
-        "url": "https://www.baenegocios.com/economia/sin-bono-en-octubre-un-grupo-de-jubilados-no-cobra-el-extra-de-70-000/",
-        "publishedAt": "Hace 51 min",
-        "timestamp": 1790696700000,
-        "imageUrl": "https://www.baenegocios.com/files/image/347/347559/6a4e826d04add_800_!.jpg?s=39a6226361064f86fa3dacab4cc8d929&amp;d="
-      },
-      {
-        "id": "art-eldiarioar-2845360504",
+        "id": "art-eldiarioar-5626185145",
         "outletId": "eldiarioar",
         "outletName": "elDiarioAR",
-        "title": "Servicios, transporte, alquileres y prepagas: todos los aumentos que llegan en octubre",
-        "snippet": "Los incrementos en diferentes sectores continúan presionando el Índice de Precios al Consumidor (IPC). El comienzo de octubre, como sucede en cada mes, trae aparejado la puesta en marcha de nuevos aumentos en diferentes ",
-        "url": "https://www.eldiarioar.com/economia/servicios-transporte-alquileres-prepagas-aumentos-llegan-octubre_1_13547958.html",
-        "publishedAt": "Hace 47 min",
-        "timestamp": 1790696922000,
-        "imageUrl": "https://static.eldiario.es/clip/b4250258-1484-4670-bb79-854a4340fd8f_16-9-discover-aspect-ratio_default_0_x699y782.jpg"
+        "title": "Lanús irá a la Justicia contra Metrogas y anunció ayuda para los damnificados",
+        "snippet": "El municipio anunció una ayuda económica extraordinaria y exenciones impositivas para los damnificados. La zona del estallido seguirá cerrada por peritajes hasta el viernes y la víctima todavía no fue",
+        "url": "https://www.eldiarioar.com/sociedad/lanus-ira-justicia-metrogas-anuncio-ayuda-damnificados_1_13666355.html",
+        "publishedAt": "21:02 hs",
+        "timestamp": 1794787346000,
+        "imageUrl": "https://static.eldiario.es/clip/26a08118-fddc-4e4b-b9e6-5b2821475ad2_16-9-discover-aspect-ratio_default_0.jpg",
+        "specificFocus": "Ayuda económica y exenciones impositivas del municipio"
+      },
+      {
+        "id": "art-elmundo-25567659901",
+        "outletId": "elmundo",
+        "outletName": "El Mundo",
+        "title": "Muere una persona y treinta resultan heridas en una explosión por un escape de gas en Argentina",
+        "snippet": "La fiscal a cargo de la causa solicitó la detención de dos directivos de la empresa&nbsp; Leer",
+        "url": "https://www.elmundo.es/internacional/2026/11/13/6af78660e9cf4ad0798b459b.html",
+        "publishedAt": "13/11",
+        "timestamp": 1794606909000,
+        "imageUrl": "https://e00-elmundo.uecdn.es/assets/multimedia/imagenes/2026/11/13/17946068770755.jpg",
+        "specificFocus": "Pedido judicial de detención para directivos de Metrogas"
       }
     ],
-    "aiComparisonNotice": "El Cronista enfocó la noticia en los detalles operativos de cobro y los requisitos para acceder al beneficio, en tanto BAE Negocios puso el acento en las restricciones que dejan a ciertos grupos de jubilados sin percibir el refuerzo completo."
+    "aiComparisonNotice": "El Mundo se concentra en el pedido de detención de directivos formulado por la fiscalía, mientras que elDiarioAR y El Cronista localizan la cobertura en la respuesta municipal de asistencia a los damnificados y las protestas callejeras."
+  },
+  {
+    "id": "story-reino-unido-advierte-sobre-consecuencias-tras-las",
+    "isLeadStory": false,
+    "kicker": "POLÍTICA EXTERIOR",
+    "neutralHeadline": "Reino Unido advierte sobre consecuencias tras las medidas anunciadas por Argentina respecto a la explotación de recursos en Malvinas",
+    "category": "Internacional",
+    "summary": "El gobierno británico expresó su preocupación y advirtió sobre un impacto perjudicial para los habitantes de las islas ante la decisión de la administración de Javier Milei de sancionar a empresas que operen en la zona en litigio.",
+    "updatedAt": "10/11",
+    "timestamp": 1794337293000,
+    "imageUrl": "https://e00-expansion.uecdn.es/assets/multimedia/imagenes/2026/09/04/17885080721675.jpg",
+    "imageCaption": "Cobertura periodística de Expansión.",
+    "spectrum": {
+      "oficialismoPct": 0,
+      "centroDatosPct": 50,
+      "oposicionPct": 50,
+      "totalOutlets": 2
+    },
+    "articles": [
+      {
+        "id": "art-theguardian-7577734239",
+        "outletId": "theguardian",
+        "outletName": "The Guardian",
+        "title": "Falkland Islanders face ‘devastating consequences’ if Argentina blocks oil project, says UK",
+        "snippet": "<p>Countries clash over Sea Lion project as Hamburg tribunal risks deepening sovereignty dispute</p><p>The people of the Falkland Islands face “devastating consequences” if Argentina is successful in ",
+        "url": "https://www.theguardian.com/world/2026/nov/10/uk-and-argentina-clash-over-falklands-oil-project-as-hamburg-tribunal-starts",
+        "publishedAt": "10/11",
+        "timestamp": 1794337293000,
+        "imageUrl": "https://i.guim.co.uk/img/media/5d2b5e1b9e781a1b5a8dd0e647c4fd2a9b8b0afb/295_244_2470_1977/master/2470.jpg?width=140&amp;quality=85&amp;auto=format&amp;fit=max&amp;s=35f0b486f371c4981f8f6f278cadd89d",
+        "specificFocus": "Advertencia británica sobre consecuencias para las islas"
+      },
+      {
+        "id": "art-expansion-11146422487",
+        "outletId": "expansion",
+        "outletName": "Expansión",
+        "title": "Ofensiva de Milei contra Reino Unido: sancionará a las empresas que operen en las Malvinas",
+        "snippet": "El presidente de Argentina, Javier Milei, ha anunciado que sancionará a aquellas empresas que exploten recursos naturales en las islas Malvinas cuya soberanía reclama el país suramericano. El Gobierno",
+        "url": "https://www.expansion.com/economia/2026/09/04/6a9a789ee5fdea786f8b4570.html",
+        "publishedAt": "4/9",
+        "timestamp": 1788508322000,
+        "imageUrl": "https://e00-expansion.uecdn.es/assets/multimedia/imagenes/2026/09/04/17885080721675.jpg",
+        "specificFocus": "Anuncio de sanciones a operadoras en el archipiélago"
+      }
+    ],
+    "aiComparisonNotice": "Expansión remarca la ofensiva diplomática y regulatoria del Ejecutivo argentino contra las compañías petroleras, mientras que The Guardian enfatiza la postura oficial británica y los riesgos sobre los proyectos energéticos locales en el archipiélago."
   }
 ]

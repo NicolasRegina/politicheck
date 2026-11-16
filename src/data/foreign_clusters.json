@@ -1,129 +1,21 @@
 [
   {
-    "id": "foreign-ai-1",
+    "id": "foreign-la-prensa-internacional-analiza-el-impacto-de-las",
     "isLeadStory": true,
-    "kicker": "MIRADA EXTERIOR • REFORMAS ECONÓMICAS Y CRISIS SOCIAL",
-    "neutralHeadline": "La prensa internacional analiza el impacto social y económico de la era Milei ante la contracción de la actividad y la pobreza",
+    "kicker": "MIRADA EXTERIOR • REFORMAS ECONÓMICAS Y TENSIONES POLÍTICAS",
+    "neutralHeadline": "La prensa internacional analiza el impacto de las medidas de Javier Milei ante la contracción económica y las tensiones diplomáticas",
     "category": "Internacional",
-    "summary": "Medios europeos y latinoamericanos ponen el foco en las tensiones del modelo económico de Javier Milei. Mientras diarios como El País y France 24 destacan el aumento de la pobreza y el cierre de empresas o fábricas en recesión, Expansión y Le Figaro rescatan la gira en busca de inversiones en Europa, la llegada de capitales tecnológicos a Vaca Muerta y los debates en torno a las estadísticas oficiales.",
+    "summary": "Medios económicos y generalistas europeos siguen de cerca la evolución macroeconómica de Argentina bajo la administración de Javier Milei, reportando caídas en la actividad económica y cruces verbales con mandatarios internacionales como Pedro Sánchez. Paralelamente, se examinan los desafíos estructurales, el impacto en sectores productivos y la apertura comercial.",
     "updatedAt": "Reciente",
-    "imageUrl": "https://s.france24.com/media/display/29422f44-bc26-11f1-a6e1-91cf9f3cd539/w:1024/p:16x9/ES-20260929-074510-075018-CS.jpg",
-    "imageCaption": "Cobertura internacional de France 24.",
+    "imageUrl": "https://e00-expansion.uecdn.es/assets/multimedia/imagenes/2026/09/25/17903167740563.jpg",
+    "imageCaption": "Cobertura internacional de Expansión.",
     "spectrum": {
       "oficialismoPct": 0,
-      "centroDatosPct": 86,
-      "oposicionPct": 14,
-      "totalOutlets": 14
+      "centroDatosPct": 100,
+      "oposicionPct": 0,
+      "totalOutlets": 6
     },
     "articles": [
-      {
-        "id": "art-france24-4971464110",
-        "outletId": "france24",
-        "outletName": "France 24",
-        "title": "Directo Latam y los objetivos del viaje de Milei a Francia y su reunión con Macron",
-        "snippet": "El presidente Javier Milei se prepara para ir a Francia en el marco del evento 'Argentina Week', en el que buscará atraer nuevas inversiones para el país. El mandatario se reunirá con su homólogo fran",
-        "url": "https://www.france24.com/es/video/20260929-directo-latam-y-los-objetivos-del-viaje-de-milei-a-francia-y-su-reuni%C3%B3n-con-macron",
-        "publishedAt": "14:57 hs",
-        "timestamp": 1790704647000,
-        "imageUrl": "https://s.france24.com/media/display/29422f44-bc26-11f1-a6e1-91cf9f3cd539/w:1024/p:16x9/ES-20260929-074510-075018-CS.jpg"
-      },
-      {
-        "id": "art-lefigaro-6542772241",
-        "outletId": "lefigaro",
-        "outletName": "Le Figaro",
-        "title": "Système économique, éloignement des zones de conflit… La « marca Argentina » débarque à Paris face aux décideurs européens",
-        "snippet": "DÉCRYPTAGE - À la tête d’une équipe de ministres et d’entrepreneurs, le président argentin se rend en France pour convaincre les décideurs du Vieux Continent d’investir dans son pays.",
-        "url": "https://www.lefigaro.fr/international/systeme-economique-eloignement-des-zones-de-conflit-la-marca-argentina-debarque-a-paris-face-aux-decideurs-europeens-20260929",
-        "publishedAt": "14:52 hs",
-        "timestamp": 1790704335000,
-        "imageUrl": "https://i.f1g.fr/media/cms/2466x1387_crop/2026/09/29/aa2b06b2d4500e7548da33ca720e19f30684a376b26ef594c3030c229cb2c9cc.jpg"
-      },
-      {
-        "id": "art-lefigaro-6207484685",
-        "outletId": "lefigaro",
-        "outletName": "Le Figaro",
-        "title": "À la recherche d’un nouveau souffle, Javier Milei arrive en France pour séduire les investisseurs",
-        "snippet": "DÉCRYPTAGE - Le chef de l’État argentin, après avoir coupé à la tronçonneuse dans les dépenses publiques, doit relancer l’économie de son pays, frappé par une crise sociale, à un an de la prochaine pr",
-        "url": "https://www.lefigaro.fr/international/a-la-recherche-d-un-nouveau-souffle-javier-milei-arrive-en-france-pour-seduire-les-investisseurs-20260929",
-        "publishedAt": "13:30 hs",
-        "timestamp": 1790699400000,
-        "imageUrl": "https://i.f1g.fr/media/cms/3000x1687_crop/2026/09/29/fe5f249bd4855205dfe1ba6d26ebbd61eef70492fbe7deaf63e3da821f2aef19.jpg"
-      },
-      {
-        "id": "art-nyt-11250907926",
-        "outletId": "nyt",
-        "outletName": "The New York Times",
-        "title": "As A.I. Panic Grows, Javier Milei Is Pitching Argentina As a Rules-Free Haven",
-        "snippet": "Mr. Milei wants to go all in on artificial intelligence even as other leaders struggle to get a handle on a technology many fear poses existential threats.",
-        "url": "https://www.nytimes.com/2026/09/29/world/americas/argentina-ai-rules-milei.html",
-        "publishedAt": "13:17 hs",
-        "timestamp": 1790698647000,
-        "imageUrl": "https://static01.nyt.com/images/2026/09/24/multimedia/00int-Milei-AI-fpmw/00int-Milei-AI-fpmw-mediumSquareAt3X.jpg"
-      },
-      {
-        "id": "art-bbcmundo-6564418941",
-        "outletId": "bbcmundo",
-        "outletName": "BBC News Mundo",
-        "title": "Qué se sabe del Corredor Andes-Atlántico, el ambicioso proyecto con el que EE.UU. busca acceder a recursos estratégicos de Argentina (y competir con China)",
-        "snippet": "De acuerdo con analistas, el proyecto muestra el interés de Washington en tener mayor presencia en países de América Latina y reducir el espacio de China en la región.",
-        "url": "https://www.bbc.com/mundo/articles/c6n9wrpdje2ro?at_medium=RSS&at_campaign=rss",
-        "publishedAt": "08:04 hs",
-        "timestamp": 1790679843000
-      },
-      {
-        "id": "art-elpais-6774029912",
-        "outletId": "elpais",
-        "outletName": "El País",
-        "title": "Una economía al borde de la recesión en Argentina",
-        "snippet": "La actividad está estancada por el freno del consumo, la inversión y el gasto público. Crecen las exportaciones, pero sin traccionar la producción y el empleo",
-        "url": "https://elpais.com/argentina/2026-09-29/una-economia-al-borde-de-la-recesion-en-argentina.html",
-        "publishedAt": "06:30 hs",
-        "timestamp": 1790674200000,
-        "imageUrl": "https://imagenes.elpais.com/resizer/v2/TS2BSBPS5VIIBOFUKWOL2ROZNE.jpg?auth=0d73d0dad200e58c2a74f6a7db99e597b5e6403100e4bdb915722d0877fc607e"
-      },
-      {
-        "id": "art-elpais-2904963368",
-        "outletId": "elpais",
-        "outletName": "El País",
-        "title": "Milei se pelea con los datos oficiales sobre la economía: “Los indicadores están arrojando cualquier cosa”",
-        "snippet": "El presidente ultra reafirma su plan económico y cuestiona las estadísticas que muestran un aumento de la pobreza y una caída de la actividad",
-        "url": "https://elpais.com/argentina/2026-09-28/milei-se-pelea-con-los-datos-oficiales-sobre-la-economia-los-indicadores-estan-arrojando-cualquier-cosa.html",
-        "publishedAt": "18:12 hs",
-        "timestamp": 1790629946000,
-        "imageUrl": "https://imagenes.elpais.com/resizer/v2/SMTJH5WBQJIG3MTHPNQCVSMMNE.jpg?auth=fe27646d6fe8ff3bac6aa3b30c3832ad4acc52a596210f671047c39b33a2ebe4"
-      },
-      {
-        "id": "art-bbcmundo-14587962016",
-        "outletId": "bbcmundo",
-        "outletName": "BBC News Mundo",
-        "title": "Por qué están cerrando miles de empresas en Argentina y qué dice de la economía en la era Milei",
-        "snippet": "El fenómeno contrasta con el crecimiento económico de Argentina y plantea dudas sobre la solidez y alcance de esa expansión.",
-        "url": "https://www.bbc.com/mundo/articles/c6z7zzel0lx5o?at_medium=RSS&at_campaign=rss",
-        "publishedAt": "28/9",
-        "timestamp": 1790594271000
-      },
-      {
-        "id": "art-france24-6454030652",
-        "outletId": "france24",
-        "outletName": "France 24",
-        "title": "La pobreza escala en Argentina y pone a prueba las políticas de Javier Milei",
-        "snippet": "Los índices de pobreza en Argentina aumentaron hasta el 32,3 % en el primer semestre de 2026, cuatro puntos más que la medición anterior, según datos del Instituto Nacional de Estadística y Censos (IN",
-        "url": "https://www.france24.com/es/am%C3%A9rica-latina/20260925-la-pobreza-escala-en-argentina-y-pone-a-prueba-las-pol%C3%ADticas-de-javier-milei",
-        "publishedAt": "25/9",
-        "timestamp": 1790361592000,
-        "imageUrl": "https://s.france24.com/media/display/91bc45b0-b90f-11f1-9d3c-91cf9f3cd539/w:1024/p:16x9/2026-09-24T111704Z-603029627-RC2R7NA4OC4W-RTRMADP-3-ARGENTINA-ECONOMY-MILEI.jpg"
-      },
-      {
-        "id": "art-france24-6756421293",
-        "outletId": "france24",
-        "outletName": "France 24",
-        "title": "Argentina: la industria manufacturera se contrae desde la llegada de Milei a la Presidencia",
-        "snippet": "A las afueras de Buenos Aires, la fábrica Kioshi se encuentra en una situación crítica. Las máquinas están paradas y las cajas de productos sin vender se acumulan. Esta situación simboliza el colapso ",
-        "url": "https://www.france24.com/es/video/20260925-argentina-la-industria-manufacturera-se-contrae-desde-la-llegada-de-milei-a-la-presidencia",
-        "publishedAt": "25/9",
-        "timestamp": 1790353065000,
-        "imageUrl": "https://s.france24.com/media/display/cb68e49c-b8f8-11f1-953e-852b23529bb9/w:1024/p:16x9/Fabrica-Argentina.jpg"
-      },
       {
         "id": "art-expansion-14175975932",
         "outletId": "expansion",
@@ -158,68 +50,79 @@
         "imageUrl": "https://e00-expansion.uecdn.es/assets/multimedia/imagenes/2026/09/06/17887210432769.jpg"
       },
       {
-        "id": "art-expansion-9478612210",
+        "id": "art-expansion-19298226909",
         "outletId": "expansion",
         "outletName": "Expansión",
-        "title": "Peter Thiel invierte en la petrolera argentina Vista",
-        "snippet": "El magnate tecnológico Peter Thiel, fundador de compañías como PayPal y Palantir, compró acciones de la petrolera argentina Vista, la mayor exportadora de crudo de Vaca Muerta, la enorme y estratégica",
-        "url": "https://www.expansion.com/latinoamerica/2026/08/16/6a81ead7468aebdf3d8b456e.html",
-        "publishedAt": "16/8",
-        "timestamp": 1786899460000,
-        "imageUrl": "https://e00-expansion.uecdn.es/assets/multimedia/imagenes/2026/08/16/17868994392438.jpg"
+        "title": "Milei acusa a Sánchez de \"traicionar a su propio pueblo\" por su política migratoria",
+        "snippet": "El presidente argentino, Javier Milei, cargó ayer contra el presidente del Gobierno español, Pedro Sánchez, al que acusó de haber \"traicionado a su propio pueblo\" por su política migratoria.&nbsp; Lee",
+        "url": "https://www.expansion.com/latinoamerica/2026/09/25/6ab611f9e5fdea54528b458e.html",
+        "publishedAt": "25/9",
+        "timestamp": 1790317151000,
+        "imageUrl": "https://e00-expansion.uecdn.es/assets/multimedia/imagenes/2026/09/25/17903170048327.jpg"
+      },
+      {
+        "id": "art-expansion-10587288794",
+        "outletId": "expansion",
+        "outletName": "Expansión",
+        "title": "Milei dice que Pedro Sánchez está \"más sucio que una papa\" y rodeado de \"gentuza\"",
+        "snippet": "El presidente de Argentina, Javier Milei, ha vuelto a cargar contra el presidente del Gobierno, Pedro Sánchez. Ha dicho de él que \"está más sucio que una papa\", \"rodeado de gentuza\" y le ha acusado de",
+        "url": "https://www.expansion.com/economia/2026/09/04/6a9a7563e5fdea342a8b457b.html",
+        "publishedAt": "4/9",
+        "timestamp": 1788507536000,
+        "imageUrl": "https://e00-expansion.uecdn.es/assets/multimedia/imagenes/2026/09/04/17885074594421.jpg"
+      },
+      {
+        "id": "art-expansion-16401161208",
+        "outletId": "expansion",
+        "outletName": "Expansión",
+        "title": "Los visitantes ricos revitalizan el sector del turismo en Argentina",
+        "snippet": "El país está atrayendo a visitantes extranjeros adinerados, a pesar de que el aumento de los precios está erosionando la tradicional reputación de Argentina como destino turístico económico.&nbsp; Lee",
+        "url": "https://www.expansion.com/economia/financial-times/2026/11/01/visitantes-ricos-revitalizan-sector-turismo-argentina.html",
+        "publishedAt": "1/11",
+        "timestamp": 1793573880000,
+        "imageUrl": "https://e00-expansion.uecdn.es/assets/multimedia/imagenes/2026/11/01/17935738657305.jpg"
       }
     ],
-    "aiComparisonNotice": "France 24 y El País enfatizan el deterioro del empleo, la contracción industrial y el aumento de la pobreza, contrastando con la mirada económica y bursátil de Expansión y Le Figaro, que priorizan los esfuerzos del gobierno por atraer capitales extranjeros y las reacciones del mandatario frente a los datos negativos."
+    "aiComparisonNotice": "Expansión (España) pone el foco en los datos negativos del PIB, la caída intermensual de julio y las reacciones verbales del mandatario argentino, mientras que otros análisis económicos evalúan los efectos colaterales de la fortaleza del peso y las políticas de importación."
   },
   {
-    "id": "foreign-ai-2",
+    "id": "foreign-reino-unido-y-espana-reportan-el-endurecimiento-de",
     "isLeadStory": false,
-    "kicker": "MIRADA EXTERIOR • DIPLOMACIA Y SOBERANÍA",
-    "neutralHeadline": "Repercusión internacional por el duro discurso de Javier Milei en la ONU y el endurecimiento del reclamo por las Malvinas",
+    "kicker": "MIRADA EXTERIOR • SOBERANÍA Y DISPUTA POR LAS MALVINAS",
+    "neutralHeadline": "Reino Unido y España reportan el endurecimiento de la postura argentina sobre la explotación de recursos en las Islas Malvinas",
     "category": "Internacional",
-    "summary": "La prensa británica, francesa y española ha cubierto ampliamente las críticas de Javier Milei hacia la Organización de Naciones Unidas durante la Asamblea General. Los medios extranjeros subrayaron el tono belicoso del presidente argentino, su advertencia sobre tomar medidas directas respecto a las islas Malvinas y las nuevas sanciones anunciadas contra empresas que operen en el archipiélago.",
+    "summary": "La prensa británica y española destaca la ofensiva diplomática y legal impulsada por el gobierno argentino contra las empresas que operan en los proyectos hidrocarburíferos de las Islas Malvinas. Desde Londres se advierte sobre las consecuencias devastadoras para los isleños, mientras juristas y medios debaten el alcance de los reclamos de soberanía.",
     "updatedAt": "Reciente",
-    "imageUrl": "https://s.france24.com/media/display/9e8a7a0c-b796-11f1-a0a3-833f01c30b8b/w:1024/p:16x9/AP26266572547038.jpg",
-    "imageCaption": "Cobertura internacional de France 24.",
+    "imageUrl": "https://i.guim.co.uk/img/media/74aeb469d38039f0e21eb808a8dd9a246b6470ec/534_0_5343_4275/master/5343.jpg?width=140&amp;quality=85&amp;auto=format&amp;fit=max&amp;s=ce39858c6c691c56c42f9a5cf5597853",
+    "imageCaption": "Cobertura internacional de The Guardian.",
     "spectrum": {
       "oficialismoPct": 0,
-      "centroDatosPct": 75,
-      "oposicionPct": 25,
-      "totalOutlets": 4
+      "centroDatosPct": 33,
+      "oposicionPct": 67,
+      "totalOutlets": 3
     },
     "articles": [
       {
-        "id": "art-france24-2215415052",
-        "outletId": "france24",
-        "outletName": "France 24",
-        "title": "Milei renueva ante la ONU el reclamo por las Malvinas, pero no espera nada de una “organización inútil”",
-        "snippet": "El presidente argentino fustigó este miércoles 23 de septiembre a Naciones Unidas por no haber sido capaz de hacer cumplir la resolución que reconocía un litigio sobre el archipiélago y pidió a Reino ",
-        "url": "https://www.france24.com/es/am%C3%A9rica-latina/20260924-milei-renueva-ante-la-onu-el-reclamo-por-las-malvinas-pero-no-espera-nada-de-una-organizaci%C3%B3n-in%C3%BAtil",
-        "publishedAt": "23/9",
-        "timestamp": 1790210182000,
-        "imageUrl": "https://s.france24.com/media/display/9e8a7a0c-b796-11f1-a0a3-833f01c30b8b/w:1024/p:16x9/AP26266572547038.jpg"
-      },
-      {
-        "id": "art-theguardian-13468806967",
+        "id": "art-theguardian-6960034563",
         "outletId": "theguardian",
         "outletName": "The Guardian",
-        "title": "Milei threatens at UN that Argentina will take ‘matters into our own hands’ on Falklands",
-        "snippet": "<p>Argentinian president accuses United Nations of being filled with ‘parasites’ in bellicose general assembly speech</p><p>Javier Milei has condemned the UN as he warned that Argentina would take “ma",
-        "url": "https://www.theguardian.com/uk-news/2026/sep/23/argentina-president-attacks-un-over-inaction-on-falkland-islands-sovereignty",
-        "publishedAt": "23/9",
-        "timestamp": 1790189443000,
-        "imageUrl": "https://i.guim.co.uk/img/media/005d4917372c725d7757a080af31f902d028df90/688_0_6880_5504/master/6880.jpg?width=140&amp;quality=85&amp;auto=format&amp;fit=max&amp;s=25cd855f28e157a4fb2fb9eb3659d699"
+        "title": "Argentinian lawyer mocks UK’s sovereignty claim in Falklands oil case",
+        "snippet": "<p>Lawyer says Britain wrong to believe in historic doctrine that crown has sovereignty over parts of oceans</p><p>Britain should not be permitted to act as a 17th-century colonial power treating the ",
+        "url": "https://www.theguardian.com/uk-news/2026/nov/11/argentine-lawyer-mocks-uk-sovereignty-claim-in-falklands-oil-case",
+        "publishedAt": "11/11",
+        "timestamp": 1794413145000,
+        "imageUrl": "https://i.guim.co.uk/img/media/74aeb469d38039f0e21eb808a8dd9a246b6470ec/534_0_5343_4275/master/5343.jpg?width=140&amp;quality=85&amp;auto=format&amp;fit=max&amp;s=ce39858c6c691c56c42f9a5cf5597853"
       },
       {
-        "id": "art-lavanguardia-246931811",
-        "outletId": "lavanguardia",
-        "outletName": "La Vanguardia",
-        "title": "Milei lleva el belicismo a la ONU al proclamar que “Malvinas es una causa nacional”",
-        "snippet": "El presidente de Argentina arremete contra la misma Organización de Naciones Unidas, a la que acusa de “parásitos” y de mirar hacia otro lado en la disputa con Reino Unido por el archipiélago del Atlá",
-        "url": "https://www.lavanguardia.com/internacional/20260923/11642435/milei-lleva-belicismo-onu-proclamar-malvinas-causa-nacional.html",
-        "publishedAt": "23/9",
-        "timestamp": 1790179662000,
-        "imageUrl": "https://www.lavanguardia.com/files/og_thumbnail/images/default.jpg"
+        "id": "art-theguardian-7577734239",
+        "outletId": "theguardian",
+        "outletName": "The Guardian",
+        "title": "Falkland Islanders face ‘devastating consequences’ if Argentina blocks oil project, says UK",
+        "snippet": "<p>Countries clash over Sea Lion project as Hamburg tribunal risks deepening sovereignty dispute</p><p>The people of the Falkland Islands face “devastating consequences” if Argentina is successful in ",
+        "url": "https://www.theguardian.com/world/2026/nov/10/uk-and-argentina-clash-over-falklands-oil-project-as-hamburg-tribunal-starts",
+        "publishedAt": "10/11",
+        "timestamp": 1794337293000,
+        "imageUrl": "https://i.guim.co.uk/img/media/5d2b5e1b9e781a1b5a8dd0e647c4fd2a9b8b0afb/295_244_2470_1977/master/2470.jpg?width=140&amp;quality=85&amp;auto=format&amp;fit=max&amp;s=35f0b486f371c4981f8f6f278cadd89d"
       },
       {
         "id": "art-expansion-11146422487",
@@ -233,6 +136,6 @@
         "imageUrl": "https://e00-expansion.uecdn.es/assets/multimedia/imagenes/2026/09/04/17885080721675.jpg"
       }
     ],
-    "aiComparisonNotice": "The Guardian (Reino Unido) y La Vanguardia (España) califican el discurso de belicoso y recalcan el choque diplomático con la ONU, mientras que France 24 y Expansión detallan el alcance de las sanciones a corporaciones en el Atlántico Sur y el enfrentamiento verbal con el gobierno británico."
+    "aiComparisonNotice": "The Guardian (Reino Unido) enfatiza las advertencias sobre el impacto negativo para los habitantes de las islas y la disputa en tribunales internacionales, en contraste con Expansión (España), que subraya la decisión oficial de sancionar a las petroleras operativas en la zona."
   }
 ]

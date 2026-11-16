@@ -4,6 +4,7 @@ import type { Article, StoryCluster, SpectrumBreakdown } from '../../types';
 import { saveNewsClustersToSupabase, getNewsClustersFromSupabase } from '../supabase';
 import { OUTLETS_REGISTRY } from '../../utils/outlets';
 import { isEditorialRelevantArticle } from '../rss/parser';
+import { brazilElectionClusters } from '../../data/brasil_election';
 
 function isSportsOrIrrelevant(a: Article): boolean {
   if (!a) return true;
@@ -105,6 +106,9 @@ export async function getCachedForeignClustersAsync(): Promise<StoryCluster[]> {
 }
 
 export function getStoryClusterById(id: string): StoryCluster | undefined {
+  const foundInBrazil = brazilElectionClusters.find(s => s.id === id);
+  if (foundInBrazil) return foundInBrazil;
+
   const cached = getCachedClusteredStories();
   const foundInCached = cached.find(s => s.id === id);
   if (foundInCached) return foundInCached;
@@ -117,6 +121,10 @@ export function getStoryClusterById(id: string): StoryCluster | undefined {
 }
 
 export async function getStoryClusterByIdAsync(id: string): Promise<StoryCluster | undefined> {
+  // 0. Dedicated Election Modules (e.g. Elecciones Brasil 2026)
+  const foundInBrazil = brazilElectionClusters.find(s => s.id === id);
+  if (foundInBrazil) return foundInBrazil;
+
   // 1. Direct query to Supabase cloud PostgreSQL by exact ID first (avoids stale local mocks)
   try {
     const { getStoryClusterByIdFromSupabase } = await import('../supabase');

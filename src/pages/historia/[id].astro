@@ -10,6 +10,9 @@ export const prerender = false;
 
 const { id } = Astro.params;
 const story = id ? await getStoryClusterByIdAsync(id) : undefined;
+const isBrazilStory = Boolean(story?.id?.startsWith('brasil-'));
+const backHref = isBrazilStory ? '/elecciones-brasil' : '/';
+const backLabel = isBrazilStory ? 'Volver al Especial Brasil 2026' : 'Volver a la Portada';
 const optimizedHeroImage = story?.imageUrl ? getOptimizedImageUrl(story.imageUrl, 1000, 75) : undefined;
 
 const topOutlets = story ? story.articles.slice(0, 4).map(a => a.outletName) : [];
@@ -44,13 +47,13 @@ const viralShareText = story
       <!-- Breadcrumb & Back button -->
       <nav class="flex items-center justify-between text-xs font-mono border-b border-slate-200 dark:border-slate-800 pb-3">
         <a 
-          href="/" 
+          href={backHref} 
           class="inline-flex items-center gap-1.5 text-slate-600 dark:text-slate-400 hover:text-slate-950 dark:hover:text-white font-bold transition-colors"
         >
           <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
           </svg>
-          <span>Volver a la Portada</span>
+          <span>{backLabel}</span>
         </a>
 
         <div class="flex items-center gap-2 text-slate-400 dark:text-slate-500">

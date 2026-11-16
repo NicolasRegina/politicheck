@@ -15,6 +15,7 @@ import { getNewsClustersFromSupabase, getActiveCivicBanner } from '../services/s
 import { getPromisesWithLiveVotes, getPromisesStats } from '../services/promises';
 import { getPolitician } from '../data/politicians';
 import { getOptimizedImageUrl } from '../utils/image';
+import { isBrazilElectionActive, brazilElectionMetadata, brazilElectionClusters, getLiveBrazilDispatches } from '../data/brasil_election';
 
 export const prerender = false;
 
@@ -139,10 +140,13 @@ const leadStoryPreloadMobile = leadStory?.imageUrl ? getOptimizedImageUrl(leadSt
 const secondaryStories = storiesToDisplay.slice(1);
 const liveRailArticles = liveArticles.slice(0, 6);
 const fullLiveFeedArticles = liveArticles.slice(0, 60);
+const liveBrazilDispatches = getLiveBrazilDispatches(liveArticles).slice(0, 9);
 
 ---
 
 <Layout 
+  title="Politicheck • Noticias de Política Argentina, Sesgo de Medios y Elecciones 2027"
+  description="Observatorio de política argentina y cobertura periodística. Compará el sesgo mediático de 31 redacciones en tiempo real y auditá las promesas de campaña camino a las Elecciones 2027."
   preloadImage={leadStoryPreload} 
   preloadImageMobile={leadStoryPreloadMobile}
   stories={storiesToDisplay} 
@@ -301,6 +305,76 @@ const fullLiveFeedArticles = liveArticles.slice(0, 60);
       </div>
     </section>
 
+    <!-- SECTION 3.5: Observatorio Cívico: Política Argentina, Medios & Elecciones 2027 -->
+    <section class="bg-white dark:bg-[#0B0F17] border border-slate-200 dark:border-slate-800/90 rounded-2xl p-6 sm:p-8 space-y-6 shadow-2xs">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 dark:border-slate-800/80 pb-4">
+        <div class="space-y-1">
+          <div class="flex items-center gap-2">
+            <span class="w-2 h-2 rounded-full bg-slate-900 dark:bg-slate-100"></span>
+            <span class="text-xs font-mono font-bold uppercase tracking-widest text-slate-500 dark:text-slate-400">
+              Observatorio Electoral & Prensa
+            </span>
+          </div>
+          <h2 class="font-editorial text-xl sm:text-2xl font-bold text-slate-950 dark:text-white">
+            Política Argentina, Encuadres Periodísticos y Elecciones 2027
+          </h2>
+        </div>
+        <div class="flex items-center gap-2 text-xs font-mono text-slate-500">
+          <span>Camino a las Elecciones Presidenciales 2027</span>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-xs text-slate-600 dark:text-slate-400 font-sans leading-relaxed">
+        <div class="space-y-2 p-4 rounded-xl bg-slate-50/70 dark:bg-slate-900/40 border border-slate-200/60 dark:border-slate-800/60 flex flex-col justify-between">
+          <div class="space-y-2">
+            <div class="flex items-center gap-2 text-slate-900 dark:text-slate-100 font-mono font-bold text-xs uppercase">
+              <span>⚖️</span>
+              <span>Sesgo y Cobertura Política</span>
+            </div>
+            <p>
+              Monitoreamos en simultáneo 31 redacciones argentinas e internacionales (Clarín, La Nación, Infobae, Página 12, TN, Ámbito, Perfil y cables globales). Nuestro algoritmo neutraliza adjetivaciones partidarias y calcula la distribución del espectro editorial fáctico en tiempo real.
+            </p>
+          </div>
+          <a href="/metodologia" class="inline-flex items-center gap-1 font-mono text-[11px] font-semibold text-slate-900 dark:text-slate-200 hover:underline pt-2">
+            <span>Conocé la fórmula matemática</span>
+            <span>→</span>
+          </a>
+        </div>
+
+        <div class="space-y-2 p-4 rounded-xl bg-slate-50/70 dark:bg-slate-900/40 border border-slate-200/60 dark:border-slate-800/60 flex flex-col justify-between">
+          <div class="space-y-2">
+            <div class="flex items-center gap-2 text-slate-900 dark:text-slate-100 font-mono font-bold text-xs uppercase">
+              <span>🗳️</span>
+              <span>Auditoría de Elecciones 2027</span>
+            </div>
+            <p>
+              Rumbo a los comicios presidenciales de 2027, auditamos de forma rigurosa las promesas de campaña de Javier Milei, Axel Kicillof, Victoria Villarruel, Mauricio Macri, Patricia Bullrich y los principales referentes, contrastando cada anuncio con pruebas oficiales del Boletín Oficial e INDEC.
+            </p>
+          </div>
+          <button type="button" onclick="document.querySelector('[data-tab=\'promesas\']')?.click(); window.scrollTo({top: 0, behavior: 'smooth'});" class="inline-flex items-center gap-1 font-mono text-[11px] font-semibold text-slate-900 dark:text-slate-200 hover:underline pt-2 cursor-pointer text-left">
+            <span>Explorar promesas auditadas ({promisesStats.total})</span>
+            <span>→</span>
+          </button>
+        </div>
+
+        <div class="space-y-2 p-4 rounded-xl bg-slate-50/70 dark:bg-slate-900/40 border border-slate-200/60 dark:border-slate-800/60 flex flex-col justify-between">
+          <div class="space-y-2">
+            <div class="flex items-center gap-2 text-slate-900 dark:text-slate-100 font-mono font-bold text-xs uppercase">
+              <span>📰</span>
+              <span>Quién es Quién en los Medios</span>
+            </div>
+            <p>
+              Investigamos la estructura corporativa, líneas de financiamiento e intereses de los conglomerados mediáticos que moldean la opinión pública argentina: Grupo Clarín, Grupo América, Grupo Indalo, Grupo Octubre, La Nación S.A. y Editorial Perfil.
+            </p>
+          </div>
+          <a href="/guias/mapa-de-medios-argentina" class="inline-flex items-center gap-1 font-mono text-[11px] font-semibold text-slate-900 dark:text-slate-200 hover:underline pt-2">
+            <span>Ver Mapa Integral de Medios</span>
+            <span>→</span>
+          </a>
+        </div>
+      </div>
+    </section>
+
     <!-- SECTION 4: Metodología, Independencia y Fuentes RSS -->
     <section id="metodologia" class="bg-slate-50 dark:bg-[#0D111A] border border-slate-200 dark:border-slate-800/90 rounded-2xl p-6 sm:p-8 space-y-5">
       <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-200 dark:border-slate-800 pb-3">
@@ -393,6 +467,32 @@ const fullLiveFeedArticles = liveArticles.slice(0, 60);
         <span>Le Figaro • France 24 • BBC Mundo • El País • The Guardian • Expansión • Le Monde • Nikkei</span>
       </div>
     </div>
+
+    <!-- Especial Regional Compacto: Elecciones Brasil 2026 -->
+    <a
+      href="/elecciones-brasil"
+      class="group relative overflow-hidden flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 sm:p-5 rounded-2xl border border-emerald-500/30 dark:border-emerald-500/25 bg-gradient-to-r from-slate-900 via-[#0B1524] to-[#0A1A17] text-white shadow-sm hover:border-emerald-400/60 transition-all"
+    >
+      <div
+        class="absolute right-0 top-0 bottom-0 w-1/3 sm:w-1/4 opacity-20 group-hover:opacity-30 pointer-events-none bg-right bg-no-repeat bg-contain transition-opacity"
+        style="background-image: url('/images/flags/brasil.svg'); mask-image: linear-gradient(to left, black, transparent); -webkit-mask-image: linear-gradient(to left, black, transparent);"
+      ></div>
+      <div class="relative z-10 space-y-1 max-w-2xl">
+        <div class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-emerald-500/20 border border-emerald-400/40 text-emerald-300 text-[10px] font-mono font-bold uppercase tracking-wider">
+          <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+          <span>Especial Regional • Cobertura Comparada</span>
+        </div>
+        <h3 class="font-editorial text-lg sm:text-xl font-bold text-white group-hover:text-emerald-300 transition-colors leading-snug">
+          Elecciones Brasil 2026: Balotaje, tensión bilateral e impacto en el Mercosur
+        </h3>
+      </div>
+      <div class="relative z-10 shrink-0">
+        <span class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-emerald-500/20 group-hover:bg-emerald-500/30 border border-emerald-400/40 text-emerald-200 font-mono text-xs font-bold transition-colors">
+          <span>Explorar especial</span>
+          <span class="transition-transform group-hover:translate-x-0.5">→</span>
+        </span>
+      </div>
+    </a>
 
     <!-- Section A: Cobertura Cruzada y Encuadres (Clusters) -->
     {foreignStoriesToDisplay.length > 0 && (
@@ -630,6 +730,124 @@ const fullLiveFeedArticles = liveArticles.slice(0, 60);
       </div>
     </section>
   </div>
+
+  <!-- VIEW 5: Elecciones Presidenciales Brasil 2026 (Módulo Especial Temporal) -->
+  {isBrazilElectionActive && (
+  <div id="view-elecciones-brasil" class="view-content space-y-10 hidden">
+    <!-- Header Especial con Bandera y Métricas Clave -->
+    <header class="relative overflow-hidden rounded-3xl border border-emerald-500/30 dark:border-emerald-500/20 bg-gradient-to-br from-slate-900 via-[#0B1524] to-[#0A1A17] p-6 sm:p-8 text-white shadow-xl">
+      <!-- Background Flag Element Subtle Glow -->
+      <div 
+        class="absolute right-0 top-0 bottom-0 w-1/3 opacity-20 pointer-events-none bg-right center bg-no-repeat bg-contain"
+        style="background-image: url('/images/flags/brasil.svg'); mask-image: linear-gradient(to left, black, transparent); -webkit-mask-image: linear-gradient(to left, black, transparent);"
+      ></div>
+
+      <div class="relative z-10 space-y-4 max-w-3xl">
+        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/20 border border-emerald-400/40 text-emerald-300 text-xs font-mono font-bold uppercase tracking-wider">
+          <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+          <span>Cobertura Especial • Elecciones Brasil 2026</span>
+        </div>
+
+        <h2 class="font-editorial text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight leading-tight">
+          Elecciones en Brasil 2026: Cobertura Cruzada & Encuadres Internacionales
+        </h2>
+
+        <p class="text-sm sm:text-base text-slate-300 font-sans leading-relaxed font-light">
+          {brazilElectionMetadata.description}
+        </p>
+
+        <!-- Quick Facts Bar Bento -->
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-2 font-mono text-xs">
+          <div class="p-3 rounded-xl bg-white/5 border border-white/10 backdrop-blur-xs">
+            <span class="text-slate-400 block text-[10px] uppercase">Padrón Electoral</span>
+            <span class="font-bold text-white text-sm">{brazilElectionMetadata.electorate}</span>
+          </div>
+          <div class="p-3 rounded-xl bg-white/5 border border-white/10 backdrop-blur-xs">
+            <span class="text-slate-400 block text-[10px] uppercase">Sistema</span>
+            <span class="font-bold text-emerald-300 text-sm">Urna Biométrica</span>
+          </div>
+          <div class="p-3 rounded-xl bg-white/5 border border-white/10 backdrop-blur-xs">
+            <span class="text-slate-400 block text-[10px] uppercase">Instancia</span>
+            <span class="font-bold text-amber-300 text-sm">Balotaje Final</span>
+          </div>
+          <div class="p-3 rounded-xl bg-white/5 border border-white/10 backdrop-blur-xs">
+            <span class="text-slate-400 block text-[10px] uppercase">Impacto Clave</span>
+            <span class="font-bold text-sky-300 text-sm">Comercio & Mercosur</span>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Sección 1: Grandes Historias y Encuadres Clúster de Brasil -->
+    <section class="space-y-6">
+      <div class="flex items-center justify-between border-b border-slate-200 dark:border-slate-800 pb-3">
+        <div class="flex items-center gap-2 text-xs font-mono text-slate-500 dark:text-slate-400">
+          <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+          <span class="font-bold text-slate-900 dark:text-white uppercase tracking-wider">
+            Análisis de Encuadre & Espectro Editorial
+          </span>
+        </div>
+        <span class="text-xs font-mono text-slate-400">Prensa Nacional e Internacional</span>
+      </div>
+
+      <div class="space-y-8" id="brazil-clusters-list">
+        {brazilElectionClusters.map((cluster) => (
+          <StoryCard story={cluster} />
+        ))}
+      </div>
+    </section>
+
+    <!-- Sección 2: Cables y Despachos de Último Momento sobre Brasil -->
+    <section class="space-y-4">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-200 dark:border-slate-800 pb-3">
+        <div>
+          <div class="flex items-center gap-2 text-xs font-mono text-slate-500 dark:text-slate-400">
+            <span class="w-2 h-2 rounded-full bg-blue-500 animate-pulse"></span>
+            <span class="font-bold text-slate-900 dark:text-white uppercase tracking-wider">
+              Despachos de Corresponsales en Vivo
+            </span>
+          </div>
+          <h3 class="font-editorial text-xl sm:text-2xl font-bold text-slate-950 dark:text-white">
+            Minuto a Minuto: Brasil 2026 en los Medios del Mundo
+          </h3>
+        </div>
+        <span class="text-xs font-mono text-slate-400">Folha • O Globo • FT • El País • Le Monde</span>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4" id="brazil-dispatches-grid">
+        {liveBrazilDispatches.map((dispatch) => (
+          <a
+            href={dispatch.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="group flex flex-col justify-between p-4 rounded-xl border border-slate-200 dark:border-slate-800/80 bg-white dark:bg-slate-900/60 hover:border-emerald-500/60 dark:hover:border-emerald-500/60 transition-all hover:shadow-xs"
+          >
+            <div class="space-y-2">
+              <div class="flex items-center justify-between text-[11px] font-mono">
+                <span class="font-bold px-2 py-0.5 rounded bg-emerald-50 text-emerald-800 dark:bg-emerald-950/60 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800/60">
+                  {dispatch.outletName}
+                </span>
+                <span class="text-slate-400">
+                  {dispatch.publishedAt}
+                </span>
+              </div>
+              <h4 class="font-editorial text-base font-bold text-slate-900 dark:text-slate-100 group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors line-clamp-3">
+                {dispatch.title}
+              </h4>
+              <p class="text-xs text-slate-600 dark:text-slate-400 line-clamp-3 leading-relaxed">
+                {dispatch.snippet}
+              </p>
+            </div>
+            <div class="mt-4 pt-2 border-t border-slate-100 dark:border-slate-800/50 flex items-center justify-between text-[11px] font-mono text-slate-400 group-hover:text-slate-700 dark:group-hover:text-slate-300">
+              <span>Leer en {dispatch.outletName}</span>
+              <span class="transition-transform group-hover:translate-x-0.5">↗</span>
+            </div>
+          </a>
+        ))}
+      </div>
+    </section>
+  </div>
+  )}
 </Layout>
 
 <script>
@@ -644,16 +862,23 @@ const fullLiveFeedArticles = liveArticles.slice(0, 60);
 
       // Update button styles
       tabButtons.forEach(b => {
-        b.classList.remove('bg-white', 'dark:bg-slate-800', 'text-slate-900', 'dark:text-white', 'shadow-xs', 'font-bold');
-        b.classList.add('text-slate-600', 'dark:text-slate-400');
+        b.classList.remove('bg-white', 'dark:bg-slate-800', 'text-slate-900', 'dark:text-white', 'shadow-xs', 'font-bold', 'ring-2', 'ring-emerald-400');
+        if (b.getAttribute('data-tab') !== 'elecciones-brasil') {
+          b.classList.add('text-slate-600', 'dark:text-slate-400');
+        }
         const icon = b.querySelector('svg');
         if (icon) {
           icon.classList.remove('text-slate-700', 'dark:text-slate-300');
           icon.classList.add('text-slate-500', 'dark:text-slate-400');
         }
       });
-      btn.classList.add('bg-white', 'dark:bg-slate-800', 'text-slate-900', 'dark:text-white', 'shadow-xs', 'font-bold');
-      btn.classList.remove('text-slate-600', 'dark:text-slate-400');
+
+      if (targetTab === 'elecciones-brasil') {
+        btn.classList.add('ring-2', 'ring-emerald-400', 'shadow-md');
+      } else {
+        btn.classList.add('bg-white', 'dark:bg-slate-800', 'text-slate-900', 'dark:text-white', 'shadow-xs', 'font-bold');
+        btn.classList.remove('text-slate-600', 'dark:text-slate-400');
+      }
       const activeIcon = btn.querySelector('svg');
       if (activeIcon) {
         activeIcon.classList.add('text-slate-700', 'dark:text-slate-300');
@@ -668,6 +893,14 @@ const fullLiveFeedArticles = liveArticles.slice(0, 60);
           view.classList.add('hidden');
         }
       });
+
+      // Update URL query param so refresh or copy link keeps active tab
+      if (window.history && window.history.replaceState) {
+        const newUrl = targetTab === 'temas-del-dia' 
+          ? window.location.pathname 
+          : `?tab=${targetTab}`;
+        window.history.replaceState(null, '', newUrl);
+      }
 
       // Smooth scroll to top of view
       window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -1008,7 +1241,11 @@ const fullLiveFeedArticles = liveArticles.slice(0, 60);
 
   if (tabParam) {
     const matchingTab = document.querySelector<HTMLButtonElement>(`.tab-btn[data-tab="${tabParam}"]`);
-    if (matchingTab) matchingTab.click();
+    if (matchingTab) {
+      matchingTab.click();
+    } else if (tabParam === 'elecciones-brasil') {
+      window.location.replace('/elecciones-brasil');
+    }
   }
 
   if (qParam && searchInput) {

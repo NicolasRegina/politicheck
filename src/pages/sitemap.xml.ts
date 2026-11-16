@@ -2,6 +2,7 @@ import type { APIRoute } from 'astro';
 import { GUIAS_ARTICLES } from '../data/guias';
 import rawPromises from '../data/promises.json';
 import rawStories from '../data/clustered_stories.json';
+import { brazilElectionClusters } from '../data/brasil_election';
 
 export const prerender = true;
 
@@ -41,6 +42,12 @@ export const GET: APIRoute = async () => {
       lastmod: '2026-09-27',
       changefreq: 'monthly',
       priority: '0.4'
+    },
+    {
+      loc: `${baseUrl}/elecciones-brasil`,
+      lastmod: today,
+      changefreq: 'hourly',
+      priority: '0.9'
     }
   ];
 
@@ -81,6 +88,18 @@ export const GET: APIRoute = async () => {
           priority: '0.8'
         });
       }
+    }
+  }
+
+  // Special Election Module Clusters (Elecciones Brasil 2026)
+  for (const story of brazilElectionClusters) {
+    if (story && story.id) {
+      urls.push({
+        loc: `${baseUrl}/historia/${story.id}`,
+        lastmod: today,
+        changefreq: 'daily',
+        priority: '0.9'
+      });
     }
   }
 
