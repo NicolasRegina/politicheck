@@ -10,7 +10,7 @@ const { alert = null } = Astro.props;
 
 <aside 
   id="breaking-news-banner" 
-  class={`w-full bg-linear-to-r from-rose-950 via-red-950 to-slate-950 text-white border-b border-rose-700/60 shadow-md transition-all duration-300 overflow-hidden ${alert ? 'block' : 'hidden'}`}
+  class={`w-full bg-linear-to-r from-rose-950 via-red-950 to-slate-950 text-white border-b border-rose-700/60 shadow-md transition-colors duration-300 overflow-hidden ${alert ? 'block' : 'hidden'}`}
   data-alert-id={alert?.id || ''}
   aria-label="Alerta de último momento"
 >
@@ -18,24 +18,23 @@ const { alert = null } = Astro.props;
     <!-- Urgent Pill & Outlets & Headline -->
     <div class="flex items-center gap-2.5 flex-1 min-w-0">
       <!-- Pulsing Badge -->
-      <div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-rose-600 text-white font-mono text-[10px] font-extrabold uppercase tracking-wider shadow-xs shrink-0">
+      <div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-rose-600 text-white font-sans text-[11px] font-bold shadow-xs shrink-0">
         <span class="relative flex h-2 w-2">
           <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-white opacity-75"></span>
           <span class="relative inline-flex rounded-full h-2 w-2 bg-white"></span>
         </span>
-        <span>ÚLTIMO MOMENTO</span>
+        <span>Último momento</span>
       </div>
 
       <!-- Outlets reporting (Desktop) -->
-      <div class="hidden md:inline-flex items-center gap-1 font-mono text-[11px] text-rose-200/90 shrink-0">
+      <div class="hidden md:inline-flex items-center gap-1 font-sans text-[11px] text-rose-200/90 shrink-0">
         <span id="breaking-outlets-count" class="font-bold text-white">
           {alert ? alert.outletsCount : 0} redacciones
         </span>
         <span>en simultáneo:</span>
         <span id="breaking-outlets-list" class="text-rose-100 font-semibold truncate max-w-[220px] lg:max-w-none">
-          {alert ? alert.outlets.join(' • ') : ''}
+          {alert ? alert.outlets.join(', ') : ''}
         </span>
-        <span class="text-rose-400 mx-1">•</span>
       </div>
 
       <!-- Live Headline -->
@@ -54,10 +53,10 @@ const { alert = null } = Astro.props;
       <a 
         id="breaking-action-btn"
         href={alert?.url || '#'} 
-        class="inline-flex items-center gap-1 px-3 py-1 rounded-lg bg-white text-rose-950 hover:bg-rose-100 font-mono text-[11px] font-extrabold transition-all shadow-xs shrink-0"
+        class="inline-flex items-center gap-1 px-3 py-1 rounded-lg bg-white text-rose-950 hover:bg-rose-100 font-sans text-[11px] font-bold transition-colors shadow-xs shrink-0"
       >
         <span>Ver contraste en vivo</span>
-        <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <svg aria-hidden="true" class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
         </svg>
       </a>

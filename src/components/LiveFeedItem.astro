@@ -16,7 +16,7 @@ const optimizedThumbnailUrl = article.imageUrl ? getOptimizedImageUrl(article.im
   href={article.url}
   target="_blank" 
   rel="noopener noreferrer"
-  class="group block bg-white dark:bg-[#0F1420] rounded-xl p-3.5 sm:p-4 border border-slate-200 dark:border-slate-800/80 hover:border-slate-300 dark:hover:border-slate-700 transition-all duration-200 shadow-xs"
+  class="group block bg-white dark:bg-surface-dark rounded-xl p-3.5 sm:p-4 border border-slate-200 dark:border-slate-800/80 hover:border-slate-300 dark:hover:border-slate-700 transition-colors duration-200 shadow-xs"
 >
   <div class="flex gap-3.5 items-start">
     {article.imageUrl && (
@@ -31,7 +31,7 @@ const optimizedThumbnailUrl = article.imageUrl ? getOptimizedImageUrl(article.im
           height="80"
           referrerpolicy="no-referrer"
           onerror="if (this.dataset.retry !== '1') { this.dataset.retry = '1'; this.setAttribute('src', this.dataset.originalSrc); } else { const w = this.closest('.thumbnail-wrapper'); if (w) w.style.display = 'none'; }"
-          class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+          class="w-full h-full object-cover motion-safe:group-hover:scale-105 motion-safe:transition-transform duration-300"
         />
       </div>
     )}
@@ -48,7 +48,7 @@ const optimizedThumbnailUrl = article.imageUrl ? getOptimizedImageUrl(article.im
 
         <span class="text-slate-400 group-hover:text-slate-700 dark:text-slate-500 dark:group-hover:text-slate-300 font-mono text-[10px] inline-flex items-center gap-1 shrink-0">
           Nota original
-          <svg class="w-2.5 h-2.5 group-hover:translate-x-0.5 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <svg aria-hidden="true" class="w-2.5 h-2.5 motion-safe:group-hover:translate-x-0.5 motion-safe:transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
           </svg>
         </span>

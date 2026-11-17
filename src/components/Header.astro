@@ -46,7 +46,7 @@ const breakingAlert = detectBreakingNews(cachedStories);
 const serverSyncIso = propSyncIso || (await getLastSyncTimestampAsync()) || new Date().toISOString();
 ---
 
-<header class="sticky top-0 z-50 bg-white/95 dark:bg-[#0A0E17]/95 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 transition-colors duration-200 shadow-xs">
+<header class="sticky top-0 z-50 bg-white/95 dark:bg-header-dark/95 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 transition-colors duration-200 shadow-xs">
   <!-- Top Ticker Bar: Streamlined Single-Line Bar (Max 28px mobile / 32px desktop) -->
   <div class="h-7 sm:h-8 bg-slate-100/95 dark:bg-slate-950 border-b border-slate-200/80 dark:border-slate-900 px-3 sm:px-4 text-[10px] sm:text-[11px] font-mono text-slate-600 dark:text-slate-400 flex items-center overflow-x-auto no-scrollbar whitespace-nowrap">
     <div class="max-w-7xl mx-auto w-full flex items-center justify-between gap-3 sm:gap-4 shrink-0">
@@ -55,7 +55,7 @@ const serverSyncIso = propSyncIso || (await getLastSyncTimestampAsync()) || new 
         <span class="font-semibold text-slate-800 dark:text-slate-200 capitalize" id="ticker-live-date">
           {serverDateFormatted}
         </span>
-        <span class="text-slate-300 dark:text-slate-700">•</span>
+        <span class="text-slate-300 dark:text-slate-700" aria-hidden="true">|</span>
         <span class="text-slate-600 dark:text-slate-400" id="ticker-live-weather">
           Bs. As. <span id="weather-temp-val">{initialTemp}</span>°C
         </span>
@@ -63,27 +63,27 @@ const serverSyncIso = propSyncIso || (await getLastSyncTimestampAsync()) || new 
 
       <!-- Financial Ticker (Live Dólar API Integration: Continuous Single-Line Flow) -->
       <div class="flex items-center gap-3 sm:gap-4 text-[10px] tracking-tight shrink-0">
-        <span class="text-slate-300 dark:text-slate-700">|</span>
+        <span class="text-slate-300 dark:text-slate-700" aria-hidden="true">|</span>
         <div class="flex items-center gap-1" title="Cotización venta Dólar Blue (dolarapi.com)">
           <span class="text-slate-500 dark:text-slate-400">BLUE:</span>
           <span class="font-bold text-slate-900 dark:text-slate-100" id="ticker-blue-val">${initialBlue}</span>
         </div>
-        <span class="text-slate-300 dark:text-slate-700 hidden sm:inline">|</span>
+        <span class="text-slate-300 dark:text-slate-700 hidden sm:inline" aria-hidden="true">|</span>
         <div class="flex items-center gap-1 hidden sm:flex" title="Cotización venta Dólar Oficial">
           <span class="text-slate-500 dark:text-slate-400">OFICIAL:</span>
           <span class="font-bold text-slate-900 dark:text-slate-100" id="ticker-oficial-val">${initialOficial}</span>
         </div>
-        <span class="text-slate-300 dark:text-slate-700">|</span>
+        <span class="text-slate-300 dark:text-slate-700" aria-hidden="true">|</span>
         <div class="flex items-center gap-1" title="Cotización Bolsa MEP">
           <span class="text-slate-500 dark:text-slate-400">MEP:</span>
           <span class="font-bold text-slate-900 dark:text-slate-100" id="ticker-mep-val">${initialMep}</span>
         </div>
-        <span class="text-slate-300 dark:text-slate-700">|</span>
+        <span class="text-slate-300 dark:text-slate-700" aria-hidden="true">|</span>
         <div class="flex items-center gap-1" title="Riesgo País Argentina (argentinadatos.com)">
           <span class="text-slate-500 dark:text-slate-400">RIESGO:</span>
           <span class="font-bold text-slate-900 dark:text-slate-100" id="ticker-riesgo-val">{initialRiesgoPais}</span>
         </div>
-        <span class="text-slate-300 dark:text-slate-700 hidden sm:inline">|</span>
+        <span class="text-slate-300 dark:text-slate-700 hidden sm:inline" aria-hidden="true">|</span>
         <div class="flex items-center gap-1 hidden sm:flex" title="Índice de Precios al Consumidor mensual (INDEC)">
           <span class="text-slate-500 dark:text-slate-400">IPC:</span>
           <span class="font-bold text-emerald-700 dark:text-emerald-400" id="ticker-ipc-val">{initialIpc.toString().replace('.', ',')}%</span>
@@ -91,22 +91,22 @@ const serverSyncIso = propSyncIso || (await getLastSyncTimestampAsync()) || new 
       </div>
 
       <!-- Live Sync status & Methodology -->
-      <div class="flex items-center gap-2 sm:gap-2.5 text-[10px] sm:text-[11px] shrink-0">
+      <div class="flex items-center gap-2 sm:gap-3 text-[10px] sm:text-[11px] shrink-0 font-sans">
         <!-- Live Sync Status Badge (Public with manual trigger) -->
         <button 
           type="button"
           id="btn-manual-sync"
-          class="flex items-center gap-1.5 sm:gap-2 px-2 sm:px-2.5 py-0.5 rounded-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 shadow-2xs hover:bg-slate-50 dark:hover:bg-slate-800 hover:border-slate-300 dark:hover:border-slate-700 transition-all cursor-pointer"
+          class="flex items-center gap-1.5 sm:gap-2 px-2 sm:px-2.5 py-0.5 rounded-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 shadow-2xs hover:bg-slate-50 dark:hover:bg-slate-800 hover:border-slate-300 dark:hover:border-slate-700 transition-colors cursor-pointer"
           title="Noticias en tiempo real. Clic para refrescar portada."
         >
           <span class="relative flex h-1.5 w-1.5 sm:h-2 sm:w-2" id="sync-ping-dot">
-            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+            <span class="motion-safe:animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
             <span class="relative inline-flex rounded-full h-1.5 w-1.5 sm:h-2 sm:w-2 bg-emerald-500"></span>
           </span>
-          <span class="font-bold uppercase tracking-wider text-[9px] sm:text-[10px] text-emerald-700 dark:text-emerald-400">EN VIVO</span>
-          <span class="text-slate-300 dark:text-slate-700">•</span>
+          <span class="font-bold text-[10px] text-emerald-700 dark:text-emerald-400">En vivo</span>
+          <span class="text-slate-300 dark:text-slate-700" aria-hidden="true">|</span>
           <span 
-            class="text-slate-500 dark:text-slate-400 text-[9px] sm:text-[10px] font-mono" 
+            class="text-slate-500 dark:text-slate-400 text-[10px] font-mono" 
             id="sync-time-ago"
             data-server-sync={serverSyncIso}
           >
@@ -114,21 +114,18 @@ const serverSyncIso = propSyncIso || (await getLastSyncTimestampAsync()) || new 
           </span>
         </button>
 
-        <span class="text-slate-300 dark:text-slate-700 hidden sm:inline">•</span>
         <a href="/guias" class="hidden sm:inline hover:text-slate-900 dark:hover:text-slate-100 transition-colors underline underline-offset-2">
           Guías
         </a>
-        <span class="text-slate-300 dark:text-slate-700 hidden sm:inline">•</span>
         <a href="/metodologia" class="hidden sm:inline hover:text-slate-900 dark:hover:text-slate-100 transition-colors underline underline-offset-2">
           Metodología
         </a>
-        <span class="text-slate-300 dark:text-slate-700 hidden sm:inline">•</span>
         <button 
           type="button" 
           onclick="if(typeof window.openLiveChat === 'function') window.openLiveChat('debate-electoral');"
           class="hidden sm:inline-flex items-center gap-1.5 hover:text-slate-900 dark:hover:text-slate-100 transition-colors underline underline-offset-2 cursor-pointer font-medium"
         >
-          <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+          <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" aria-hidden="true"></span>
           <span>Chat Electoral</span>
         </button>
       </div>
@@ -142,7 +139,7 @@ const serverSyncIso = propSyncIso || (await getLastSyncTimestampAsync()) || new 
   <div class="max-w-7xl mx-auto px-4 sm:px-6 py-2.5 sm:py-4">
     <div class="grid grid-cols-1 md:grid-cols-12 items-center gap-2 sm:gap-4 border-b border-slate-200 dark:border-slate-800 pb-2.5 sm:pb-4">
       <!-- Left Column: Coverage scope -->
-      <div class="hidden md:flex md:col-span-3 flex-col text-[11px] font-mono text-slate-500 dark:text-slate-400 space-y-0.5">
+      <div class="hidden md:flex md:col-span-3 flex-col text-[11px] font-sans text-slate-500 dark:text-slate-400 space-y-0.5">
         <span class="font-semibold text-slate-700 dark:text-slate-300">31 Redacciones Monitoreadas</span>
         <span>Cobertura cruzada en tiempo real</span>
       </div>
@@ -150,14 +147,14 @@ const serverSyncIso = propSyncIso || (await getLastSyncTimestampAsync()) || new 
       <!-- Center Column: Grand Newspaper Title -->
       <div class="col-span-12 md:col-span-6 text-center">
         <a href="/" class="inline-block group">
-          <h1 class="font-editorial text-2xl sm:text-5xl md:text-5xl font-black tracking-wider text-slate-950 dark:text-white uppercase group-hover:opacity-90 transition-opacity">
-            POLITICHECK
-            <span class="sr-only"> — Noticias de Política Argentina, Cobertura de Medios y Elecciones 2027</span>
+          <h1 class="font-editorial text-2xl sm:text-5xl md:text-5xl font-black tracking-tight text-slate-950 dark:text-white group-hover:opacity-90 transition-opacity">
+            Politicheck
+            <span class="sr-only">: Noticias de Política Argentina, Cobertura de Medios y Elecciones 2027</span>
           </h1>
           <div class="mt-1 flex items-center justify-center gap-2">
             <span class="h-px w-6 sm:w-12 bg-slate-400 dark:bg-slate-600"></span>
-            <p class="font-mono text-[10px] sm:text-[11px] uppercase tracking-widest text-slate-600 dark:text-slate-400 font-medium">
-              Observatorio de Política Argentina, Medios & Elecciones 2027
+            <p class="font-sans text-[11px] text-slate-600 dark:text-slate-400 font-medium">
+              Observatorio de Política Argentina, Medios y Elecciones 2027
             </p>
             <span class="h-px w-6 sm:w-12 bg-slate-400 dark:bg-slate-600"></span>
           </div>
@@ -166,9 +163,9 @@ const serverSyncIso = propSyncIso || (await getLastSyncTimestampAsync()) || new 
 
       <!-- Right Column: Quick Status & Theme Switcher -->
       <div class="col-span-12 md:col-span-3 flex items-center justify-between md:justify-end gap-3">
-        <div class="hidden sm:flex flex-col text-right text-[10px] font-mono text-slate-500 dark:text-slate-400">
-          <span class="font-semibold text-slate-800 dark:text-slate-200 uppercase">Sin Sesgo Partidario</span>
-          <span class="text-emerald-600 dark:text-emerald-400 font-bold">100% Fuentes Oficiales RSS</span>
+        <div class="hidden sm:flex flex-col text-right text-[11px] font-sans text-slate-500 dark:text-slate-400">
+          <span class="font-semibold text-slate-800 dark:text-slate-200">Sin sesgo partidario</span>
+          <span class="text-emerald-600 dark:text-emerald-400 font-bold">100% fuentes oficiales RSS</span>
         </div>
 
         <div class="flex items-center gap-2">
@@ -176,11 +173,11 @@ const serverSyncIso = propSyncIso || (await getLastSyncTimestampAsync()) || new 
           <button 
             type="button" 
             onclick="window.openPwaInstallPrompt?.()"
-            class="inline-flex items-center justify-center gap-1.5 h-8 px-2.5 rounded-lg bg-emerald-50 hover:bg-emerald-100 dark:bg-emerald-950/50 dark:hover:bg-emerald-900/60 border border-emerald-200 dark:border-emerald-800/80 text-emerald-800 dark:text-emerald-300 text-[11px] font-mono font-semibold transition-all cursor-pointer shadow-2xs"
+            class="inline-flex items-center justify-center gap-1.5 h-8 px-2.5 rounded-lg bg-emerald-50 hover:bg-emerald-100 dark:bg-emerald-950/50 dark:hover:bg-emerald-900/60 border border-emerald-200 dark:border-emerald-800/80 text-emerald-800 dark:text-emerald-300 text-[11px] font-sans font-semibold transition-colors cursor-pointer shadow-2xs"
             title="Instalar Politicheck en tu celular o computadora"
             aria-label="Instalar aplicación Politicheck"
           >
-            <svg class="w-3.5 h-3.5 text-emerald-700 dark:text-emerald-400 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <svg aria-hidden="true" class="w-3.5 h-3.5 text-emerald-700 dark:text-emerald-400 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
             </svg>
             <span>Instalar App</span>
@@ -209,7 +206,7 @@ const serverSyncIso = propSyncIso || (await getLastSyncTimestampAsync()) || new 
     <!-- Newspaper Sections Bar & View Switcher (The Classical Hairline Navigation) -->
     <div class="pt-2 flex flex-col lg:flex-row lg:items-center justify-between gap-2.5">
       <!-- Traditional Newspaper Sections (Dynamic Filtering) -->
-      <nav class="flex items-center gap-1 sm:gap-1.5 overflow-x-auto [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden shrink-0 text-[11px] sm:text-xs font-semibold tracking-wide uppercase text-slate-700 dark:text-slate-300 py-1" id="newspaper-sections-nav" aria-label="Secciones del periódico">
+      <nav class="flex items-center gap-1.5 sm:gap-2 overflow-x-auto [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden shrink-0 text-xs font-semibold text-slate-700 dark:text-slate-300 py-1" id="newspaper-sections-nav" aria-label="Secciones del periódico">
         <button 
           type="button" 
           data-nav-section="all" 
@@ -217,7 +214,6 @@ const serverSyncIso = propSyncIso || (await getLastSyncTimestampAsync()) || new 
         >
           Portada
         </button>
-        <span class="text-slate-300 dark:text-slate-700">•</span>
         <button 
           type="button" 
           data-nav-section="Política" 
@@ -225,7 +221,6 @@ const serverSyncIso = propSyncIso || (await getLastSyncTimestampAsync()) || new 
         >
           Política
         </button>
-        <span class="text-slate-300 dark:text-slate-700">•</span>
         <button 
           type="button" 
           data-nav-section="Economía" 
@@ -233,7 +228,6 @@ const serverSyncIso = propSyncIso || (await getLastSyncTimestampAsync()) || new 
         >
           Economía
         </button>
-        <span class="text-slate-300 dark:text-slate-700">•</span>
         <button 
           type="button" 
           data-nav-section="Sociedad" 
@@ -241,10 +235,9 @@ const serverSyncIso = propSyncIso || (await getLastSyncTimestampAsync()) || new 
         >
           Sociedad
         </button>
-        <span class="text-slate-300 dark:text-slate-700">•</span>
         <a 
           href="/guias" 
-          class="px-2 py-0.5 sm:py-1 rounded bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-slate-100 hover:bg-slate-200 dark:hover:bg-slate-800 transition-colors whitespace-nowrap inline-flex items-center gap-1 font-semibold"
+          class="px-2.5 py-0.5 sm:py-1 rounded bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-slate-100 hover:bg-slate-200 dark:hover:bg-slate-800 transition-colors whitespace-nowrap inline-flex items-center gap-1 font-semibold"
         >
           <span>Guías & Medios</span>
         </a>
@@ -260,19 +253,19 @@ const serverSyncIso = propSyncIso || (await getLastSyncTimestampAsync()) || new 
             placeholder="Buscar..." 
             class="w-full bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg pl-2.5 pr-6 py-1 text-xs text-slate-900 dark:text-slate-200 placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:border-slate-400 dark:focus:border-slate-500 focus:bg-white dark:focus:bg-slate-950 shadow-xs transition-colors font-sans"
           />
-          <svg class="w-3.5 h-3.5 text-slate-400 dark:text-slate-500 absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <svg aria-hidden="true" class="w-3.5 h-3.5 text-slate-400 dark:text-slate-500 absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
           </svg>
         </div>
 
         <!-- View Switcher Tabs (Temas del Día / Noticias / Mirada Exterior) -->
-        <nav class="flex items-center p-0.5 sm:p-1 rounded-xl bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-xs font-mono shrink-0 overflow-x-auto [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden" id="view-tabs">
+        <nav class="flex items-center p-0.5 sm:p-1 rounded-xl bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-xs font-sans shrink-0 overflow-x-auto [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden" id="view-tabs">
           <button 
             type="button"
             data-tab="temas-del-dia"
-            class={`tab-btn py-1 rounded-lg transition-all duration-200 flex items-center gap-1 text-slate-900 dark:text-white bg-white dark:bg-slate-800 shadow-xs whitespace-nowrap font-bold ${isBrazilElectionActive ? 'px-1.5 sm:px-2' : 'px-2 sm:px-2.5'}`}
+            class={`tab-btn py-1 rounded-lg transition-colors duration-200 flex items-center gap-1 text-slate-900 dark:text-white bg-white dark:bg-slate-800 shadow-xs whitespace-nowrap font-bold ${isBrazilElectionActive ? 'px-1.5 sm:px-2' : 'px-2 sm:px-2.5'}`}
           >
-            <svg class="w-3.5 h-3.5 text-slate-700 dark:text-slate-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <svg aria-hidden="true" class="w-3.5 h-3.5 text-slate-700 dark:text-slate-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
             </svg>
             <span>Tapa del Día</span>
@@ -281,9 +274,9 @@ const serverSyncIso = propSyncIso || (await getLastSyncTimestampAsync()) || new 
           <button 
             type="button"
             data-tab="ultimo-momento"
-            class={`tab-btn py-1 rounded-lg transition-all duration-200 flex items-center gap-1 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 whitespace-nowrap ${isBrazilElectionActive ? 'px-1.5 sm:px-2' : 'px-2 sm:px-2.5'}`}
+            class={`tab-btn py-1 rounded-lg transition-colors duration-200 flex items-center gap-1 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 whitespace-nowrap ${isBrazilElectionActive ? 'px-1.5 sm:px-2' : 'px-2 sm:px-2.5'}`}
           >
-            <svg class="w-3.5 h-3.5 text-slate-500 dark:text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <svg aria-hidden="true" class="w-3.5 h-3.5 text-slate-500 dark:text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
             </svg>
             <span>Minuto a Minuto</span>
@@ -292,9 +285,9 @@ const serverSyncIso = propSyncIso || (await getLastSyncTimestampAsync()) || new 
           <button 
             type="button"
             data-tab="mirada-exterior"
-            class={`tab-btn py-1 rounded-lg transition-all duration-200 flex items-center gap-1 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 whitespace-nowrap ${isBrazilElectionActive ? 'px-1.5 sm:px-2' : 'px-2 sm:px-2.5'}`}
+            class={`tab-btn py-1 rounded-lg transition-colors duration-200 flex items-center gap-1 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 whitespace-nowrap ${isBrazilElectionActive ? 'px-1.5 sm:px-2' : 'px-2 sm:px-2.5'}`}
           >
-            <svg class="w-3.5 h-3.5 text-slate-500 dark:text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <svg aria-hidden="true" class="w-3.5 h-3.5 text-slate-500 dark:text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
             <span>Mirada Exterior</span>
@@ -303,9 +296,9 @@ const serverSyncIso = propSyncIso || (await getLastSyncTimestampAsync()) || new 
           <button 
             type="button"
             data-tab="promesas"
-            class={`tab-btn py-1 rounded-lg transition-all duration-200 flex items-center gap-1 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 whitespace-nowrap ${isBrazilElectionActive ? 'px-1.5 sm:px-2' : 'px-2 sm:px-2.5'}`}
+            class={`tab-btn py-1 rounded-lg transition-colors duration-200 flex items-center gap-1 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 whitespace-nowrap ${isBrazilElectionActive ? 'px-1.5 sm:px-2' : 'px-2 sm:px-2.5'}`}
           >
-            <svg class="w-3.5 h-3.5 text-slate-500 dark:text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <svg aria-hidden="true" class="w-3.5 h-3.5 text-slate-500 dark:text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
             <span>Promesas 2027</span>
@@ -316,11 +309,10 @@ const serverSyncIso = propSyncIso || (await getLastSyncTimestampAsync()) || new 
             <button 
               type="button" 
               data-tab="elecciones-brasil"
-              class="tab-btn relative overflow-hidden pl-2.5 sm:pl-3 pr-8 sm:pr-9 py-1 rounded-full border border-emerald-500/50 hover:border-emerald-400 bg-slate-950 transition-all duration-200 flex items-center gap-1.5 whitespace-nowrap shadow-xs cursor-pointer group shrink-0"
-              style="background: linear-gradient(90deg, #07151e 0%, #0c202d 46%, rgba(12, 32, 45, 0.45) 75%, rgba(12, 32, 45, 0.1) 100%), url('/images/flags/brasil.svg') right 0px center / 44px auto no-repeat;"
+              class="tab-btn brazil-pill-bg relative overflow-hidden pl-2.5 sm:pl-3 pr-8 sm:pr-9 py-1 rounded-full border border-emerald-500/50 hover:border-emerald-400 bg-slate-950 transition-colors duration-200 flex items-center gap-1.5 whitespace-nowrap shadow-xs cursor-pointer group shrink-0"
               title="Cobertura Especial: Elecciones Presidenciales Brasil 2026"
             >
-              <span class="font-bold text-xs text-white tracking-tight drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)]">Elecciones 2026</span>
+              <span class="font-bold text-xs text-white tracking-tight drop-shadow-xs">Elecciones 2026</span>
             </button>
           )}
 

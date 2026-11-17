@@ -15,15 +15,14 @@ if (!banner || !banner.is_active) {
 ---
 
 <div class={`w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 my-6 ${className}`} id="civic-ad-banner">
-  <div class="relative overflow-hidden rounded-xl border border-zinc-800 bg-zinc-950/70 p-1.5 sm:p-2 shadow-sm transition-all hover:border-zinc-700">
+  <div class="relative overflow-hidden rounded-xl border border-zinc-800 bg-zinc-950/70 p-1.5 sm:p-2 shadow-sm transition-colors hover:border-zinc-700">
     <div class="flex items-center justify-between px-2.5 py-1 mb-1.5 border-b border-zinc-800/60">
       <div class="flex items-center gap-1.5">
-        <span class="inline-block w-1.5 h-1.5 rounded-full bg-amber-500/80"></span>
-        <span class="text-[10px] font-mono tracking-widest uppercase text-zinc-400 font-semibold">
+        <span class="text-xs font-sans text-zinc-400 font-semibold">
           Patrocinio Cívico e Institucional
         </span>
       </div>
-      <span class="text-[10px] font-mono text-zinc-400">
+      <span class="text-[11px] font-sans text-zinc-400">
         Espacio transparente auditado
       </span>
     </div>
@@ -32,7 +31,7 @@ if (!banner || !banner.is_active) {
       href={banner.destination_url} 
       target="_blank" 
       rel="noopener noreferrer sponsored"
-      class="group block relative w-full overflow-hidden rounded-lg bg-zinc-900 focus:outline-none focus:ring-2 focus:ring-[#6BA4D9]"
+      class="group block relative w-full overflow-hidden rounded-lg bg-zinc-900 focus:outline-none focus:ring-2 focus:ring-arg-blue"
       title={banner.title}
     >
       <div class="relative w-full aspect-[21/9] sm:aspect-[32/9] md:aspect-[40/9] max-h-36 overflow-hidden flex items-center justify-center bg-zinc-900/90">
@@ -41,7 +40,7 @@ if (!banner || !banner.is_active) {
           alt={banner.title}
           loading="lazy"
           decoding="async"
-          class="w-full h-full object-cover sm:object-contain object-center transition-transform duration-300 group-hover:scale-[1.01]"
+          class="w-full h-full object-cover sm:object-contain object-center motion-safe:transition-transform duration-300 motion-safe:group-hover:scale-[1.01]"
         />
         <div class="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end justify-between p-3">
           <span class="text-xs font-medium text-white truncate max-w-[80%] drop-shadow-sm font-sans">

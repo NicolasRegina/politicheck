@@ -8,7 +8,7 @@ import BrandLogo from './BrandLogo.astro';
   id="offline-indicator" 
   class="hidden fixed top-0 inset-x-0 z-50 py-1.5 px-4 bg-amber-500 text-slate-950 font-mono text-xs font-bold text-center shadow-md flex items-center justify-center gap-2"
 >
-  <span class="w-2 h-2 rounded-full bg-slate-950 animate-ping"></span>
+  <span class="w-2 h-2 rounded-full bg-slate-950 motion-safe:animate-ping" aria-hidden="true"></span>
   <span>Modo Sin Conexión: Visualizando noticias guardadas en caché local.</span>
 </div>
 
@@ -22,7 +22,7 @@ import BrandLogo from './BrandLogo.astro';
 <!-- Adaptive PWA Install Sheet / Card -->
 <aside 
   id="pwa-install-banner" 
-  class="fixed inset-x-0 bottom-0 sm:inset-x-auto sm:bottom-6 sm:left-6 z-50 w-full sm:max-w-md p-5 sm:p-5 rounded-t-3xl sm:rounded-2xl bg-white/98 dark:bg-slate-900/98 backdrop-blur-md border-t sm:border border-slate-200 dark:border-slate-800 shadow-2xl transition-all duration-300 ease-out transform translate-y-full opacity-0 pointer-events-none"
+  class="fixed inset-x-0 bottom-0 sm:inset-x-auto sm:bottom-6 sm:left-6 z-50 w-full sm:max-w-md p-5 sm:p-5 rounded-t-3xl sm:rounded-2xl bg-white/98 dark:bg-slate-900/98 backdrop-blur-md border-t sm:border border-slate-200 dark:border-slate-800 shadow-2xl motion-safe:transition-transform transition-opacity duration-300 ease-out transform translate-y-full opacity-0 pointer-events-none"
   aria-label="Instalar aplicación web de Politicheck"
 >
   <!-- Mobile Drag / Bottom Sheet Pill Indicator -->
@@ -34,10 +34,10 @@ import BrandLogo from './BrandLogo.astro';
       <BrandLogo size={38} />
       <div>
         <div class="flex items-center gap-1.5">
-          <h4 class="font-bold text-slate-950 dark:text-white font-mono text-sm tracking-tight" id="pwa-title-text">
+          <h4 class="font-bold text-slate-950 dark:text-white font-sans text-sm tracking-tight" id="pwa-title-text">
             Instalar Politicheck
           </h4>
-          <span class="px-1.5 py-0.5 rounded text-[9px] font-mono font-bold bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800">
+          <span class="px-1.5 py-0.5 rounded text-[10px] font-sans font-bold bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800">
             PWA
           </span>
         </div>
@@ -52,7 +52,7 @@ import BrandLogo from './BrandLogo.astro';
       class="text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 p-1.5 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
       aria-label="Cerrar aviso de instalación"
     >
-      <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <svg aria-hidden="true" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
       </svg>
     </button>
@@ -60,31 +60,31 @@ import BrandLogo from './BrandLogo.astro';
 
   <!-- VIEW 1: Android / Chromium / Desktop (One-click native install) -->
   <div id="pwa-android-view" class="space-y-3 pt-3">
-    <div class="grid grid-cols-3 gap-2 text-[10px] font-mono text-slate-600 dark:text-slate-400 py-1">
-      <div class="p-2 rounded-lg bg-slate-50 dark:bg-slate-800/60 border border-slate-200/80 dark:border-slate-800 text-center">
-        <span class="block text-sm mb-0.5">⚡</span>
+    <div class="grid grid-cols-3 gap-2 text-[11px] font-sans text-slate-600 dark:text-slate-400 py-1">
+      <div class="p-2 rounded-lg bg-slate-50 dark:bg-slate-800/60 border border-slate-200/80 dark:border-slate-800 text-center flex flex-col items-center gap-0.5">
+        <svg aria-hidden="true" class="w-4 h-4 text-amber-500 mb-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>
         <span class="font-semibold text-slate-800 dark:text-slate-200">1 Toque</span>
-        <span class="block text-[9px] text-slate-400">Acceso veloz</span>
+        <span class="block text-[10px] text-slate-400">Acceso veloz</span>
       </div>
-      <div class="p-2 rounded-lg bg-slate-50 dark:bg-slate-800/60 border border-slate-200/80 dark:border-slate-800 text-center">
-        <span class="block text-sm mb-0.5">📴</span>
+      <div class="p-2 rounded-lg bg-slate-50 dark:bg-slate-800/60 border border-slate-200/80 dark:border-slate-800 text-center flex flex-col items-center gap-0.5">
+        <svg aria-hidden="true" class="w-4 h-4 text-slate-500 mb-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14M12 5l7 7-7 7" /></svg>
         <span class="font-semibold text-slate-800 dark:text-slate-200">Offline</span>
-        <span class="block text-[9px] text-slate-400">Caché local</span>
+        <span class="block text-[10px] text-slate-400">Caché local</span>
       </div>
-      <div class="p-2 rounded-lg bg-slate-50 dark:bg-slate-800/60 border border-slate-200/80 dark:border-slate-800 text-center">
-        <span class="block text-sm mb-0.5">🛡️</span>
+      <div class="p-2 rounded-lg bg-slate-50 dark:bg-slate-800/60 border border-slate-200/80 dark:border-slate-800 text-center flex flex-col items-center gap-0.5">
+        <svg aria-hidden="true" class="w-4 h-4 text-emerald-500 mb-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" /></svg>
         <span class="font-semibold text-slate-800 dark:text-slate-200">0 Pauta</span>
-        <span class="block text-[9px] text-slate-400">Sin publicidad</span>
+        <span class="block text-[10px] text-slate-400">Sin publicidad</span>
       </div>
     </div>
 
-    <div class="flex items-center gap-2 pt-1 font-mono text-xs">
+    <div class="flex items-center gap-2 pt-1 font-sans text-xs">
       <button 
         type="button" 
         id="pwa-install-btn" 
-        class="flex-1 py-2.5 px-4 rounded-xl bg-slate-900 hover:bg-slate-800 text-white dark:bg-white dark:hover:bg-slate-100 dark:text-slate-950 font-bold transition-all shadow-md text-center flex items-center justify-center gap-1.5 cursor-pointer active:scale-98"
+        class="flex-1 py-2.5 px-4 rounded-xl bg-slate-900 hover:bg-slate-800 text-white dark:bg-white dark:hover:bg-slate-100 dark:text-slate-950 font-bold transition-colors shadow-md text-center flex items-center justify-center gap-1.5 cursor-pointer"
       >
-        <span>📲</span>
+        <svg aria-hidden="true" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" /></svg>
         <span>Instalar App</span>
       </button>
       <button 
@@ -99,15 +99,15 @@ import BrandLogo from './BrandLogo.astro';
 
   <!-- VIEW 2: iOS / Safari Guide (2-step visual walkthrough) -->
   <div id="pwa-ios-view" class="hidden space-y-3 pt-3">
-    <div class="p-3 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-800 space-y-2.5 text-xs font-mono">
+    <div class="p-3 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-800 space-y-2.5 text-xs font-sans">
       <div class="flex items-start gap-2.5">
         <span class="flex items-center justify-center w-6 h-6 rounded-lg bg-blue-500/10 text-blue-600 dark:text-blue-400 font-bold text-xs shrink-0 mt-0.5 border border-blue-500/20">
           1
         </span>
-        <div class="leading-relaxed text-slate-700 dark:text-slate-300 text-[11px]">
+        <div class="leading-relaxed text-slate-700 dark:text-slate-300 text-xs">
           Tocá el botón <strong class="text-slate-950 dark:text-white">Compartir</strong> 
           <span class="inline-flex items-center justify-center px-1.5 py-0.5 rounded bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 align-middle text-blue-500 font-bold text-[10px] mx-0.5">
-            <svg class="w-3.5 h-3.5 inline" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <svg aria-hidden="true" class="w-3.5 h-3.5 inline" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
             </svg>
           </span>
@@ -119,20 +119,20 @@ import BrandLogo from './BrandLogo.astro';
         <span class="flex items-center justify-center w-6 h-6 rounded-lg bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 font-bold text-xs shrink-0 mt-0.5 border border-emerald-500/20">
           2
         </span>
-        <div class="leading-relaxed text-slate-700 dark:text-slate-300 text-[11px]">
+        <div class="leading-relaxed text-slate-700 dark:text-slate-300 text-xs">
           Deslizá hacia abajo y seleccioná <strong class="text-slate-950 dark:text-white">"Agregar a pantalla de inicio"</strong> 
           <span class="inline-flex items-center justify-center px-1.5 py-0.5 rounded bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 align-middle text-emerald-500 font-bold text-[10px] mx-0.5">
-            ➕
+            <svg aria-hidden="true" class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" /></svg>
           </span>.
         </div>
       </div>
     </div>
 
-    <div class="flex items-center gap-2 pt-1 font-mono text-xs">
+    <div class="flex items-center gap-2 pt-1 font-sans text-xs">
       <button 
         type="button" 
         id="pwa-ios-done-btn" 
-        class="w-full py-2.5 px-4 rounded-xl bg-slate-900 hover:bg-slate-800 text-white dark:bg-white dark:hover:bg-slate-100 dark:text-slate-950 font-bold transition-all shadow-md text-center cursor-pointer active:scale-98"
+        class="w-full py-2.5 px-4 rounded-xl bg-slate-900 hover:bg-slate-800 text-white dark:bg-white dark:hover:bg-slate-100 dark:text-slate-950 font-bold transition-colors shadow-md text-center cursor-pointer"
       >
         Entendido
       </button>
@@ -209,7 +209,7 @@ import BrandLogo from './BrandLogo.astro';
       if (!banner) return;
       if (isAppStandalone()) {
         if (force && typeof window.showPoliticheckToast === 'function') {
-          window.showPoliticheckToast('App ya instalada', 'Politicheck ya está ejecutándose en modo nativo.', '📲');
+          window.showPoliticheckToast('App ya instalada', 'Politicheck ya está ejecutándose en modo nativo.', 'check');
         }
         return;
       }
@@ -281,7 +281,7 @@ import BrandLogo from './BrandLogo.astro';
         } else {
           // If browser didn't fire beforeinstallprompt yet (or already installed)
           if (typeof window.showPoliticheckToast === 'function') {
-            window.showPoliticheckToast('Instalar Politicheck', 'Tocá el menú de tu navegador (⋮) y seleccioná "Instalar aplicación" o "Agregar a la pantalla principal".', '📲');
+            window.showPoliticheckToast('Instalar Politicheck', 'Tocá el menú de tu navegador y seleccioná "Instalar aplicación" o "Agregar a la pantalla principal".', 'check');
           }
           hideBanner(true);
         }
@@ -310,7 +310,7 @@ import BrandLogo from './BrandLogo.astro';
   window.subscribeToMorningDigest = async function() {
     if (!('Notification' in window)) {
       if (typeof window.showPoliticheckToast === 'function') {
-        window.showPoliticheckToast('Notificaciones no soportadas', 'Tu navegador no admite notificaciones push.', '⚠️');
+        window.showPoliticheckToast('Notificaciones no soportadas', 'Tu navegador no admite notificaciones push.', 'check');
       }
       return;
     }
@@ -321,9 +321,9 @@ import BrandLogo from './BrandLogo.astro';
         localStorage.setItem('politicheck-morning-digest', 'enabled');
         if (typeof window.showPoliticheckToast === 'function') {
           window.showPoliticheckToast(
-            '¡Suscripción activa!',
+            'Suscripción activa',
             'Recibirás el resumen con el contraste de las 31 tapas cada mañana a las 8:00 AM.',
-            '📬'
+            'check'
           );
         }
       } else {
@@ -331,7 +331,7 @@ import BrandLogo from './BrandLogo.astro';
           window.showPoliticheckToast(
             'Permiso denegado',
             'Podés activar las notificaciones desde la configuración del navegador.',
-            'ℹ️'
+            'check'
           );
         }
       }

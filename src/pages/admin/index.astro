@@ -17,7 +17,7 @@ const liveArticles = await getCachedArticlesAsync();
   title="Centro de Control Editorial & Superadmin • Politicheck"
   description="Panel de administración y gobernanza editorial de Politicheck Argentina."
 >
-  <div class="min-h-screen bg-slate-50 dark:bg-[#070A0F] text-slate-900 dark:text-slate-100 py-6 sm:py-8">
+  <div class="min-h-screen bg-slate-50 dark:bg-canvas-dark text-slate-900 dark:text-slate-100 py-6 sm:py-8">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       
       <!-- Top Bar: Institutional Identity & User Status -->
@@ -29,11 +29,11 @@ const liveArticles = await getCachedArticlesAsync();
               <h1 class="font-editorial text-2xl font-bold tracking-tight text-slate-950 dark:text-white">
                 Centro de Control Editorial
               </h1>
-              <span id="user-role-badge" class="px-2 py-0.5 rounded text-[10px] font-mono font-bold uppercase tracking-wider bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300">
+              <span id="user-role-badge" class="px-2 py-0.5 rounded text-[11px] font-sans font-bold bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300">
                 Verificando...
               </span>
             </div>
-            <p class="text-xs font-mono text-slate-500 dark:text-slate-400">
+            <p class="text-xs font-sans text-slate-500 dark:text-slate-400">
               Observatorio de Cobertura Periodística & Auditoría Electoral
             </p>
           </div>
@@ -42,25 +42,25 @@ const liveArticles = await getCachedArticlesAsync();
         <!-- User Controls -->
         <div class="flex flex-wrap items-center gap-2 sm:gap-3 w-full md:w-auto justify-between md:justify-end">
           <div class="flex items-center gap-2 text-xs font-mono bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 px-3 py-1.5 rounded-xl shadow-2xs">
-            <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+            <span class="w-2 h-2 rounded-full bg-emerald-500 motion-safe:animate-pulse" aria-hidden="true"></span>
             <span id="current-user-email" class="text-slate-700 dark:text-slate-300 font-medium">Cargando sesión...</span>
           </div>
 
           <a 
             href="/" 
             target="_blank" 
-            class="px-3 py-1.5 rounded-xl bg-white hover:bg-slate-100 dark:bg-slate-900 dark:hover:bg-slate-800 border border-slate-200 dark:border-slate-800 text-xs font-mono font-semibold text-slate-700 dark:text-slate-300 transition-colors flex items-center gap-1.5 shadow-2xs"
+            class="px-3 py-1.5 rounded-xl bg-white hover:bg-slate-100 dark:bg-slate-900 dark:hover:bg-slate-800 border border-slate-200 dark:border-slate-800 text-xs font-sans font-semibold text-slate-700 dark:text-slate-300 transition-colors flex items-center gap-1.5 shadow-2xs"
           >
-            <span>Ver Sitio Público</span>
-            <span class="text-slate-400">↗</span>
+            <span>Ver sitio público</span>
+            <svg aria-hidden="true" class="w-3 h-3 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" /></svg>
           </a>
 
           <button 
             type="button" 
             id="logout-btn"
-            class="px-3 py-1.5 rounded-xl bg-rose-50 hover:bg-rose-100 dark:bg-rose-950/40 dark:hover:bg-rose-900/60 text-rose-700 dark:text-rose-300 border border-rose-200 dark:border-rose-900/40 text-xs font-mono font-semibold transition-colors cursor-pointer shadow-2xs"
+            class="px-3 py-1.5 rounded-xl bg-rose-50 hover:bg-rose-100 dark:bg-rose-950/40 dark:hover:bg-rose-900/60 text-rose-700 dark:text-rose-300 border border-rose-200 dark:border-rose-900/40 text-xs font-sans font-semibold transition-colors cursor-pointer shadow-2xs"
           >
-            Cerrar Sesión
+            Cerrar sesión
           </button>
         </div>
       </header>
@@ -69,39 +69,39 @@ const liveArticles = await getCachedArticlesAsync();
       <nav class="flex border-b border-slate-200 dark:border-slate-800 mb-8 overflow-x-auto no-scrollbar gap-2">
         <button 
           type="button" 
-          class="tab-btn active px-4 py-2.5 text-xs font-mono font-bold uppercase tracking-wider border-b-2 border-[#0B111A] dark:border-white text-slate-950 dark:text-white transition-all cursor-pointer whitespace-nowrap flex items-center gap-2"
+          class="tab-btn active px-4 py-2.5 text-xs font-sans font-bold border-b-2 border-navy-dark dark:border-white text-slate-950 dark:text-white transition-colors cursor-pointer whitespace-nowrap flex items-center gap-2"
           data-tab="sync"
         >
-          <span>📊</span>
-          <span>Salud & Sincronización</span>
+          <svg aria-hidden="true" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" /></svg>
+          <span>Salud y sincronización</span>
         </button>
 
         <button 
           type="button" 
-          class="tab-btn px-4 py-2.5 text-xs font-mono font-bold uppercase tracking-wider border-b-2 border-transparent text-slate-500 hover:text-slate-900 dark:hover:text-slate-300 transition-all cursor-pointer whitespace-nowrap flex items-center gap-2"
+          class="tab-btn px-4 py-2.5 text-xs font-sans font-bold border-b-2 border-transparent text-slate-500 hover:text-slate-900 dark:hover:text-slate-300 transition-colors cursor-pointer whitespace-nowrap flex items-center gap-2"
           data-tab="banners"
         >
-          <span>📢</span>
-          <span>Gestor de Banners Cívicos</span>
+          <svg aria-hidden="true" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z" /></svg>
+          <span>Gestor de banners cívicos</span>
         </button>
 
         <button 
           type="button" 
-          class="tab-btn px-4 py-2.5 text-xs font-mono font-bold uppercase tracking-wider border-b-2 border-transparent text-slate-500 hover:text-slate-900 dark:hover:text-slate-300 transition-all cursor-pointer whitespace-nowrap flex items-center gap-2"
+          class="tab-btn px-4 py-2.5 text-xs font-sans font-bold border-b-2 border-transparent text-slate-500 hover:text-slate-900 dark:hover:text-slate-300 transition-colors cursor-pointer whitespace-nowrap flex items-center gap-2"
           data-tab="rrss"
         >
-          <span>🕊️</span>
+          <svg aria-hidden="true" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" /></svg>
           <span>Sindicación RRSS (X / Redes)</span>
         </button>
 
         <button 
           type="button" 
           id="tab-btn-users"
-          class="tab-btn hidden px-4 py-2.5 text-xs font-mono font-bold uppercase tracking-wider border-b-2 border-transparent text-slate-500 hover:text-slate-900 dark:hover:text-slate-300 transition-all cursor-pointer whitespace-nowrap flex items-center gap-2"
+          class="tab-btn hidden px-4 py-2.5 text-xs font-sans font-bold border-b-2 border-transparent text-slate-500 hover:text-slate-900 dark:hover:text-slate-300 transition-colors cursor-pointer whitespace-nowrap flex items-center gap-2"
           data-tab="users"
         >
-          <span>👥</span>
-          <span>Gobernanza & Roles (Superadmin)</span>
+          <svg aria-hidden="true" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" /></svg>
+          <span>Gobernanza y roles (Superadmin)</span>
         </button>
       </nav>
 
@@ -112,36 +112,35 @@ const liveArticles = await getCachedArticlesAsync();
         <!-- Overview Stats Grid -->
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-5 shadow-2xs">
-            <div class="text-[11px] font-mono uppercase text-slate-500 dark:text-slate-400 font-semibold mb-1">Medios Monitoreados</div>
+            <div class="text-xs font-sans text-slate-500 dark:text-slate-400 font-semibold mb-1">Medios monitoreados</div>
             <div class="text-3xl font-extrabold text-slate-950 dark:text-white font-mono">31</div>
-            <div class="text-[10px] font-mono text-emerald-600 dark:text-emerald-400 mt-2 flex items-center gap-1">
-              <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+            <div class="text-[11px] font-sans text-emerald-600 dark:text-emerald-400 mt-2 flex items-center gap-1">
               19 nacionales + 12 internacionales
             </div>
           </div>
 
           <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-5 shadow-2xs">
-            <div class="text-[11px] font-mono uppercase text-slate-500 dark:text-slate-400 font-semibold mb-1">Historias en Portada</div>
+            <div class="text-xs font-sans text-slate-500 dark:text-slate-400 font-semibold mb-1">Historias en portada</div>
             <div class="text-3xl font-extrabold text-slate-950 dark:text-white font-mono">{cachedClusters.length}</div>
-            <div class="text-[10px] font-mono text-slate-500 dark:text-slate-400 mt-2">
+            <div class="text-[11px] font-sans text-slate-500 dark:text-slate-400 mt-2">
               Clustering IA Gemini 2.5
             </div>
           </div>
 
           <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-5 shadow-2xs">
-            <div class="text-[11px] font-mono uppercase text-slate-500 dark:text-slate-400 font-semibold mb-1">Noticias en Cable Vivo</div>
+            <div class="text-xs font-sans text-slate-500 dark:text-slate-400 font-semibold mb-1">Noticias en cable vivo</div>
             <div class="text-3xl font-extrabold text-slate-950 dark:text-white font-mono">{liveArticles.length}</div>
-            <div class="text-[10px] font-mono text-slate-500 dark:text-slate-400 mt-2">
+            <div class="text-[11px] font-sans text-slate-500 dark:text-slate-400 mt-2">
               Flujo cronológico continuo
             </div>
           </div>
 
           <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-5 shadow-2xs">
-            <div class="text-[11px] font-mono uppercase text-slate-500 dark:text-slate-400 font-semibold mb-1">Última Sincronización</div>
+            <div class="text-xs font-sans text-slate-500 dark:text-slate-400 font-semibold mb-1">Última sincronización</div>
             <div class="text-sm font-bold text-slate-900 dark:text-white font-mono truncate" id="stat-last-sync-time">
               {lastSyncTimestamp ? new Date(lastSyncTimestamp).toLocaleTimeString('es-AR', { hour: '2-digit', minute: '2-digit', second: '2-digit' }) : 'Pendiente'}
             </div>
-            <div class="text-[10px] font-mono text-slate-400 mt-2 truncate">
+            <div class="text-[11px] font-mono text-slate-400 mt-2 truncate">
               {lastSyncTimestamp ? new Date(lastSyncTimestamp).toLocaleDateString('es-AR') : 'Sin registro'}
             </div>
           </div>
@@ -154,7 +153,7 @@ const liveArticles = await getCachedArticlesAsync();
               <h2 class="font-editorial text-xl font-bold text-slate-950 dark:text-white">
                 Sincronización Forzada de Redacciones
               </h2>
-              <p class="text-xs font-mono text-slate-500 dark:text-slate-400 mt-1 max-w-2xl leading-relaxed">
+              <p class="text-xs font-sans text-slate-500 dark:text-slate-400 mt-1 max-w-2xl leading-relaxed">
                 Dispara el raspado inmediato de los 31 feeds RSS oficiales y fuerza a Google Gemini a re-clusterizar las noticias de portada ignorando el temporizador de cooldown.
               </p>
             </div>
@@ -162,18 +161,20 @@ const liveArticles = await getCachedArticlesAsync();
             <button 
               type="button" 
               id="force-sync-btn"
-              class="px-5 py-2.5 rounded-xl bg-[#0B111A] hover:bg-slate-800 dark:bg-white dark:hover:bg-slate-100 text-white dark:text-slate-950 font-bold text-xs uppercase tracking-wider transition-all flex items-center gap-2 cursor-pointer font-mono shrink-0 shadow-sm"
+              class="px-5 py-2.5 rounded-xl bg-navy-dark hover:bg-slate-800 dark:bg-white dark:hover:bg-slate-100 text-white dark:text-slate-950 font-bold text-xs transition-colors flex items-center gap-2 cursor-pointer font-sans shrink-0 shadow-sm"
             >
-              <span id="sync-btn-icon">⚡</span>
-              <span id="sync-btn-text">Forzar Sincronización Ahora</span>
+              <span id="sync-btn-icon" aria-hidden="true">
+                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>
+              </span>
+              <span id="sync-btn-text">Forzar sincronización ahora</span>
             </button>
           </div>
 
           <!-- Live Progress / Output Terminal -->
           <div class="mt-6">
             <div class="flex items-center justify-between mb-2">
-              <span class="text-xs font-mono font-semibold uppercase text-slate-700 dark:text-slate-300">
-                Consola de Sincronización en Vivo
+              <span class="text-xs font-sans font-semibold text-slate-700 dark:text-slate-300">
+                Consola de sincronización en vivo
               </span>
               <span id="sync-status-indicator" class="text-[11px] font-mono text-slate-500">
                 En reposo
@@ -183,7 +184,7 @@ const liveArticles = await getCachedArticlesAsync();
               id="sync-terminal" 
               class="bg-slate-950 text-slate-300 font-mono text-xs p-4 rounded-xl h-44 overflow-y-auto border border-slate-800 space-y-1.5 select-text"
             >
-              <div class="text-slate-500">> Sistema de agregación listo. Presioná 'Forzar Sincronización Ahora' para disparar el pipeline.</div>
+              <div class="text-slate-500">> Sistema de agregación listo. Presioná 'Forzar sincronización ahora' para disparar el pipeline.</div>
             </div>
           </div>
         </div>
@@ -198,7 +199,7 @@ const liveArticles = await getCachedArticlesAsync();
             <h2 class="font-editorial text-2xl font-bold text-slate-950 dark:text-white">
               Gestor de Banners y Patrocinios Cívicos
             </h2>
-            <p class="text-xs font-mono text-slate-500 dark:text-slate-400 mt-1">
+            <p class="text-xs font-sans text-slate-500 dark:text-slate-400 mt-1">
               Administrá los espacios de patrocinio en la portada con compresión WebP para proteger la cuota de Supabase Storage.
             </p>
           </div>
@@ -206,16 +207,16 @@ const liveArticles = await getCachedArticlesAsync();
           <button 
             type="button" 
             id="open-banner-modal-btn"
-            class="px-4 py-2 rounded-xl bg-[#0B111A] hover:bg-slate-800 dark:bg-white dark:hover:bg-slate-100 text-white dark:text-slate-950 font-semibold text-xs font-mono transition-all flex items-center gap-1.5 cursor-pointer shadow-sm"
+            class="px-4 py-2 rounded-xl bg-navy-dark hover:bg-slate-800 dark:bg-white dark:hover:bg-slate-100 text-white dark:text-slate-950 font-semibold text-xs font-sans transition-colors flex items-center gap-1.5 cursor-pointer shadow-sm"
           >
-            <span>+ Crear Nuevo Banner</span>
+            <span>+ Crear nuevo banner</span>
           </button>
         </div>
 
         <!-- Banners List Container -->
         <div id="banners-list" class="space-y-4">
           <!-- Populated dynamically via JS -->
-          <div class="p-8 text-center bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl text-xs font-mono text-slate-500">
+          <div class="p-8 text-center bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl text-xs font-sans text-slate-500">
             Cargando banners...
           </div>
         </div>
@@ -227,7 +228,7 @@ const liveArticles = await getCachedArticlesAsync();
               <h3 id="modal-banner-title" class="font-editorial text-lg font-bold text-slate-950 dark:text-white">
                 Nuevo Banner de Patrocinio
               </h3>
-              <button type="button" id="close-banner-modal-btn" class="text-slate-400 hover:text-slate-700 dark:hover:text-white text-lg font-mono cursor-pointer">
+              <button type="button" id="close-banner-modal-btn" class="text-slate-400 hover:text-slate-700 dark:hover:text-white text-lg font-mono cursor-pointer" aria-label="Cerrar modal">
                 ✕
               </button>
             </div>
@@ -236,36 +237,36 @@ const liveArticles = await getCachedArticlesAsync();
               <input type="hidden" id="banner-id" name="id" />
 
               <div>
-                <label for="banner-title" class="block text-xs font-mono font-semibold uppercase text-slate-700 dark:text-slate-300 mb-1">
-                  Título del Patrocinio / Campaña
+                <label for="banner-title" class="block text-xs font-sans font-semibold text-slate-700 dark:text-slate-300 mb-1">
+                  Título del patrocinio / campaña
                 </label>
                 <input 
                   type="text" 
                   id="banner-title" 
                   required
                   placeholder="Ej: Observatorio Cívico de la Democracia"
-                  class="w-full px-3.5 py-2 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 text-xs text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#6BA4D9] font-sans"
+                  class="w-full px-3.5 py-2 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 text-xs text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-arg-blue font-sans"
                 />
               </div>
 
               <div>
-                <label for="banner-destination" class="block text-xs font-mono font-semibold uppercase text-slate-700 dark:text-slate-300 mb-1">
-                  URL de Destino
+                <label for="banner-destination" class="block text-xs font-sans font-semibold text-slate-700 dark:text-slate-300 mb-1">
+                  URL de destino
                 </label>
                 <input 
                   type="url" 
                   id="banner-destination" 
                   required
                   placeholder="https://ejemplo.com.ar"
-                  class="w-full px-3.5 py-2 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 text-xs text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#6BA4D9] font-mono"
+                  class="w-full px-3.5 py-2 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 text-xs text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-arg-blue font-mono"
                 />
               </div>
 
               <!-- Image Source Tabs: Upload with WebP Compression or External URL -->
               <div>
                 <div class="flex items-center justify-between mb-2">
-                  <label class="block text-xs font-mono font-semibold uppercase text-slate-700 dark:text-slate-300">
-                    Imagen del Banner
+                  <label class="block text-xs font-sans font-semibold text-slate-700 dark:text-slate-300">
+                    Imagen del banner
                   </label>
                   <span class="text-[10px] font-mono text-emerald-600 dark:text-emerald-400 font-semibold">
                     Compresión WebP Automática
@@ -285,7 +286,7 @@ const liveArticles = await getCachedArticlesAsync();
                       for="banner-file-input" 
                       class="cursor-pointer flex flex-col items-center justify-center gap-1.5"
                     >
-                      <span class="text-2xl">🖼️</span>
+                      <svg aria-hidden="true" class="w-6 h-6 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.75"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 001.5-1.5V6a1.5 1.5 0 00-1.5-1.5H3.75A1.5 1.5 0 002.25 6v12a1.5 1.5 0 001.5 1.5zm10.5-11.25h.008v.008h-.008V8.25zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z" /></svg>
                       <span class="text-xs font-mono font-bold text-slate-800 dark:text-slate-200">
                         Seleccionar imagen para comprimir a WebP
                       </span>
@@ -307,13 +308,13 @@ const liveArticles = await getCachedArticlesAsync();
                       type="text" 
                       id="banner-image-url" 
                       placeholder="https://... o data:image/webp;base64,..."
-                      class="w-full px-3.5 py-2 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 text-xs text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#6BA4D9] font-mono"
+                      class="w-full px-3.5 py-2 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 text-xs text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-arg-blue font-mono"
                     />
                   </div>
 
                   <!-- Live Preview -->
                   <div id="banner-preview-box" class="hidden rounded-xl border border-slate-200 dark:border-slate-800 overflow-hidden bg-slate-950 p-2">
-                    <div class="text-[10px] font-mono text-slate-400 uppercase tracking-widest mb-1 px-1">Previsualización:</div>
+                    <div class="text-[10px] font-mono text-slate-400 tracking-wide mb-1 px-1">Previsualización:</div>
                     <img id="banner-preview-img" src="" alt="Vista previa" class="w-full h-24 object-contain rounded-lg" />
                   </div>
                 </div>
@@ -321,12 +322,12 @@ const liveArticles = await getCachedArticlesAsync();
 
               <!-- Position Selector -->
               <div>
-                <label for="banner-position" class="block text-xs font-mono font-semibold uppercase text-slate-700 dark:text-slate-300 mb-1">
+                <label for="banner-position" class="block text-xs font-mono font-semibold text-slate-700 dark:text-slate-300 mb-1">
                   Posición en el Sitio
                 </label>
                 <select 
                   id="banner-position"
-                  class="w-full px-3.5 py-2 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 text-xs text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#6BA4D9] font-mono"
+                  class="w-full px-3.5 py-2 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 text-xs text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-arg-blue font-mono"
                 >
                   <option value="home_top">Portada (Entre Gran Apertura y Bento Grid)</option>
                   <option value="home_bottom">Pie de Portada (Antes de Metodología)</option>
@@ -338,7 +339,7 @@ const liveArticles = await getCachedArticlesAsync();
                 <input 
                   type="checkbox" 
                   id="banner-is-active"
-                  class="w-4 h-4 rounded text-[#0B111A] focus:ring-[#6BA4D9] border-slate-300 cursor-pointer"
+                  class="w-4 h-4 rounded text-navy-dark focus:ring-arg-blue border-slate-300 cursor-pointer"
                 />
                 <label for="banner-is-active" class="text-xs font-mono font-semibold text-slate-800 dark:text-slate-200 cursor-pointer">
                   Activar este banner en el sitio público inmediatamente
@@ -360,7 +361,7 @@ const liveArticles = await getCachedArticlesAsync();
                 <button 
                   type="submit" 
                   id="save-banner-btn"
-                  class="px-4 py-2 rounded-xl bg-[#0B111A] hover:bg-slate-800 dark:bg-white dark:hover:bg-slate-100 text-white dark:text-slate-950 font-semibold text-xs font-mono transition-all cursor-pointer shadow-sm"
+                  class="px-4 py-2 rounded-xl bg-navy-dark hover:bg-slate-800 dark:bg-white dark:hover:bg-slate-100 text-white dark:text-slate-950 font-semibold text-xs font-mono transition-colors cursor-pointer shadow-sm"
                 >
                   Guardar Banner
                 </button>
@@ -386,14 +387,14 @@ const liveArticles = await getCachedArticlesAsync();
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
           <!-- Left Column: Story Picker -->
           <div class="lg:col-span-5 space-y-3">
-            <div class="text-xs font-mono font-semibold uppercase text-slate-700 dark:text-slate-300 pb-2 border-b border-slate-200 dark:border-slate-800">
+            <div class="text-xs font-mono font-semibold text-slate-700 dark:text-slate-300 pb-2 border-b border-slate-200 dark:border-slate-800">
               Historias del Día ({cachedClusters.length})
             </div>
 
             <div class="space-y-2.5 max-h-[600px] overflow-y-auto pr-1">
               {cachedClusters.map((story, idx) => (
                 <div 
-                  class="story-picker-card p-3 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 hover:border-slate-400 transition-all cursor-pointer shadow-2xs"
+                  class="story-picker-card p-3 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 hover:border-slate-400 transition-colors cursor-pointer shadow-2xs"
                   data-index={idx}
                   data-headline={story.neutralHeadline}
                   data-id={story.id}
@@ -403,8 +404,8 @@ const liveArticles = await getCachedArticlesAsync();
                   data-outlets={Array.from(new Set(story.articles?.map((a: any) => a.outletName).filter(Boolean) || [])).slice(0, 3).join(', ')}
                 >
                   <div class="flex items-center gap-1.5 text-[10px] font-mono text-slate-400 mb-1">
-                    <span class="px-1.5 py-0.5 rounded bg-slate-100 dark:bg-slate-800 font-bold uppercase">{story.category}</span>
-                    <span>• {story.articles?.length || 0} medios contrastados</span>
+                    <span class="px-1.5 py-0.5 rounded bg-slate-100 dark:bg-slate-800 font-bold">{story.category}</span>
+                    <span>{story.articles?.length || 0} medios contrastados</span>
                   </div>
                   <h4 class="font-editorial text-sm font-bold text-slate-950 dark:text-white line-clamp-2">
                     {story.neutralHeadline}
@@ -418,7 +419,7 @@ const liveArticles = await getCachedArticlesAsync();
           <div class="lg:col-span-7 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 shadow-sm space-y-5">
             <div class="flex items-center justify-between pb-3 border-b border-slate-200 dark:border-slate-800">
               <div class="flex items-center gap-2">
-                <span class="text-lg">🕊️</span>
+                <svg aria-hidden="true" class="w-4 h-4 text-slate-600 dark:text-slate-300" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
                 <h3 class="font-editorial text-lg font-bold text-slate-950 dark:text-white">
                   Editor de Publicación para X
                 </h3>
@@ -436,7 +437,7 @@ const liveArticles = await getCachedArticlesAsync();
                 id="tweet-editor-textarea"
                 rows="6"
                 placeholder="Seleccioná una historia de la izquierda para autogenerar el copy..."
-                class="w-full p-4 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 text-sm text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#6BA4D9] font-sans leading-relaxed resize-none"
+                class="w-full p-4 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 text-sm text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-arg-blue font-sans leading-relaxed resize-none"
               ></textarea>
             </div>
 
@@ -444,9 +445,9 @@ const liveArticles = await getCachedArticlesAsync();
             <div id="tweet-spectrum-preview" class="p-3 rounded-xl bg-slate-100 dark:bg-slate-950/80 border border-slate-200 dark:border-slate-800 text-xs font-mono flex items-center justify-between">
               <span class="text-slate-500">Espectro de Cobertura:</span>
               <div class="flex items-center gap-3 font-bold" id="tweet-spectrum-tags">
-                <span class="text-purple-600">🟣 Oficialismo: -%</span>
-                <span class="text-emerald-600">🟢 Centro: -%</span>
-                <span class="text-amber-600">🟠 Oposición: -%</span>
+                <span class="inline-flex items-center gap-1.5 text-purple-600"><span class="w-2 h-2 rounded-full bg-purple-600" aria-hidden="true"></span>Oficialismo: -%</span>
+                <span class="inline-flex items-center gap-1.5 text-emerald-600"><span class="w-2 h-2 rounded-full bg-emerald-600" aria-hidden="true"></span>Centro: -%</span>
+                <span class="inline-flex items-center gap-1.5 text-amber-600"><span class="w-2 h-2 rounded-full bg-amber-600" aria-hidden="true"></span>Oposición: -%</span>
               </div>
             </div>
 
@@ -456,9 +457,9 @@ const liveArticles = await getCachedArticlesAsync();
               <button 
                 type="button" 
                 id="copy-tweet-btn"
-                class="px-5 py-3 rounded-xl bg-[#0B111A] hover:bg-slate-800 dark:bg-white dark:hover:bg-slate-100 text-white dark:text-slate-950 font-bold text-xs uppercase tracking-wider font-mono transition-all flex items-center justify-center gap-2 cursor-pointer shadow-sm"
+                class="px-5 py-3 rounded-xl bg-navy-dark hover:bg-slate-800 dark:bg-white dark:hover:bg-slate-100 text-white dark:text-slate-950 font-bold text-xs tracking-wide font-mono transition-colors flex items-center justify-center gap-2 cursor-pointer shadow-sm"
               >
-                <span id="copy-icon">📋</span>
+                <span id="copy-icon" aria-hidden="true"><svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" /></svg></span>
                 <span id="copy-btn-text">Copiar al Portapapeles (1 Clic)</span>
               </button>
 
@@ -466,10 +467,10 @@ const liveArticles = await getCachedArticlesAsync();
               <button 
                 type="button" 
                 id="publish-x-btn"
-                class="px-4 py-3 rounded-xl bg-sky-500 hover:bg-sky-600 text-white font-bold text-xs uppercase tracking-wider font-mono transition-all flex items-center justify-center gap-2 cursor-pointer shadow-sm"
+                class="px-4 py-3 rounded-xl bg-sky-500 hover:bg-sky-600 text-white font-bold text-xs tracking-wide font-mono transition-colors flex items-center justify-center gap-2 cursor-pointer shadow-sm"
                 title="Publicar directo usando X API v2 @politicheck_ok"
               >
-                <span>🚀</span>
+                <svg aria-hidden="true" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" /></svg>
                 <span>Publicar Directo en X</span>
               </button>
             </div>
@@ -486,7 +487,7 @@ const liveArticles = await getCachedArticlesAsync();
       <section id="tab-content-users" class="tab-pane hidden space-y-6">
         <div>
           <div class="flex items-center gap-2">
-            <span class="px-2 py-0.5 rounded text-[10px] font-mono font-bold uppercase tracking-wider bg-amber-100 dark:bg-amber-950/60 text-amber-800 dark:text-amber-300 border border-amber-300 dark:border-amber-800">
+            <span class="px-2 py-0.5 rounded text-[10px] font-mono font-bold tracking-wide bg-amber-100 dark:bg-amber-950/60 text-amber-800 dark:text-amber-300 border border-amber-300 dark:border-amber-800">
               Exclusivo Superadmin
             </span>
           </div>
@@ -501,7 +502,7 @@ const liveArticles = await getCachedArticlesAsync();
         <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl overflow-hidden shadow-sm">
           <div class="overflow-x-auto">
             <table class="w-full text-left text-xs font-mono">
-              <thead class="bg-slate-100 dark:bg-slate-950 text-slate-600 dark:text-slate-400 uppercase tracking-wider border-b border-slate-200 dark:border-slate-800">
+              <thead class="bg-slate-100 dark:bg-slate-950 text-slate-600 dark:text-slate-400 tracking-wide border-b border-slate-200 dark:border-slate-800">
                 <tr>
                   <th class="p-4">Usuario / Email</th>
                   <th class="p-4">Rol Asignado</th>
@@ -605,11 +606,11 @@ const liveArticles = await getCachedArticlesAsync();
       const tabTarget = btn.getAttribute('data-tab');
 
       tabButtons.forEach(b => {
-        b.classList.remove('active', 'border-[#0B111A]', 'dark:border-white', 'text-slate-950', 'dark:text-white');
+        b.classList.remove('active', 'border-navy-dark', 'dark:border-white', 'text-slate-950', 'dark:text-white');
         b.classList.add('border-transparent', 'text-slate-500');
       });
 
-      btn.classList.add('active', 'border-[#0B111A]', 'dark:border-white', 'text-slate-950', 'dark:text-white');
+      btn.classList.add('active', 'border-navy-dark', 'dark:border-white', 'text-slate-950', 'dark:text-white');
       btn.classList.remove('border-transparent', 'text-slate-500');
 
       tabPanes.forEach(pane => {
@@ -642,9 +643,9 @@ const liveArticles = await getCachedArticlesAsync();
   forceSyncBtn?.addEventListener('click', async () => {
     forceSyncBtn.disabled = true;
     syncBtnText.textContent = 'Sincronizando feeds y Gemini...';
-    syncBtnIcon.textContent = '⏳';
+    syncBtnIcon.innerHTML = '<svg class="w-4 h-4 motion-safe:animate-spin" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path></svg>';
     syncStatusIndicator.textContent = 'Ejecutando proceso...';
-    syncStatusIndicator.className = 'text-[11px] font-mono text-amber-500 animate-pulse';
+    syncStatusIndicator.className = 'text-[11px] font-mono text-amber-500 motion-safe:animate-pulse';
 
     appendTerminal('Iniciando sincronización forzada bajo credenciales administrativas...');
     appendTerminal('Descargando y parseando 31 feeds RSS (19 nacionales + 12 internacionales)...');
@@ -682,7 +683,7 @@ const liveArticles = await getCachedArticlesAsync();
     } finally {
       forceSyncBtn.disabled = false;
       syncBtnText.textContent = 'Forzar Sincronización Ahora';
-      syncBtnIcon.textContent = '⚡';
+      syncBtnIcon.innerHTML = '<svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>';
     }
   });
 
@@ -967,8 +968,8 @@ const liveArticles = await getCachedArticlesAsync();
   // Story click auto-populates tweet draft
   document.querySelectorAll('.story-picker-card').forEach(card => {
     card.addEventListener('click', () => {
-      document.querySelectorAll('.story-picker-card').forEach(c => c.classList.remove('ring-2', 'ring-[#6BA4D9]'));
-      card.classList.add('ring-2', 'ring-[#6BA4D9]');
+      document.querySelectorAll('.story-picker-card').forEach(c => c.classList.remove('ring-2', 'ring-arg-blue'));
+      card.classList.add('ring-2', 'ring-arg-blue');
 
       const headline = card.getAttribute('data-headline') || '';
       const id = card.getAttribute('data-id') || '';
@@ -978,9 +979,9 @@ const liveArticles = await getCachedArticlesAsync();
       const outlets = card.getAttribute('data-outlets') || '';
 
       tweetSpectrumTags.innerHTML = `
-        <span class="text-purple-600 dark:text-purple-400">🟣 Oficialismo: ${ofi}%</span>
-        <span class="text-emerald-600 dark:text-emerald-400">🟢 Centro: ${cen}%</span>
-        <span class="text-amber-600 dark:text-amber-400">🟠 Oposición: ${opo}%</span>
+        <span class="inline-flex items-center gap-1.5 text-purple-600 dark:text-purple-400"><span class="w-2 h-2 rounded-full bg-purple-600" aria-hidden="true"></span>Oficialismo: ${ofi}%</span>
+        <span class="inline-flex items-center gap-1.5 text-emerald-600 dark:text-emerald-400"><span class="w-2 h-2 rounded-full bg-emerald-600" aria-hidden="true"></span>Centro: ${cen}%</span>
+        <span class="inline-flex items-center gap-1.5 text-amber-600 dark:text-amber-400"><span class="w-2 h-2 rounded-full bg-amber-600" aria-hidden="true"></span>Oposición: ${opo}%</span>
       `;
 
       // Compose high-converting, strictly compliant 280-char tweet draft
@@ -1031,12 +1032,12 @@ const liveArticles = await getCachedArticlesAsync();
 
     try {
       await navigator.clipboard.writeText(text);
-      copyIcon.textContent = '✓';
+      copyIcon.innerHTML = '<svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" /></svg>';
       copyBtnText.textContent = '¡Copiado al Portapapeles!';
       copyTweetBtn.classList.add('bg-emerald-600', 'text-white');
 
       setTimeout(() => {
-        copyIcon.textContent = '📋';
+        copyIcon.innerHTML = '<svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" /></svg>';
         copyBtnText.textContent = 'Copiar al Portapapeles (1 Clic)';
         copyTweetBtn.classList.remove('bg-emerald-600');
       }, 2500);

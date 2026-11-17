@@ -8,15 +8,15 @@ import BrandLogo from './BrandLogo.astro';
   <button 
     type="button" 
     id="open-live-chat-btn" 
-    class="group inline-flex items-center gap-2.5 px-4 py-2.5 rounded-full bg-slate-950 dark:bg-white text-white dark:text-slate-950 border border-slate-800 dark:border-slate-200 shadow-xl hover:scale-105 active:scale-95 transition-all duration-200 font-mono text-xs font-bold cursor-pointer"
+    class="group inline-flex items-center gap-2.5 px-4 py-2.5 rounded-full bg-slate-950 dark:bg-white text-white dark:text-slate-950 border border-slate-800 dark:border-slate-200 shadow-xl motion-safe:hover:scale-105 motion-safe:active:scale-95 motion-safe:transition-transform transition-colors duration-200 font-sans text-xs font-bold cursor-pointer"
     aria-label="Abrir Sala de Debate Cívico en Vivo"
   >
-    <span class="relative flex h-2 w-2">
-      <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+    <span class="relative flex h-2 w-2" aria-hidden="true">
+      <span class="motion-safe:animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
       <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
     </span>
     <span class="tracking-tight">Chat en Vivo</span>
-    <span class="px-1.5 py-0.2 rounded-full bg-slate-800 dark:bg-slate-200 text-slate-300 dark:text-slate-700 text-[10px] font-mono" id="chat-launcher-unread">
+    <span class="px-1.5 py-0.5 rounded-full bg-slate-800 dark:bg-slate-200 text-slate-300 dark:text-slate-700 text-[10px] font-sans" id="chat-launcher-unread">
       Debate
     </span>
   </button>
@@ -32,30 +32,30 @@ import BrandLogo from './BrandLogo.astro';
 <!-- Chat Modal / Drawer Container -->
 <aside 
   id="live-chat-panel" 
-  class="hidden fixed inset-x-0 bottom-0 sm:inset-x-auto sm:bottom-6 sm:right-6 z-50 w-full sm:w-[410px] h-[85vh] sm:h-[600px] flex-col rounded-t-3xl sm:rounded-2xl bg-white dark:bg-[#0A0E17] border border-slate-200 dark:border-slate-800 shadow-2xl transition-all duration-300 ease-out transform translate-y-full opacity-0 font-sans"
+  class="hidden fixed inset-x-0 bottom-0 sm:inset-x-auto sm:bottom-6 sm:right-6 z-50 w-full sm:w-[410px] h-[85vh] sm:h-[600px] flex-col rounded-t-3xl sm:rounded-2xl bg-white dark:bg-header-dark border border-slate-200 dark:border-slate-800 shadow-2xl motion-safe:transition-transform transition-opacity duration-300 ease-out transform translate-y-full opacity-0 font-sans"
   aria-label="Ventana de Chat Cívico en Vivo"
 >
   <!-- Mobile Drag Bar -->
   <div class="w-12 h-1 rounded-full bg-slate-300 dark:bg-slate-700 mx-auto mt-2.5 mb-1 sm:hidden" aria-hidden="true"></div>
 
   <!-- Header Section -->
-  <header class="p-3.5 sm:p-4 border-b border-slate-200 dark:border-slate-800/90 flex items-center justify-between gap-2 shrink-0 bg-slate-50/70 dark:bg-[#0F1420]/80 rounded-t-3xl sm:rounded-t-2xl">
+  <header class="p-3.5 sm:p-4 border-b border-slate-200 dark:border-slate-800/90 flex items-center justify-between gap-2 shrink-0 bg-slate-50/70 dark:bg-surface-dark/80 rounded-t-3xl sm:rounded-t-2xl">
     <div class="flex items-center gap-2.5">
       <div class="relative">
         <BrandLogo size={26} />
-        <span class="absolute -bottom-0.5 -right-0.5 w-2 h-2 rounded-full bg-emerald-500 border border-white dark:border-slate-900"></span>
+        <span class="absolute -bottom-0.5 -right-0.5 w-2 h-2 rounded-full bg-emerald-500 border border-white dark:border-slate-900" aria-hidden="true"></span>
       </div>
       <div>
         <div class="flex items-center gap-2">
           <h3 class="font-editorial text-base sm:text-lg font-bold text-slate-950 dark:text-white leading-none">
             Debate Cívico en Vivo
           </h3>
-          <span class="px-1.5 py-0.5 rounded text-[9px] font-mono font-bold bg-emerald-100 text-emerald-800 dark:bg-emerald-950/80 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800 uppercase">
-            Live
+          <span class="px-1.5 py-0.5 rounded text-[10px] font-sans font-bold bg-emerald-100 text-emerald-800 dark:bg-emerald-950/80 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800">
+            En vivo
           </span>
         </div>
-        <p class="text-[11px] font-mono text-slate-500 dark:text-slate-400 mt-0.5">
-          Politicheck • Contrastes & Opinión
+        <p class="text-[11px] font-sans text-slate-500 dark:text-slate-400 mt-0.5">
+          Politicheck, contrastes y opinión
         </p>
       </div>
     </div>
@@ -68,7 +68,7 @@ import BrandLogo from './BrandLogo.astro';
         class="text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 p-1.5 rounded-lg hover:bg-slate-200/50 dark:hover:bg-slate-800 transition-colors cursor-pointer"
         aria-label="Cerrar ventana de chat"
       >
-        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <svg aria-hidden="true" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
         </svg>
       </button>
@@ -76,24 +76,25 @@ import BrandLogo from './BrandLogo.astro';
   </header>
 
   <!-- Channel Navigation Tabs -->
-  <nav class="flex items-center gap-1.5 px-3 py-2 border-b border-slate-100 dark:border-slate-800/80 overflow-x-auto text-[11px] font-mono shrink-0 bg-white dark:bg-[#0A0E17]" id="chat-channel-tabs">
+  <nav class="flex items-center gap-1.5 px-3 py-2 border-b border-slate-100 dark:border-slate-800/80 overflow-x-auto text-xs font-sans shrink-0 bg-white dark:bg-header-dark" id="chat-channel-tabs">
     <button 
       type="button" 
-      class="channel-tab-btn active px-2.5 py-1 rounded-lg border border-slate-950 dark:border-white bg-slate-950 dark:bg-white text-white dark:text-slate-950 font-bold transition-all whitespace-nowrap cursor-pointer"
+      class="channel-tab-btn active inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg border border-slate-950 dark:border-white bg-slate-950 dark:bg-white text-white dark:text-slate-950 font-bold transition-colors whitespace-nowrap cursor-pointer"
       data-channel="debate-electoral"
     >
-      🔴 #debate-electoral
+      <span class="w-1.5 h-1.5 rounded-full bg-rose-500" aria-hidden="true"></span>
+      <span>#debate-electoral</span>
     </button>
     <button 
       type="button" 
-      class="channel-tab-btn px-2.5 py-1 rounded-lg border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 font-medium transition-all whitespace-nowrap cursor-pointer"
+      class="channel-tab-btn px-2.5 py-1 rounded-lg border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 font-medium transition-colors whitespace-nowrap cursor-pointer"
       data-channel="general"
     >
       #general
     </button>
     <button 
       type="button" 
-      class="channel-tab-btn px-2.5 py-1 rounded-lg border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 font-medium transition-all whitespace-nowrap cursor-pointer"
+      class="channel-tab-btn px-2.5 py-1 rounded-lg border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 font-medium transition-colors whitespace-nowrap cursor-pointer"
       data-channel="economia-datos"
     >
       #economia-datos
@@ -102,9 +103,9 @@ import BrandLogo from './BrandLogo.astro';
 
   <!-- Pinned Announcement Box (Subtle Editorial Notice) -->
   <div id="chat-pinned-box" class="hidden px-3.5 py-2 bg-amber-50/80 dark:bg-amber-950/20 border-b border-amber-200/80 dark:border-amber-900/40 text-xs font-sans text-amber-950 dark:text-amber-200 flex items-start gap-2 shrink-0">
-    <span class="text-sm shrink-0 mt-0.5">📌</span>
+    <svg aria-hidden="true" class="w-4 h-4 text-amber-600 dark:text-amber-400 shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z" /></svg>
     <div class="flex-1 min-w-0">
-      <div class="font-mono text-[10px] font-bold text-amber-800 dark:text-amber-400 uppercase tracking-wider">Aviso de Moderación:</div>
+      <div class="font-sans text-[11px] font-bold text-amber-800 dark:text-amber-400">Aviso de moderación:</div>
       <p id="chat-pinned-content" class="text-[11px] leading-tight line-clamp-2 mt-0.5"></p>
     </div>
   </div>
@@ -112,18 +113,18 @@ import BrandLogo from './BrandLogo.astro';
   <!-- Messages Scroll Area -->
   <div 
     id="chat-messages-container" 
-    class="flex-1 p-3.5 space-y-3 overflow-y-auto min-h-0 text-xs font-sans bg-slate-50/40 dark:bg-[#070A12]/40"
+    class="flex-1 p-3.5 space-y-3 overflow-y-auto min-h-0 text-xs font-sans bg-slate-50/40 dark:bg-canvas-dark/40"
   >
     <!-- Message placeholders populated via JS -->
-    <div class="text-center py-8 text-slate-400 dark:text-slate-500 font-mono text-[11px]" id="chat-loading-placeholder">
+    <div class="text-center py-8 text-slate-400 dark:text-slate-500 font-sans text-xs" id="chat-loading-placeholder">
       Cargando mensajes del debate...
     </div>
   </div>
 
   <!-- Footer Input Area -->
-  <footer class="p-3 border-t border-slate-200 dark:border-slate-800/90 bg-white dark:bg-[#0A0E17] shrink-0 space-y-2">
+  <footer class="p-3 border-t border-slate-200 dark:border-slate-800/90 bg-white dark:bg-header-dark shrink-0 space-y-2">
     <!-- User Alias Strip -->
-    <div class="flex items-center justify-between text-[11px] font-mono text-slate-500 dark:text-slate-400">
+    <div class="flex items-center justify-between text-[11px] font-sans text-slate-500 dark:text-slate-400">
       <div class="flex items-center gap-1.5">
         <span>Tu alias:</span>
         <input 
@@ -135,7 +136,7 @@ import BrandLogo from './BrandLogo.astro';
           class="px-1.5 py-0.5 rounded border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900 text-slate-800 dark:text-slate-200 font-medium focus:outline-hidden focus:border-slate-400 dark:focus:border-slate-600 text-[11px]"
         />
       </div>
-      <span id="chat-char-counter" class="text-slate-400 text-[10px]">0/300</span>
+      <span id="chat-char-counter" class="text-slate-400 text-[10px] font-mono">0/300</span>
     </div>
 
     <!-- Message Form -->
@@ -146,12 +147,12 @@ import BrandLogo from './BrandLogo.astro';
         maxlength="300"
         autocomplete="off"
         placeholder="Escribí tu comentario o contrastá una fuente..." 
-        class="flex-1 px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900 text-slate-900 dark:text-slate-100 placeholder-slate-400 text-xs focus:outline-hidden focus:border-slate-900 dark:focus:border-white transition-all"
+        class="flex-1 px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900 text-slate-900 dark:text-slate-100 placeholder-slate-400 text-xs focus:outline-hidden focus:border-slate-900 dark:focus:border-white transition-colors"
       />
       <button 
         type="submit" 
         id="chat-submit-btn" 
-        class="px-3.5 py-2 rounded-xl bg-slate-950 dark:bg-white text-white dark:text-slate-950 font-mono text-xs font-bold hover:bg-slate-800 dark:hover:bg-slate-200 active:scale-95 transition-all disabled:opacity-50 cursor-pointer shrink-0"
+        class="px-3.5 py-2 rounded-xl bg-slate-950 dark:bg-white text-white dark:text-slate-950 font-sans text-xs font-bold hover:bg-slate-800 dark:hover:bg-slate-200 transition-colors disabled:opacity-50 cursor-pointer shrink-0"
       >
         <span>Enviar</span>
       </button>
@@ -317,7 +318,7 @@ import BrandLogo from './BrandLogo.astro';
         ? `<span class="px-1 py-0.2 rounded text-[9px] font-mono font-bold bg-sky-100 text-sky-800 dark:bg-sky-950 dark:text-sky-300 border border-sky-300 dark:border-sky-800">Oficial</span>`
         : '';
       const pinBadge = m.is_pinned 
-        ? `<span class="text-[10px] text-amber-500" title="Mensaje fijado">📌</span>`
+        ? `<span class="text-[10px] font-sans font-semibold text-amber-600 dark:text-amber-400" title="Mensaje fijado">Fijado</span>`
         : '';
 
       return `

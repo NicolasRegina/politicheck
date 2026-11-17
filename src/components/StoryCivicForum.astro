@@ -38,14 +38,14 @@ function linkifyText(text: string): string {
 
 <section 
   id="debate-civico" 
-  class="bg-white dark:bg-[#0F1420] border border-slate-200 dark:border-slate-800/90 rounded-2xl p-4 sm:p-6 md:p-8 space-y-6 shadow-2xs scroll-mt-20 font-sans"
+  class="bg-white dark:bg-surface-dark border border-slate-200 dark:border-slate-800/90 rounded-2xl p-4 sm:p-6 md:p-8 space-y-6 shadow-2xs scroll-mt-20 font-sans"
   data-story-id={storyId}
 >
   <!-- Section Header & Civic Mission -->
   <header class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border-b border-slate-100 dark:border-slate-800 pb-5">
     <div class="space-y-1">
-      <div class="flex items-center gap-2">
-        <span class="text-xl">💬</span>
+      <div class="flex items-center gap-2.5">
+        <svg aria-hidden="true" class="w-6 h-6 text-slate-700 dark:text-slate-300 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" /></svg>
         <h2 class="font-editorial text-2xl sm:text-3xl font-bold text-slate-950 dark:text-white">
           Debate Cívico & Contraste Ciudadano
         </h2>
@@ -56,16 +56,16 @@ function linkifyText(text: string): string {
     </div>
 
     <div class="flex items-center gap-2 shrink-0 self-start sm:self-center">
-      <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-mono text-xs font-semibold border border-slate-200 dark:border-slate-700">
-        <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-        <span id="forum-total-count">{totalContributions}</span> aportes cívicos
+      <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-sans text-xs font-semibold border border-slate-200 dark:border-slate-700">
+        <span class="w-2 h-2 rounded-full bg-emerald-500 motion-safe:animate-pulse" aria-hidden="true"></span>
+        <span id="forum-total-count" class="font-mono">{totalContributions}</span> aportes cívicos
       </span>
     </div>
   </header>
 
   <!-- Community Standards Notice -->
-  <aside class="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-900/60 border border-slate-200/80 dark:border-slate-800 flex items-start gap-3 text-xs text-slate-600 dark:text-slate-400 font-mono">
-    <span class="text-base shrink-0">🏛️</span>
+  <aside class="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-900/60 border border-slate-200/80 dark:border-slate-800 flex items-start gap-3 text-xs text-slate-600 dark:text-slate-400 font-sans">
+    <svg aria-hidden="true" class="w-4 h-4 text-slate-500 shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 6l3 1m0 0l-3 9a5.002 5.002 0 006.001 0M6 7l3 9M6 7l6-2m6 2l3-1m-3 1l-3 9a5.002 5.002 0 006.001 0M18 7l3 9m-3-9l-6-2m0-2v2m0 16V5m0 16H9m3 0h3" /></svg>
     <div class="space-y-0.5 leading-relaxed">
       <p class="font-semibold text-slate-800 dark:text-slate-200">Normas de Convivencia Cívica:</p>
       <p>
@@ -78,18 +78,19 @@ function linkifyText(text: string): string {
   <form id="forum-root-form" class="space-y-3.5 p-4 sm:p-5 rounded-2xl bg-slate-50/70 dark:bg-slate-900/40 border border-slate-200 dark:border-slate-800">
     <div class="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
       <div class="flex items-center gap-2">
-        <span class="text-xs font-mono text-slate-500 dark:text-slate-400 font-medium">Tu Alias Cívico:</span>
+        <span class="text-xs font-sans text-slate-500 dark:text-slate-400 font-medium">Tu alias cívico:</span>
         <input 
           type="text" 
           id="forum-alias-input" 
           maxlength="40" 
           placeholder="Ej: CiudadanoCBA, LectorAtento"
-          class="px-2.5 py-1 text-xs font-mono rounded-lg bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 text-slate-900 dark:text-white focus:outline-hidden focus:ring-1 focus:ring-slate-950 dark:focus:ring-white transition-all w-48"
+          class="px-2.5 py-1 text-xs font-sans rounded-lg bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 text-slate-900 dark:text-white focus:outline-hidden focus:ring-1 focus:ring-slate-950 dark:focus:ring-white transition-colors w-48"
         />
       </div>
 
-      <div class="text-[11px] font-mono text-slate-400 flex items-center gap-1.5">
-        <span>🛡️ Identidad protegida con huella criptográfica SHA-256</span>
+      <div class="text-[11px] font-sans text-slate-400 flex items-center gap-1.5">
+        <svg aria-hidden="true" class="w-3.5 h-3.5 text-emerald-500 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" /></svg>
+        <span>Identidad protegida con huella criptográfica SHA-256</span>
       </div>
     </div>
 
@@ -99,7 +100,7 @@ function linkifyText(text: string): string {
         rows="3" 
         maxlength="600"
         placeholder="Aportá tu perspectiva sobre el contraste de redacciones de esta noticia. Podés incluir enlaces a fuentes oficiales o documentos..."
-        class="w-full p-3 text-sm rounded-xl bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 focus:outline-hidden focus:ring-2 focus:ring-slate-950 dark:focus:ring-white transition-all resize-y min-h-[80px]"
+        class="w-full p-3 text-sm rounded-xl bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 focus:outline-hidden focus:ring-2 focus:ring-slate-950 dark:focus:ring-white transition-colors resize-y min-h-[80px]"
         required
       ></textarea>
       <div class="absolute bottom-2.5 right-3 text-[11px] font-mono text-slate-400" id="forum-char-counter">
@@ -108,15 +109,15 @@ function linkifyText(text: string): string {
     </div>
 
     <div class="flex items-center justify-between gap-3 pt-1">
-      <div id="forum-form-feedback" class="text-xs font-mono text-rose-500 dark:text-rose-400 hidden"></div>
+      <div id="forum-form-feedback" class="text-xs font-sans text-rose-500 dark:text-rose-400 hidden"></div>
       
       <button 
         type="submit" 
         id="forum-submit-btn"
-        class="ml-auto inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-slate-950 dark:bg-white text-white dark:text-slate-950 font-mono text-xs font-bold hover:bg-slate-800 dark:hover:bg-slate-200 active:scale-98 transition-all cursor-pointer shadow-xs disabled:opacity-50 disabled:cursor-not-allowed"
+        class="ml-auto inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-slate-950 dark:bg-white text-white dark:text-slate-950 font-sans text-xs font-bold hover:bg-slate-800 dark:hover:bg-slate-200 transition-colors cursor-pointer shadow-xs disabled:opacity-50 disabled:cursor-not-allowed"
       >
-        <span>Publicar Aporte Cívico</span>
-        <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <span>Publicar aporte cívico</span>
+        <svg aria-hidden="true" class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
         </svg>
       </button>
@@ -125,37 +126,37 @@ function linkifyText(text: string): string {
 
   <!-- Filter & Sorting Tabs Bar -->
   <div class="flex flex-wrap items-center justify-between gap-3 border-b border-slate-200 dark:border-slate-800 pb-3 pt-2">
-    <div class="flex items-center gap-1.5 p-1 rounded-xl bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-xs font-mono">
+    <div class="flex items-center gap-1.5 p-1 rounded-xl bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-xs font-sans">
       <button 
         type="button" 
-        class="forum-sort-btn px-3 py-1 rounded-lg font-bold bg-white dark:bg-slate-800 text-slate-950 dark:text-white shadow-2xs transition-all cursor-pointer"
+        class="forum-sort-btn px-3 py-1 rounded-lg font-bold bg-white dark:bg-slate-800 text-slate-950 dark:text-white shadow-2xs transition-colors cursor-pointer"
         data-sort="top"
       >
-        🏆 Relevancia (Karma)
+        Relevancia (Karma)
       </button>
       <button 
         type="button" 
-        class="forum-sort-btn px-3 py-1 rounded-lg text-slate-600 dark:text-slate-400 hover:text-slate-950 dark:hover:text-white transition-all cursor-pointer"
+        class="forum-sort-btn px-3 py-1 rounded-lg text-slate-600 dark:text-slate-400 hover:text-slate-950 dark:hover:text-white transition-colors cursor-pointer"
         data-sort="newest"
       >
-        ⏱️ Más Recientes
+        Más recientes
       </button>
       <button 
         type="button" 
-        class="forum-sort-btn px-3 py-1 rounded-lg text-slate-600 dark:text-slate-400 hover:text-slate-950 dark:hover:text-white transition-all cursor-pointer"
+        class="forum-sort-btn px-3 py-1 rounded-lg text-slate-600 dark:text-slate-400 hover:text-slate-950 dark:hover:text-white transition-colors cursor-pointer"
         data-sort="debated"
       >
-        🔥 Más Debatidos
+        Más debatidos
       </button>
     </div>
 
     <button 
       type="button" 
       id="forum-refresh-btn"
-      class="inline-flex items-center gap-1.5 text-xs font-mono text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-slate-200 transition-colors cursor-pointer"
+      class="inline-flex items-center gap-1.5 text-xs font-sans text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-slate-200 transition-colors cursor-pointer"
       title="Actualizar debate"
     >
-      <svg class="w-3.5 h-3.5 animate-spin-hover" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <svg aria-hidden="true" class="w-3.5 h-3.5 animate-spin-hover" fill="none" viewBox="0 0 24 24" stroke="currentColor">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
       </svg>
       <span>Actualizar</span>
@@ -165,78 +166,81 @@ function linkifyText(text: string): string {
   <!-- Comments Thread List Container -->
   <div id="forum-comments-container" class="space-y-6">
     {comments.length === 0 ? (
-      <div id="forum-empty-placeholder" class="text-center py-12 px-4 rounded-2xl border border-dashed border-slate-200 dark:border-slate-800 text-slate-400 dark:text-slate-500 font-mono text-xs space-y-2">
-        <div class="text-3xl">🗳️</div>
+      <div id="forum-empty-placeholder" class="text-center py-12 px-4 rounded-2xl border border-dashed border-slate-200 dark:border-slate-800 text-slate-400 dark:text-slate-500 font-sans text-xs space-y-2">
+        <div class="flex justify-center" aria-hidden="true">
+          <svg class="w-8 h-8 text-slate-300 dark:text-slate-600" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" /></svg>
+        </div>
         <p class="font-bold text-slate-700 dark:text-slate-300">Todavía no hay aportes en este debate.</p>
         <p class="text-[11px]">Sé el primer ciudadano en contrastar las fuentes o plantear un matiz.</p>
       </div>
     ) : (
       comments.map((comment) => (
         <article 
-          class="forum-comment-card space-y-3 p-4 sm:p-5 rounded-2xl bg-white dark:bg-slate-900/50 border border-slate-200 dark:border-slate-800 transition-all hover:border-slate-300 dark:hover:border-slate-700"
+          class="forum-comment-card space-y-3 p-4 sm:p-5 rounded-2xl bg-white dark:bg-slate-900/50 border border-slate-200 dark:border-slate-800 transition-colors hover:border-slate-300 dark:hover:border-slate-700"
           id={`comment-${comment.id}`}
           data-comment-id={comment.id}
         >
           <!-- Comment Header (Author, Badge, Date, Pin) -->
           <div class="flex items-start justify-between gap-3">
-            <div class="flex flex-wrap items-center gap-2 text-xs font-mono">
+            <div class="flex flex-wrap items-center gap-2 text-xs font-sans">
               <span class="font-bold text-slate-900 dark:text-white">
                 {comment.author_name}
               </span>
 
               {comment.author_role === 'superadmin' && (
-                <span class="px-1.5 py-0.2 rounded text-[10px] font-bold bg-amber-100 text-amber-900 dark:bg-amber-950 dark:text-amber-300 border border-amber-300 dark:border-amber-800">
-                  👑 Superadmin
+                <span class="px-1.5 py-0.5 rounded text-[10px] font-bold bg-amber-100 text-amber-900 dark:bg-amber-950 dark:text-amber-300 border border-amber-300 dark:border-amber-800">
+                  Superadmin
                 </span>
               )}
               {comment.author_role === 'admin' && (
-                <span class="px-1.5 py-0.2 rounded text-[10px] font-bold bg-sky-100 text-sky-900 dark:bg-sky-950 dark:text-sky-300 border border-sky-300 dark:border-sky-800">
-                  🛡️ Admin
+                <span class="px-1.5 py-0.5 rounded text-[10px] font-bold bg-sky-100 text-sky-900 dark:bg-sky-950 dark:text-sky-300 border border-sky-300 dark:border-sky-800">
+                  Admin
                 </span>
               )}
               {comment.author_role === 'moderator' && (
-                <span class="px-1.5 py-0.2 rounded text-[10px] font-bold bg-purple-100 text-purple-900 dark:bg-purple-950 dark:text-purple-300 border border-purple-300 dark:border-purple-800">
-                  🏛️ Moderación
+                <span class="px-1.5 py-0.5 rounded text-[10px] font-bold bg-purple-100 text-purple-900 dark:bg-purple-950 dark:text-purple-300 border border-purple-300 dark:border-purple-800">
+                  Moderación
                 </span>
               )}
               {comment.author_role === 'verified' && (
-                <span class="px-1.5 py-0.2 rounded text-[10px] font-bold bg-emerald-100 text-emerald-900 dark:bg-emerald-950 dark:text-emerald-300 border border-emerald-300 dark:border-emerald-800">
-                  ✅ Ciudadano Verificado
+                <span class="px-1.5 py-0.5 rounded text-[10px] font-bold bg-emerald-100 text-emerald-900 dark:bg-emerald-950 dark:text-emerald-300 border border-emerald-300 dark:border-emerald-800">
+                  Ciudadano Verificado
                 </span>
               )}
               {comment.author_role === 'user' && (
-                <span class="px-1.5 py-0.2 rounded text-[10px] font-medium bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-400">
-                  👤 Ciudadano
+                <span class="px-1.5 py-0.5 rounded text-[10px] font-medium bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-400">
+                  Ciudadano
                 </span>
               )}
 
               {comment.is_pinned && (
-                <span class="px-1.5 py-0.2 rounded text-[10px] font-bold bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/30 flex items-center gap-1">
-                  📌 Fijado
+                <span class="px-1.5 py-0.5 rounded text-[10px] font-bold bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/30 flex items-center gap-1">
+                  Fijado
                 </span>
               )}
 
               <span class="text-slate-400 dark:text-slate-500 text-[11px]">
-                • {formatDate(comment.created_at)}
+                {formatDate(comment.created_at)}
               </span>
             </div>
 
             <!-- Report Button -->
             <button 
               type="button"
-              class="forum-report-btn text-[11px] font-mono text-slate-400 hover:text-rose-500 dark:hover:text-rose-400 transition-colors cursor-pointer shrink-0"
+              class="forum-report-btn text-xs font-sans text-slate-400 hover:text-rose-500 dark:hover:text-rose-400 transition-colors cursor-pointer shrink-0 p-1"
               data-comment-id={comment.id}
               title="Reportar aporte"
+              aria-label="Reportar aporte"
             >
-              🚩
+              <svg aria-hidden="true" class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 21v-4m0 0V5a2 2 0 012-2h6.5l1 1H21l-3 6 3 6h-8.5l-1-1H5a2 2 0 00-2 2zm9-13.5V9" /></svg>
             </button>
           </div>
 
           <!-- Comment Body Content (Respecting Auto-Collapse) -->
           <div class="forum-content-wrapper text-sm text-slate-800 dark:text-slate-200 leading-relaxed font-sans">
             {comment.is_collapsed ? (
-              <div class="p-3 rounded-xl bg-amber-50/60 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-900/40 text-xs font-mono text-amber-800 dark:text-amber-300 space-y-2">
-                <p>⚠️ Este aporte fue colapsado por la comunidad (karma bajo o reportes).</p>
+              <div class="p-3 rounded-xl bg-amber-50/60 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-900/40 text-xs font-sans text-amber-800 dark:text-amber-300 space-y-2">
+                <p>Este aporte fue colapsado por la comunidad (karma bajo o reportes).</p>
                 <button 
                   type="button" 
                   class="forum-uncollapse-btn underline font-bold hover:text-amber-950 dark:hover:text-amber-200 cursor-pointer"
@@ -288,12 +292,13 @@ function linkifyText(text: string): string {
             <!-- Reply Button -->
             <button 
               type="button" 
-              class="forum-reply-toggle-btn text-xs font-mono font-medium text-slate-600 hover:text-slate-950 dark:text-slate-400 dark:hover:text-white transition-colors cursor-pointer inline-flex items-center gap-1.5"
+              class="forum-reply-toggle-btn text-xs font-sans font-medium text-slate-600 hover:text-slate-950 dark:text-slate-400 dark:hover:text-white transition-colors cursor-pointer inline-flex items-center gap-1.5"
               data-comment-id={comment.id}
             >
-              <span>💬 Responder</span>
+              <svg aria-hidden="true" class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6" /></svg>
+              <span>Responder</span>
               {comment.replies && comment.replies.length > 0 && (
-                <span class="px-1.5 py-0.2 rounded-full bg-slate-100 dark:bg-slate-800 text-[10px]">
+                <span class="px-1.5 py-0.5 rounded-full bg-slate-100 dark:bg-slate-800 text-[10px] font-mono">
                   {comment.replies.length}
                 </span>
               )}
@@ -303,62 +308,63 @@ function linkifyText(text: string): string {
           <!-- Inline Nested Reply Box (Initially Hidden) -->
           <div class="forum-reply-box-container hidden pt-3" id={`reply-box-${comment.id}`}>
             <form class="forum-nested-reply-form space-y-2 p-3 sm:p-4 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800" data-parent-id={comment.id}>
-              <div class="flex items-center justify-between text-xs font-mono text-slate-500">
+              <div class="flex items-center justify-between text-xs font-sans text-slate-500">
                 <span>Respondiendo a <strong class="text-slate-800 dark:text-slate-200">@{comment.author_name}</strong></span>
-                <span class="forum-reply-char-counter">0 / 350</span>
+                <span class="forum-reply-char-counter font-mono">0 / 350</span>
               </div>
               <textarea 
                 rows="2" 
                 maxlength="350"
                 placeholder="Escribí tu respuesta fundamentada..."
-                class="w-full p-2.5 text-xs rounded-lg bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 text-slate-900 dark:text-white placeholder-slate-400 focus:outline-hidden focus:ring-1 focus:ring-slate-950 dark:focus:ring-white transition-all resize-y min-h-[60px]"
+                class="w-full p-2.5 text-xs rounded-lg bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 text-slate-900 dark:text-white placeholder-slate-400 focus:outline-hidden focus:ring-1 focus:ring-slate-950 dark:focus:ring-white transition-colors resize-y min-h-[60px]"
                 required
               ></textarea>
               <div class="flex items-center justify-end gap-2">
                 <button 
                   type="button" 
-                  class="forum-cancel-reply-btn px-3 py-1 text-xs font-mono text-slate-500 hover:text-slate-800 dark:hover:text-slate-200 cursor-pointer"
+                  class="forum-cancel-reply-btn px-3 py-1 text-xs font-sans text-slate-500 hover:text-slate-800 dark:hover:text-slate-200 cursor-pointer"
                 >
                   Cancelar
                 </button>
                 <button 
                   type="submit" 
-                  class="px-3 py-1 text-xs font-mono font-bold rounded-lg bg-slate-950 dark:bg-white text-white dark:text-slate-950 hover:bg-slate-800 dark:hover:bg-slate-200 cursor-pointer"
+                  class="px-3 py-1 text-xs font-sans font-bold rounded-lg bg-slate-950 dark:bg-white text-white dark:text-slate-950 hover:bg-slate-800 dark:hover:bg-slate-200 cursor-pointer"
                 >
-                  Publicar Respuesta
+                  Publicar respuesta
                 </button>
               </div>
             </form>
           </div>
 
-          <!-- Level 2 Nested Replies List -->
+          <!-- Level 2 Nested Replies List (Flat thread lines, no nested card border) -->
           {comment.replies && comment.replies.length > 0 && (
             <div class="forum-nested-replies-list ml-3 sm:ml-6 pl-3 sm:pl-4 border-l-2 border-slate-200 dark:border-slate-800 space-y-3 pt-2">
               {comment.replies.map((reply) => (
                 <div 
-                  class="forum-reply-card space-y-2 p-3 rounded-xl bg-slate-50/70 dark:bg-slate-900/30 border border-slate-100 dark:border-slate-800/80"
+                  class="forum-reply-item space-y-2 py-2 border-b border-slate-100 dark:border-slate-800/60 last:border-b-0 last:pb-0"
                   id={`comment-${reply.id}`}
                   data-comment-id={reply.id}
                 >
-                  <div class="flex items-center justify-between gap-2 text-xs font-mono">
+                  <div class="flex items-center justify-between gap-2 text-xs font-sans">
                     <div class="flex items-center gap-1.5">
                       <span class="font-bold text-slate-900 dark:text-white">{reply.author_name}</span>
                       {reply.author_role === 'verified' && (
-                        <span class="px-1 py-0.2 rounded text-[9px] font-bold bg-emerald-100 text-emerald-900 dark:bg-emerald-950 dark:text-emerald-300">
+                        <span class="px-1 py-0.5 rounded text-[10px] font-bold bg-emerald-100 text-emerald-900 dark:bg-emerald-950 dark:text-emerald-300">
                           ✓
                         </span>
                       )}
-                      <span class="text-slate-400 text-[10px]">
-                        • {formatDate(reply.created_at)}
+                      <span class="text-slate-400 text-[11px]">
+                        {formatDate(reply.created_at)}
                       </span>
                     </div>
 
                     <button 
                       type="button"
-                      class="forum-report-btn text-[10px] text-slate-400 hover:text-rose-500 cursor-pointer"
+                      class="forum-report-btn text-xs text-slate-400 hover:text-rose-500 cursor-pointer p-1"
                       data-comment-id={reply.id}
+                      aria-label="Reportar respuesta"
                     >
-                      🚩
+                      <svg aria-hidden="true" class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 21v-4m0 0V5a2 2 0 012-2h6.5l1 1H21l-3 6 3 6h-8.5l-1-1H5a2 2 0 00-2 2zm9-13.5V9" /></svg>
                     </button>
                   </div>
 
@@ -614,7 +620,7 @@ function linkifyText(text: string): string {
 
       const data = await res.json();
       if (data && data.success) {
-        reportBtn.textContent = '✅';
+        reportBtn.textContent = 'Reportado';
         reportBtn.setAttribute('title', 'Aporte reportado');
         if (data.isCollapsed) {
           await fetchAndRenderComments();
@@ -667,8 +673,7 @@ function linkifyText(text: string): string {
 
       if (comments.length === 0) {
         commentsContainer.innerHTML = `
-          <div id="forum-empty-placeholder" class="text-center py-12 px-4 rounded-2xl border border-dashed border-slate-200 dark:border-slate-800 text-slate-400 dark:text-slate-500 font-mono text-xs space-y-2">
-            <div class="text-3xl">🗳️</div>
+          <div id="forum-empty-placeholder" class="text-center py-12 px-4 rounded-2xl border border-dashed border-slate-200 dark:border-slate-800 text-slate-400 dark:text-slate-500 font-sans text-xs space-y-2">
             <p class="font-bold text-slate-700 dark:text-slate-300">Todavía no hay aportes en este debate.</p>
             <p class="text-[11px]">Sé el primer ciudadano en contrastar las fuentes o plantear un matiz.</p>
           </div>
@@ -706,14 +711,14 @@ function linkifyText(text: string): string {
         const karmaText = comment.karma_score > 0 ? `+${comment.karma_score}` : `${comment.karma_score}`;
 
         const repliesHtml = (comment.replies || []).map((reply: any) => `
-          <div class="forum-reply-card space-y-2 p-3 rounded-xl bg-slate-50/70 dark:bg-slate-900/30 border border-slate-100 dark:border-slate-800/80" id="comment-${reply.id}" data-comment-id="${reply.id}">
-            <div class="flex items-center justify-between gap-2 text-xs font-mono">
+          <div class="forum-reply-item space-y-2 py-2 border-b border-slate-100 dark:border-slate-800/60 last:border-b-0 last:pb-0" id="comment-${reply.id}" data-comment-id="${reply.id}">
+            <div class="flex items-center justify-between gap-2 text-xs font-sans">
               <div class="flex items-center gap-1.5">
                 <span class="font-bold text-slate-900 dark:text-white">${escape(reply.author_name)}</span>
-                ${reply.author_role === 'verified' ? '<span class="px-1 py-0.2 rounded text-[9px] font-bold bg-emerald-100 text-emerald-900 dark:bg-emerald-950 dark:text-emerald-300">✓</span>' : ''}
-                <span class="text-slate-400 text-[10px]">• ${formatIso(reply.created_at)}</span>
+                ${reply.author_role === 'verified' ? '<span class="px-1 py-0.5 rounded text-[10px] font-bold bg-emerald-100 text-emerald-900 dark:bg-emerald-950 dark:text-emerald-300">✓</span>' : ''}
+                <span class="text-slate-400 text-[11px]">${formatIso(reply.created_at)}</span>
               </div>
-              <button type="button" class="forum-report-btn text-[10px] text-slate-400 hover:text-rose-500 cursor-pointer" data-comment-id="${reply.id}">🚩</button>
+              <button type="button" class="forum-report-btn text-xs text-slate-400 hover:text-rose-500 cursor-pointer" data-comment-id="${reply.id}" aria-label="Reportar respuesta">Reportar</button>
             </div>
             <div class="text-xs text-slate-800 dark:text-slate-200 leading-relaxed font-sans break-words">${linkify(reply.content)}</div>
             <div class="flex items-center gap-1 text-[11px] font-mono pt-1">
@@ -725,21 +730,21 @@ function linkifyText(text: string): string {
         `).join('');
 
         return `
-          <article class="forum-comment-card space-y-3 p-4 sm:p-5 rounded-2xl bg-white dark:bg-slate-900/50 border border-slate-200 dark:border-slate-800 transition-all hover:border-slate-300 dark:hover:border-slate-700" id="comment-${comment.id}" data-comment-id="${comment.id}">
+          <article class="forum-comment-card space-y-3 p-4 sm:p-5 rounded-2xl bg-white dark:bg-slate-900/50 border border-slate-200 dark:border-slate-800 transition-colors hover:border-slate-300 dark:hover:border-slate-700" id="comment-${comment.id}" data-comment-id="${comment.id}">
             <div class="flex items-start justify-between gap-3">
-              <div class="flex flex-wrap items-center gap-2 text-xs font-mono">
+              <div class="flex flex-wrap items-center gap-2 text-xs font-sans">
                 <span class="font-bold text-slate-900 dark:text-white">${escape(comment.author_name)}</span>
-                ${comment.author_role === 'verified' ? '<span class="px-1.5 py-0.2 rounded text-[10px] font-bold bg-emerald-100 text-emerald-900 dark:bg-emerald-950 dark:text-emerald-300 border border-emerald-300 dark:border-emerald-800">✅ Verificado</span>' : '<span class="px-1.5 py-0.2 rounded text-[10px] font-medium bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-400">👤 Ciudadano</span>'}
-                ${comment.is_pinned ? '<span class="px-1.5 py-0.2 rounded text-[10px] font-bold bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/30">📌 Fijado</span>' : ''}
-                <span class="text-slate-400 dark:text-slate-500 text-[11px]">• ${formatIso(comment.created_at)}</span>
+                ${comment.author_role === 'verified' ? '<span class="px-1.5 py-0.5 rounded text-[10px] font-bold bg-emerald-100 text-emerald-900 dark:bg-emerald-950 dark:text-emerald-300 border border-emerald-300 dark:border-emerald-800">Verificado</span>' : '<span class="px-1.5 py-0.5 rounded text-[10px] font-medium bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-400">Ciudadano</span>'}
+                ${comment.is_pinned ? '<span class="px-1.5 py-0.5 rounded text-[10px] font-bold bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/30">Fijado</span>' : ''}
+                <span class="text-slate-400 dark:text-slate-500 text-[11px]">${formatIso(comment.created_at)}</span>
               </div>
-              <button type="button" class="forum-report-btn text-[11px] font-mono text-slate-400 hover:text-rose-500 dark:hover:text-rose-400 transition-colors cursor-pointer shrink-0" data-comment-id="${comment.id}">🚩</button>
+              <button type="button" class="forum-report-btn text-xs font-sans text-slate-400 hover:text-rose-500 dark:hover:text-rose-400 transition-colors cursor-pointer shrink-0" data-comment-id="${comment.id}">Reportar</button>
             </div>
 
             <div class="forum-content-wrapper text-sm text-slate-800 dark:text-slate-200 leading-relaxed font-sans">
               ${comment.is_collapsed ? `
-                <div class="p-3 rounded-xl bg-amber-50/60 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-900/40 text-xs font-mono text-amber-800 dark:text-amber-300 space-y-2">
-                  <p>⚠️ Este aporte fue colapsado por la comunidad (karma bajo o reportes).</p>
+                <div class="p-3 rounded-xl bg-amber-50/60 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-900/40 text-xs font-sans text-amber-800 dark:text-amber-300 space-y-2">
+                  <p>Este aporte fue colapsado por la comunidad (karma bajo o reportes).</p>
                   <button type="button" class="forum-uncollapse-btn underline font-bold hover:text-amber-950 cursor-pointer">Mostrar contenido</button>
                   <div class="hidden forum-collapsed-text pt-2 text-slate-700 dark:text-slate-300 font-sans text-sm">${linkify(comment.content)}</div>
                 </div>
@@ -756,7 +761,7 @@ function linkifyText(text: string): string {
               </div>
 
               <button type="button" class="forum-reply-toggle-btn text-xs font-mono font-medium text-slate-600 hover:text-slate-950 dark:text-slate-400 dark:hover:text-white transition-colors cursor-pointer inline-flex items-center gap-1.5" data-comment-id="${comment.id}">
-                <span>💬 Responder</span>
+                <span>Responder</span>
                 ${comment.replies?.length ? `<span class="px-1.5 py-0.2 rounded-full bg-slate-100 dark:bg-slate-800 text-[10px]">${comment.replies.length}</span>` : ''}
               </button>
             </div>

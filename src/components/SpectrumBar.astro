@@ -49,7 +49,7 @@ if (!spectrum) {
   <div class="flex flex-wrap items-center justify-between gap-x-2 gap-y-1.5 text-[10px] sm:text-xs font-mono">
     <button 
       type="button"
-      class={`spectrum-filter-trigger flex items-center gap-1.5 transition-all hover:scale-105 cursor-pointer text-left focus:outline-none focus:ring-1 focus:ring-violet-400 rounded px-1 -mx-1 py-0.5 ${spectrum.oficialismoPct > 0 ? 'text-violet-700 dark:text-violet-300 font-semibold' : 'text-slate-400 dark:text-slate-600 opacity-60'}`}
+      class={`spectrum-filter-trigger flex items-center gap-1.5 transition-colors motion-safe:transition-transform motion-safe:hover:scale-105 cursor-pointer text-left focus:outline-none focus:ring-1 focus:ring-violet-400 rounded px-1 -mx-1 py-0.5 ${spectrum.oficialismoPct > 0 ? 'text-violet-700 dark:text-violet-300 font-semibold' : 'text-slate-400 dark:text-slate-600 opacity-60'}`}
       data-trigger-leaning="oficialismo"
       title="Clic para filtrar por medios de línea oficialista"
     >
@@ -59,7 +59,7 @@ if (!spectrum) {
 
     <button 
       type="button"
-      class={`spectrum-filter-trigger flex items-center gap-1.5 transition-all hover:scale-105 cursor-pointer text-left focus:outline-none focus:ring-1 focus:ring-emerald-400 rounded px-1 -mx-1 py-0.5 ${spectrum.centroDatosPct > 0 ? 'text-emerald-700 dark:text-emerald-300 font-semibold' : 'text-slate-400 dark:text-slate-600'}`}
+      class={`spectrum-filter-trigger flex items-center gap-1.5 transition-colors motion-safe:transition-transform motion-safe:hover:scale-105 cursor-pointer text-left focus:outline-none focus:ring-1 focus:ring-emerald-400 rounded px-1 -mx-1 py-0.5 ${spectrum.centroDatosPct > 0 ? 'text-emerald-700 dark:text-emerald-300 font-semibold' : 'text-slate-400 dark:text-slate-600'}`}
       data-trigger-leaning="centro_datos"
       title="Clic para filtrar por medios de centro y datos factuales"
     >
@@ -69,7 +69,7 @@ if (!spectrum) {
 
     <button 
       type="button"
-      class={`spectrum-filter-trigger flex items-center gap-1.5 transition-all hover:scale-105 cursor-pointer text-left focus:outline-none focus:ring-1 focus:ring-amber-400 rounded px-1 -mx-1 py-0.5 ${spectrum.oposicionPct > 0 ? 'text-amber-700 dark:text-amber-300 font-semibold' : 'text-slate-400 dark:text-slate-600'}`}
+      class={`spectrum-filter-trigger flex items-center gap-1.5 transition-colors motion-safe:transition-transform motion-safe:hover:scale-105 cursor-pointer text-left focus:outline-none focus:ring-1 focus:ring-amber-400 rounded px-1 -mx-1 py-0.5 ${spectrum.oposicionPct > 0 ? 'text-amber-700 dark:text-amber-300 font-semibold' : 'text-slate-400 dark:text-slate-600'}`}
       data-trigger-leaning="oposicion"
       title="Clic para filtrar por medios de línea crítica / opositora"
     >
@@ -82,7 +82,7 @@ if (!spectrum) {
   <div class="w-full h-2.5 sm:h-3 rounded-full bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-0.5 flex overflow-hidden gap-0.5 shadow-inner">
     {spectrum.oficialismoPct > 0 && (
       <div 
-        class="spectrum-filter-trigger h-full bg-violet-600 dark:bg-violet-500 rounded-l-full transition-all duration-500 hover:opacity-90 cursor-pointer focus:outline-none focus:ring-1 focus:ring-white/50" 
+        class="spectrum-filter-trigger h-full bg-violet-600 dark:bg-violet-500 rounded-l-full transition-opacity duration-500 hover:opacity-90 cursor-pointer focus:outline-none focus:ring-1 focus:ring-white/50" 
         style={`width: ${spectrum.oficialismoPct}%`}
         data-trigger-leaning="oficialismo"
         title={`Enfoque Oficialista: ${spectrum.oficialismoPct}% (Clic para filtrar)`}
@@ -92,7 +92,7 @@ if (!spectrum) {
     )}
     {spectrum.centroDatosPct > 0 && (
       <div 
-        class={`spectrum-filter-trigger h-full bg-emerald-500 dark:bg-emerald-400 transition-all duration-500 hover:opacity-90 cursor-pointer focus:outline-none focus:ring-1 focus:ring-white/50 ${spectrum.oficialismoPct === 0 ? 'rounded-l-full' : ''} ${spectrum.oposicionPct === 0 ? 'rounded-r-full' : ''}`} 
+        class={`spectrum-filter-trigger h-full bg-emerald-500 dark:bg-emerald-400 transition-opacity duration-500 hover:opacity-90 cursor-pointer focus:outline-none focus:ring-1 focus:ring-white/50 ${spectrum.oficialismoPct === 0 ? 'rounded-l-full' : ''} ${spectrum.oposicionPct === 0 ? 'rounded-r-full' : ''}`} 
         style={`width: ${spectrum.centroDatosPct}%`}
         data-trigger-leaning="centro_datos"
         title={`Centro / Datos Factuales: ${spectrum.centroDatosPct}% (Clic para filtrar)`}
@@ -102,7 +102,7 @@ if (!spectrum) {
     )}
     {spectrum.oposicionPct > 0 && (
       <div 
-        class="spectrum-filter-trigger h-full bg-amber-500 dark:bg-amber-400 rounded-r-full transition-all duration-500 hover:opacity-90 cursor-pointer focus:outline-none focus:ring-1 focus:ring-white/50" 
+        class="spectrum-filter-trigger h-full bg-amber-500 dark:bg-amber-400 rounded-r-full transition-opacity duration-500 hover:opacity-90 cursor-pointer focus:outline-none focus:ring-1 focus:ring-white/50" 
         style={`width: ${spectrum.oposicionPct}%`}
         data-trigger-leaning="oposicion"
         title={`Enfoque Opositor: ${spectrum.oposicionPct}% (Clic para filtrar)`}

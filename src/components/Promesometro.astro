@@ -60,10 +60,10 @@ const meter = getMeterData(status);
 const isSmall = size === 'sm';
 ---
 
-<div class={`inline-flex flex-col items-center justify-between ${isSmall ? 'p-2' : 'p-3'} rounded-xl border ${meter.cardBg} select-none transition-all shadow-xs`}>
+<div class={`inline-flex flex-col items-center justify-between ${isSmall ? 'p-2' : 'p-3'} rounded-xl border ${meter.cardBg} select-none transition-colors shadow-xs`}>
   <!-- Meter Dial Graphic -->
   <div class={`relative ${isSmall ? 'w-28 h-16' : 'w-36 h-20'} flex items-center justify-center overflow-hidden`}>
-    <svg viewBox="0 0 140 85" class="w-full h-full drop-shadow-xs">
+    <svg aria-hidden="true" viewBox="0 0 140 85" class="w-full h-full drop-shadow-xs">
       <defs>
         <!-- Arcs gradients -->
         <linearGradient id="meter-gradient" x1="0%" y1="0%" x2="100%" y2="0%">
@@ -105,7 +105,7 @@ const isSmall = size === 'sm';
       <circle cx="70" cy="75" r="3" class="fill-white dark:fill-slate-900" />
 
       <!-- Needle with dynamic rotation -->
-      <g transform={`rotate(${meter.angle}, 70, 75)`} class="transition-transform duration-700 ease-out">
+      <g transform={`rotate(${meter.angle}, 70, 75)`} class="motion-safe:transition-transform duration-700 ease-out">
         <polygon points="68,75 72,75 70,22" class="fill-slate-900 dark:fill-white" />
         <circle cx="70" cy="24" r="2.5" class="fill-rose-600 dark:fill-rose-400" />
       </g>
@@ -114,13 +114,13 @@ const isSmall = size === 'sm';
 
   <!-- PolitiFact-style Meter Badge & Glowing LED Diode -->
   <div class="mt-1 flex items-center gap-2">
-    <span class={`w-2 h-2 rounded-full ${meter.ledBg} animate-pulse shrink-0`}></span>
-    <span class={`font-mono text-[11px] font-black tracking-wider uppercase ${meter.color}`}>
+    <span class={`w-2 h-2 rounded-full ${meter.ledBg} motion-safe:animate-pulse shrink-0`} aria-hidden="true"></span>
+    <span class={`font-sans text-xs font-extrabold ${meter.color}`}>
       {meter.label}
     </span>
   </div>
 
-  <span class="text-[9px] font-mono tracking-tight text-slate-600 dark:text-slate-400 mt-0.5">
-    AUDITORÍA OFICIAL
+  <span class="text-[10px] font-sans font-medium text-slate-600 dark:text-slate-400 mt-0.5">
+    Auditoría oficial
   </span>
 </div>

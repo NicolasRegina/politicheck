@@ -33,12 +33,12 @@ const pageDescription = "Especial regional sobre las Elecciones Presidenciales d
       </nav>
       <div class="flex items-center gap-1.5 text-emerald-600 dark:text-emerald-400 font-bold">
         <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
-        <span>Especial Regional • Archivo & Análisis Bilateral</span>
+        <span>Especial regional, archivo y análisis bilateral</span>
       </div>
     </div>
 
     <!-- Hero Header Especial con Bandera y Métricas Clave -->
-    <header class="relative overflow-hidden rounded-3xl border border-emerald-500/30 dark:border-emerald-500/20 bg-gradient-to-br from-slate-900 via-[#0B1524] to-[#0A1A17] p-6 sm:p-10 text-white shadow-xl">
+    <header class="relative overflow-hidden rounded-3xl border border-emerald-500/30 dark:border-emerald-500/20 bg-gradient-to-br from-slate-900 via-navy-card to-navy-deep p-6 sm:p-10 text-white shadow-xl">
       <!-- Background Flag Element Subtle Glow -->
       <div 
         class="absolute right-0 top-0 bottom-0 w-2/5 opacity-20 pointer-events-none bg-right center bg-no-repeat bg-contain"
@@ -46,9 +46,8 @@ const pageDescription = "Especial regional sobre las Elecciones Presidenciales d
       ></div>
 
       <div class="relative z-10 space-y-4 max-w-3xl">
-        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/20 border border-emerald-400/40 text-emerald-300 text-xs font-mono font-bold uppercase tracking-wider">
-          <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
-          <span>Especial Regional • Elecciones Brasil 2026 & Mercosur</span>
+        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/20 border border-emerald-400/40 text-emerald-300 text-xs font-sans font-bold">
+          <span>Especial regional, elecciones Brasil 2026 y Mercosur</span>
         </div>
 
         <h1 class="font-editorial text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight leading-tight">
@@ -60,22 +59,22 @@ const pageDescription = "Especial regional sobre las Elecciones Presidenciales d
         </p>
 
         <!-- Quick Facts Bar Bento -->
-        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-3 font-mono text-xs">
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-3 font-sans text-xs">
           <div class="p-3.5 rounded-xl bg-white/5 border border-white/10 backdrop-blur-xs">
-            <span class="text-slate-400 block text-[10px] uppercase">Padrón Electoral</span>
-            <span class="font-bold text-white text-sm sm:text-base">{brazilElectionMetadata.electorate}</span>
+            <span class="text-slate-400 block text-[11px]">Padrón electoral</span>
+            <span class="font-bold text-white text-sm sm:text-base font-mono">{brazilElectionMetadata.electorate}</span>
           </div>
           <div class="p-3.5 rounded-xl bg-white/5 border border-white/10 backdrop-blur-xs">
-            <span class="text-slate-400 block text-[10px] uppercase">Sistema Electoral</span>
-            <span class="font-bold text-emerald-300 text-sm sm:text-base">Urna Biométrica</span>
+            <span class="text-slate-400 block text-[11px]">Sistema electoral</span>
+            <span class="font-bold text-emerald-300 text-sm sm:text-base">Urna biométrica</span>
           </div>
           <div class="p-3.5 rounded-xl bg-white/5 border border-white/10 backdrop-blur-xs">
-            <span class="text-slate-400 block text-[10px] uppercase">Instancia</span>
-            <span class="font-bold text-amber-300 text-sm sm:text-base">Balotaje Final</span>
+            <span class="text-slate-400 block text-[11px]">Instancia</span>
+            <span class="font-bold text-amber-300 text-sm sm:text-base">Balotaje final</span>
           </div>
           <div class="p-3.5 rounded-xl bg-white/5 border border-white/10 backdrop-blur-xs">
-            <span class="text-slate-400 block text-[10px] uppercase">Impacto Clave</span>
-            <span class="font-bold text-sky-300 text-sm sm:text-base">Comercio & Mercosur</span>
+            <span class="text-slate-400 block text-[11px]">Impacto clave</span>
+            <span class="font-bold text-sky-300 text-sm sm:text-base">Comercio y Mercosur</span>
           </div>
         </div>
       </div>
@@ -84,13 +83,12 @@ const pageDescription = "Especial regional sobre las Elecciones Presidenciales d
     <!-- Sección 1: Grandes Historias y Encuadres Clúster de Brasil -->
     <section class="space-y-6">
       <div class="flex items-center justify-between border-b border-slate-200 dark:border-slate-800 pb-3">
-        <div class="flex items-center gap-2 text-xs font-mono text-slate-500 dark:text-slate-400">
-          <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
-          <span class="font-bold text-slate-900 dark:text-white uppercase tracking-wider">
-            Análisis de Encuadre & Espectro Editorial
+        <div class="flex items-center gap-2 text-xs font-sans text-slate-500 dark:text-slate-400">
+          <span class="font-bold text-slate-900 dark:text-white">
+            Análisis de encuadre y espectro editorial
           </span>
         </div>
-        <span class="text-xs font-mono text-slate-400">Folha de S. Paulo • O Globo • FT • El País</span>
+        <span class="text-xs font-sans text-slate-400">Folha de S. Paulo, O Globo, FT, El País</span>
       </div>
 
       <div class="space-y-8" id="brazil-clusters-list">
@@ -104,17 +102,17 @@ const pageDescription = "Especial regional sobre las Elecciones Presidenciales d
     <section class="space-y-4">
       <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-200 dark:border-slate-800 pb-3">
         <div>
-          <div class="flex items-center gap-2 text-xs font-mono text-slate-500 dark:text-slate-400">
-            <span class="w-2 h-2 rounded-full bg-blue-500 animate-pulse"></span>
-            <span class="font-bold text-slate-900 dark:text-white uppercase tracking-wider">
-              Despachos de Corresponsales en Vivo
+          <div class="flex items-center gap-2 text-xs font-sans text-slate-500 dark:text-slate-400">
+            <span class="w-2 h-2 rounded-full bg-blue-500 motion-safe:animate-pulse" aria-hidden="true"></span>
+            <span class="font-bold text-slate-900 dark:text-white">
+              Despachos de corresponsales en vivo
             </span>
           </div>
           <h2 class="font-editorial text-xl sm:text-2xl font-bold text-slate-950 dark:text-white">
             Despachos y Cobertura: Brasil, Lula y el Impacto Regional
           </h2>
         </div>
-        <span class="text-xs font-mono text-slate-400">Cables y Agencias Internacionales</span>
+        <span class="text-xs font-sans text-slate-400">Cables y agencias internacionales</span>
       </div>
 
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4" id="brazil-dispatches-grid">
@@ -123,11 +121,11 @@ const pageDescription = "Especial regional sobre las Elecciones Presidenciales d
             href={dispatch.url}
             target="_blank"
             rel="noopener noreferrer"
-            class="group flex flex-col justify-between p-4 rounded-xl border border-slate-200 dark:border-slate-800/80 bg-white dark:bg-slate-900/60 hover:border-emerald-500/60 dark:hover:border-emerald-500/60 transition-all hover:shadow-xs"
+            class="group flex flex-col justify-between p-4 rounded-xl border border-slate-200 dark:border-slate-800/80 bg-white dark:bg-slate-900/60 hover:border-emerald-500/60 dark:hover:border-emerald-500/60 transition-colors hover:shadow-xs"
           >
             <div class="space-y-2">
               <div class="flex items-center justify-between text-[11px] font-mono">
-                <span class="font-bold px-2 py-0.5 rounded bg-emerald-50 text-emerald-800 dark:bg-emerald-950/60 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800/60">
+                <span class="font-bold px-2 py-0.5 rounded bg-emerald-50 text-emerald-800 dark:bg-emerald-950/60 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800/60 font-sans">
                   {dispatch.outletName}
                 </span>
                 <span class="text-slate-400">
@@ -141,9 +139,9 @@ const pageDescription = "Especial regional sobre las Elecciones Presidenciales d
                 {dispatch.snippet}
               </p>
             </div>
-            <div class="mt-4 pt-2 border-t border-slate-100 dark:border-slate-800/50 flex items-center justify-between text-[11px] font-mono text-slate-400 group-hover:text-slate-700 dark:group-hover:text-slate-300">
+            <div class="mt-4 pt-2 border-t border-slate-100 dark:border-slate-800/50 flex items-center justify-between text-[11px] font-sans text-slate-400 group-hover:text-slate-700 dark:group-hover:text-slate-300">
               <span>Leer en {dispatch.outletName}</span>
-              <span class="transition-transform group-hover:translate-x-0.5">↗</span>
+              <svg aria-hidden="true" class="w-3 h-3 motion-safe:transition-transform motion-safe:group-hover:translate-x-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" /></svg>
             </div>
           </a>
         ))}
@@ -154,9 +152,10 @@ const pageDescription = "Especial regional sobre las Elecciones Presidenciales d
     <div class="pt-6 text-center border-t border-slate-200 dark:border-slate-800">
       <a 
         href="/" 
-        class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 dark:bg-slate-100 dark:hover:bg-white text-white dark:text-slate-950 font-mono text-xs font-bold transition-all shadow-sm"
+        class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 dark:bg-slate-100 dark:hover:bg-white text-white dark:text-slate-950 font-sans text-xs font-bold transition-colors shadow-sm"
       >
-        <span>← Volver al Observatorio de Noticias de Argentina</span>
+        <svg aria-hidden="true" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" /></svg>
+        <span>Volver al Observatorio de Noticias de Argentina</span>
       </a>
     </div>
   </div>

@@ -54,25 +54,25 @@ const FACTUALITY_BADGES: Record<FactualityRating, string> = {
   <main class="max-w-6xl mx-auto px-4 sm:px-6 py-10 space-y-16">
     
     <!-- Top Breadcrumb Navigation -->
-    <nav class="flex items-center justify-between border-b border-slate-200 dark:border-slate-800 pb-4 text-xs font-mono">
+    <nav class="flex items-center justify-between border-b border-slate-200 dark:border-slate-800 pb-4 text-xs font-sans">
       <a href="/" class="inline-flex items-center gap-1.5 text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white transition-colors">
-        <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <svg aria-hidden="true" class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
         </svg>
         <span>Volver a la Portada del Observatorio</span>
       </a>
       <div class="flex items-center gap-2 text-slate-400 dark:text-slate-500">
         <span>Documento Metodológico v2.5</span>
-        <span>•</span>
+        <span aria-hidden="true">|</span>
         <span>Revisión Septiembre 2026</span>
       </div>
     </nav>
 
     <!-- Hero Header: Institutional Manifesto -->
     <header class="space-y-6 max-w-4xl">
-      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-slate-900 text-white dark:bg-slate-100 dark:text-slate-900 text-[11px] font-mono uppercase tracking-widest font-semibold shadow-sm">
-        <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-        Transparencia Cívica & Neutralidad Algorítmica
+      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-slate-900 text-white dark:bg-slate-100 dark:text-slate-900 text-xs font-sans font-semibold shadow-sm">
+        <span class="w-2 h-2 rounded-full bg-emerald-400 motion-safe:animate-pulse" aria-hidden="true"></span>
+        <span>Transparencia cívica y neutralidad algorítmica</span>
       </div>
       
       <h1 class="font-editorial text-3xl sm:text-5xl lg:text-6xl font-black text-slate-950 dark:text-white leading-[1.1] tracking-tight">
@@ -87,31 +87,31 @@ const FACTUALITY_BADGES: Record<FactualityRating, string> = {
       <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-4">
         <div class="p-4 rounded-xl bg-slate-50 dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800">
           <div class="font-mono text-2xl sm:text-3xl font-bold text-slate-950 dark:text-white">{totalOutlets}</div>
-          <div class="text-[11px] font-mono text-slate-500 dark:text-slate-400 uppercase mt-0.5">Medios en Simultáneo</div>
-          <div class="text-[10px] text-slate-400 dark:text-slate-500 mt-1">15 Nac. / 16 Internacionales</div>
+          <div class="text-xs font-sans text-slate-500 dark:text-slate-400 mt-0.5">Medios en simultáneo</div>
+          <div class="text-[11px] text-slate-400 dark:text-slate-500 mt-1">15 Nac. / 16 Internacionales</div>
         </div>
         <div class="p-4 rounded-xl bg-slate-50 dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800">
           <div class="font-mono text-2xl sm:text-3xl font-bold text-emerald-600 dark:text-emerald-400">$0</div>
-          <div class="text-[11px] font-mono text-slate-500 dark:text-slate-400 uppercase mt-0.5">Pauta Oficial</div>
-          <div class="text-[10px] text-slate-400 dark:text-slate-500 mt-1">100% Independencia Financiera</div>
+          <div class="text-xs font-sans text-slate-500 dark:text-slate-400 mt-0.5">Pauta oficial</div>
+          <div class="text-[11px] text-slate-400 dark:text-slate-500 mt-1">100% Independencia Financiera</div>
         </div>
         <div class="p-4 rounded-xl bg-slate-50 dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800">
           <div class="font-mono text-2xl sm:text-3xl font-bold text-blue-600 dark:text-blue-400">100%</div>
-          <div class="text-[11px] font-mono text-slate-500 dark:text-slate-400 uppercase mt-0.5">Fuentes Primarias</div>
-          <div class="text-[10px] text-slate-400 dark:text-slate-500 mt-1">Boletín Oficial e INDEC</div>
+          <div class="text-xs font-sans text-slate-500 dark:text-slate-400 mt-0.5">Fuentes primarias</div>
+          <div class="text-[11px] text-slate-400 dark:text-slate-500 mt-1">Boletín Oficial e INDEC</div>
         </div>
         <div class="p-4 rounded-xl bg-slate-50 dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800">
           <div class="font-mono text-2xl sm:text-3xl font-bold text-purple-600 dark:text-purple-400">SHA-256</div>
-          <div class="text-[11px] font-mono text-slate-500 dark:text-slate-400 uppercase mt-0.5">Voto Anti-Fraude</div>
-          <div class="text-[10px] text-slate-400 dark:text-slate-500 mt-1">Anonimato Criptográfico</div>
+          <div class="text-xs font-sans text-slate-500 dark:text-slate-400 mt-0.5">Voto anti-fraude</div>
+          <div class="text-[11px] text-slate-400 dark:text-slate-500 mt-1">Anonimato Criptográfico</div>
         </div>
       </div>
     </header>
 
     <!-- Quick Navigation Index / Jump Anchors -->
     <div class="sticky top-2 z-20 p-2.5 rounded-2xl bg-white/90 dark:bg-slate-900/90 backdrop-blur border border-slate-200 dark:border-slate-800 shadow-sm overflow-x-auto">
-      <div class="flex items-center gap-2 text-xs font-mono whitespace-nowrap px-1">
-        <span class="text-slate-400 uppercase text-[10px] font-bold mr-1">Índice:</span>
+      <div class="flex items-center gap-2 text-xs font-sans whitespace-nowrap px-1">
+        <span class="text-slate-400 text-[11px] font-bold mr-1">Índice:</span>
         <a href="#manifiesto" class="px-2.5 py-1 rounded-lg bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-200 transition-colors">1. Manifiesto Cívico</a>
         <a href="#espectro" class="px-2.5 py-1 rounded-lg bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-200 transition-colors">2. Fórmula del Espectro</a>
         <a href="#catalogo" class="px-2.5 py-1 rounded-lg bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-200 transition-colors">3. Catálogo de 31 Medios</a>
@@ -130,14 +130,14 @@ const FACTUALITY_BADGES: Record<FactualityRating, string> = {
           <h2 class="font-editorial text-2xl sm:text-3xl font-bold text-slate-950 dark:text-white">
             Manifiesto de Independencia Cívica
           </h2>
-          <p class="text-xs font-mono text-slate-500 dark:text-slate-400">Principios rectores de neutralidad, legalidad y financiamiento cero</p>
+          <p class="text-xs font-sans text-slate-500 dark:text-slate-400">Principios rectores de neutralidad, legalidad y financiamiento cero</p>
         </div>
       </div>
 
       <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-sm leading-relaxed text-slate-600 dark:text-slate-300">
         <div class="space-y-2 p-4 rounded-xl bg-slate-50 dark:bg-slate-950/60 border border-slate-200 dark:border-slate-800/80">
-          <div class="flex items-center gap-2 font-mono font-bold text-slate-900 dark:text-slate-100 text-xs uppercase">
-            <span class="text-emerald-500 font-bold">✓</span> 0% Pauta Oficial o Partidaria
+          <div class="flex items-center gap-2 font-sans font-bold text-slate-900 dark:text-slate-100 text-xs">
+            <span class="text-emerald-500 font-bold">✓</span> 0% pauta oficial o partidaria
           </div>
           <p class="text-xs">
             Politicheck <strong>no recibe ni aceptará pauta publicitaria</strong> ni transferencias de fondos provenientes de ningún nivel estatal (Nación, Provincias o Municipios) ni de fundaciones ligadas a partidos políticos. El proyecto opera bajo infraestructura austera y donaciones cívicas individuales transparentes.
@@ -145,8 +145,8 @@ const FACTUALITY_BADGES: Record<FactualityRating, string> = {
         </div>
 
         <div class="space-y-2 p-4 rounded-xl bg-slate-50 dark:bg-slate-950/60 border border-slate-200 dark:border-slate-800/80">
-          <div class="flex items-center gap-2 font-mono font-bold text-slate-900 dark:text-slate-100 text-xs uppercase">
-            <span class="text-blue-500 font-bold">✓</span> Derecho de Cita (Ley 11.723)
+          <div class="flex items-center gap-2 font-sans font-bold text-slate-900 dark:text-slate-100 text-xs">
+            <span class="text-blue-500 font-bold">✓</span> Derecho de cita (Ley 11.723)
           </div>
           <p class="text-xs">
             Respetamos estrictamente la propiedad intelectual de las redacciones. No realizamos web scraping invasivo ni eludimos barreras de pago (paywalls). Consumimos únicamente los <strong>feeds RSS públicos y oficiales</strong> emitidos por los medios, enmarcado en el artículo 10 de la Ley 11.723 de la República Argentina, vinculando siempre con enlace saliente directo a la nota original.
@@ -154,8 +154,8 @@ const FACTUALITY_BADGES: Record<FactualityRating, string> = {
         </div>
 
         <div class="space-y-2 p-4 rounded-xl bg-slate-50 dark:bg-slate-950/60 border border-slate-200 dark:border-slate-800/80">
-          <div class="flex items-center gap-2 font-mono font-bold text-slate-900 dark:text-slate-100 text-xs uppercase">
-            <span class="text-purple-500 font-bold">✓</span> Neutralidad Algorítmica
+          <div class="flex items-center gap-2 font-sans font-bold text-slate-900 dark:text-slate-100 text-xs">
+            <span class="text-purple-500 font-bold">✓</span> Neutralidad algorítmica
           </div>
           <p class="text-xs">
             El sistema de clusterización y asignación de espectro opera bajo modelos de lenguaje de última generación (Google Gemini) mediante prompts determinísticos con temperatura reducida. Las reglas de ponderación son públicas, inalterables por presiones de coyuntura y auditables por cualquier ciudadano.
@@ -174,20 +174,20 @@ const FACTUALITY_BADGES: Record<FactualityRating, string> = {
           <h2 class="font-editorial text-2xl sm:text-3xl font-bold text-slate-950 dark:text-white">
             Fórmula Matemática del Espectro Editorial
           </h2>
-          <p class="text-xs font-mono text-slate-500 dark:text-slate-400">Cómo calculamos la distribución de Oficialismo, Centro-Datos y Oposición</p>
+          <p class="text-xs font-sans text-slate-500 dark:text-slate-400">Cómo calculamos la distribución de Oficialismo, Centro-Datos y Oposición</p>
         </div>
       </div>
 
       <!-- Definition of the 3 Leanings -->
       <div class="space-y-3">
-        <h3 class="text-xs font-mono uppercase font-bold tracking-wider text-slate-700 dark:text-slate-300">
-          Definición Fáctica de los Tres Polos
+        <h3 class="text-xs font-sans font-bold text-slate-700 dark:text-slate-300">
+          Definición fáctica de los tres polos
         </h3>
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div class="p-4 rounded-xl border border-purple-200 dark:border-purple-900/60 bg-purple-50/50 dark:bg-purple-950/20 space-y-2">
             <div class="flex items-center gap-2">
-              <span class="w-3 h-3 rounded-full bg-purple-600"></span>
-              <span class="font-bold text-purple-950 dark:text-purple-300 font-mono text-sm">🟣 Oficialismo</span>
+              <span class="w-3 h-3 rounded-full bg-purple-600" aria-hidden="true"></span>
+              <span class="font-bold text-purple-950 dark:text-purple-300 font-sans text-sm">Oficialismo</span>
             </div>
             <p class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
               Titulares y notas con encuadre prioritario en los logros del Gobierno Nacional, defensa de medidas del Poder Ejecutivo, citas extensas y preeminentes a voceros oficiales, o énfasis en beneficios macroeconómicos y reformas pro-mercado.
@@ -196,8 +196,8 @@ const FACTUALITY_BADGES: Record<FactualityRating, string> = {
 
           <div class="p-4 rounded-xl border border-emerald-200 dark:border-emerald-900/60 bg-emerald-50/50 dark:bg-emerald-950/20 space-y-2">
             <div class="flex items-center gap-2">
-              <span class="w-3 h-3 rounded-full bg-emerald-600"></span>
-              <span class="font-bold text-emerald-950 dark:text-emerald-300 font-mono text-sm">🟢 Centro / Fáctico / Datos</span>
+              <span class="w-3 h-3 rounded-full bg-emerald-600" aria-hidden="true"></span>
+              <span class="font-bold text-emerald-950 dark:text-emerald-300 font-sans text-sm">Centro / Fáctico / Datos</span>
             </div>
             <p class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
               Cobertura ceñida estrictamente a datos duros verificables (cotizaciones cambiarias, índices de inflación INDEC, balances del BCRA, cables de agencia) con citas equilibradas a todas las partes involucradas y ausencia de adjetivación editorial valorativa.
@@ -206,8 +206,8 @@ const FACTUALITY_BADGES: Record<FactualityRating, string> = {
 
           <div class="p-4 rounded-xl border border-amber-200 dark:border-amber-900/60 bg-amber-50/50 dark:bg-amber-950/20 space-y-2">
             <div class="flex items-center gap-2">
-              <span class="w-3 h-3 rounded-full bg-amber-600"></span>
-              <span class="font-bold text-amber-950 dark:text-amber-300 font-mono text-sm">🟠 Oposición</span>
+              <span class="w-3 h-3 rounded-full bg-amber-600" aria-hidden="true"></span>
+              <span class="font-bold text-amber-950 dark:text-amber-300 font-sans text-sm">Oposición</span>
             </div>
             <p class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
               Titulares y notas que enfatizan el costo social del ajuste, pérdida del poder adquisitivo, reclamos sindicales, amparos judiciales contra decretos o críticas expresas de dirigentes y bloques parlamentarios no oficialistas.
@@ -219,7 +219,7 @@ const FACTUALITY_BADGES: Record<FactualityRating, string> = {
       <!-- The Mathematical Equation Box -->
       <div class="p-6 rounded-2xl bg-slate-900 text-white dark:bg-slate-950 border border-slate-800 space-y-4 font-mono">
         <div class="flex items-center justify-between text-xs text-slate-400 border-b border-slate-800 pb-3">
-          <span class="uppercase tracking-widest font-semibold text-slate-300">Algoritmo de Ponderación Normalizada Base 100</span>
+          <span class="font-sans font-semibold text-slate-300">Algoritmo de ponderación normalizada base 100</span>
           <span class="text-emerald-400">Σ (P_ofi + P_cen + P_opo) ≡ 100%</span>
         </div>
 
@@ -231,9 +231,9 @@ const FACTUALITY_BADGES: Record<FactualityRating, string> = {
           <div>
             <span class="text-purple-400 font-bold">α<sub>i</sub> (Factor de Prominencia):</span>
             <ul class="list-disc list-inside mt-1 space-y-0.5 text-slate-400">
-              <li><strong>1.5</strong> — Gran Apertura / Tapa Principal</li>
-              <li><strong>1.2</strong> — Portada sección Política o Economía</li>
-              <li><strong>1.0</strong> — Cable general o sección secundaria</li>
+              <li><strong>1.5</strong>: Gran Apertura / Tapa Principal</li>
+              <li><strong>1.2</strong>: Portada sección Política o Economía</li>
+              <li><strong>1.0</strong>: Cable general o sección secundaria</li>
             </ul>
           </div>
           <div>
@@ -248,9 +248,9 @@ const FACTUALITY_BADGES: Record<FactualityRating, string> = {
 
       <!-- Real Example Walkthrough -->
       <div class="p-5 rounded-xl bg-slate-50 dark:bg-slate-950/50 border border-slate-200 dark:border-slate-800 text-xs space-y-2">
-        <span class="font-mono font-bold text-slate-900 dark:text-slate-100 uppercase tracking-wider">Ejemplo Práctico de Cálculo:</span>
+        <span class="font-sans font-bold text-slate-900 dark:text-slate-100">Ejemplo práctico de cálculo:</span>
         <p class="text-slate-600 dark:text-slate-400 leading-relaxed">
-          Si en una jornada caliente sobre la <em>"Ley de Presupuesto"</em>, 4 redacciones publican con foco en superávit (Oficialismo), 6 presentan cifras cuantitativas de coparticipación sin juicios (Centro) y 5 destacan reclamos de gobernadores por fondos (Oposición), el algoritmo pondera cada artículo según su ubicación en portada y arroja exactamente: <strong>🟣 27% Oficialismo • 🟢 40% Centro • 🟠 33% Oposición</strong>.
+          Si en una jornada caliente sobre la <em>"Ley de Presupuesto"</em>, 4 redacciones publican con foco en superávit (Oficialismo), 6 presentan cifras cuantitativas de coparticipación sin juicios (Centro) y 5 destacan reclamos de gobernadores por fondos (Oposición), el algoritmo pondera cada artículo según su ubicación en portada y arroja exactamente: <strong>27% Oficialismo, 40% Centro y 33% Oposición</strong>.
         </p>
       </div>
     </section>
@@ -280,7 +280,7 @@ const FACTUALITY_BADGES: Record<FactualityRating, string> = {
             placeholder="Buscar por medio, dueño, sesgo, país..."
             class="w-full text-xs font-mono px-3 py-2 pl-8 rounded-xl bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-slate-900 dark:focus:ring-white transition"
           />
-          <svg class="w-4 h-4 text-slate-400 absolute left-2.5 top-2.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <svg aria-hidden="true" class="w-4 h-4 text-slate-400 absolute left-2.5 top-2.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
           </svg>
         </div>
@@ -289,18 +289,18 @@ const FACTUALITY_BADGES: Record<FactualityRating, string> = {
       <!-- Ground News Tripartite Standard Framework Info Banner -->
       <div class="p-4 sm:p-5 rounded-xl bg-slate-50 dark:bg-slate-950/60 border border-slate-200 dark:border-slate-800 space-y-3">
         <div class="flex items-center gap-2">
-          <span class="text-base">⚖️</span>
-          <h3 class="font-mono text-xs font-bold uppercase tracking-wider text-slate-900 dark:text-white">
-            Metodología Tripartita de Auditoría (Estándar Ground News)
+          <svg aria-hidden="true" class="w-4 h-4 text-slate-600 dark:text-slate-300 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 6l3 1m0 0l-3 9a5.002 5.002 0 006.001 0M6 7l3 9M6 7l6-2m6 2l3-1m-3 1l-3 9a5.002 5.002 0 006.001 0M18 7l3 9m-3-9l-6-2m0-2v2m0 16V5m0 16H9m3 0h3" /></svg>
+          <h3 class="font-sans text-xs font-bold text-slate-900 dark:text-white">
+            Metodología tripartita de auditoría (Estándar Ground News)
           </h3>
         </div>
         <p class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
           Siguiendo el modelo de referencia global implementado por <em>Ground News</em>, Politicheck evalúa cada redacción integrando las bases de datos de <strong>AllSides</strong>, <strong>Media Bias/Fact Check (MBFC)</strong> y el <strong>Media Ownership Monitor (MOM / Reporteros Sin Fronteras)</strong> en tres ejes complementarios:
         </p>
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-3 pt-1 text-xs font-mono">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-3 pt-1 text-xs font-sans">
           <div class="p-3 rounded-lg bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800/80 space-y-1">
             <span class="font-bold text-slate-900 dark:text-slate-100 flex items-center gap-1.5">
-              <span>📐</span> 1. Ideología & Sesgo
+              1. Ideología y sesgo
             </span>
             <p class="text-[11px] text-slate-500 dark:text-slate-400 leading-normal">
               Posición editorial en escala AllSides/MBFC de 5 puntos (Izquierda a Derecha) ponderada con el escenario argentino.
@@ -308,7 +308,7 @@ const FACTUALITY_BADGES: Record<FactualityRating, string> = {
           </div>
           <div class="p-3 rounded-lg bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800/80 space-y-1">
             <span class="font-bold text-slate-900 dark:text-slate-100 flex items-center gap-1.5">
-              <span>🛡️</span> 2. Calidad Factual
+              2. Calidad factual
             </span>
             <p class="text-[11px] text-slate-500 dark:text-slate-400 leading-normal">
               Nivel de rigor periodístico y respaldo documental (Muy Alta, Alta o Mixta) según auditorías de verificación y políticas de rectificación de errores.
@@ -316,7 +316,7 @@ const FACTUALITY_BADGES: Record<FactualityRating, string> = {
           </div>
           <div class="p-3 rounded-lg bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800/80 space-y-1">
             <span class="font-bold text-slate-900 dark:text-slate-100 flex items-center gap-1.5">
-              <span>🏢</span> 3. Propiedad y Control
+              3. Propiedad y control
             </span>
             <p class="text-[11px] text-slate-500 dark:text-slate-400 leading-normal">
               Transparencia corporativa sobre grupos de medios, accionistas mayoritarios y tipo de financiamiento según el Media Ownership Monitor.
@@ -329,10 +329,10 @@ const FACTUALITY_BADGES: Record<FactualityRating, string> = {
       <div class="p-4 sm:p-5 rounded-xl border border-sky-200 dark:border-sky-900/60 bg-sky-50/50 dark:bg-sky-950/20 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 font-sans">
         <div class="space-y-1">
           <div class="flex items-center gap-2">
-            <span class="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-sky-500/20 text-sky-700 dark:text-sky-300 uppercase tracking-wider">
-              Investigación Especial
+            <span class="px-2 py-0.5 rounded text-[11px] font-sans font-bold bg-sky-500/20 text-sky-700 dark:text-sky-300">
+              Investigación especial
             </span>
-            <span class="font-bold text-slate-950 dark:text-white text-xs sm:text-sm font-mono">
+            <span class="font-bold text-slate-950 dark:text-white text-xs sm:text-sm font-sans">
               Mapa del Ecosistema de Medios en Argentina
             </span>
           </div>
@@ -342,16 +342,17 @@ const FACTUALITY_BADGES: Record<FactualityRating, string> = {
         </div>
         <a 
           href="/guias/mapa-de-medios-argentina" 
-          class="shrink-0 inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-slate-950 hover:bg-slate-800 dark:bg-white dark:hover:bg-slate-200 text-white dark:text-slate-950 font-mono text-xs font-bold transition shadow-xs"
+          class="shrink-0 inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-slate-950 hover:bg-slate-800 dark:bg-white dark:hover:bg-slate-200 text-white dark:text-slate-950 font-sans text-xs font-bold transition shadow-xs"
         >
-          <span>Explorar el Mapa →</span>
+          <span>Explorar el Mapa</span>
+          <svg aria-hidden="true" class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" /></svg>
         </a>
       </div>
 
       <!-- Multi-Filter Toolbar -->
       <div class="space-y-3 border-b border-slate-200 dark:border-slate-800 pb-4">
         <!-- Category Tabs -->
-        <div class="flex flex-wrap items-center justify-between gap-3 text-xs font-mono">
+        <div class="flex flex-wrap items-center justify-between gap-3 text-xs font-sans">
           <div class="flex flex-wrap items-center gap-2">
             <button 
               class="outlet-cat-btn active px-3 py-1.5 rounded-lg bg-slate-900 text-white dark:bg-white dark:text-slate-950 font-semibold transition"
@@ -363,28 +364,28 @@ const FACTUALITY_BADGES: Record<FactualityRating, string> = {
               class="outlet-cat-btn px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 transition"
               data-filter="nacional"
             >
-              🇦🇷 Nacionales ({nationalCount})
+              Nacionales ({nationalCount})
             </button>
             <button 
               class="outlet-cat-btn px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 transition"
               data-filter="internacional"
             >
-              🌐 Internacionales ({foreignCount})
+              Internacionales ({foreignCount})
             </button>
           </div>
 
-          <div class="text-[11px] font-mono text-slate-500 dark:text-slate-400">
-            Mostrando <span id="visible-outlets-count" class="font-bold text-slate-900 dark:text-white">{totalOutlets}</span> de {totalOutlets} medios
+          <div class="text-[11px] font-sans text-slate-500 dark:text-slate-400">
+            Mostrando <span id="visible-outlets-count" class="font-bold text-slate-900 dark:text-white font-mono">{totalOutlets}</span> de {totalOutlets} medios
           </div>
         </div>
 
         <!-- Secondary Filters: Factualidad & Ideología -->
-        <div class="flex flex-wrap items-center gap-3 pt-1 text-xs font-mono">
+        <div class="flex flex-wrap items-center gap-3 pt-1 text-xs font-sans">
           <div class="flex items-center gap-2">
-            <label for="outlet-factuality-filter" class="text-slate-500 dark:text-slate-400 text-[11px]">🛡️ Factualidad:</label>
+            <label for="outlet-factuality-filter" class="text-slate-500 dark:text-slate-400 text-xs">Factualidad:</label>
             <select 
               id="outlet-factuality-filter"
-              class="px-2.5 py-1 text-xs font-mono rounded-lg bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-200 focus:outline-none focus:ring-1 focus:ring-slate-900 dark:focus:ring-white"
+              class="px-2.5 py-1 text-xs font-sans rounded-lg bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-200 focus:outline-none focus:ring-1 focus:ring-slate-900 dark:focus:ring-white"
             >
               <option value="all">Todas</option>
               <option value="muy_alta">Muy Alta</option>
@@ -394,10 +395,10 @@ const FACTUALITY_BADGES: Record<FactualityRating, string> = {
           </div>
 
           <div class="flex items-center gap-2">
-            <label for="outlet-ideology-filter" class="text-slate-500 dark:text-slate-400 text-[11px]">📐 Ideología:</label>
+            <label for="outlet-ideology-filter" class="text-slate-500 dark:text-slate-400 text-xs">Ideología:</label>
             <select 
               id="outlet-ideology-filter"
-              class="px-2.5 py-1 text-xs font-mono rounded-lg bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-200 focus:outline-none focus:ring-1 focus:ring-slate-900 dark:focus:ring-white"
+              class="px-2.5 py-1 text-xs font-sans rounded-lg bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-200 focus:outline-none focus:ring-1 focus:ring-slate-900 dark:focus:ring-white"
             >
               <option value="all">Todas</option>
               <option value="izquierda">Izquierda</option>
@@ -414,12 +415,12 @@ const FACTUALITY_BADGES: Record<FactualityRating, string> = {
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4" id="outlets-grid">
         {OUTLETS_CATALOG.map((outlet) => {
           const leaningLabel = 
-            outlet.baselineLeaning === 'oficialismo' ? '🟣 Oficialismo' :
-            outlet.baselineLeaning === 'oposicion' ? '🟠 Oposición' : '🟢 Centro - Datos';
+            outlet.baselineLeaning === 'oficialismo' ? 'Oficialismo' :
+            outlet.baselineLeaning === 'oposicion' ? 'Oposición' : 'Centro - Datos';
           
           return (
             <article 
-              class="outlet-card p-4 rounded-xl bg-slate-50 dark:bg-slate-950/70 border border-slate-200 dark:border-slate-800 flex flex-col justify-between space-y-3.5 transition-all hover:border-slate-400 dark:hover:border-slate-600 shadow-sm"
+              class="outlet-card p-4 rounded-xl bg-slate-50 dark:bg-slate-950/70 border border-slate-200 dark:border-slate-800 flex flex-col justify-between space-y-3.5 transition-colors hover:border-slate-400 dark:hover:border-slate-600 shadow-sm"
               data-name={outlet.name.toLowerCase()}
               data-code={outlet.code.toLowerCase()}
               data-country={outlet.country.toLowerCase()}
@@ -436,37 +437,37 @@ const FACTUALITY_BADGES: Record<FactualityRating, string> = {
                   <div class="flex items-center gap-2">
                     <span class="text-xl" title={outlet.country}>{outlet.flag}</span>
                     <div>
-                      <h4 class="font-bold text-slate-950 dark:text-white font-mono text-sm tracking-tight leading-snug">
+                      <h4 class="font-bold text-slate-950 dark:text-white font-sans text-sm tracking-tight leading-snug">
                         {outlet.name}
                       </h4>
-                      <span class="text-[10px] font-mono text-slate-400 dark:text-slate-500 uppercase">{outlet.country}</span>
+                      <span class="text-[11px] font-sans text-slate-400 dark:text-slate-500">{outlet.country}</span>
                     </div>
                   </div>
-                  <span class={`text-[10px] font-mono font-bold px-2 py-0.5 rounded border whitespace-nowrap ${outlet.badgeClass}`}>
+                  <span class={`text-[11px] font-sans font-bold px-2 py-0.5 rounded border whitespace-nowrap ${outlet.badgeClass}`}>
                     {leaningLabel}
                   </span>
                 </div>
 
                 <!-- Tripartite Badges: Ideology & Factuality -->
                 <div class="flex flex-wrap items-center gap-1.5 pt-0.5">
-                  <span class={`text-[10px] font-mono font-medium px-2 py-0.5 rounded-md border ${IDEOLOGY_BADGES[outlet.ideology]}`}>
-                    📐 {IDEOLOGY_LABELS[outlet.ideology]}
+                  <span class={`text-[11px] font-sans font-medium px-2 py-0.5 rounded-md border ${IDEOLOGY_BADGES[outlet.ideology]}`}>
+                    {IDEOLOGY_LABELS[outlet.ideology]}
                   </span>
-                  <span class={`text-[10px] font-mono font-medium px-2 py-0.5 rounded-md border ${FACTUALITY_BADGES[outlet.factuality]}`}>
-                    🛡️ {FACTUALITY_LABELS[outlet.factuality]}
+                  <span class={`text-[11px] font-sans font-medium px-2 py-0.5 rounded-md border ${FACTUALITY_BADGES[outlet.factuality]}`}>
+                    {FACTUALITY_LABELS[outlet.factuality]}
                   </span>
                 </div>
 
                 <!-- Ownership & Corporate Structure -->
-                <div class="p-2.5 rounded-lg bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800/80 space-y-1 text-[11px] font-mono">
+                <div class="p-2.5 rounded-lg bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800/80 space-y-1 text-[11px] font-sans">
                   <div class="flex items-center justify-between text-slate-600 dark:text-slate-400">
-                    <span class="text-slate-400 dark:text-slate-500">🏢 Grupo/Dueño:</span>
+                    <span class="text-slate-400 dark:text-slate-500">Grupo/Dueño:</span>
                     <span class="font-semibold text-slate-900 dark:text-slate-200 text-right truncate max-w-[160px]" title={outlet.ownership.group}>
                       {outlet.ownership.group}
                     </span>
                   </div>
                   <div class="flex items-center justify-between text-slate-600 dark:text-slate-400">
-                    <span class="text-slate-400 dark:text-slate-500">💼 Propiedad:</span>
+                    <span class="text-slate-400 dark:text-slate-500">Propiedad:</span>
                     <span class="text-slate-800 dark:text-slate-300">
                       {FUNDING_LABELS[outlet.ownership.fundingType]}
                     </span>
@@ -479,8 +480,8 @@ const FACTUALITY_BADGES: Record<FactualityRating, string> = {
                 </p>
 
                 <!-- Independent Audit Citation -->
-                <div class="text-[10px] font-mono text-slate-500 dark:text-slate-400 flex items-start gap-1 bg-slate-100/60 dark:bg-slate-900/40 p-2 rounded-md border border-slate-200/50 dark:border-slate-800/50">
-                  <span class="text-slate-400">⚖️</span>
+                <div class="text-[11px] font-sans text-slate-500 dark:text-slate-400 flex items-start gap-1.5 bg-slate-100/60 dark:bg-slate-900/40 p-2 rounded-md border border-slate-200/50 dark:border-slate-800/50">
+                  <svg aria-hidden="true" class="w-3.5 h-3.5 text-slate-400 shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
                   <div class="leading-tight">
                     <span class="font-semibold text-slate-700 dark:text-slate-300">Auditoría: </span>
                     <span>{outlet.sourceAuditRef}</span>
@@ -489,7 +490,7 @@ const FACTUALITY_BADGES: Record<FactualityRating, string> = {
               </div>
 
               <!-- RSS & Web Links -->
-              <div class="pt-2 border-t border-slate-200/80 dark:border-slate-800/80 flex items-center justify-between text-[11px] font-mono">
+              <div class="pt-2 border-t border-slate-200/80 dark:border-slate-800/80 flex items-center justify-between text-[11px] font-sans">
                 <a 
                   href={outlet.rssFeedUrl} 
                   target="_blank" 
@@ -497,7 +498,7 @@ const FACTUALITY_BADGES: Record<FactualityRating, string> = {
                   class="inline-flex items-center gap-1 text-amber-600 dark:text-amber-400 hover:underline"
                   title="Ver canal RSS sindicado oficial"
                 >
-                  <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 24 24">
+                  <svg aria-hidden="true" class="w-3 h-3" fill="currentColor" viewBox="0 0 24 24">
                     <path d="M6.18 15.64a2.18 2.18 0 0 1 2.18 2.18C8.36 19 7.38 20 6.18 20C5 20 4 19 4 17.82a2.18 2.18 0 0 1 2.18-2.18M4 4.44A15.56 15.56 0 0 1 19.56 20h-2.83A12.73 12.73 0 0 0 4 7.27V4.44m0 5.66a9.9 9.9 0 0 1 9.9 9.9h-2.83A7.07 7.07 0 0 0 4 12.93V10.1z"/>
                   </svg>
                   <span>Feed RSS</span>
@@ -510,7 +511,7 @@ const FACTUALITY_BADGES: Record<FactualityRating, string> = {
                   class="text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white hover:underline inline-flex items-center gap-1"
                 >
                   <span>Visitar Portal</span>
-                  <svg class="w-2.5 h-2.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <svg aria-hidden="true" class="w-2.5 h-2.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
                   </svg>
                 </a>
@@ -521,7 +522,7 @@ const FACTUALITY_BADGES: Record<FactualityRating, string> = {
       </div>
 
       <!-- No Results Message -->
-      <div id="no-outlets-found" class="hidden p-8 text-center text-slate-500 dark:text-slate-400 font-mono text-xs">
+      <div id="no-outlets-found" class="hidden p-8 text-center text-slate-500 dark:text-slate-400 font-sans text-xs">
         No se encontraron medios que coincidan con los criterios seleccionados.
       </div>
     </section>
@@ -536,7 +537,7 @@ const FACTUALITY_BADGES: Record<FactualityRating, string> = {
           <h2 class="font-editorial text-2xl sm:text-3xl font-bold text-slate-950 dark:text-white">
             Metodología del Monitor de Promesas 2027
           </h2>
-          <p class="text-xs font-mono text-slate-500 dark:text-slate-400">
+          <p class="text-xs font-sans text-slate-500 dark:text-slate-400">
             Escala inspirada en PolitiFact y exigencia estricta de prueba documental primaria
           </p>
         </div>
@@ -547,11 +548,11 @@ const FACTUALITY_BADGES: Record<FactualityRating, string> = {
         <!-- 1. Cumplida -->
         <div class="p-4 rounded-xl border border-emerald-300 dark:border-emerald-800 bg-emerald-50/60 dark:bg-emerald-950/20 space-y-2">
           <div class="flex items-center gap-2">
-            <span class="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-emerald-600 text-white uppercase">
+            <span class="px-2 py-0.5 rounded text-[11px] font-sans font-bold bg-emerald-600 text-white">
               Cumplida
             </span>
           </div>
-          <h4 class="font-bold text-slate-900 dark:text-white text-xs font-mono">Boletín Oficial / Meta Lograda</h4>
+          <h4 class="font-bold text-slate-900 dark:text-white text-xs font-sans">Boletín Oficial / Meta Lograda</h4>
           <p class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
             El compromiso fue reglamentado y promulgado de manera efectiva mediante decreto, ley sancionada en el Congreso o cumplimiento estricto del indicador oficial anunciado (ej: meta de superávit o baja mensual de inflación).
           </p>
@@ -560,11 +561,11 @@ const FACTUALITY_BADGES: Record<FactualityRating, string> = {
         <!-- 2. En Progreso -->
         <div class="p-4 rounded-xl border border-blue-300 dark:border-blue-800 bg-blue-50/60 dark:bg-blue-950/20 space-y-2">
           <div class="flex items-center gap-2">
-            <span class="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-blue-600 text-white uppercase">
-              En Progreso
+            <span class="px-2 py-0.5 rounded text-[11px] font-sans font-bold bg-blue-600 text-white">
+              En progreso
             </span>
           </div>
-          <h4 class="font-bold text-slate-900 dark:text-white text-xs font-mono">En Trámite Formal</h4>
+          <h4 class="font-bold text-slate-900 dark:text-white text-xs font-sans">En Trámite Formal</h4>
           <p class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
             El poder público inició actos administrativos formales: envío de proyecto de ley con estado parlamentario, apertura de licitación pública o aplicación de protocolos con mediciones intermedias activas.
           </p>
@@ -573,11 +574,11 @@ const FACTUALITY_BADGES: Record<FactualityRating, string> = {
         <!-- 3. En Pausa / Trabada -->
         <div class="p-4 rounded-xl border border-amber-300 dark:border-amber-800 bg-amber-50/60 dark:bg-amber-950/20 space-y-2">
           <div class="flex items-center gap-2">
-            <span class="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-amber-600 text-white uppercase">
-              En Pausa
+            <span class="px-2 py-0.5 rounded text-[11px] font-sans font-bold bg-amber-600 text-white">
+              En pausa
             </span>
           </div>
-          <h4 class="font-bold text-slate-900 dark:text-white text-xs font-mono">Freno Judicial o Legislativo</h4>
+          <h4 class="font-bold text-slate-900 dark:text-white text-xs font-sans">Freno Judicial o Legislativo</h4>
           <p class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
             La medida se encuentra suspendida por medidas cautelares de la Justicia, rechazo de pliegos parlamentarios, vetos presidenciales o falta de financiamiento presupuestario acreditado.
           </p>
@@ -586,11 +587,11 @@ const FACTUALITY_BADGES: Record<FactualityRating, string> = {
         <!-- 4. Incumplida -->
         <div class="p-4 rounded-xl border border-rose-300 dark:border-rose-800 bg-rose-50/60 dark:bg-rose-950/20 space-y-2">
           <div class="flex items-center gap-2">
-            <span class="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-rose-600 text-white uppercase">
+            <span class="px-2 py-0.5 rounded text-[11px] font-sans font-bold bg-rose-600 text-white">
               Incumplida
             </span>
           </div>
-          <h4 class="font-bold text-slate-900 dark:text-white text-xs font-mono">Plazo Fenecido / Acción Contraria</h4>
+          <h4 class="font-bold text-slate-900 dark:text-white text-xs font-sans">Plazo Fenecido / Acción Contraria</h4>
           <p class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
             El plazo temporal comprometido venció sin avances verificables, o el funcionario adoptó por decreto o voto parlamentario una política directamente contraria a su promesa pública explícita.
           </p>
@@ -599,13 +600,14 @@ const FACTUALITY_BADGES: Record<FactualityRating, string> = {
 
       <!-- Requirement of Primary Evidence -->
       <div class="p-5 rounded-xl bg-slate-50 dark:bg-slate-950/50 border border-slate-200 dark:border-slate-800 text-xs space-y-3">
-        <h4 class="font-mono font-bold text-slate-900 dark:text-slate-100 uppercase tracking-wider flex items-center gap-2">
-          <span class="text-blue-500">📜</span> Regla de Oro: Prueba Documental Primaria Inviolable
+        <h4 class="font-sans font-bold text-slate-900 dark:text-slate-100 flex items-center gap-2">
+          <svg aria-hidden="true" class="w-4 h-4 text-blue-500 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>
+          <span>Regla de oro: prueba documental primaria inviolable</span>
         </h4>
         <p class="text-slate-600 dark:text-slate-400 leading-relaxed">
           Ninguna promesa electoral se califica en Politicheck con meras declaraciones de prensa o trascendidos en off. Cada ficha individual incorpora obligatoriamente:
         </p>
-        <ul class="list-disc list-inside space-y-1 text-slate-600 dark:text-slate-400 font-mono text-[11px]">
+        <ul class="list-disc list-inside space-y-1 text-slate-600 dark:text-slate-400 font-sans text-xs">
           <li><strong>Cita Original Verificada:</strong> Fecha, hora y medio audiovisual o escrito donde se enunció el compromiso.</li>
           <li><strong>Documento Público de Respaldo:</strong> Enlace al <em>Boletín Oficial de la República Argentina (boletinoficial.gob.ar)</em>, actas de votación nominal del Congreso o informes técnicos del <em>INDEC</em> y <em>BCRA</em>.</li>
           <li><strong>Termómetro Cívico Abierto:</strong> Espacio de votación ciudadana para contrastar la percepción de los votantes con el veredicto técnico documental.</li>
@@ -623,7 +625,7 @@ const FACTUALITY_BADGES: Record<FactualityRating, string> = {
           <h2 class="font-editorial text-2xl sm:text-3xl font-bold text-slate-950 dark:text-white">
             Protocolo Cívico Anti-Fraude en el Voto
           </h2>
-          <p class="text-xs font-mono text-slate-500 dark:text-slate-400">
+          <p class="text-xs font-sans text-slate-500 dark:text-slate-400">
             Anonimato garantizado sin registro invasivo y con unicidad criptográfica idempotente
           </p>
         </div>
@@ -631,8 +633,9 @@ const FACTUALITY_BADGES: Record<FactualityRating, string> = {
 
       <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-sm leading-relaxed text-slate-600 dark:text-slate-300">
         <div class="p-5 rounded-xl bg-slate-50 dark:bg-slate-950/60 border border-slate-200 dark:border-slate-800 space-y-3">
-          <h4 class="font-mono font-bold text-slate-900 dark:text-slate-100 text-xs uppercase flex items-center gap-2">
-            <span class="text-purple-500">🔒</span> Anonimato Absoluto (Cero Datos Personales)
+          <h4 class="font-sans font-bold text-slate-900 dark:text-slate-100 text-xs flex items-center gap-2">
+            <svg aria-hidden="true" class="w-4 h-4 text-purple-500 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" /></svg>
+            <span>Anonimato absoluto (cero datos personales)</span>
           </h4>
           <p class="text-xs">
             Politicheck <strong>no solicita correo electrónico, redes sociales ni creación forzada de cuentas</strong> para emitir opinión en el Promesómetro. Consideramos que la participación democrática debe ser universal, ágil y libre de rastreo publicitario.
@@ -640,8 +643,9 @@ const FACTUALITY_BADGES: Record<FactualityRating, string> = {
         </div>
 
         <div class="p-5 rounded-xl bg-slate-50 dark:bg-slate-950/60 border border-slate-200 dark:border-slate-800 space-y-3">
-          <h4 class="font-mono font-bold text-slate-900 dark:text-slate-100 text-xs uppercase flex items-center gap-2">
-            <span class="text-emerald-500">🛡️</span> Hashing Criptográfico SHA-256 Idempotente
+          <h4 class="font-sans font-bold text-slate-900 dark:text-slate-100 text-xs flex items-center gap-2">
+            <svg aria-hidden="true" class="w-4 h-4 text-emerald-500 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" /></svg>
+            <span>Hashing criptográfico SHA-256 idempotente</span>
           </h4>
           <p class="text-xs">
             Para evitar que bots o granjas de clics alteren los resultados, el servidor genera una firma criptográfica única combinando la dirección IP y la firma técnica del dispositivo con un salt rotativo de seguridad:
