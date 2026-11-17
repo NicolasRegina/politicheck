@@ -1,0 +1,22 @@
+# Politicheck
+
+> Plataforma cívica e informativa argentina que contrasta el sesgo y encuadre mediático de las noticias del día mediante agregación de feeds RSS oficiales y audita las promesas de campaña mediante el Promesómetro.
+
+## Secciones Principales
+- [Portada y Comparativa Diaria](https://www.politicheck.com.ar/): Cobertura comparada en tiempo real entre medios de Oficialismo, Centro/Datos y Oposición.
+- [Metodología y Transparencia](https://www.politicheck.com.ar/metodologia): Criterios de clasificación editorial, fuentes RSS auditadas y reglas de neutralidad.
+- [Especial Elecciones Brasil 2026](https://www.politicheck.com.ar/elecciones-brasil): Seguimiento regional de cobertura mediática sobre Brasil 2026.
+
+## Mapa de Medios y Guías de Propiedad (Argentina)
+- [Índice de Guías de Medios](https://www.politicheck.com.ar/guias): Directorio completo de investigaciones societarias y editoriales.
+- [Mapa del Ecosistema de Medios en Argentina](https://www.politicheck.com.ar/guias/mapa-de-medios-argentina): Radiografía de los 31 medios monitoreados, grupos económicos, propiedad y sesgo.
+- [¿Quién es el Dueño de Clarín?](https://www.politicheck.com.ar/guias/quien-es-el-dueno-de-clarin): Estructura de Grupo Clarín S.A., GC Dominio S.A. y línea editorial.
+- [¿Quién es el Dueño de La Nación?](https://www.politicheck.com.ar/guias/quien-es-el-dueno-de-la-nacion): Familia Saguier (MNMS Holding), LN+ y perfil institucional.
+- [¿Quién es el Dueño de Infobae?](https://www.politicheck.com.ar/guias/quien-es-el-dueno-de-infobae): Daniel Hadad, expansión panregional y modelo editorial.
+- [¿Quién es el Dueño de Ámbito Financiero y C5N?](https://www.politicheck.com.ar/guias/quien-es-el-dueno-de-ambito-financiero): Grupo Indalo, Cristóbal López y línea editorial.
+- [¿Quién es el Dueño de Grupo América y El Cronista?](https://www.politicheck.com.ar/guias/quien-es-el-dueno-de-grupo-america-el-cronista): Daniel Vila, José Luis Manzano, Claudio Belocopitt y activos del grupo.
+- [¿Quién es el Dueño de Página/12 e IP Noticias?](https://www.politicheck.com.ar/guias/quien-es-el-dueno-de-pagina-12): Víctor Santa María, SUTERH y Grupo Octubre.
+- [¿Quién es el Dueño de Editorial Perfil?](https://www.politicheck.com.ar/guias/quien-es-el-dueno-de-editorial-perfil): Jorge Fontevecchia, Noticias y Diario Perfil.
+
+## Sitemap
+- [Sitemap XML](https://www.politicheck.com.ar/sitemap.xml)

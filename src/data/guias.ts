@@ -399,8 +399,8 @@ export const GUIAS_ARTICLES: GuiaArticle[] = [
       'Media Ownership Monitor (MOM / Reporteros Sin Fronteras)',
       'AllSides & Media Bias/Fact Check (MBFC)'
     ],
-    metaTitle: '¿Quién es el Dueño de Clarín? Accionistas y Grupo (2026)',
-    metaDescription: 'Conocé quiénes son los dueños de Clarín: la estructura del Grupo Clarín S.A., Héctor Magnetto, accionistas, empresas controladas y su línea editorial.',
+    metaTitle: '¿Quién es el Dueño de Clarín y TN? Accionistas y Grupo Clarín',
+    metaDescription: 'Héctor Magnetto, Aranda, Pagliaro y los herederos Noble controlan Grupo Clarín (TN, El Trece). Accionistas reales, estructura y sesgo editorial.',
     canonicalUrl: 'https://www.politicheck.com.ar/guias/quien-es-el-dueno-de-clarin',
     targetSnippet: 'El diario Clarín pertenece al Grupo Clarín S.A. Su control accionario mayoritario está en manos de Héctor Magnetto, José Antonio Aranda, Lucio Pagliaro y los herederos de Ernestina Herrera de Noble mediante la sociedad GC Dominio S.A. (70,99% de derechos de voto).',
     faq: [
@@ -557,8 +557,8 @@ export const GUIAS_ARTICLES: GuiaArticle[] = [
       'Media Ownership Monitor (MOM / Reporteros Sin Fronteras)',
       'AllSides & Media Bias/Fact Check (MBFC)'
     ],
-    metaTitle: '¿Quién es el Dueño de La Nación? Familia Saguier y Accionistas (2026)',
-    metaDescription: 'Descubrí quién controla Diario La Nación y la señal LN+: accionistas principales, la familia Saguier, historia societaria y su línea editorial.',
+    metaTitle: '¿Quién es el Dueño de La Nación y LN+? Familia Saguier y Accionistas',
+    metaDescription: 'La familia Saguier (MNMS Holding) controla Diario La Nación y La Nación Más (LN+). Accionistas, vínculo con Mitre y su línea editorial en Argentina.',
     canonicalUrl: 'https://www.politicheck.com.ar/guias/quien-es-el-dueno-de-la-nacion',
     targetSnippet: 'El diario La Nación y la señal LN+ pertenecen a S.A. La Nación, controlada mayoritariamente por la familia Saguier (a través de MNMS Holding), descendientes de Josefina Mitre, junto a inversores privados del ámbito financiero.',
     faq: [
@@ -713,14 +713,18 @@ export const GUIAS_ARTICLES: GuiaArticle[] = [
       'Media Ownership Monitor (MOM / Reporteros Sin Fronteras)',
       'AllSides & Media Bias/Fact Check (MBFC)'
     ],
-    metaTitle: '¿Quién es el Dueño de Infobae? Daniel Hadad y Modelo (2026)',
-    metaDescription: 'Descubrí quién es el dueño de Infobae: Daniel Hadad, su estructura societaria, cómo se financia sin muro de pago y cuál es su línea editorial.',
+    metaTitle: '¿Quién es el Dueño de Infobae? Daniel Hadad y Sesgo Editorial',
+    metaDescription: 'Daniel Hadad es el dueño de Infobae. Conocé a quién pertenece, cómo se financia sin muro de pago y si su línea editorial es de centro, derecha o izquierda.',
     canonicalUrl: 'https://www.politicheck.com.ar/guias/quien-es-el-dueno-de-infobae',
     targetSnippet: 'El portal Infobae pertenece en su totalidad al periodista y empresario Daniel Hadad, quien lo fundó en 2002. Opera como un medio nativo digital sin rotativas de papel, con redacciones activas en Argentina, México, Colombia, España, Perú y Estados Unidos.',
     faq: [
       {
         question: '¿Quién es el dueño del portal Infobae?',
         answer: 'Infobae pertenece en su totalidad al periodista y empresario argentino Daniel Hadad a través de las sociedades Infobae América y TXH Medios, ejerciendo la presidencia ejecutiva y la conducción editorial.'
+      },
+      {
+        question: '¿Infobae es de derecha o de izquierda?',
+        answer: 'En la auditoría de Politicheck, Infobae se ubica mayormente en el espectro de Centro / Datos en política local, combinando cobertura de alto volumen y tono institucional, aunque en política exterior (EE.UU., Israel, Venezuela) suele adoptar una postura más pro-occidental y liberal.'
       },
       {
         question: '¿Infobae es un medio argentino o extranjero?',
@@ -847,8 +851,8 @@ export const GUIAS_ARTICLES: GuiaArticle[] = [
       'Fallo del Tribunal Oral Federal N° 3 (Causa Oil Combustibles)',
       'Comscore MMX Multi-Platform'
     ],
-    metaTitle: '¿Quién es el Dueño de Ámbito Financiero y C5N? Cristóbal López y Grupo Indalo',
-    metaDescription: 'Conocé quiénes son los dueños de Ámbito Financiero y C5N: la historia de Grupo Indalo, Cristóbal López, Fabián De Sousa, las causas judiciales y su línea editorial.',
+    metaTitle: '¿Quién es el Dueño de C5N y Ámbito Financiero? Grupo Indalo',
+    metaDescription: 'Cristóbal López y Fabián De Sousa (Grupo Indalo) controlan C5N y Ámbito Financiero. Historia, causas judiciales, accionistas y línea editorial.',
     canonicalUrl: 'https://www.politicheck.com.ar/guias/quien-es-el-dueno-de-ambito-financiero',
     targetSnippet: 'Ámbito Financiero y C5N pertenecen al Grupo Indalo, conglomerado empresarial controlado por Cristóbal López y Fabián De Sousa a través de South Media Investments y Editorial Amfin S.A.',
     faq: [
@@ -999,8 +1003,8 @@ export const GUIAS_ARTICLES: GuiaArticle[] = [
       'Inspección General de Justicia (IGJ)',
       'Balances Corporativos de El Cronista Comercial S.A.'
     ],
-    metaTitle: '¿Quién es el Dueño de Grupo América y El Cronista? Daniel Vila y Manzano',
-    metaDescription: 'Descubrí quiénes son los dueños de Grupo América y El Cronista: Daniel Vila, José Luis Manzano, Claudio Belocopitt, América TV, A24 y su sesgo editorial.',
+    metaTitle: '¿Quién es el Dueño de América TV, A24 y El Cronista? Grupo América',
+    metaDescription: 'Daniel Vila, José Luis Manzano y Claudio Belocopitt son los dueños de América TV, A24, Radio La Red y El Cronista. Composición accionaria y sesgo.',
     canonicalUrl: 'https://www.politicheck.com.ar/guias/quien-es-el-dueno-de-grupo-america-el-cronista',
     targetSnippet: 'Grupo América es controlado por Daniel Vila y José Luis Manzano, junto a Claudio Belocopitt (Swiss Medical, 40% en TV). Opera América TV, A24, Radio La Red y El Cronista Comercial.',
     faq: [
@@ -1113,8 +1117,8 @@ export const GUIAS_ARTICLES: GuiaArticle[] = [
       'Editorial La Página S.A. Balances',
       'Comscore MMX'
     ],
-    metaTitle: '¿Quién es el Dueño de Página 12? Víctor Santa María y Grupo Octubre',
-    metaDescription: 'Conocé quién es el dueño de Página 12 e IP Noticias: Víctor Santa María, el gremio de encargados de edificios SUTERH, Canal 9 y su línea editorial.',
+    metaTitle: '¿Quién es el Dueño de Página 12 y Canal 9? Víctor Santa María',
+    metaDescription: 'Víctor Santa María, el gremio SUTERH y Grupo Octubre controlan Página 12, IP Noticias y Canal 9. Historia, financiamiento y línea editorial.',
     canonicalUrl: 'https://www.politicheck.com.ar/guias/quien-es-el-dueno-de-pagina-12',
     targetSnippet: 'Página 12 e IP Noticias pertenecen al Grupo Octubre, administrado por el sindicato de encargados de edificios (SUTERH) y presidido por el dirigente Víctor Santa María.',
     faq: [
@@ -1181,8 +1185,8 @@ export const GUIAS_ARTICLES: GuiaArticle[] = [
       'Balances Comerciales de Editorial Perfil S.A.',
       'Comscore MMX'
     ],
-    metaTitle: '¿Quién es el Dueño de Editorial Perfil? Jorge Fontevecchia',
-    metaDescription: 'Descubrí quién es el dueño de Editorial Perfil, Diario Perfil y Revista Noticias: Jorge Fontevecchia, su historia, Net TV y su línea editorial independiente.',
+    metaTitle: '¿Quién es el Dueño de Diario Perfil y Noticias? Jorge Fontevecchia',
+    metaDescription: 'Jorge Fontevecchia es el dueño de Editorial Perfil, Diario Perfil, Revista Noticias y Net TV. Historia, modelo editorial y análisis de sesgo.',
     canonicalUrl: 'https://www.politicheck.com.ar/guias/quien-es-el-dueno-de-editorial-perfil',
     targetSnippet: 'Editorial Perfil pertenece a la familia Fontevecchia, fundada y presidida por el periodista Jorge Fontevecchia. Opera Diario Perfil, Revista Noticias, Caras y Net TV.',
     faq: [

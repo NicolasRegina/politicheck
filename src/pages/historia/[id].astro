@@ -32,6 +32,25 @@ const cleanHeadline = (story?.neutralHeadline || '').length > 110
 const viralShareText = story
   ? `🗞️ "${cleanHeadline}"\n\nMedios: ${outletsText}\n📊 Espectro: 🟣 ${story.spectrum.oficialismoPct}% | 🟢 ${story.spectrum.centroDatosPct}% | 🟠 ${story.spectrum.oposicionPct}%\n\n👉 Comparativa sin sesgo:`
   : '';
+
+const OUTLET_GUIDES = [
+  { match: ['clarin', 'clarín', 'todo noticias', 'tn'], slug: 'quien-es-el-dueno-de-clarin', label: 'Quién es el dueño de Clarín y su grupo económico' },
+  { match: ['la nacion', 'la nación', 'ln+'], slug: 'quien-es-el-dueno-de-la-nacion', label: 'Quién es el dueño de La Nación y LN+' },
+  { match: ['infobae'], slug: 'quien-es-el-dueno-de-infobae', label: 'Quién es el dueño de Infobae y cómo se financia' },
+  { match: ['ambito', 'ámbito', 'c5n'], slug: 'quien-es-el-dueno-de-ambito-financiero', label: 'Quién es el dueño de Ámbito Financiero y C5N' },
+  { match: ['cronista', 'america', 'américa', 'a24'], slug: 'quien-es-el-dueno-de-grupo-america-el-cronista', label: 'Quién es el dueño de Grupo América y El Cronista' },
+  { match: ['pagina', 'página', 'ip noticias'], slug: 'quien-es-el-dueno-de-pagina-12', label: 'Quién es el dueño de Página/12 y Grupo Octubre' },
+  { match: ['perfil'], slug: 'quien-es-el-dueno-de-editorial-perfil', label: 'Quién es el dueño de Editorial Perfil' },
+];
+
+const matchedGuides = story
+  ? OUTLET_GUIDES.filter((g) =>
+      story.articles.some((a) => {
+        const name = (a.outletName || '').toLowerCase();
+        return g.match.some((kw) => name.includes(kw));
+      })
+    )
+  : [];
 ---
 
 <Layout 
@@ -203,6 +222,42 @@ const viralShareText = story
         <HeadlineComparison articles={story.articles} storyId={story.id} isLeadStory={true} />
       </section>
 
+      <!-- Contextual Internal Links to Media Ownership Guides -->
+      <section class="bg-slate-50 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 rounded-2xl p-5 sm:p-6 space-y-3">
+        <div class="flex flex-wrap items-center justify-between gap-2">
+          <h3 class="font-editorial text-lg font-bold text-slate-950 dark:text-white">
+            ¿Quiénes están detrás de estos medios?
+          </h3>
+          <a
+            href="/guias/mapa-de-medios-argentina"
+            class="text-xs font-mono font-semibold text-arg-blue hover:underline"
+          >
+            Ver mapa completo de medios argentinos
+          </a>
+        </div>
+        <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-400 font-sans">
+          Consultá la estructura societaria, los grupos económicos propietarios y la auditoría de sesgo de las redacciones citadas en esta cobertura:
+        </p>
+        <div class="flex flex-wrap gap-2 pt-1">
+          {matchedGuides.map((guide) => (
+            <a
+              href={`/guias/${guide.slug}`}
+              class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 hover:border-arg-blue dark:hover:border-arg-blue text-xs font-sans font-medium text-slate-800 dark:text-slate-200 transition-colors"
+            >
+              <span>{guide.label}</span>
+            </a>
+          ))}
+          {matchedGuides.length === 0 && (
+            <a
+              href="/guias"
+              class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 hover:border-arg-blue dark:hover:border-arg-blue text-xs font-sans font-medium text-slate-800 dark:text-slate-200 transition-colors"
+            >
+              <span>Explorar todas las guías de propiedad y sesgo de medios en Argentina</span>
+            </a>
+          )}
+        </div>
+      </section>
+
       <!-- Story Civic Forum: Ciudadanía, Contraste de Fuentes & Deliberación -->
       <StoryCivicForum storyId={story.id} storyTitle={story.neutralHeadline} />
     </article>
@@ -235,9 +290,9 @@ const viralShareText = story
     copyBtn.addEventListener('click', () => {
       const url = copyBtn.getAttribute('data-url') || window.location.href;
       navigator.clipboard.writeText(url).then(() => {
-        copyBtnText.textContent = '✅ ¡Enlace copiado!';
+        copyBtnText.textContent = '¡Enlace copiado!';
         setTimeout(() => {
-          copyBtnText.textContent = '🔗 Copiar enlace';
+          copyBtnText.textContent = 'Copiar enlace';
         }, 2500);
       });
     });

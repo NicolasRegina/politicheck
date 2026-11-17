@@ -15,7 +15,7 @@ interface SitemapUrl {
 
 export const GET: APIRoute = async () => {
   const baseUrl = 'https://www.politicheck.com.ar';
-  const today = '2026-10-12';
+  const today = new Date().toISOString().split('T')[0];
 
   const urls: SitemapUrl[] = [
     // Core Hub & Section Pages
