@@ -189,10 +189,10 @@ export function getLastSyncTimestamp(): string | null {
 
 export async function getLastSyncTimestampAsync(): Promise<string | null> {
   try {
-    const { getLiveArticlesFromSupabase } = await import('../supabase');
-    const cloudFeed = await getLiveArticlesFromSupabase();
-    if (cloudFeed?.timestamp) {
-      return cloudFeed.timestamp;
+    const { getLastSyncTimestampFromSupabase } = await import('../supabase');
+    const cloudTs = await getLastSyncTimestampFromSupabase();
+    if (cloudTs) {
+      return cloudTs;
     }
   } catch {}
   return getLastSyncTimestamp();

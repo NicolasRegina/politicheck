@@ -19,8 +19,8 @@ import { isBrazilElectionActive, brazilElectionMetadata, brazilElectionClusters,
 
 export const prerender = false;
 
-// Edge Cache: cache 120s at CDN, serve stale up to 600s while revalidating
-Astro.response.headers.set('Cache-Control', 'public, s-maxage=120, stale-while-revalidate=600');
+// Edge Cache: cache 300s at CDN, serve stale up to 900s while revalidating
+Astro.response.headers.set('Cache-Control', 'public, s-maxage=300, stale-while-revalidate=900');
 
 // Parallelize all initial database and cache requests for maximum TTFB speed
 const [
@@ -32,7 +32,7 @@ const [
 ] = await Promise.all([
   getPromisesWithLiveVotes(),
   getCachedArticlesAsync(),
-  getNewsClustersFromSupabase(1440),
+  getNewsClustersFromSupabase({ maxAgeDays: 7, limit: 45 }),
   getLastSyncTimestampAsync(),
   getActiveCivicBanner('home_top')
 ]);
@@ -1648,17 +1648,20 @@ const liveBrazilDispatches = getLiveBrazilDispatches(liveArticles).slice(0, 9);
     let knownLeadStoryId: string | null = null;
     let hasAlertShown = false;
 
-    // Check interval: every 60 seconds
-    const REFRESH_INTERVAL_MS = 60 * 1000;
+    // Check interval: every 5 minutes (paused while tab is hidden)
+    const REFRESH_INTERVAL_MS = 5 * 60 * 1000;
+    let lastCheckedAt = 0;
 
     async function checkForNewsUpdates() {
-      // If user is navigating away or in subpage like /historia/:id, abort
+      // Skip if tab is hidden or user navigated away from homepage
+      if (document.hidden) return;
       if (window.location.pathname !== '/' && window.location.pathname !== '' && !window.location.pathname.endsWith('/index.html')) {
         return;
       }
 
+      lastCheckedAt = Date.now();
       try {
-        const res = await fetch('/api/news/latest', { cache: 'no-store' });
+        const res = await fetch('/api/news/latest');
         if (!res.ok) return;
 
         const data = await res.json();
@@ -1726,9 +1729,14 @@ const liveBrazilDispatches = getLiveBrazilDispatches(liveArticles).slice(0, 9);
       }
     }
 
-    // First check after 30 seconds of reading, then every 60 seconds
-    setTimeout(checkForNewsUpdates, 30000);
+    // First check after 60 seconds of reading, then every 5 minutes while visible
+    setTimeout(checkForNewsUpdates, 60000);
     setInterval(checkForNewsUpdates, REFRESH_INTERVAL_MS);
+    document.addEventListener('visibilitychange', () => {
+      if (!document.hidden && Date.now() - lastCheckedAt >= 2 * 60 * 1000) {
+        checkForNewsUpdates();
+      }
+    });
   }
 </script>
 

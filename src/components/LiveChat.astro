@@ -392,9 +392,15 @@ import BrandLogo from './BrandLogo.astro';
   function startPolling() {
     stopPolling();
     pollInterval = setInterval(() => {
-      if (isPanelOpen) fetchMessages();
-    }, 4000);
+      if (isPanelOpen && !document.hidden) fetchMessages();
+    }, 12000);
   }
+
+  document.addEventListener('visibilitychange', () => {
+    if (!document.hidden && isPanelOpen) {
+      fetchMessages();
+    }
+  });
 
   function stopPolling() {
     if (pollInterval) {

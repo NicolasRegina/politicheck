@@ -10,6 +10,10 @@ export const prerender = false;
 
 const { id } = Astro.params;
 const story = id ? await getStoryClusterByIdAsync(id) : undefined;
+Astro.response.headers.set(
+  'Cache-Control',
+  story ? 'public, s-maxage=3600, stale-while-revalidate=86400' : 'public, s-maxage=60'
+);
 const isBrazilStory = Boolean(story?.id?.startsWith('brasil-'));
 const backHref = isBrazilStory ? '/elecciones-brasil' : '/';
 const backLabel = isBrazilStory ? 'Volver al Especial Brasil 2026' : 'Volver a la Portada';

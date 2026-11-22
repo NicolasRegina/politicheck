@@ -8,11 +8,13 @@ export const prerender = false;
 
 export const GET: APIRoute = async () => {
   try {
-    const articles = await getCachedArticlesAsync();
-    const cloudStories = await getNewsClustersFromSupabase(1440);
+    const [articles, cloudStories, lastSync] = await Promise.all([
+      getCachedArticlesAsync(),
+      getNewsClustersFromSupabase({ maxAgeDays: 2, limit: 15 }),
+      getLastSyncTimestampAsync()
+    ]);
     const stories = (cloudStories && cloudStories.length > 0) ? cloudStories : getCachedClusteredStories();
     const breakingAlert = detectBreakingNews(stories, articles);
-    const lastSync = await getLastSyncTimestampAsync();
 
     return new Response(
       JSON.stringify({
@@ -29,7 +31,7 @@ export const GET: APIRoute = async () => {
         status: 200,
         headers: {
           'Content-Type': 'application/json',
-          'Cache-Control': 'no-cache, no-store, must-revalidate'
+          'Cache-Control': 'public, s-maxage=120, stale-while-revalidate=300'
         }
       }
     );

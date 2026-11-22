@@ -6,6 +6,7 @@ import { getPromiseById, getPromises } from '../../services/promises';
 import { getPolitician } from '../../data/politicians';
 
 export const prerender = false;
+Astro.response.headers.set('Cache-Control', 'public, s-maxage=600, stale-while-revalidate=3600');
 
 const { id } = Astro.params;
 const promise = id ? getPromiseById(id) : undefined;

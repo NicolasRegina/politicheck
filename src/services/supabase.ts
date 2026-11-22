@@ -1,5 +1,6 @@
 import { createClient } from '@supabase/supabase-js';
 import type { ChatChannel, ChatMessage, ForumComment, ForumAuthorRole } from '../types';
+import { MemoryTtlCache } from './cache.ts';
 
 const supabaseUrl = import.meta.env?.SUPABASE_URL || process.env.SUPABASE_URL || import.meta.env?.PUBLIC_SUPABASE_URL || process.env.PUBLIC_SUPABASE_URL;
 const supabaseKey = import.meta.env?.SUPABASE_ANON_KEY || process.env.SUPABASE_ANON_KEY || import.meta.env?.PUBLIC_SUPABASE_ANON_KEY || process.env.PUBLIC_SUPABASE_ANON_KEY;
@@ -9,6 +10,23 @@ export const isSupabaseConfigured = Boolean(supabaseUrl && supabaseKey);
 export const supabase = isSupabaseConfigured
   ? createClient(supabaseUrl!, supabaseKey!)
   : null;
+
+export const supabaseReadCache = new MemoryTtlCache();
+
+const CLUSTERS_TTL_MS = 3 * 60 * 1000;
+const FEED_TTL_MS = 3 * 60 * 1000;
+const TIMESTAMP_TTL_MS = 2 * 60 * 1000;
+const BANNER_TTL_MS = 10 * 60 * 1000;
+
+export function invalidateNewsCache(): void {
+  supabaseReadCache.invalidate('clusters:');
+  supabaseReadCache.invalidate('feed:');
+  supabaseReadCache.invalidate('last-sync-ts');
+}
+
+export function invalidateBannersCache(): void {
+  supabaseReadCache.invalidate('banner:');
+}
 
 /**
  * Record a citizen vote in Supabase cloud PostgreSQL
@@ -197,6 +215,7 @@ export async function saveNewsClustersToSupabase(clusters: any[]): Promise<boole
       console.warn('[Supabase] Error saving news clusters:', error.message);
       return false;
     }
+    invalidateNewsCache();
     return true;
   } catch (err: any) {
     console.error('[Supabase] Exception saving news clusters:', err.message);
@@ -215,98 +234,106 @@ export interface GetNewsClustersOptions {
  */
 export async function getNewsClustersFromSupabase(
   param?: number | GetNewsClustersOptions,
-  maxAgeDays = 60
+  maxAgeDays = 7,
+  client = supabase
 ): Promise<any[] | null> {
-  if (!supabase) return null;
+  if (!client) return null;
 
-  try {
-    let limit = 100;
-    let minTime: string;
+  let limit = 45;
+  let cacheWindowKey = '';
+  let minTime: string;
 
-    if (typeof param === 'object' && param !== null) {
-      limit = param.limit || 100;
-      if (param.maxAgeMinutes) {
-        minTime = new Date(Date.now() - param.maxAgeMinutes * 60 * 1000).toISOString();
-      } else {
-        const days = param.maxAgeDays || 60;
-        minTime = new Date(Date.now() - days * 24 * 60 * 60 * 1000).toISOString();
-      }
+  if (typeof param === 'object' && param !== null) {
+    limit = param.limit || 45;
+    if (param.maxAgeMinutes) {
+      cacheWindowKey = `m${param.maxAgeMinutes}`;
+      minTime = new Date(Date.now() - param.maxAgeMinutes * 60 * 1000).toISOString();
     } else {
-      const num = typeof param === 'number' ? param : 100;
-      if (num <= 240) {
-        // e.g. 60 or 120 minutes
-        minTime = new Date(Date.now() - num * 60 * 1000).toISOString();
-        limit = 50;
-      } else {
-        // e.g. 1440 or historical query
-        const days = maxAgeDays || 60;
-        minTime = new Date(Date.now() - days * 24 * 60 * 60 * 1000).toISOString();
-        limit = 150;
-      }
+      const days = param.maxAgeDays || 7;
+      cacheWindowKey = `d${days}`;
+      minTime = new Date(Date.now() - days * 24 * 60 * 60 * 1000).toISOString();
     }
+  } else {
+    const num = typeof param === 'number' ? param : 100;
+    if (num <= 240) {
+      cacheWindowKey = `m${num}`;
+      minTime = new Date(Date.now() - num * 60 * 1000).toISOString();
+      limit = 30;
+    } else {
+      const days = maxAgeDays || 7;
+      cacheWindowKey = `d${days}`;
+      minTime = new Date(Date.now() - days * 24 * 60 * 60 * 1000).toISOString();
+      limit = 45;
+    }
+  }
 
-    const { data, error } = await supabase
-      .from('news_clusters')
-      .select('*')
-      .neq('id', 'live-feed-cache')
-      .neq('id', 'foreign-feed-cache')
-      .gt('updated_at', minTime)
-      .order('updated_at', { ascending: false })
-      .limit(limit);
+  const cacheKey = `clusters:${cacheWindowKey}:${limit}`;
 
-    if (error || !data || data.length === 0) {
+  return supabaseReadCache.getOrLoad(cacheKey, CLUSTERS_TTL_MS, async () => {
+    try {
+      const { data, error } = await client
+        .from('news_clusters')
+        .select('id, lead_title, neutral_headline, summary, category, spectrum, articles, key_quotes, updated_at')
+        .neq('id', 'live-feed-cache')
+        .neq('id', 'foreign-feed-cache')
+        .gt('updated_at', minTime)
+        .order('updated_at', { ascending: false })
+        .limit(limit);
+
+      if (error || !data || data.length === 0) {
+        return null;
+      }
+
+      // Map DB rows back to full application StoryCluster objects
+      const mapped = data.map(row => {
+        const meta = (typeof row.key_quotes === 'object' && row.key_quotes !== null) ? row.key_quotes : {};
+        const firstArticleImg = Array.isArray(row.articles) && row.articles[0]?.imageUrl;
+        const defaultImg = row.category === 'Economía' ? '/images/regalias.jpg' : row.category === 'Sociedad' ? '/images/universidad.jpg' : '/images/malvinas.jpg';
+
+        const articleTimes = (Array.isArray(row.articles) ? row.articles : [])
+          .map((a: any) => typeof a.timestamp === 'number' ? a.timestamp : new Date(a.publishedAt).getTime())
+          .filter((t: number) => !isNaN(t) && t > 0);
+        const accurateTimestamp = meta.timestamp || (articleTimes.length > 0 ? Math.max(...articleTimes) : new Date(row.updated_at).getTime());
+
+        return {
+          id: row.id,
+          isLeadStory: false,
+          kicker: meta.kicker || (row.category === 'Internacional' ? 'MIRADA EXTERIOR' : 'EN COBERTURA'),
+          neutralHeadline: row.neutral_headline || row.lead_title,
+          category: row.category,
+          summary: row.summary,
+          updatedAt: meta.updatedAt || row.updated_at,
+          timestamp: accurateTimestamp,
+          imageUrl: meta.imageUrl || firstArticleImg || defaultImg,
+          imageCaption: meta.imageCaption || `Cobertura periodística de ${row.articles?.[0]?.outletName || 'prensa oficial'}.`,
+          spectrum: row.spectrum,
+          articles: row.articles || [],
+          aiComparisonNotice: meta.aiComparisonNotice || ''
+        };
+      });
+
+      // Rank stories by Editorial Score (Most relevant multi-outlet news of today first)
+      mapped.sort((a, b) => {
+        const scoreA = computeClusterEditorialScore(a);
+        const scoreB = computeClusterEditorialScore(b);
+        if (scoreA !== scoreB) {
+          return scoreB - scoreA;
+        }
+        const timeA = a.timestamp || new Date(a.updatedAt).getTime() || 0;
+        const timeB = b.timestamp || new Date(b.updatedAt).getTime() || 0;
+        return timeB - timeA;
+      });
+
+      if (mapped.length > 0) {
+        mapped[0].isLeadStory = true;
+      }
+
+      return mapped;
+    } catch (err: any) {
+      console.error('[Supabase] Exception loading news clusters:', err.message);
       return null;
     }
-
-    // Map DB rows back to full application StoryCluster objects
-    const mapped = data.map(row => {
-      const meta = (typeof row.key_quotes === 'object' && row.key_quotes !== null) ? row.key_quotes : {};
-      const firstArticleImg = Array.isArray(row.articles) && row.articles[0]?.imageUrl;
-      const defaultImg = row.category === 'Economía' ? '/images/regalias.jpg' : row.category === 'Sociedad' ? '/images/universidad.jpg' : '/images/malvinas.jpg';
-
-      const articleTimes = (Array.isArray(row.articles) ? row.articles : [])
-        .map((a: any) => typeof a.timestamp === 'number' ? a.timestamp : new Date(a.publishedAt).getTime())
-        .filter((t: number) => !isNaN(t) && t > 0);
-      const accurateTimestamp = meta.timestamp || (articleTimes.length > 0 ? Math.max(...articleTimes) : new Date(row.updated_at).getTime());
-
-      return {
-        id: row.id,
-        isLeadStory: false,
-        kicker: meta.kicker || (row.category === 'Internacional' ? 'MIRADA EXTERIOR' : 'EN COBERTURA'),
-        neutralHeadline: row.neutral_headline || row.lead_title,
-        category: row.category,
-        summary: row.summary,
-        updatedAt: meta.updatedAt || row.updated_at,
-        timestamp: accurateTimestamp,
-        imageUrl: meta.imageUrl || firstArticleImg || defaultImg,
-        imageCaption: meta.imageCaption || `Cobertura periodística de ${row.articles?.[0]?.outletName || 'prensa oficial'}.`,
-        spectrum: row.spectrum,
-        articles: row.articles || [],
-        aiComparisonNotice: meta.aiComparisonNotice || ''
-      };
-    });
-
-    // Rank stories by Editorial Score (Most relevant multi-outlet news of today first)
-    mapped.sort((a, b) => {
-      const scoreA = computeClusterEditorialScore(a);
-      const scoreB = computeClusterEditorialScore(b);
-      if (scoreA !== scoreB) {
-        return scoreB - scoreA;
-      }
-      const timeA = a.timestamp || new Date(a.updatedAt).getTime() || 0;
-      const timeB = b.timestamp || new Date(b.updatedAt).getTime() || 0;
-      return timeB - timeA;
-    });
-
-    if (mapped.length > 0) {
-      mapped[0].isLeadStory = true;
-    }
-
-    return mapped;
-  } catch (err: any) {
-    console.error('[Supabase] Exception loading news clusters:', err.message);
-    return null;
-  }
+  });
 }
 
 /**
@@ -374,6 +401,7 @@ export async function saveLiveArticlesToSupabase(articles: any[], timestamp?: st
       console.warn('[Supabase] Error saving live feed cache:', error.message);
       return false;
     }
+    invalidateNewsCache();
     return true;
   } catch (err: any) {
     console.error('[Supabase] Exception saving live feed cache:', err.message);
@@ -382,31 +410,58 @@ export async function saveLiveArticlesToSupabase(articles: any[], timestamp?: st
 }
 
 /**
- * Load live minute-by-minute articles feed from Supabase cloud cache
+ * Load ONLY the last sync timestamp from Supabase (~50 bytes instead of full articles array)
  */
-export async function getLiveArticlesFromSupabase(): Promise<{ articles: any[]; timestamp: string } | null> {
-  if (!supabase) return null;
+export async function getLastSyncTimestampFromSupabase(client = supabase): Promise<string | null> {
+  if (!client) return null;
 
-  try {
-    const { data, error } = await supabase
-      .from('news_clusters')
-      .select('*')
-      .eq('id', 'live-feed-cache')
-      .maybeSingle();
+  return supabaseReadCache.getOrLoad('last-sync-ts', TIMESTAMP_TTL_MS, async () => {
+    try {
+      const { data, error } = await client
+        .from('news_clusters')
+        .select('updated_at')
+        .eq('id', 'live-feed-cache')
+        .maybeSingle();
 
-    if (error || !data || !Array.isArray(data.articles) || data.articles.length === 0) {
+      if (error || !data?.updated_at) {
+        return null;
+      }
+      return data.updated_at as string;
+    } catch (err: any) {
+      console.error('[Supabase] Exception loading last sync timestamp:', err.message);
       return null;
     }
+  });
+}
 
-    const meta = (typeof data.key_quotes === 'object' && data.key_quotes !== null) ? data.key_quotes : {};
-    return {
-      articles: data.articles,
-      timestamp: meta.timestamp || data.updated_at
-    };
-  } catch (err: any) {
-    console.error('[Supabase] Exception loading live feed cache:', err.message);
-    return null;
-  }
+/**
+ * Load live minute-by-minute articles feed from Supabase cloud cache
+ */
+export async function getLiveArticlesFromSupabase(client = supabase): Promise<{ articles: any[]; timestamp: string } | null> {
+  if (!client) return null;
+
+  return supabaseReadCache.getOrLoad('feed:live', FEED_TTL_MS, async () => {
+    try {
+      const { data, error } = await client
+        .from('news_clusters')
+        .select('articles, key_quotes, updated_at')
+        .eq('id', 'live-feed-cache')
+        .maybeSingle();
+
+      if (error || !data || !Array.isArray(data.articles) || data.articles.length === 0) {
+        return null;
+      }
+
+      const meta = (typeof data.key_quotes === 'object' && data.key_quotes !== null) ? data.key_quotes : {};
+      return {
+        articles: data.articles,
+        timestamp: meta.timestamp || data.updated_at
+      };
+    } catch (err: any) {
+      console.error('[Supabase] Exception loading live feed cache:', err.message);
+      return null;
+    }
+  });
 }
 
 /**
@@ -435,6 +490,7 @@ export async function saveLiveForeignArticlesToSupabase(articles: any[], timesta
       console.warn('[Supabase] Error saving foreign feed cache:', error.message);
       return false;
     }
+    invalidateNewsCache();
     return true;
   } catch (err: any) {
     console.error('[Supabase] Exception saving foreign feed cache:', err.message);
@@ -445,29 +501,31 @@ export async function saveLiveForeignArticlesToSupabase(articles: any[], timesta
 /**
  * Load foreign articles feed from Supabase cloud cache
  */
-export async function getLiveForeignArticlesFromSupabase(): Promise<{ articles: any[]; timestamp: string } | null> {
-  if (!supabase) return null;
+export async function getLiveForeignArticlesFromSupabase(client = supabase): Promise<{ articles: any[]; timestamp: string } | null> {
+  if (!client) return null;
 
-  try {
-    const { data, error } = await supabase
-      .from('news_clusters')
-      .select('*')
-      .eq('id', 'foreign-feed-cache')
-      .maybeSingle();
+  return supabaseReadCache.getOrLoad('feed:foreign', FEED_TTL_MS, async () => {
+    try {
+      const { data, error } = await client
+        .from('news_clusters')
+        .select('articles, key_quotes, updated_at')
+        .eq('id', 'foreign-feed-cache')
+        .maybeSingle();
 
-    if (error || !data || !Array.isArray(data.articles) || data.articles.length === 0) {
+      if (error || !data || !Array.isArray(data.articles) || data.articles.length === 0) {
+        return null;
+      }
+
+      const meta = (typeof data.key_quotes === 'object' && data.key_quotes !== null) ? data.key_quotes : {};
+      return {
+        articles: data.articles,
+        timestamp: meta.timestamp || data.updated_at
+      };
+    } catch (err: any) {
+      console.error('[Supabase] Exception loading foreign feed cache:', err.message);
       return null;
     }
-
-    const meta = (typeof data.key_quotes === 'object' && data.key_quotes !== null) ? data.key_quotes : {};
-    return {
-      articles: data.articles,
-      timestamp: meta.timestamp || data.updated_at
-    };
-  } catch (err: any) {
-    console.error('[Supabase] Exception loading foreign feed cache:', err.message);
-    return null;
-  }
+  });
 }
 
 // ==========================================
@@ -522,28 +580,30 @@ export function createScopedClient(accessToken?: string) {
 /**
  * Get active banner for public rendering (e.g. on homepage)
  */
-export async function getActiveCivicBanner(position = 'home_top'): Promise<CivicBanner | null> {
-  if (!supabase) return null;
+export async function getActiveCivicBanner(position = 'home_top', client = supabase): Promise<CivicBanner | null> {
+  if (!client) return null;
 
-  try {
-    const { data, error } = await supabase
-      .from('banners')
-      .select('*')
-      .eq('position', position)
-      .eq('is_active', true)
-      .order('updated_at', { ascending: false })
-      .limit(1)
-      .maybeSingle();
+  return supabaseReadCache.getOrLoad(`banner:${position}`, BANNER_TTL_MS, async () => {
+    try {
+      const { data, error } = await client
+        .from('banners')
+        .select('id, title, image_url, destination_url, position, is_active, updated_at')
+        .eq('position', position)
+        .eq('is_active', true)
+        .order('updated_at', { ascending: false })
+        .limit(1)
+        .maybeSingle();
 
-    if (error) {
-      console.warn('[Supabase] Warning fetching active banner:', error.message);
+      if (error) {
+        console.warn('[Supabase] Warning fetching active banner:', error.message);
+        return null;
+      }
+      return data as CivicBanner | null;
+    } catch (err: any) {
+      console.error('[Supabase] Exception fetching active banner:', err.message);
       return null;
     }
-    return data as CivicBanner | null;
-  } catch (err: any) {
-    console.error('[Supabase] Exception fetching active banner:', err.message);
-    return null;
-  }
+  });
 }
 
 /**
@@ -593,6 +653,7 @@ export async function upsertCivicBanner(
     if (error) {
       return { success: false, error: error.message };
     }
+    invalidateBannersCache();
     return { success: true, data: data as CivicBanner };
   } catch (err: any) {
     return { success: false, error: err.message };
@@ -616,6 +677,7 @@ export async function toggleBannerActive(
       .eq('id', bannerId);
 
     if (error) return { success: false, error: error.message };
+    invalidateBannersCache();
     return { success: true };
   } catch (err: any) {
     return { success: false, error: err.message };
@@ -638,6 +700,7 @@ export async function deleteCivicBanner(
       .eq('id', bannerId);
 
     if (error) return { success: false, error: error.message };
+    invalidateBannersCache();
     return { success: true };
   } catch (err: any) {
     return { success: false, error: err.message };
