@@ -1,5 +1,6 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import AgendaRadar from '../components/AgendaRadar.astro';
 import StoryCard from '../components/StoryCard.astro';
 import LiveFeedItem from '../components/LiveFeedItem.astro';
 import PromiseCard from '../components/PromiseCard.astro';
@@ -162,8 +163,11 @@ const blindspotStories = storiesToDisplay
   stories={storiesToDisplay} 
   serverSyncIso={lastSyncIso}
 >
-  <!-- VIEW 1: Temas del Día (Blindspots + Lead story + live rail + secondary grid) -->
+  <!-- VIEW 1: Temas del Día (Agenda Radar + Blindspots + Lead story + live rail + secondary grid) -->
   <div id="view-temas-del-dia" class="view-content space-y-8">
+    {/* Track B: Termómetro de Portada / Radar de Agenda del Día */}
+    <AgendaRadar stories={storiesToDisplay} />
+
     {/* Feature #1 (ADR-0008): Puntos Ciegos del Día */}
     {blindspotStories.length > 0 && (
       <section class="bg-surface border border-rule rounded-md p-4 sm:p-5 space-y-3.5" aria-label="Puntos Ciegos del Día">

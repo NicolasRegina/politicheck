@@ -171,6 +171,24 @@ const pageUrl = `https://www.politicheck.com.ar/promesa/${id}`;
           </span>
         </div>
         <div class="flex flex-wrap items-center gap-2">
+          <button
+            type="button"
+            id="open-promise-card-btn"
+            data-title={pageTitle}
+            data-headline={promise.promiseText}
+            data-candidate={promise.candidate}
+            data-coalition={promise.coalition}
+            data-status={promise.status}
+            data-status-label={promise.statusLabel}
+            data-votes={JSON.stringify(votes)}
+            data-url={pageUrl}
+            data-text={`Auditoría de Politicheck a ${promise.candidate}: "${promise.promiseText}" — Veredicto: ${promise.statusLabel}. ¿Cumplió o no?`}
+            class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-ink text-canvas hover:opacity-90 font-sans text-xs font-bold transition-opacity cursor-pointer"
+          >
+            <svg aria-hidden="true" class="w-3.5 h-3.5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
+            <span>Placa visual</span>
+          </button>
+
           <a 
             href={`https://api.whatsapp.com/send?text=${encodeURIComponent(`Mirá la auditoría de Politicheck a ${promise.candidate}: ${promise.promiseText} — Veredicto: ${promise.statusLabel}. ¿Cumplió o no? Votá acá: ${pageUrl}`)}`}
             target="_blank"
@@ -372,6 +390,36 @@ const pageUrl = `https://www.politicheck.com.ar/promesa/${id}`;
 </Layout>
 
 <script>
+  // Open Promise Visual Card Modal
+  const openPromiseCardBtn = document.getElementById('open-promise-card-btn');
+  if (openPromiseCardBtn) {
+    openPromiseCardBtn.addEventListener('click', () => {
+      const widget = document.querySelector<HTMLElement>('.citizen-audit-widget');
+      const rawVotes = widget?.getAttribute('data-votes') || openPromiseCardBtn.getAttribute('data-votes');
+      let parsedVotes = { fulfilled: 0, inProgress: 0, broken: 0 };
+      if (rawVotes) {
+        try {
+          parsedVotes = JSON.parse(rawVotes);
+        } catch (_) {}
+      }
+
+      if (typeof (window as any).openShareModal === 'function') {
+        (window as any).openShareModal({
+          mode: 'promise',
+          title: openPromiseCardBtn.getAttribute('data-title') || document.title,
+          headline: openPromiseCardBtn.getAttribute('data-headline') || '',
+          candidate: openPromiseCardBtn.getAttribute('data-candidate') || '',
+          coalition: openPromiseCardBtn.getAttribute('data-coalition') || '',
+          statusLabel: openPromiseCardBtn.getAttribute('data-status-label') || 'En evaluación',
+          status: openPromiseCardBtn.getAttribute('data-status') || 'en_evaluacion',
+          votes: parsedVotes,
+          url: openPromiseCardBtn.getAttribute('data-url') || window.location.href,
+          text: openPromiseCardBtn.getAttribute('data-text') || ''
+        });
+      }
+    });
+  }
+
   // Copy link handler
   const copyBtn = document.getElementById('copy-promise-link-btn');
   const copyBtnText = document.getElementById('copy-btn-text');

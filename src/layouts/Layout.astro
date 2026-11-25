@@ -18,11 +18,12 @@ interface Props {
   serverSyncIso?: string | null;
 }
 
+const defaultCanonicalPath = Astro.url.pathname === '/' ? '' : Astro.url.pathname.replace(/\/+$/, '');
 const { 
   title = "Politicheck • Noticias de Política Argentina, Sesgo de Medios y Elecciones 2027",
   description = "Observatorio cívico de política argentina y cobertura periodística. Compará el sesgo mediático de 31 redacciones en tiempo real y auditá las promesas de campaña camino a las Elecciones 2027.",
   image = "/images/social/twitter_banner.jpg",
-  canonicalUrl = "https://www.politicheck.com.ar",
+  canonicalUrl = `https://www.politicheck.com.ar${defaultCanonicalPath}`,
   ogType = "website",
   preloadImage,
   preloadImageMobile,

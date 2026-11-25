@@ -75,6 +75,28 @@ export const GET: APIRoute = async () => {
     });
   }
 
+  // Verified Candidate Profiles (/candidato/[slug])
+  const candidateSlugs = [
+    'javier-milei',
+    'axel-kicillof',
+    'mauricio-macri',
+    'victoria-villarruel',
+    'patricia-bullrich',
+    'jorge-macri',
+    'juan-schiaretti',
+    'horacio-rodriguez-larreta',
+    'leandro-santoro',
+    'sergio-massa',
+  ];
+  for (const slug of candidateSlugs) {
+    urls.push({
+      loc: `${baseUrl}/candidato/${slug}`,
+      lastmod: today,
+      changefreq: 'weekly',
+      priority: '0.8'
+    });
+  }
+
   // Verified Candidate Campaign Promises (Promesómetro 2027)
   if (Array.isArray(rawPromises)) {
     for (const promise of rawPromises) {

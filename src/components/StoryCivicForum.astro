@@ -28,10 +28,20 @@ function formatDate(iso: string) {
   }
 }
 
+function escapeHtmlServer(raw: string): string {
+  return raw
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
 function linkifyText(text: string): string {
-  const urlRegex = /(https?:\/\/[^\s]+)/g;
-  return text.replace(urlRegex, (url) => {
-    return `<a href="${url}" target="_blank" rel="nofollow noopener noreferrer" class="text-sky-600 dark:text-sky-400 hover:underline break-all">${url}</a>`;
+  const safe = escapeHtmlServer(text || '');
+  const urlRegex = /(https?:\/\/[^\s<>"']+)/g;
+  return safe.replace(urlRegex, (url) => {
+    return `<a href="${url}" target="_blank" rel="nofollow noopener noreferrer" class="text-accent hover:underline break-all">${url}</a>`;
   });
 }
 ---

@@ -1,6 +1,7 @@
 import type { APIRoute } from 'astro';
 import { autoTweetLatestStory, formatViralStoryTweet, postCustomTweet } from '../../../services/twitter';
 import { getCachedClusteredStories } from '../../../services/ai/clustering';
+import { authenticateRequest } from '../../../services/auth';
 
 export const prerender = false;
 
@@ -9,6 +10,21 @@ export const ALL: APIRoute = async ({ request }) => {
   const isPreview = url.searchParams.get('preview') === 'true';
   const force = url.searchParams.get('force') === 'true';
   const origin = url.origin;
+
+  // Security guard: require Admin JWT or configured CRON_SECRET Bearer token
+  const authHeader = request.headers.get('authorization') || '';
+  const cronSecret = process.env.CRON_SECRET;
+  const hasValidCronBearer = Boolean(cronSecret && authHeader === `Bearer ${cronSecret}`);
+
+  if (!hasValidCronBearer) {
+    const auth = await authenticateRequest(request);
+    if (!auth.isAuthenticated || !auth.isAdmin) {
+      return new Response(
+        JSON.stringify({ success: false, error: 'No autorizado. Se requiere rol de administrador.' }),
+        { status: 401, headers: { 'Content-Type': 'application/json' } }
+      );
+    }
+  }
 
   try {
     // 1. Check if customText was provided via POST body

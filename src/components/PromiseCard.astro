@@ -67,6 +67,18 @@ const getInitials = (name: string) => {
     .toUpperCase();
 };
 
+const slugifyCandidate = (name: string) => {
+  return name
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toLowerCase()
+    .trim()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '');
+};
+
+const candidateSlug = slugifyCandidate(promise.candidate);
+
 const votes = promise.votes || { fulfilled: 0, inProgress: 0, broken: 0 };
 
 // Persuasive viral copy calculation
@@ -111,9 +123,13 @@ const xUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(viralPr
       <div class="flex-1 min-w-0">
         <div class="flex flex-wrap items-center gap-2">
           <!-- Candidate Name Badge with party background -->
-          <span class={`inline-flex items-center px-2.5 py-0.5 rounded-md font-sans text-sm font-extrabold border shadow-2xs ${politician.partyColor.badgeBg}`}>
+          <a
+            href={`/candidato/${candidateSlug}`}
+            class={`inline-flex items-center px-2.5 py-0.5 rounded-md font-sans text-sm font-extrabold border shadow-2xs hover:underline underline-offset-2 transition-colors ${politician.partyColor.badgeBg}`}
+            title={`Ver radiografía completa de ${promise.candidate}`}
+          >
             {promise.candidate}
-          </span>
+          </a>
 
           <!-- Coalition Pill -->
           <span class="text-[11px] font-mono px-2 py-0.5 rounded-full bg-slate-100 dark:bg-slate-800/90 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700">

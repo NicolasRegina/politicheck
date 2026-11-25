@@ -2,51 +2,84 @@
 // src/components/ShareModal.astro
 ---
 
-<dialog 
-  id="politicheck-share-modal" 
-  class="backdrop:bg-slate-950/80 backdrop:backdrop-blur-sm fixed inset-0 m-auto z-50 p-0 rounded-3xl bg-white dark:bg-navy-dark text-slate-900 dark:text-slate-100 border border-slate-200 dark:border-slate-800 shadow-2xl max-w-lg w-[calc(100%-2rem)] max-h-[92vh] overflow-y-auto open:animate-in open:fade-in-0 open:zoom-in-95"
+<dialog
+  id="politicheck-share-modal"
+  class="backdrop:bg-black/75 backdrop:backdrop-blur-xs fixed inset-0 m-auto z-50 p-0 rounded-md bg-surface text-ink border border-rule shadow-2xl max-w-lg w-[calc(100%-2rem)] max-h-[92vh] overflow-y-auto open:animate-in open:fade-in-0 open:zoom-in-95"
 >
   <div class="p-5 sm:p-6 space-y-4">
     <!-- Header -->
-    <div class="flex items-start justify-between gap-3 border-b border-slate-100 dark:border-slate-800/80 pb-3.5">
+    <div class="flex items-start justify-between gap-3 border-b border-rule pb-3.5">
       <div>
-        <div class="flex items-center gap-2 text-xs font-sans font-semibold text-slate-500 dark:text-slate-400">
+        <div class="flex items-center gap-2 text-[11px] font-mono uppercase tracking-wider font-semibold text-ink-muted">
           <span id="share-modal-category">Difusión cívica</span>
         </div>
-        <h3 id="share-modal-title" class="font-editorial text-xl sm:text-2xl font-bold text-slate-950 dark:text-white mt-0.5">
+        <h3 id="share-modal-title" class="font-editorial text-xl sm:text-2xl font-bold text-ink mt-0.5 leading-tight">
           Difusión y placa para redes
         </h3>
       </div>
-      <button 
-        type="button" 
+      <button
+        type="button"
         id="share-modal-close-btn"
-        class="w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 flex items-center justify-center text-slate-500 dark:text-slate-300 text-sm font-bold transition-colors cursor-pointer"
+        class="w-8 h-8 rounded-md bg-surface-muted hover:bg-rule border border-rule flex items-center justify-center text-ink-muted hover:text-ink text-sm font-bold transition-colors cursor-pointer shrink-0"
         aria-label="Cerrar modal"
       >
         <svg aria-hidden="true" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
       </button>
     </div>
 
-    <!-- Visual Graphic Card Section (1080x1080 Canvas Generator) -->
+    <!-- Visual Graphic Card Section (1080x1080 / 1080x1920 Canvas Generator) -->
     <div class="space-y-2.5">
-      <div class="flex items-center justify-between text-xs font-sans">
-        <span class="text-slate-700 dark:text-slate-300 font-semibold flex items-center gap-1.5">
-          <svg aria-hidden="true" class="w-4 h-4 text-slate-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
-          <span>Placa visual autogenerada (1:1 HD)</span>
+      <div class="flex flex-wrap items-center justify-between gap-2 text-xs font-sans">
+        <span class="text-ink font-semibold flex items-center gap-1.5">
+          <svg aria-hidden="true" class="w-4 h-4 text-ink-muted shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
+          <span id="share-card-format-label">Placa visual autogenerada (1:1 HD)</span>
         </span>
-        <span class="text-[11px] text-emerald-600 dark:text-emerald-400 font-bold">Lista para WhatsApp y redes</span>
+        <span class="text-[11px] font-mono text-ink-muted">Lista para WhatsApp y redes</span>
+      </div>
+
+      <!-- Segmented Format Switcher: Cuadrada (1:1) vs Stories (9:16) -->
+      <div
+        role="tablist"
+        aria-label="Formato de placa visual"
+        class="grid grid-cols-2 gap-1 p-1 rounded-md bg-surface-muted border border-rule"
+      >
+        <button
+          type="button"
+          role="tab"
+          id="share-format-1x1"
+          data-format="1:1"
+          aria-selected="true"
+          class="share-format-btn flex items-center justify-center gap-1.5 py-1.5 px-2.5 rounded-md bg-ink text-canvas font-sans text-xs font-bold transition-colors cursor-pointer"
+        >
+          <svg aria-hidden="true" class="w-3.5 h-3.5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><rect x="4" y="4" width="16" height="16" rx="2" stroke-width="2" /></svg>
+          <span>Cuadrada (1:1)</span>
+        </button>
+        <button
+          type="button"
+          role="tab"
+          id="share-format-9x16"
+          data-format="9:16"
+          aria-selected="false"
+          class="share-format-btn flex items-center justify-center gap-1.5 py-1.5 px-2.5 rounded-md text-ink-muted hover:text-ink font-sans text-xs font-semibold transition-colors cursor-pointer"
+        >
+          <svg aria-hidden="true" class="w-3.5 h-3.5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><rect x="7" y="2.5" width="10" height="19" rx="2" stroke-width="2" /></svg>
+          <span>Stories (9:16)</span>
+        </button>
       </div>
 
       <!-- Preview Box with canvas rendered as image -->
-      <div class="relative rounded-2xl overflow-hidden border border-slate-200 dark:border-slate-800/90 bg-header-dark shadow-sm flex items-center justify-center aspect-[16/10] sm:aspect-[16/9] max-h-[220px]">
+      <div
+        id="share-card-preview-box"
+        class="relative rounded-md overflow-hidden border border-rule bg-[#121210] flex items-center justify-center h-[230px] sm:h-[260px] transition-all"
+      >
         <canvas id="share-card-canvas" width="1080" height="1080" class="hidden" aria-hidden="true"></canvas>
-        <img 
-          id="share-card-preview-img" 
-          src="" 
-          alt="Vista previa de la placa gráfica" 
+        <img
+          id="share-card-preview-img"
+          src=""
+          alt="Vista previa de la placa gráfica"
           class="w-full h-full object-contain"
         />
-        <div id="share-card-loading" class="absolute inset-0 flex items-center justify-center bg-slate-950/70 text-slate-300 text-xs font-sans gap-2">
+        <div id="share-card-loading" class="absolute inset-0 flex items-center justify-center bg-[#121210]/85 text-[#A3A098] text-xs font-mono gap-2">
           <span class="w-4 h-4 border-2 border-current border-t-transparent rounded-full motion-safe:animate-spin" aria-hidden="true"></span>
           <span>Generando placa...</span>
         </div>
@@ -54,10 +87,10 @@
 
       <!-- Primary Action: 1-Click Clipboard Image Copy & Direct Download -->
       <div class="grid grid-cols-1 sm:grid-cols-12 gap-2 pt-0.5">
-        <button 
+        <button
           type="button"
           id="btn-copy-card-image"
-          class="sm:col-span-8 flex items-center justify-center gap-2 py-2.5 px-3.5 rounded-xl bg-navy-dark hover:bg-slate-800 dark:bg-white dark:hover:bg-slate-100 text-white dark:text-slate-950 font-sans text-xs font-bold shadow-xs hover:shadow-md transition-colors cursor-pointer"
+          class="sm:col-span-8 flex items-center justify-center gap-2 py-2.5 px-3.5 rounded-md bg-ink hover:opacity-90 text-canvas font-sans text-xs font-bold transition-opacity cursor-pointer"
         >
           <span id="btn-copy-card-icon" aria-hidden="true">
             <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3" /></svg>
@@ -65,10 +98,10 @@
           <span id="btn-copy-card-text">Copiar placa al portapapeles</span>
         </button>
 
-        <button 
+        <button
           type="button"
           id="btn-download-card-image"
-          class="sm:col-span-4 flex items-center justify-center gap-1.5 py-2.5 px-3 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-200 font-sans text-xs font-semibold transition-colors cursor-pointer shadow-2xs"
+          class="sm:col-span-4 flex items-center justify-center gap-1.5 py-2.5 px-3 rounded-md border border-rule bg-surface hover:bg-surface-muted text-ink font-sans text-xs font-semibold transition-colors cursor-pointer"
           title="Descargar imagen PNG en alta definición"
         >
           <svg aria-hidden="true" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" /></svg>
@@ -76,18 +109,18 @@
         </button>
       </div>
 
-      <div id="share-clipboard-feedback" class="hidden p-2 rounded-lg text-center font-sans text-[11px]"></div>
+      <div id="share-clipboard-feedback" class="hidden p-2 rounded-md text-center font-sans text-[11px]"></div>
     </div>
 
     <!-- Message Preview Box -->
-    <div class="space-y-1.5 pt-1 border-t border-slate-100 dark:border-slate-800/80">
-      <div class="flex items-center justify-between text-[11px] font-sans text-slate-500 dark:text-slate-400">
+    <div class="space-y-1.5 pt-2 border-t border-rule">
+      <div class="flex items-center justify-between text-[11px] font-sans text-ink-muted">
         <span>Texto prediseñado con enlace:</span>
-        <span>1 clic para enviar</span>
+        <span class="font-mono">1 clic para enviar</span>
       </div>
-      <div 
-        id="share-modal-preview" 
-        class="p-3 rounded-xl bg-slate-50 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 text-xs font-sans text-slate-700 dark:text-slate-300 leading-relaxed italic max-h-20 overflow-y-auto"
+      <div
+        id="share-modal-preview"
+        class="p-3 rounded-md bg-surface-muted border border-rule text-xs font-sans text-ink-secondary leading-relaxed italic max-h-20 overflow-y-auto"
       >
       </div>
     </div>
@@ -95,12 +128,12 @@
     <!-- Quick Social Link Triggers -->
     <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 pt-0.5">
       <!-- WhatsApp -->
-      <a 
-        id="share-btn-wa" 
-        href="#" 
-        target="_blank" 
+      <a
+        id="share-btn-wa"
+        href="#"
+        target="_blank"
         rel="noopener noreferrer"
-        class="flex items-center justify-center gap-1.5 py-2 px-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-sans text-xs font-bold shadow-2xs transition-colors"
+        class="flex items-center justify-center gap-1.5 py-2 px-2.5 rounded-md bg-emerald-700 hover:bg-emerald-800 text-white font-sans text-xs font-bold transition-colors"
       >
         <svg aria-hidden="true" class="w-3.5 h-3.5 fill-current shrink-0" viewBox="0 0 24 24">
           <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/>
@@ -109,34 +142,34 @@
       </a>
 
       <!-- X (Twitter) -->
-      <a 
-        id="share-btn-x" 
-        href="#" 
-        target="_blank" 
+      <a
+        id="share-btn-x"
+        href="#"
+        target="_blank"
         rel="noopener noreferrer"
-        class="flex items-center justify-center gap-1.5 py-2 px-2.5 rounded-xl bg-black hover:bg-slate-800 dark:bg-white dark:hover:bg-slate-200 text-white dark:text-black font-sans text-xs font-bold shadow-2xs transition-colors"
+        class="flex items-center justify-center gap-1.5 py-2 px-2.5 rounded-md bg-ink hover:opacity-90 text-canvas font-sans text-xs font-bold transition-opacity"
       >
         <span class="text-xs font-bold font-mono">𝕏</span>
         <span>Twitter</span>
       </a>
 
       <!-- Telegram -->
-      <a 
-        id="share-btn-tg" 
-        href="#" 
-        target="_blank" 
+      <a
+        id="share-btn-tg"
+        href="#"
+        target="_blank"
         rel="noopener noreferrer"
-        class="flex items-center justify-center gap-1.5 py-2 px-2.5 rounded-xl bg-sky-500 hover:bg-sky-600 text-white font-sans text-xs font-bold shadow-2xs transition-colors"
+        class="flex items-center justify-center gap-1.5 py-2 px-2.5 rounded-md bg-accent hover:opacity-90 text-white dark:text-[#121210] font-sans text-xs font-bold transition-opacity"
       >
         <svg aria-hidden="true" class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" /></svg>
         <span>Telegram</span>
       </a>
 
       <!-- Copy Link -->
-      <button 
-        type="button" 
-        id="share-btn-copy" 
-        class="flex items-center justify-center gap-1.5 py-2 px-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-700 font-sans text-xs font-bold transition-colors cursor-pointer shadow-2xs"
+      <button
+        type="button"
+        id="share-btn-copy"
+        class="flex items-center justify-center gap-1.5 py-2 px-2.5 rounded-md border border-rule bg-surface hover:bg-surface-muted text-ink font-sans text-xs font-bold transition-colors cursor-pointer"
       >
         <svg aria-hidden="true" class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" /></svg>
         <span id="share-copy-label">Enlace</span>
@@ -145,10 +178,10 @@
 
     <!-- Mobile Native Share (Conditional) -->
     <div id="share-native-wrapper" class="hidden pt-0.5">
-      <button 
-        type="button" 
+      <button
+        type="button"
         id="share-btn-native"
-        class="w-full flex items-center justify-center gap-2 py-2 px-3 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 font-sans text-xs font-semibold transition-colors cursor-pointer"
+        class="w-full flex items-center justify-center gap-2 py-2 px-3 rounded-md bg-surface-muted hover:bg-rule border border-rule text-ink font-sans text-xs font-semibold transition-colors cursor-pointer"
       >
         <svg aria-hidden="true" class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" /></svg>
         <span>Más aplicaciones en tu teléfono</span>
@@ -172,26 +205,84 @@
     const nativeWrapper = document.getElementById('share-native-wrapper');
     const btnNative = document.getElementById('share-btn-native');
 
-    // Canvas elements
+    // Canvas & format controls
     const canvas = document.getElementById('share-card-canvas');
     const previewImg = document.getElementById('share-card-preview-img');
+    const previewBox = document.getElementById('share-card-preview-box');
     const cardLoading = document.getElementById('share-card-loading');
+    const formatLabel = document.getElementById('share-card-format-label');
+    const formatBtns = document.querySelectorAll('.share-format-btn');
     const btnCopyCard = document.getElementById('btn-copy-card-image');
     const btnCopyCardText = document.getElementById('btn-copy-card-text');
     const btnDownloadCard = document.getElementById('btn-download-card-image');
     const feedbackBox = document.getElementById('share-clipboard-feedback');
 
+    let currentFormat = '1:1'; // '1:1' | '9:16'
+    let currentPreviewUrl = null;
+    let generatedCardBlob = null;
+
     let currentShareData = {
+      mode: 'story', // 'story' | 'promise'
       title: 'Politicheck Argentina',
       headline: '',
       text: 'Observatorio de medios y compromisos electorales',
       url: window.location.href,
       category: 'Difusión Cívica',
       spectrum: { oficialismo: 0, centro: 0, oposicion: 0 },
-      outlets: ''
+      outlets: '',
+      // Promise mode fields
+      candidate: '',
+      coalition: '',
+      status: 'en_evaluacion',
+      statusLabel: 'En evaluación',
+      votes: { fulfilled: 0, inProgress: 0, broken: 0 }
     };
 
-    let generatedCardBlob = null;
+    function getDownloadFilename() {
+      return currentFormat === '9:16'
+        ? 'politicheck-placa-9x16.png'
+        : 'politicheck-placa-1x1.png';
+    }
+
+    function updateFormatUI() {
+      formatBtns.forEach((btn) => {
+        const isSelected = btn.getAttribute('data-format') === currentFormat;
+        btn.setAttribute('aria-selected', isSelected ? 'true' : 'false');
+        if (isSelected) {
+          btn.classList.add('bg-ink', 'text-canvas', 'font-bold');
+          btn.classList.remove('text-ink-muted', 'hover:text-ink', 'font-semibold');
+        } else {
+          btn.classList.remove('bg-ink', 'text-canvas', 'font-bold');
+          btn.classList.add('text-ink-muted', 'hover:text-ink', 'font-semibold');
+        }
+      });
+
+      if (formatLabel) {
+        formatLabel.textContent = currentFormat === '9:16'
+          ? 'Placa visual autogenerada (9:16 Stories)'
+          : 'Placa visual autogenerada (1:1 HD)';
+      }
+
+      if (previewBox) {
+        if (currentFormat === '9:16') {
+          previewBox.classList.remove('h-[230px]', 'sm:h-[260px]');
+          previewBox.classList.add('h-[290px]', 'sm:h-[320px]');
+        } else {
+          previewBox.classList.remove('h-[290px]', 'sm:h-[320px]');
+          previewBox.classList.add('h-[230px]', 'sm:h-[260px]');
+        }
+      }
+    }
+
+    formatBtns.forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const nextFormat = btn.getAttribute('data-format');
+        if (!nextFormat || nextFormat === currentFormat) return;
+        currentFormat = nextFormat;
+        updateFormatUI();
+        renderGraphicCard();
+      });
+    });
 
     function closeModal() {
       if (modal && modal.open) {
@@ -217,19 +308,20 @@
 
     // Helper: Wrap text on Canvas
     function wrapText(ctx, text, x, y, maxWidth, lineHeight, maxLines = 4) {
-      const words = text.split(' ');
+      const clean = String(text || '').replace(/\s+/g, ' ').trim();
+      if (!clean) return y;
+      const words = clean.split(' ');
       let line = '';
       let linesDrawn = 0;
 
       for (let n = 0; n < words.length; n++) {
         const testLine = line + words[n] + ' ';
-        const metrics = ctx.measureText(testLine);
-        const testWidth = metrics.width;
+        const testWidth = ctx.measureText(testLine).width;
 
         if (testWidth > maxWidth && n > 0) {
           linesDrawn++;
           if (linesDrawn >= maxLines) {
-            ctx.fillText(line.trim() + '...', x, y);
+            ctx.fillText(line.trim() + '…', x, y);
             return y + lineHeight;
           }
           ctx.fillText(line.trim(), x, y);
@@ -240,51 +332,633 @@
         }
       }
 
-      ctx.fillText(line.trim(), x, y);
+      if (line.trim()) {
+        ctx.fillText(line.trim(), x, y);
+      }
       return y + lineHeight;
     }
 
-    // Draw Vector P-Checkmark Logo directly on 2D Canvas
-    function drawBrandLogo(ctx, cx, cy, radius) {
-      // 1. Base dark circle
+    // Helper: Draw a clipped rounded-pill multi-segment bar cleanly
+    function drawSegmentedBar(ctx, x, y, w, h, radius, segments) {
+      // Base track
+      ctx.fillStyle = '#252521';
       ctx.beginPath();
-      ctx.arc(cx, cy, radius, 0, Math.PI * 2);
-      ctx.fillStyle = '#0B111A';
+      ctx.roundRect(x, y, w, h, radius);
       ctx.fill();
 
-      // 2. Ivory perimeter ring
+      ctx.save();
+      ctx.beginPath();
+      ctx.roundRect(x, y, w, h, radius);
+      ctx.clip();
+
+      let curX = x;
+      for (const seg of segments) {
+        if (!seg.pct || seg.pct <= 0) continue;
+        const segW = (w * seg.pct) / 100;
+        ctx.fillStyle = seg.color;
+        ctx.fillRect(curX, y, Math.ceil(segW) + 1, h);
+        curX += segW;
+      }
+
+      ctx.restore();
+    }
+
+    // Draw Vector P-Checkmark Logo directly on 2D Canvas (ADR-0008 tokens)
+    function drawBrandLogo(ctx, cx, cy, radius) {
+      ctx.beginPath();
+      ctx.arc(cx, cy, radius, 0, Math.PI * 2);
+      ctx.fillStyle = '#121210';
+      ctx.fill();
+
       ctx.lineWidth = radius * 0.08;
-      ctx.strokeStyle = '#F4F2EB';
+      ctx.strokeStyle = '#F2F0EB';
       ctx.stroke();
 
-      // 3. Architectural white letter 'P'
-      ctx.fillStyle = '#F8F9FA';
-      ctx.font = `bold ${Math.round(radius * 1.05)}px 'Inter', sans-serif`;
+      ctx.fillStyle = '#F2F0EB';
+      ctx.font = `700 ${Math.round(radius * 1.05)}px 'DM Sans', sans-serif`;
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
       ctx.fillText('P', cx - radius * 0.12, cy - radius * 0.02);
 
-      // 4. Argentine light-blue checkmark dot
       ctx.beginPath();
       ctx.arc(cx + radius * 0.44, cy + radius * 0.38, radius * 0.22, 0, Math.PI * 2);
-      ctx.fillStyle = '#6BA4D9';
+      ctx.fillStyle = '#7FB3E0';
       ctx.fill();
 
-      // Reset alignment
       ctx.textAlign = 'left';
       ctx.textBaseline = 'alphabetic';
     }
 
-    // Native HTML5 Canvas 1080x1080 Visual Share Card Generator
+    // Shared Header Renderer for both Story & Promise cards
+    function drawEditorialHeader(ctx, width, isStories, subtitle, pillText) {
+      const headerY = isStories ? 186 : 108;
+      const logoR = isStories ? 48 : 44;
+
+      drawBrandLogo(ctx, 124, headerY, logoR);
+
+      ctx.fillStyle = '#F2F0EB';
+      ctx.font = `700 ${isStories ? 46 : 42}px 'Fraunces', Georgia, serif`;
+      ctx.fillText('Politicheck', 192, headerY + 6);
+
+      ctx.fillStyle = '#A3A098';
+      ctx.font = `500 ${isStories ? 15 : 14}px 'JetBrains Mono', monospace`;
+      ctx.fillText(subtitle, 194, headerY + 36);
+
+      // Category Pill at top right
+      const pill = String(pillText || 'POLÍTICA').toUpperCase();
+      ctx.font = "700 17px 'JetBrains Mono', monospace";
+      const catMetrics = ctx.measureText(pill);
+      const catBoxWidth = Math.min(catMetrics.width + 36, 360);
+      const catBoxX = width - 80 - catBoxWidth;
+      const catBoxY = headerY - 22;
+
+      ctx.fillStyle = '#1B1B18';
+      ctx.beginPath();
+      ctx.roundRect(catBoxX, catBoxY, catBoxWidth, 44, 6);
+      ctx.fill();
+      ctx.strokeStyle = '#2E2E29';
+      ctx.lineWidth = 2;
+      ctx.stroke();
+
+      ctx.fillStyle = '#7FB3E0';
+      ctx.fillText(pill, catBoxX + 18, catBoxY + 28);
+
+      // Top separator rule
+      const ruleY = isStories ? 274 : 186;
+      ctx.strokeStyle = '#2E2E29';
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.moveTo(80, ruleY);
+      ctx.lineTo(width - 80, ruleY);
+      ctx.stroke();
+
+      return ruleY;
+    }
+
+    // Shared Footer Renderer
+    function drawEditorialFooter(ctx, width, height, isStories, tagline) {
+      const ruleY = isStories ? height - 240 : height - 150;
+      const textY = ruleY + 58;
+
+      ctx.strokeStyle = '#2E2E29';
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.moveTo(80, ruleY);
+      ctx.lineTo(width - 80, ruleY);
+      ctx.stroke();
+
+      ctx.fillStyle = '#A3A098';
+      ctx.font = `${isStories ? 19 : 18}px 'DM Sans', sans-serif`;
+      ctx.fillText(tagline, 80, textY);
+
+      ctx.fillStyle = '#7FB3E0';
+      ctx.font = `700 ${isStories ? 27 : 25}px 'JetBrains Mono', monospace`;
+      ctx.textAlign = 'right';
+      ctx.fillText('www.politicheck.com.ar', width - 80, textY);
+      ctx.textAlign = 'left';
+    }
+
+    // Render Story Mode (Zero Partisan Colors — ADR-0008 Neutral Mineral Palette)
+    function drawStoryCard(ctx, width, height, isStories) {
+      const ruleY = drawEditorialHeader(
+        ctx,
+        width,
+        isStories,
+        'OBSERVATORIO DE ENCUADRES & AUDITORÍA CÍVICA',
+        currentShareData.category || 'POLÍTICA'
+      );
+
+      // Kicker
+      const kickerY = isStories ? ruleY + 74 : ruleY + 52;
+      ctx.fillStyle = '#7FB3E0';
+      ctx.font = `700 ${isStories ? 20 : 18}px 'JetBrains Mono', monospace`;
+      ctx.fillText('CRUCE SIMULTÁNEO DE REDACCIONES', 80, kickerY);
+
+      // Grand Headline
+      const headlineY = isStories ? kickerY + 78 : kickerY + 68;
+      ctx.fillStyle = '#F2F0EB';
+      ctx.font = `700 ${isStories ? 58 : 46}px 'Fraunces', Georgia, serif`;
+      const headlineText = currentShareData.headline || currentShareData.title || 'Cobertura periodística del día';
+      const endY = wrapText(
+        ctx,
+        headlineText,
+        80,
+        headlineY,
+        width - 160,
+        isStories ? 74 : 58,
+        isStories ? 6 : 4
+      );
+
+      // Outlets cited
+      if (currentShareData.outlets) {
+        ctx.fillStyle = '#A3A098';
+        ctx.font = `${isStories ? 23 : 20}px 'DM Sans', sans-serif`;
+        const outletsY = isStories
+          ? Math.min(endY + 38, 955)
+          : Math.min(endY + 26, 568);
+        wrapText(
+          ctx,
+          `Medios contrastados: ${currentShareData.outlets}`,
+          80,
+          outletsY,
+          width - 160,
+          isStories ? 34 : 28,
+          2
+        );
+      }
+
+      // Spectrum Card Container (ADR-0008 Neutral Mineral Trio)
+      const ofi = currentShareData.spectrum?.oficialismo || 0;
+      const cen = currentShareData.spectrum?.centro || 0;
+      const opo = currentShareData.spectrum?.oposicion || 0;
+
+      if (isStories) {
+        const cardY = 1040;
+        const cardH = 440;
+
+        ctx.fillStyle = '#1B1B18';
+        ctx.beginPath();
+        ctx.roundRect(80, cardY, width - 160, cardH, 10);
+        ctx.fill();
+        ctx.strokeStyle = '#2E2E29';
+        ctx.lineWidth = 2;
+        ctx.stroke();
+
+        ctx.fillStyle = '#F2F0EB';
+        ctx.font = "700 23px 'JetBrains Mono', monospace";
+        ctx.fillText('ESPECTRO DE ENCUADRE EDITORIAL', 116, cardY + 56);
+
+        ctx.fillStyle = '#A3A098';
+        ctx.font = "17px 'JetBrains Mono', monospace";
+        ctx.fillText('Cálculo determinístico sobre fuentes RSS públicas', 116, cardY + 90);
+
+        const barX = 116;
+        const barY = cardY + 132;
+        const barW = width - 232;
+        const barH = 32;
+
+        drawSegmentedBar(ctx, barX, barY, barW, barH, 16, [
+          { pct: ofi, color: '#F2F0EB' },
+          { pct: cen, color: '#6B6860' },
+          { pct: opo, color: '#8FA3B8' }
+        ]);
+
+        // Three Neutral Mineral Metric Boxes
+        const boxY = cardY + 210;
+        const boxH = 180;
+        const gap = 20;
+        const boxW = (barW - gap * 2) / 3;
+        const poles = [
+          { label: 'OFICIALISMO', pct: ofi, color: '#F2F0EB' },
+          { label: 'CENTRO / DATOS', pct: cen, color: '#6B6860' },
+          { label: 'OPOSICIÓN', pct: opo, color: '#8FA3B8' }
+        ];
+
+        poles.forEach((pole, idx) => {
+          const bx = barX + idx * (boxW + gap);
+          ctx.fillStyle = '#121210';
+          ctx.beginPath();
+          ctx.roundRect(bx, boxY, boxW, boxH, 8);
+          ctx.fill();
+          ctx.strokeStyle = '#2E2E29';
+          ctx.lineWidth = 2;
+          ctx.stroke();
+
+          // Mineral Swatch
+          ctx.fillStyle = pole.color;
+          ctx.beginPath();
+          ctx.roundRect(bx + 22, boxY + 28, 28, 8, 4);
+          ctx.fill();
+
+          ctx.fillStyle = '#A3A098';
+          ctx.font = "700 16px 'JetBrains Mono', monospace";
+          ctx.fillText(pole.label, bx + 22, boxY + 68);
+
+          ctx.fillStyle = '#F2F0EB';
+          ctx.font = "700 48px 'JetBrains Mono', monospace";
+          ctx.fillText(`${pole.pct}%`, bx + 22, boxY + 138);
+        });
+
+        // Subtle Stories CTA below card
+        ctx.fillStyle = '#A3A098';
+        ctx.font = "21px 'DM Sans', sans-serif";
+        ctx.textAlign = 'center';
+        ctx.fillText('Compará cómo tituló cada redacción en Politicheck', width / 2, 1564);
+        ctx.textAlign = 'left';
+      } else {
+        const cardY = 618;
+        const cardH = 262;
+
+        ctx.fillStyle = '#1B1B18';
+        ctx.beginPath();
+        ctx.roundRect(80, cardY, width - 160, cardH, 10);
+        ctx.fill();
+        ctx.strokeStyle = '#2E2E29';
+        ctx.lineWidth = 2;
+        ctx.stroke();
+
+        ctx.fillStyle = '#F2F0EB';
+        ctx.font = "700 20px 'JetBrains Mono', monospace";
+        ctx.fillText('ESPECTRO DE ENCUADRE EDITORIAL', 115, cardY + 46);
+
+        ctx.fillStyle = '#A3A098';
+        ctx.font = "14px 'JetBrains Mono', monospace";
+        ctx.fillText('Cálculo determinístico sobre fuentes RSS públicas (sin colores partidarios)', 115, cardY + 76);
+
+        const barX = 115;
+        const barY = cardY + 108;
+        const barW = width - 230;
+        const barH = 24;
+
+        drawSegmentedBar(ctx, barX, barY, barW, barH, 12, [
+          { pct: ofi, color: '#F2F0EB' },
+          { pct: cen, color: '#6B6860' },
+          { pct: opo, color: '#8FA3B8' }
+        ]);
+
+        // Mineral Legend Numbers (Zero partisan colors/emojis)
+        const legY = barY + 72;
+        const items = [
+          { x: 115, color: '#F2F0EB', text: `Oficialismo: ${ofi}%`, textColor: '#F2F0EB' },
+          { x: 432, color: '#6B6860', text: `Centro: ${cen}%`, textColor: '#A3A098' },
+          { x: 706, color: '#8FA3B8', text: `Oposición: ${opo}%`, textColor: '#8FA3B8' }
+        ];
+
+        ctx.font = "700 21px 'JetBrains Mono', monospace";
+        items.forEach((item) => {
+          ctx.fillStyle = item.color;
+          ctx.beginPath();
+          ctx.roundRect(item.x, legY - 16, 14, 14, 3);
+          ctx.fill();
+
+          ctx.fillStyle = item.textColor;
+          ctx.fillText(item.text, item.x + 24, legY);
+        });
+      }
+
+      drawEditorialFooter(
+        ctx,
+        width,
+        height,
+        isStories,
+        'Comparativa sin sesgo de 31 redacciones en simultáneo'
+      );
+    }
+
+    // Status theme helper for Promise Card (Semantic audit verdict colors)
+    function getPromiseVerdictColors(status) {
+      switch (status) {
+        case 'cumplida':
+          return { dot: '#10B981', text: '#6EE7B7', bg: 'rgba(16, 185, 129, 0.14)', border: 'rgba(16, 185, 129, 0.45)' };
+        case 'en_progreso':
+          return { dot: '#F59E0B', text: '#FCD34D', bg: 'rgba(245, 158, 11, 0.14)', border: 'rgba(245, 158, 11, 0.45)' };
+        case 'en_pausa':
+          return { dot: '#F97316', text: '#FDBA74', bg: 'rgba(249, 115, 22, 0.14)', border: 'rgba(249, 115, 22, 0.45)' };
+        case 'incumplida':
+          return { dot: '#F43F5E', text: '#FDA4AF', bg: 'rgba(244, 63, 94, 0.14)', border: 'rgba(244, 63, 94, 0.45)' };
+        default:
+          return { dot: '#A3A098', text: '#F2F0EB', bg: 'rgba(163, 160, 152, 0.14)', border: 'rgba(163, 160, 152, 0.4)' };
+      }
+    }
+
+    // Render Promise Mode (ADR-0008 Carbón Cálido Editorial Promise Card — 1:1 & 9:16)
+    function drawPromiseCard(ctx, width, height, isStories) {
+      const ruleY = drawEditorialHeader(
+        ctx,
+        width,
+        isStories,
+        'AUDITORÍA CÍVICA DE COMPROMISOS',
+        'PROMESÓMETRO 2027'
+      );
+
+      const candidate = currentShareData.candidate || 'Dirigente';
+      const coalition = (currentShareData.coalition || '').toUpperCase();
+      const statusLabel = currentShareData.statusLabel || 'En evaluación';
+      const verdictTheme = getPromiseVerdictColors(currentShareData.status);
+
+      // Clean quote (avoid double-wrapping if promiseText already has quotes)
+      const rawPromise = String(currentShareData.headline || currentShareData.title || '').trim();
+      const strippedPromise = rawPromise.replace(/^[“"']+|[”"']+$/g, '').trim();
+      const quotedPromise = `“${strippedPromise}”`;
+
+      const votes = currentShareData.votes || { fulfilled: 0, inProgress: 0, broken: 0 };
+      const totalVotes = (votes.fulfilled || 0) + (votes.inProgress || 0) + (votes.broken || 0);
+      const fPct = totalVotes > 0 ? Math.round((votes.fulfilled / totalVotes) * 100) : 0;
+      const ipPct = totalVotes > 0 ? Math.round((votes.inProgress / totalVotes) * 100) : 0;
+      const bPct = totalVotes > 0 ? Math.max(0, 100 - fPct - ipPct) : 0;
+
+      if (isStories) {
+        // 9:16 Stories Promise Layout
+        ctx.fillStyle = '#7FB3E0';
+        ctx.font = "700 19px 'JetBrains Mono', monospace";
+        ctx.fillText('COMPROMISO AUDITADO', 80, ruleY + 68);
+
+        ctx.fillStyle = '#F2F0EB';
+        ctx.font = "700 54px 'Fraunces', Georgia, serif";
+        ctx.fillText(candidate, 80, ruleY + 136);
+
+        if (coalition) {
+          ctx.fillStyle = '#A3A098';
+          ctx.font = "500 21px 'JetBrains Mono', monospace";
+          ctx.fillText(coalition, 80, ruleY + 178);
+        }
+
+        // Quoted Promise Panel
+        const quoteY = 505;
+        const quoteH = 540;
+        ctx.fillStyle = '#1B1B18';
+        ctx.beginPath();
+        ctx.roundRect(80, quoteY, width - 160, quoteH, 10);
+        ctx.fill();
+        ctx.strokeStyle = '#2E2E29';
+        ctx.lineWidth = 2;
+        ctx.stroke();
+
+        // Semantic left accent stripe
+        ctx.fillStyle = verdictTheme.dot;
+        ctx.beginPath();
+        ctx.roundRect(80, quoteY, 10, quoteH, [10, 0, 0, 10]);
+        ctx.fill();
+
+        ctx.fillStyle = '#F2F0EB';
+        ctx.font = "italic 600 45px 'Fraunces', Georgia, serif";
+        wrapText(ctx, quotedPromise, 126, quoteY + 84, width - 246, 62, 7);
+
+        // Official Audit Verdict Card
+        const verdictY = 1085;
+        const verdictH = 132;
+        ctx.fillStyle = verdictTheme.bg;
+        ctx.beginPath();
+        ctx.roundRect(80, verdictY, width - 160, verdictH, 10);
+        ctx.fill();
+        ctx.strokeStyle = verdictTheme.border;
+        ctx.lineWidth = 2;
+        ctx.stroke();
+
+        ctx.fillStyle = '#A3A098';
+        ctx.font = "700 18px 'JetBrains Mono', monospace";
+        ctx.fillText('DICTAMEN OFICIAL', 118, verdictY + 50);
+
+        ctx.fillStyle = '#F2F0EB';
+        ctx.font = "18px 'DM Sans', sans-serif";
+        ctx.fillText('Auditoría documental', 118, verdictY + 86);
+
+        // Verdict pill on right
+        ctx.font = "700 30px 'JetBrains Mono', monospace";
+        const vLabel = statusLabel.toUpperCase();
+        const vW = ctx.measureText(vLabel).width;
+        const vX = width - 118 - vW;
+
+        ctx.fillStyle = verdictTheme.dot;
+        ctx.beginPath();
+        ctx.arc(vX - 24, verdictY + 66, 10, 0, Math.PI * 2);
+        ctx.fill();
+
+        ctx.fillStyle = verdictTheme.text;
+        ctx.fillText(vLabel, vX, verdictY + 76);
+
+        // Citizen Vote Breakdown Card
+        const voteY = 1260;
+        const voteH = 310;
+        ctx.fillStyle = '#1B1B18';
+        ctx.beginPath();
+        ctx.roundRect(80, voteY, width - 160, voteH, 10);
+        ctx.fill();
+        ctx.strokeStyle = '#2E2E29';
+        ctx.lineWidth = 2;
+        ctx.stroke();
+
+        if (totalVotes > 0) {
+          ctx.fillStyle = '#F2F0EB';
+          ctx.font = "700 21px 'JetBrains Mono', monospace";
+          ctx.fillText('CONSENSO CIUDADANO', 118, voteY + 56);
+
+          ctx.fillStyle = '#A3A098';
+          ctx.font = "500 18px 'JetBrains Mono', monospace";
+          ctx.textAlign = 'right';
+          ctx.fillText(`${totalVotes.toLocaleString('es-AR')} votos auditados`, width - 118, voteY + 56);
+          ctx.textAlign = 'left';
+
+          const barX = 118;
+          const barY = voteY + 96;
+          const barW = width - 236;
+          drawSegmentedBar(ctx, barX, barY, barW, 30, 15, [
+            { pct: fPct, color: '#10B981' },
+            { pct: ipPct, color: '#F59E0B' },
+            { pct: bPct, color: '#F43F5E' }
+          ]);
+
+          ctx.fillStyle = '#F2F0EB';
+          ctx.font = "700 23px 'JetBrains Mono', monospace";
+          ctx.fillText(`Cumple ${fPct}% · En proceso ${ipPct}% · Incumple ${bPct}%`, 118, voteY + 186);
+
+          ctx.fillStyle = '#A3A098';
+          ctx.font = "20px 'DM Sans', sans-serif";
+          ctx.fillText('¿Cumplió o no? Sumá tu voto y revisá la fuente oficial.', 118, voteY + 252);
+        } else {
+          ctx.fillStyle = '#7FB3E0';
+          ctx.font = "700 21px 'JetBrains Mono', monospace";
+          ctx.fillText('AUDITORÍA CIUDADANA ABIERTA', 118, voteY + 78);
+
+          ctx.fillStyle = '#F2F0EB';
+          ctx.font = "26px 'DM Sans', sans-serif";
+          wrapText(
+            ctx,
+            'Consultá los documentos oficiales cotejados y registrá tu postura en el Promesómetro 2027.',
+            118,
+            voteY + 142,
+            width - 236,
+            40,
+            3
+          );
+        }
+      } else {
+        // 1:1 Square Promise Layout
+        ctx.fillStyle = '#F2F0EB';
+        ctx.font = "700 38px 'Fraunces', Georgia, serif";
+        ctx.fillText(candidate, 80, 240);
+
+        if (coalition) {
+          ctx.fillStyle = '#A3A098';
+          ctx.font = "500 17px 'JetBrains Mono', monospace";
+          ctx.fillText(coalition, 80, 272);
+        }
+
+        // Official Audit Verdict Badge (top right of candidate row)
+        const vLabel = statusLabel.toUpperCase();
+        ctx.font = "700 18px 'JetBrains Mono', monospace";
+        const vTextW = ctx.measureText(vLabel).width;
+        const badgeW = vTextW + 58;
+        const badgeH = 48;
+        const badgeX = width - 80 - badgeW;
+        const badgeY = 212;
+
+        ctx.fillStyle = verdictTheme.bg;
+        ctx.beginPath();
+        ctx.roundRect(badgeX, badgeY, badgeW, badgeH, 6);
+        ctx.fill();
+        ctx.strokeStyle = verdictTheme.border;
+        ctx.lineWidth = 2;
+        ctx.stroke();
+
+        ctx.fillStyle = verdictTheme.dot;
+        ctx.beginPath();
+        ctx.arc(badgeX + 24, badgeY + badgeH / 2, 7, 0, Math.PI * 2);
+        ctx.fill();
+
+        ctx.fillStyle = verdictTheme.text;
+        ctx.fillText(vLabel, badgeX + 42, badgeY + 30);
+
+        // Quoted Promise Panel
+        const quoteY = 304;
+        const quoteH = 342;
+        ctx.fillStyle = '#1B1B18';
+        ctx.beginPath();
+        ctx.roundRect(80, quoteY, width - 160, quoteH, 10);
+        ctx.fill();
+        ctx.strokeStyle = '#2E2E29';
+        ctx.lineWidth = 2;
+        ctx.stroke();
+
+        ctx.fillStyle = verdictTheme.dot;
+        ctx.beginPath();
+        ctx.roundRect(80, quoteY, 8, quoteH, [10, 0, 0, 10]);
+        ctx.fill();
+
+        ctx.fillStyle = '#F2F0EB';
+        ctx.font = "italic 600 36px 'Fraunces', Georgia, serif";
+        wrapText(ctx, quotedPromise, 120, quoteY + 68, width - 236, 52, 5);
+
+        // Citizen Vote Breakdown Card
+        const voteY = 678;
+        const voteH = 212;
+        ctx.fillStyle = '#1B1B18';
+        ctx.beginPath();
+        ctx.roundRect(80, voteY, width - 160, voteH, 10);
+        ctx.fill();
+        ctx.strokeStyle = '#2E2E29';
+        ctx.lineWidth = 2;
+        ctx.stroke();
+
+        if (totalVotes > 0) {
+          ctx.fillStyle = '#F2F0EB';
+          ctx.font = "700 18px 'JetBrains Mono', monospace";
+          ctx.fillText('CONSENSO CIUDADANO', 115, voteY + 46);
+
+          ctx.fillStyle = '#A3A098';
+          ctx.font = "500 16px 'JetBrains Mono', monospace";
+          ctx.textAlign = 'right';
+          ctx.fillText(`${totalVotes.toLocaleString('es-AR')} votos auditados`, width - 115, voteY + 46);
+          ctx.textAlign = 'left';
+
+          const barX = 115;
+          const barY = voteY + 78;
+          const barW = width - 230;
+          drawSegmentedBar(ctx, barX, barY, barW, 24, 12, [
+            { pct: fPct, color: '#10B981' },
+            { pct: ipPct, color: '#F59E0B' },
+            { pct: bPct, color: '#F43F5E' }
+          ]);
+
+          ctx.fillStyle = '#F2F0EB';
+          ctx.font = "700 21px 'JetBrains Mono', monospace";
+          ctx.fillText(`Cumple ${fPct}% · En proceso ${ipPct}% · Incumple ${bPct}%`, 115, voteY + 154);
+
+          ctx.fillStyle = '#A3A098';
+          ctx.font = "15px 'DM Sans', sans-serif";
+          ctx.fillText('Tendencia abierta en tiempo real · Votá tu postura en Politicheck', 115, voteY + 186);
+        } else {
+          ctx.fillStyle = '#7FB3E0';
+          ctx.font = "700 18px 'JetBrains Mono', monospace";
+          ctx.fillText('AUDITORÍA CIUDADANA ABIERTA', 115, voteY + 62);
+
+          ctx.fillStyle = '#F2F0EB';
+          ctx.font = "22px 'DM Sans', sans-serif";
+          wrapText(
+            ctx,
+            'Revisá las fuentes oficiales cotejadas y registrá tu voto en el Promesómetro 2027.',
+            115,
+            voteY + 110,
+            width - 230,
+            34,
+            2
+          );
+        }
+      }
+
+      drawEditorialFooter(
+        ctx,
+        width,
+        height,
+        isStories,
+        'Promesómetro 2027 · Auditoría cívica documentada'
+      );
+    }
+
+    // Native HTML5 Canvas Visual Share Card Generator (1:1 & 9:16, Story & Promise)
     async function renderGraphicCard() {
       if (!canvas) return;
       if (cardLoading) cardLoading.classList.remove('hidden');
 
+      // Wait briefly for web fonts if available so Fraunces/JetBrains Mono render sharply
+      if (document.fonts && document.fonts.ready) {
+        try {
+          await Promise.race([
+            document.fonts.ready,
+            new Promise((resolve) => setTimeout(resolve, 600))
+          ]);
+        } catch (_) {}
+      }
+
+      const isStories = currentFormat === '9:16';
+      const width = 1080;
+      const height = isStories ? 1920 : 1080;
+
+      canvas.width = width;
+      canvas.height = height;
+
       const ctx = canvas.getContext('2d');
       if (!ctx) return;
-
-      const width = 1080;
-      const height = 1080;
 
       // 1. Background: ADR-0008 Carbón Cálido editorial canvas
       ctx.fillStyle = '#121210';
@@ -295,179 +969,54 @@
       ctx.lineWidth = 10;
       ctx.strokeRect(5, 5, width - 10, height - 10);
 
-      // 2. Header: Logo, Institutional Title & Category Badge
-      drawBrandLogo(ctx, 110, 110, 48);
-
-      ctx.fillStyle = '#F2F0EB';
-      ctx.font = "700 44px 'Fraunces', Georgia, serif";
-      ctx.fillText('Politicheck', 180, 118);
-
-      ctx.fillStyle = '#A3A098';
-      ctx.font = "500 16px 'JetBrains Mono', monospace";
-      ctx.fillText('OBSERVATORIO DE ENCUADRES & AUDITORÍA CÍVICA', 182, 148);
-
-      // Category Pill at top right
-      const category = (currentShareData.category || 'POLÍTICA').toUpperCase();
-      ctx.font = "bold 18px 'JetBrains Mono', monospace";
-      const catMetrics = ctx.measureText(category);
-      const catBoxWidth = catMetrics.width + 36;
-      const catBoxX = width - 80 - catBoxWidth;
-
-      ctx.fillStyle = '#1B1B18';
-      ctx.beginPath();
-      ctx.roundRect(catBoxX, 85, catBoxWidth, 44, 6);
-      ctx.fill();
-      ctx.strokeStyle = '#2E2E29';
-      ctx.lineWidth = 2;
-      ctx.stroke();
-
-      ctx.fillStyle = '#7FB3E0';
-      ctx.fillText(category, catBoxX + 18, 113);
-
-      // Top separator rule
-      ctx.strokeStyle = '#2E2E29';
-      ctx.lineWidth = 2;
-      ctx.beginPath();
-      ctx.moveTo(80, 190);
-      ctx.lineTo(width - 80, 190);
-      ctx.stroke();
-
-      // 3. Volanta / Kicker
-      ctx.fillStyle = '#7FB3E0';
-      ctx.font = "bold 18px 'JetBrains Mono', monospace";
-      ctx.fillText('CRUCE SIMULTÁNEO DE REDACCIONES', 80, 240);
-
-      // 4. Grand Headline
-      ctx.fillStyle = '#F2F0EB';
-      ctx.font = "bold 46px 'Fraunces', Georgia, serif";
-      const headlineText = currentShareData.headline || currentShareData.title || 'Cobertura periodística del día';
-      const endY = wrapText(ctx, headlineText, 80, 310, width - 160, 58, 4);
-
-      // 5. Outlets cited
-      if (currentShareData.outlets) {
-        ctx.fillStyle = '#A3A098';
-        ctx.font = "20px 'DM Sans', sans-serif";
-        ctx.fillText(`Medios contrastados: ${currentShareData.outlets}`, 80, Math.min(endY + 30, 570));
+      // 2. Dispatch to Story or Promise renderer
+      if (currentShareData.mode === 'promise') {
+        drawPromiseCard(ctx, width, height, isStories);
+      } else {
+        drawStoryCard(ctx, width, height, isStories);
       }
 
-      // 6. Spectrum Card Container (ADR-0008 Neutral Mineral Palette)
-      const spectrumCardY = 620;
-      const spectrumCardH = 260;
-
-      ctx.fillStyle = '#1B1B18';
-      ctx.beginPath();
-      ctx.roundRect(80, spectrumCardY, width - 160, spectrumCardH, 10);
-      ctx.fill();
-      ctx.strokeStyle = '#2E2E29';
-      ctx.lineWidth = 2;
-      ctx.stroke();
-
-      // Spectrum Card Title
-      ctx.fillStyle = '#F2F0EB';
-      ctx.font = "bold 20px 'JetBrains Mono', monospace";
-      ctx.fillText('ESPECTRO DE ENCUADRE EDITORIAL', 115, spectrumCardY + 45);
-
-      ctx.fillStyle = '#A3A098';
-      ctx.font = "14px 'JetBrains Mono', monospace";
-      ctx.fillText('Cálculo determinístico sobre fuentes RSS públicas (sin colores partidarios)', 115, spectrumCardY + 75);
-
-      // Spectrum Horizontal Bar
-      const barX = 115;
-      const barY = spectrumCardY + 108;
-      const barW = width - 230;
-      const barH = 24;
-
-      const ofi = currentShareData.spectrum.oficialismo || 0;
-      const cen = currentShareData.spectrum.centro || 0;
-      const opo = currentShareData.spectrum.oposicion || 0;
-
-      // Base bar background
-      ctx.fillStyle = '#252521';
-      ctx.beginPath();
-      ctx.roundRect(barX, barY, barW, barH, 12);
-      ctx.fill();
-
-      // Render Neutral Mineral Segments (ADR-0008)
-      let curX = barX;
-      if (ofi > 0) {
-        const segW = (barW * ofi) / 100;
-        ctx.fillStyle = '#F2F0EB'; // Oficialismo (Tinta clara)
-        ctx.beginPath();
-        ctx.roundRect(curX, barY, segW, barH, [12, 0, 0, 12]);
-        ctx.fill();
-        curX += segW;
-      }
-      if (cen > 0) {
-        const segW = (barW * cen) / 100;
-        ctx.fillStyle = '#6B6860'; // Centro / Datos (Piedra)
-        ctx.beginPath();
-        ctx.roundRect(curX, barY, segW, barH, (ofi === 0 ? [12, 0, 0, 12] : [0, 0, 0, 0]));
-        ctx.fill();
-        curX += segW;
-      }
-      if (opo > 0) {
-        const segW = (barW * opo) / 100;
-        ctx.fillStyle = '#8FA3B8'; // Oposición (Pizarra)
-        ctx.beginPath();
-        ctx.roundRect(curX, barY, segW, barH, [0, 12, 12, 0]);
-        ctx.fill();
-      }
-
-      // Legend Numbers under the bar (Zero partisan emojis)
-      const legY = barY + 68;
-      ctx.font = "bold 22px 'JetBrains Mono', monospace";
-
-      ctx.fillStyle = '#F2F0EB';
-      ctx.fillText(`Oficialismo: ${ofi}%`, 115, legY);
-
-      ctx.fillStyle = '#A3A098';
-      ctx.fillText(`Centro: ${cen}%`, 435, legY);
-
-      ctx.fillStyle = '#8FA3B8';
-      ctx.fillText(`Oposición: ${opo}%`, 725, legY);
-
-      // 7. Footer: Transparency watermark and live web URL
-      ctx.strokeStyle = '#2E2E29';
-      ctx.lineWidth = 2;
-      ctx.beginPath();
-      ctx.moveTo(80, 930);
-      ctx.lineTo(width - 80, 930);
-      ctx.stroke();
-
-      ctx.fillStyle = '#A3A098';
-      ctx.font = "18px 'DM Sans', sans-serif";
-      ctx.fillText('Comparativa sin sesgo de 31 redacciones en simultáneo', 80, 985);
-
-      ctx.fillStyle = '#7FB3E0';
-      ctx.font = "bold 26px 'JetBrains Mono', monospace";
-      ctx.textAlign = 'right';
-      ctx.fillText('www.politicheck.com.ar', width - 80, 985);
-      ctx.textAlign = 'left';
-
-      // Export canvas to Image preview and cache blob
+      // 3. Export canvas to Image preview and cache blob
       canvas.toBlob((blob) => {
         if (blob) {
           generatedCardBlob = blob;
-          const dataUrl = URL.createObjectURL(blob);
-          if (previewImg) previewImg.src = dataUrl;
+          if (currentPreviewUrl) {
+            URL.revokeObjectURL(currentPreviewUrl);
+          }
+          currentPreviewUrl = URL.createObjectURL(blob);
+          if (previewImg) previewImg.src = currentPreviewUrl;
         }
         if (cardLoading) cardLoading.classList.add('hidden');
       }, 'image/png');
     }
 
     // Global modal opener
-    window.openShareModal = function(opts) {
+    window.openShareModal = function(opts = {}) {
+      const mode = opts.mode === 'promise' ? 'promise' : 'story';
+
       currentShareData = {
+        mode,
         title: opts.title || 'Politicheck Argentina',
         headline: opts.headline || opts.title || '',
         text: opts.text || '',
         url: opts.url || window.location.href,
-        category: opts.category || 'Difusión Cívica',
+        category: opts.category || (mode === 'promise' ? 'Promesómetro 2027' : 'Difusión Cívica'),
         spectrum: opts.spectrum || { oficialismo: 33, centro: 34, oposicion: 33 },
-        outlets: opts.outlets || ''
+        outlets: opts.outlets || '',
+        candidate: opts.candidate || '',
+        coalition: opts.coalition || '',
+        status: opts.status || 'en_evaluacion',
+        statusLabel: opts.statusLabel || 'En evaluación',
+        votes: opts.votes || { fulfilled: 0, inProgress: 0, broken: 0 }
       };
 
-      if (titleEl) titleEl.textContent = opts.modalTitle || 'Difusión y Placa para Redes';
+      // Reset format to 1:1 by default (or use requested format)
+      currentFormat = opts.format === '9:16' ? '9:16' : '1:1';
+      updateFormatUI();
+
+      if (titleEl) {
+        titleEl.textContent = opts.modalTitle || (mode === 'promise' ? 'Placa de promesa para redes' : 'Difusión y placa para redes');
+      }
       if (categoryEl) categoryEl.textContent = currentShareData.category;
       if (previewEl) previewEl.textContent = `"${currentShareData.text}"`;
 
@@ -503,13 +1052,15 @@
     };
 
     // Helper: Trigger file download
-    function downloadBlob(blob, filename = 'politicheck-placa.png') {
+    function downloadBlob(blob, filename) {
+      const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
-      a.href = URL.createObjectURL(blob);
-      a.download = filename;
+      a.href = url;
+      a.download = filename || getDownloadFilename();
       document.body.appendChild(a);
       a.click();
       document.body.removeChild(a);
+      setTimeout(() => URL.revokeObjectURL(url), 1000);
     }
 
     // 1-Click Clipboard Image Copy
@@ -521,23 +1072,20 @@
         btnCopyCardText.textContent = 'Copiando placa...';
 
         try {
-          // Check ClipboardItem image support
           if (navigator.clipboard && typeof window.ClipboardItem !== 'undefined') {
             const item = new window.ClipboardItem({ 'image/png': generatedCardBlob });
             await navigator.clipboard.write([item]);
 
             btnCopyCardText.textContent = 'Placa copiada al portapapeles';
-            btnCopyCard.classList.add('bg-emerald-600', 'text-white');
 
             if (feedbackBox) {
               feedbackBox.textContent = 'Placa copiada. Ya podés pegarla con Ctrl+V en WhatsApp Web, Telegram o redes.';
-              feedbackBox.className = 'p-2 rounded-lg text-center font-sans text-xs bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800';
+              feedbackBox.className = 'p-2 rounded-md text-center font-sans text-xs bg-surface-muted text-ink border border-rule';
               feedbackBox.classList.remove('hidden');
             }
 
             setTimeout(() => {
               btnCopyCardText.textContent = 'Copiar placa al portapapeles';
-              btnCopyCard.classList.remove('bg-emerald-600');
               btnCopyCard.disabled = false;
             }, 3000);
           } else {
@@ -545,13 +1093,13 @@
           }
         } catch (err) {
           console.warn('[ShareModal] Clipboard copy fallback to download:', err);
-          downloadBlob(generatedCardBlob, 'politicheck-placa.png');
+          downloadBlob(generatedCardBlob, getDownloadFilename());
 
           btnCopyCardText.textContent = 'Placa descargada en tu equipo';
 
           if (feedbackBox) {
             feedbackBox.textContent = 'Tu navegador no permite escribir imágenes al portapapeles. Se descargó la placa directamente.';
-            feedbackBox.className = 'p-2 rounded-lg text-center font-sans text-xs bg-sky-50 dark:bg-sky-950/40 text-sky-700 dark:text-sky-300 border border-sky-200 dark:border-sky-800';
+            feedbackBox.className = 'p-2 rounded-md text-center font-sans text-xs bg-surface-muted text-ink border border-rule';
             feedbackBox.classList.remove('hidden');
           }
 
@@ -567,7 +1115,7 @@
     if (btnDownloadCard) {
       btnDownloadCard.addEventListener('click', () => {
         if (generatedCardBlob) {
-          downloadBlob(generatedCardBlob, 'politicheck-placa.png');
+          downloadBlob(generatedCardBlob, getDownloadFilename());
         }
       });
     }

@@ -1,0 +1,408 @@
+---
+import type { StoryCluster } from '../types';
+import { getOutletMeta } from '../utils/outlets';
+
+interface Props {
+  stories: StoryCluster[];
+}
+
+const { stories = [] } = Astro.props;
+
+// Helper: largest-remainder percentage calculation so the 3 poles always sum to 100%
+function toExactPercentages(ofi: number, cen: number, opo: number): { ofiPct: number; cenPct: number; opoPct: number } {
+  const total = ofi + cen + opo;
+  if (total <= 0) {
+    return { ofiPct: 0, cenPct: 100, opoPct: 0 };
+  }
+  const raw = [
+    { key: 'ofi' as const, exact: (ofi / total) * 100 },
+    { key: 'cen' as const, exact: (cen / total) * 100 },
+    { key: 'opo' as const, exact: (opo / total) * 100 },
+  ];
+  const floored = raw.map((item) => ({
+    key: item.key,
+    val: Math.floor(item.exact),
+    rem: item.exact - Math.floor(item.exact),
+  }));
+  let remainder = 100 - floored.reduce((acc, item) => acc + item.val, 0);
+  floored
+    .slice()
+    .sort((a, b) => b.rem - a.rem)
+    .forEach((item) => {
+      if (remainder > 0) {
+        item.val += 1;
+        remainder -= 1;
+      }
+    });
+
+  return {
+    ofiPct: floored.find((i) => i.key === 'ofi')!.val,
+    cenPct: floored.find((i) => i.key === 'cen')!.val,
+    opoPct: floored.find((i) => i.key === 'opo')!.val,
+  };
+}
+
+// 1. Sesgo agregado del día (weighted across all articles in stories)
+let totalOfi = 0;
+let totalCen = 0;
+let totalOpo = 0;
+let totalArticles = 0;
+
+for (const story of stories) {
+  const articles = story.articles || [];
+  for (const article of articles) {
+    const leaning = getOutletMeta(article.outletId)?.baselineLeaning || 'centro_datos';
+    if (leaning === 'oficialismo') totalOfi++;
+    else if (leaning === 'oposicion') totalOpo++;
+    else totalCen++;
+    totalArticles++;
+  }
+}
+
+const daySpectrum = toExactPercentages(totalOfi, totalCen, totalOpo);
+
+// 2. Temas dominantes (3–4 clickable chips)
+const normalize = (text: string) =>
+  text
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toLowerCase();
+
+interface CuratedTerm {
+  label: string;
+  query: string;
+  patterns: string[];
+}
+
+const CURATED_AGENDA_TERMS: CuratedTerm[] = [
+  { label: 'Dólar', query: 'dólar', patterns: ['dolar', 'dolares', 'cambiario', 'tipo de cambio'] },
+  { label: 'Inflación', query: 'inflación', patterns: ['inflacion', 'ipc', 'precios'] },
+  { label: 'Milei', query: 'Milei', patterns: ['milei'] },
+  { label: 'Kicillof', query: 'Kicillof', patterns: ['kicillof'] },
+  { label: 'Senado', query: 'Senado', patterns: ['senado', 'senadores'] },
+  { label: 'Congreso', query: 'Congreso', patterns: ['congreso', 'diputados', 'parlamento', 'sesion'] },
+  { label: 'Presupuesto', query: 'Presupuesto', patterns: ['presupuesto'] },
+  { label: 'Corte', query: 'Corte', patterns: ['corte suprema', 'la corte'] },
+  { label: 'INDEC', query: 'INDEC', patterns: ['indec'] },
+  { label: 'Universidades', query: 'universidades', patterns: ['universidad', 'universidades', 'universitario', 'universitarios'] },
+  { label: 'Paro', query: 'paro', patterns: ['paro', 'huelga', 'cgt', 'gremios'] },
+  { label: 'Jubilaciones', query: 'jubilaciones', patterns: ['jubilacion', 'jubilaciones', 'jubilados', 'anses'] },
+  { label: 'FMI', query: 'FMI', patterns: ['fmi', 'fondo monetario'] },
+  { label: 'Cepo', query: 'cepo', patterns: ['cepo'] },
+  { label: 'Salarios', query: 'salarios', patterns: ['salario', 'salarios', 'paritarias', 'sueldos'] },
+  { label: 'Seguridad', query: 'seguridad', patterns: ['seguridad', 'narcotrafico', 'policia', 'bullrich'] },
+  { label: 'Tarifas', query: 'tarifas', patterns: ['tarifa', 'tarifas', 'subsidios', 'energia', 'nafta'] },
+  { label: 'Justicia', query: 'justicia', patterns: ['justicia', 'fiscal', 'juez', 'causa', 'comodoro py'] },
+  { label: 'BCRA', query: 'BCRA', patterns: ['bcra', 'banco central', 'reservas'] },
+  { label: 'Retenciones', query: 'retenciones', patterns: ['retenciones', 'campo', 'agro'] },
+  { label: 'Villarruel', query: 'Villarruel', patterns: ['villarruel'] },
+  { label: 'Caputo', query: 'Caputo', patterns: ['caputo'] },
+  { label: 'Cristina', query: 'Cristina', patterns: ['cristina', 'kirchner', 'cfk'] },
+  { label: 'Macri', query: 'Macri', patterns: ['macri', 'pro'] },
+  { label: 'Gobernadores', query: 'gobernadores', patterns: ['gobernador', 'gobernadores', 'provincias', 'coparticipacion'] },
+  { label: 'Reforma', query: 'reforma', patterns: ['reforma', 'dnu', 'veto'] },
+  { label: 'Pobreza', query: 'pobreza', patterns: ['pobreza', 'indigencia'] },
+  { label: 'Elecciones', query: 'elecciones', patterns: ['elecciones', 'electoral', 'candidatos', 'boleta'] },
+  { label: 'Trump', query: 'Trump', patterns: ['trump', 'ee.uu.', 'estados unidos'] },
+  { label: 'YPF', query: 'YPF', patterns: ['ypf', 'vaca muerta'] },
+];
+
+const STOPWORDS = new Set([
+  'para', 'como', 'pero', 'sobre', 'entre', 'desde', 'hasta', 'segun', 'tras', 'ante',
+  'pese', 'luego', 'ahora', 'hoy', 'ayer', 'mas', 'menos', 'todo', 'todos', 'toda', 'todas',
+  'este', 'esta', 'esto', 'estos', 'estas', 'ese', 'esa', 'esos', 'esas', 'aquel', 'aquella',
+  'cual', 'cuales', 'quien', 'quienes', 'donde', 'cuando', 'porque', 'contra', 'hacia',
+  'otro', 'otra', 'otros', 'otras', 'mismo', 'misma', 'nuevo', 'nueva', 'nuevos', 'nuevas',
+  'gran', 'mayor', 'menor', 'primer', 'primera', 'ultimo', 'ultima', 'pais', 'argentina',
+  'nacional', 'politica', 'economia', 'sociedad', 'mundo', 'noticia', 'noticias', 'actualidad',
+  'gobierno', 'estado', 'casa', 'rosada', 'buenos', 'aires', 'ciudad', 'provincia',
+  'pide', 'piden', 'dijo', 'aseguro', 'afirmo', 'anuncio', 'confirmo', 'busca', 'buscan',
+  'frente', 'medio', 'medios', 'fuerte', 'clave', 'tension', 'debate', 'crisis', 'acuerdo',
+]);
+
+interface TopicCandidate {
+  label: string;
+  query: string;
+  storyCount: number;
+  articleCount: number;
+  priority: number;
+}
+
+const topicMap = new Map<string, TopicCandidate>();
+
+const escapeRegex = (s: string) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+
+for (const story of stories) {
+  const headline = story.neutralHeadline || '';
+  const kicker = story.kicker || '';
+  const combinedNorm = normalize(`${headline} ${kicker}`);
+  const artCount = story.articles?.length || 1;
+  const matchedInStory = new Set<string>();
+
+  // Pass 1: Curated Argentine agenda terms
+  for (const term of CURATED_AGENDA_TERMS) {
+    const isMatch = term.patterns.some((pat) => {
+      const re = new RegExp(`(?:^|[^a-z0-9])${escapeRegex(pat)}(?:$|[^a-z0-9])`, 'i');
+      return re.test(combinedNorm);
+    });
+    if (isMatch) {
+      const key = normalize(term.label);
+      matchedInStory.add(key);
+      const existing = topicMap.get(key);
+      if (existing) {
+        existing.storyCount += 1;
+        existing.articleCount += artCount;
+      } else {
+        topicMap.set(key, {
+          label: term.label,
+          query: term.query,
+          storyCount: 1,
+          articleCount: artCount,
+          priority: 2,
+        });
+      }
+    }
+  }
+
+  // Pass 2: Capitalized entities / nouns from headline (skip first word of headline to avoid sentence-start false positives)
+  const words = headline.split(/\s+/);
+  for (let i = 1; i < words.length; i++) {
+    const cleaned = words[i].replace(/^[^A-Za-zÁÉÍÓÚÜÑáéíóúüñ0-9]+|[^A-Za-zÁÉÍÓÚÜÑáéíóúüñ0-9]+$/g, '');
+    if (cleaned.length < 4) continue;
+    if (!/^[A-ZÁÉÍÓÚÜÑ]/.test(cleaned)) continue;
+    const norm = normalize(cleaned);
+    if (STOPWORDS.has(norm) || matchedInStory.has(norm)) continue;
+
+    matchedInStory.add(norm);
+    const existing = topicMap.get(norm);
+    if (existing) {
+      existing.storyCount += 1;
+      existing.articleCount += artCount;
+    } else {
+      topicMap.set(norm, {
+        label: cleaned,
+        query: cleaned,
+        storyCount: 1,
+        articleCount: artCount,
+        priority: 1,
+      });
+    }
+  }
+}
+
+const topTopics = Array.from(topicMap.values())
+  .sort((a, b) => {
+    // Prefer recurring stories first, then curated priority, then article volume
+    if (b.storyCount !== a.storyCount) return b.storyCount - a.storyCount;
+    if (b.priority !== a.priority) return b.priority - a.priority;
+    return b.articleCount - a.articleCount;
+  })
+  .slice(0, 4);
+
+// 3. Mayor divergencia del día (>=3 articles, widest balanced tension Ofi vs Opo, fallback highest non-center coverage)
+interface DivergentPick {
+  id: string;
+  headline: string;
+  ofiPct: number;
+  opoPct: number;
+  articlesCount: number;
+  tensionScore: number;
+  nonCenterPct: number;
+}
+
+let mostDivergent: DivergentPick | null = null;
+
+for (const story of stories) {
+  const articles = story.articles || [];
+  if (articles.length < 3) continue;
+
+  let sOfi = 0;
+  let sCen = 0;
+  let sOpo = 0;
+  for (const a of articles) {
+    const leaning = getOutletMeta(a.outletId)?.baselineLeaning || 'centro_datos';
+    if (leaning === 'oficialismo') sOfi++;
+    else if (leaning === 'oposicion') sOpo++;
+    else sCen++;
+  }
+  const { ofiPct, opoPct } = toExactPercentages(sOfi, sCen, sOpo);
+  const tensionScore = Math.min(ofiPct, opoPct) * 2; // 0..100, maximized at 50/50 split
+  const nonCenterPct = ofiPct + opoPct;
+
+  const candidate: DivergentPick = {
+    id: story.id,
+    headline: story.neutralHeadline,
+    ofiPct,
+    opoPct,
+    articlesCount: articles.length,
+    tensionScore,
+    nonCenterPct,
+  };
+
+  if (
+    !mostDivergent ||
+    candidate.tensionScore > mostDivergent.tensionScore ||
+    (candidate.tensionScore === mostDivergent.tensionScore && candidate.nonCenterPct > mostDivergent.nonCenterPct) ||
+    (candidate.tensionScore === mostDivergent.tensionScore &&
+      candidate.nonCenterPct === mostDivergent.nonCenterPct &&
+      candidate.articlesCount > mostDivergent.articlesCount)
+  ) {
+    mostDivergent = candidate;
+  }
+}
+---
+
+{stories.length > 0 && (
+  <section
+    id="agenda-radar"
+    class="bg-surface border border-rule rounded-md px-4 py-3"
+    aria-label="Termómetro de Portada y Radar de Agenda del Día"
+  >
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-3 lg:gap-5 items-center">
+      {/* Left: Termómetro agregado del día */}
+      <div class="lg:col-span-5 space-y-1.5">
+        <div class="flex items-baseline justify-between gap-2">
+          <span class="font-sans text-[11px] font-bold uppercase tracking-wider text-ink">
+            Termómetro del día
+          </span>
+          <span class="font-mono text-[10px] text-ink-muted tabular-nums">
+            {totalArticles} {totalArticles === 1 ? 'nota' : 'notas'} · {stories.length} {stories.length === 1 ? 'historia' : 'historias'}
+          </span>
+        </div>
+
+        {/* Mini Spectrum Bar (ADR-0008 non-partisan mineral trio) */}
+        <div
+          class="w-full h-1.5 rounded-full overflow-hidden flex bg-surface-muted"
+          role="img"
+          aria-label={`Sesgo agregado del día: ${daySpectrum.ofiPct}% Oficialismo, ${daySpectrum.cenPct}% Centro/Datos, ${daySpectrum.opoPct}% Oposición`}
+        >
+          {daySpectrum.ofiPct > 0 && (
+            <div
+              class="h-full bg-spec-ofi transition-all"
+              style={`width: ${daySpectrum.ofiPct}%`}
+              title={`Oficialismo: ${daySpectrum.ofiPct}%`}
+            />
+          )}
+          {daySpectrum.cenPct > 0 && (
+            <div
+              class="h-full bg-spec-cen transition-all"
+              style={`width: ${daySpectrum.cenPct}%`}
+              title={`Centro / Datos: ${daySpectrum.cenPct}%`}
+            />
+          )}
+          {daySpectrum.opoPct > 0 && (
+            <div
+              class="h-full bg-spec-opo transition-all"
+              style={`width: ${daySpectrum.opoPct}%`}
+              title={`Oposición: ${daySpectrum.opoPct}%`}
+            />
+          )}
+        </div>
+
+        {/* Compact legend */}
+        <div class="flex flex-wrap items-center justify-between gap-x-3 gap-y-0.5 font-mono text-[10px] text-ink-muted tabular-nums">
+          <span class="inline-flex items-center gap-1">
+            <span class="w-1.5 h-1.5 rounded-full bg-spec-ofi shrink-0" aria-hidden="true"></span>
+            <strong class="text-ink font-semibold">{daySpectrum.ofiPct}%</strong> Ofi
+          </span>
+          <span class="inline-flex items-center gap-1">
+            <span class="w-1.5 h-1.5 rounded-full bg-spec-cen shrink-0" aria-hidden="true"></span>
+            <strong class="text-ink font-semibold">{daySpectrum.cenPct}%</strong> Centro
+          </span>
+          <span class="inline-flex items-center gap-1">
+            <span class="w-1.5 h-1.5 rounded-full bg-spec-opo shrink-0" aria-hidden="true"></span>
+            <strong class="text-ink font-semibold">{daySpectrum.opoPct}%</strong> Opo
+          </span>
+        </div>
+      </div>
+
+      {/* Right: Radar de Agenda (Temas dominantes) */}
+      <div class="lg:col-span-7 lg:border-l lg:border-rule lg:pl-5 space-y-1.5">
+        <div class="flex items-baseline justify-between gap-2">
+          <span class="font-sans text-[11px] font-bold uppercase tracking-wider text-ink">
+            Agenda dominante
+          </span>
+          <span class="font-sans text-[10px] text-ink-muted">
+            Filtrar portada
+          </span>
+        </div>
+
+        {topTopics.length > 0 ? (
+          <div class="flex flex-wrap items-center gap-1.5">
+            {topTopics.map((topic) => (
+              <button
+                type="button"
+                class="agenda-topic-chip inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md border border-rule bg-surface-muted text-ink hover:border-accent hover:text-accent font-sans text-xs font-medium transition-colors cursor-pointer"
+                data-topic-query={topic.query}
+                aria-pressed="false"
+                title={`Filtrar historias sobre ${topic.label}`}
+              >
+                <span>{topic.label}</span>
+                <span class="font-mono text-[10px] text-ink-muted tabular-nums">{topic.storyCount}</span>
+              </button>
+            ))}
+          </div>
+        ) : (
+          <p class="font-sans text-xs text-ink-muted">Sin temas dominantes detectados aún.</p>
+        )}
+      </div>
+    </div>
+
+    {/* Bottom 1-line strip: Mayor divergencia del día */}
+    {mostDivergent && (
+      <div class="mt-2.5 pt-2.5 border-t border-rule flex flex-wrap sm:flex-nowrap items-center justify-between gap-2 text-xs">
+        <div class="flex items-center gap-2 min-w-0">
+          <span class="font-mono text-[10px] font-semibold uppercase tracking-wider text-accent shrink-0">
+            Mayor divergencia
+          </span>
+          <span class="text-rule shrink-0 hidden sm:inline" aria-hidden="true">·</span>
+          <a
+            href={`/historia/${mostDivergent.id}#comparativa`}
+            class="font-editorial font-semibold text-ink hover:text-accent truncate transition-colors"
+            title={mostDivergent.headline}
+          >
+            {mostDivergent.headline}
+          </a>
+        </div>
+        <a
+          href={`/historia/${mostDivergent.id}#comparativa`}
+          class="font-mono text-[10px] text-ink-muted hover:text-accent shrink-0 tabular-nums transition-colors"
+        >
+          {mostDivergent.ofiPct}% Ofi · {mostDivergent.opoPct}% Opo →
+        </a>
+      </div>
+    )}
+  </section>
+)}
+
+<script>
+  const radarChips = Array.from(document.querySelectorAll<HTMLButtonElement>('.agenda-topic-chip'));
+  const searchInput = document.getElementById('search-input') as HTMLInputElement | null;
+
+  const syncChipStates = () => {
+    const current = (searchInput?.value || '').trim().toLowerCase();
+    radarChips.forEach((chip) => {
+      const query = (chip.dataset.topicQuery || '').trim().toLowerCase();
+      const isActive = Boolean(current && current === query);
+      chip.setAttribute('aria-pressed', String(isActive));
+      chip.classList.toggle('border-accent', isActive);
+      chip.classList.toggle('text-accent', isActive);
+      chip.classList.toggle('bg-surface', isActive);
+      chip.classList.toggle('bg-surface-muted', !isActive);
+      chip.classList.toggle('border-rule', !isActive);
+    });
+  };
+
+  radarChips.forEach((chip) => {
+    chip.addEventListener('click', () => {
+      if (!searchInput) return;
+      const query = chip.dataset.topicQuery || '';
+      const isSame = searchInput.value.trim().toLowerCase() === query.trim().toLowerCase();
+      searchInput.value = isSame ? '' : query;
+      searchInput.dispatchEvent(new Event('input', { bubbles: true }));
+      syncChipStates();
+    });
+  });
+
+  searchInput?.addEventListener('input', syncChipStates);
+</script>
