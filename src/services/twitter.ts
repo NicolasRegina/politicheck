@@ -106,13 +106,13 @@ export function formatViralStoryTweet(story: StoryCluster, isBreaking = false, b
   const outlets = Array.from(new Set((story.articles || []).map(a => a.outletName || (a as any).outlet || 'Medios'))).slice(0, 3);
   const outletsStr = outlets.length > 0 ? outlets.join(', ') : 'los principales medios';
 
-  const prefix = isBreaking ? '🚨 ÚLTIMO MOMENTO' : '🗞️ TAPA DEL DÍA';
-  
-  // Format options with decreasing length if needed
+  const prefix = isBreaking ? 'ÚLTIMO MOMENTO' : 'TEMAS DEL DÍA';
+
+  // Format options with decreasing length if needed (ADR-0008: zero partisan emojis)
   let tweet = `${prefix} | ${headline}\n\n`;
   tweet += `Mirá cómo titulan ${outletsStr}:\n`;
-  tweet += `📊 Espectro: 🟣 ${ofi}% | 🟢 ${cen}% | 🟠 ${opo}%\n\n`;
-  tweet += `👉 Leé la comparativa sin sesgo en vivo:\n${storyUrl}`;
+  tweet += `Espectro: Oficialismo ${ofi}% · Centro ${cen}% · Oposición ${opo}%\n\n`;
+  tweet += `Comparativa de encuadres en Politicheck:\n${storyUrl}`;
 
   // If over 265 chars, trim the headline cleanly at word boundary
   if (getTwitterLength(tweet) > 265) {
@@ -121,10 +121,10 @@ export function formatViralStoryTweet(story: StoryCluster, isBreaking = false, b
     const lastSpace = sliced.lastIndexOf(' ');
     if (lastSpace > 35) sliced = sliced.slice(0, lastSpace);
     const trimmedTitle = sliced.trim().replace(/[,.:;]+$/, '') + '...';
-    
+
     tweet = `${prefix} | "${trimmedTitle}"\n\n`;
-    tweet += `📊 Espectro: 🟣 ${ofi}% | 🟢 ${cen}% | 🟠 ${opo}%\n\n`;
-    tweet += `👉 Comparativa en vivo:\n${storyUrl}`;
+    tweet += `Espectro: Oficialismo ${ofi}% · Centro ${cen}% · Oposición ${opo}%\n\n`;
+    tweet += `Comparativa en vivo:\n${storyUrl}`;
   }
 
   return tweet;

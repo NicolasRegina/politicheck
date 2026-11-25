@@ -10,23 +10,288 @@ interface Props {
 
 const { articles, storyId, isLeadStory = false } = Astro.props;
 
-// Compute counts by baseline leaning
+const FACTUALITY_LABELS: Record<string, string> = {
+  muy_alta: 'Factualidad: Muy Alta',
+  alta: 'Factualidad: Alta',
+  mixta: 'Factualidad: Mixta',
+};
+
+const FUNDING_LABELS: Record<string, string> = {
+  privado_corporativo: 'Privado',
+  sindical_partidario: 'Sindical / Partidario',
+  publico_estatal: 'Público / Estatal',
+  independiente_suscripcion: 'Independiente',
+};
+
+const enrichedArticles = articles.map((art) => {
+  const outlet = getOutletMeta(art.outletId);
+  return {
+    art,
+    outlet,
+    leaning: outlet.baselineLeaning,
+    factualityLabel: FACTUALITY_LABELS[outlet.factuality] || 'Factualidad: Alta',
+    fundingLabel: FUNDING_LABELS[outlet.ownership?.fundingType] || 'Privado',
+    ownerGroup: outlet.ownership?.group || 'Medio auditado',
+  };
+});
+
+const ofiArticles = enrichedArticles.filter((e) => e.leaning === 'oficialismo');
+const opoArticles = enrichedArticles.filter((e) => e.leaning === 'oposicion');
+const cenArticles = enrichedArticles.filter((e) => e.leaning === 'centro_datos');
+
 const leaningCounts = {
   all: articles.length,
-  oficialismo: articles.filter(a => getOutletMeta(a.outletId).baselineLeaning === 'oficialismo').length,
-  centro_datos: articles.filter(a => getOutletMeta(a.outletId).baselineLeaning === 'centro_datos').length,
-  oposicion: articles.filter(a => getOutletMeta(a.outletId).baselineLeaning === 'oposicion').length,
+  oficialismo: ofiArticles.length,
+  centro_datos: cenArticles.length,
+  oposicion: opoArticles.length,
 };
+
+// Pick initial active mobile tab with content
+const initialMobilePole = ofiArticles.length > 0 ? 'oficialismo' : (opoArticles.length > 0 ? 'oposicion' : 'centro_datos');
 ---
 
-<div class="headline-comparison-container space-y-3" data-story-id={storyId}>
-  <!-- Filter & Controls Toolbar -->
-  <div class="flex flex-wrap items-center justify-between gap-2 border-b border-slate-200/80 dark:border-slate-800/80 pb-2.5">
-    <!-- Leaning filter buttons -->
+<div class="headline-comparison-container space-y-5" data-story-id={storyId}>
+  <!-- Top Controls: View Mode Switcher (Cara a Cara default | Vista Grilla) -->
+  <div class="flex flex-wrap items-center justify-between gap-3 border-b border-rule pb-3">
+    <div class="inline-flex items-center p-0.5 rounded-md bg-surface-muted border border-rule text-xs font-sans" role="tablist" aria-label="Modo de visualización del comparador">
+      <button
+        type="button"
+        role="tab"
+        aria-selected="true"
+        data-view-mode="cara-a-cara"
+        class="view-mode-btn px-3 py-1 rounded-md bg-ink text-canvas font-semibold transition-colors cursor-pointer"
+      >
+        Cara a Cara
+      </button>
+      <button
+        type="button"
+        role="tab"
+        aria-selected="false"
+        data-view-mode="grilla"
+        class="view-mode-btn px-3 py-1 rounded-md text-ink-muted hover:text-ink font-medium transition-colors cursor-pointer"
+      >
+        Vista Grilla ({articles.length})
+      </button>
+    </div>
+
+    <span class="filter-status-badge text-[11px] font-mono text-ink-muted">
+      {articles.length} medios cotejados
+    </span>
+  </div>
+
+  <!-- =========================================================================
+       MODE 1: CARA A CARA (DEFAULT — ADR-0008 Feature #2)
+       ========================================================================= -->
+  <div class="cara-a-cara-view space-y-5">
+    <!-- Mobile Pole Switcher (<md) -->
+    <div class="flex md:hidden items-center gap-1.5 overflow-x-auto pb-1 text-xs font-mono">
+      <button
+        type="button"
+        data-mobile-pole="oficialismo"
+        class={`mobile-pole-btn px-2.5 py-1.5 rounded-md border transition-colors whitespace-nowrap cursor-pointer inline-flex items-center gap-1.5 ${initialMobilePole === 'oficialismo' ? 'bg-ink text-canvas border-ink font-semibold' : 'bg-surface border-rule text-ink-muted'}`}
+      >
+        <span class="w-2 h-2 rounded-full bg-spec-ofi"></span>
+        <span>Oficialismo ({ofiArticles.length})</span>
+      </button>
+      <button
+        type="button"
+        data-mobile-pole="oposicion"
+        class={`mobile-pole-btn px-2.5 py-1.5 rounded-md border transition-colors whitespace-nowrap cursor-pointer inline-flex items-center gap-1.5 ${initialMobilePole === 'oposicion' ? 'bg-ink text-canvas border-ink font-semibold' : 'bg-surface border-rule text-ink-muted'}`}
+      >
+        <span class="w-2 h-2 rounded-full bg-spec-opo"></span>
+        <span>Oposición ({opoArticles.length})</span>
+      </button>
+      <button
+        type="button"
+        data-mobile-pole="centro_datos"
+        class={`mobile-pole-btn px-2.5 py-1.5 rounded-md border transition-colors whitespace-nowrap cursor-pointer inline-flex items-center gap-1.5 ${initialMobilePole === 'centro_datos' ? 'bg-ink text-canvas border-ink font-semibold' : 'bg-surface border-rule text-ink-muted'}`}
+      >
+        <span class="w-2 h-2 rounded-full bg-spec-cen"></span>
+        <span>Centro ({cenArticles.length})</span>
+      </button>
+    </div>
+
+    <!-- 2 Parallel Columns: Oficialismo vs Oposición -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+      <!-- Oficialismo Column -->
+      <div
+        class={`pole-column space-y-3 ${initialMobilePole !== 'oficialismo' ? 'hidden md:block' : ''}`}
+        data-pole-col="oficialismo"
+      >
+        <div class="flex items-center justify-between pb-2 border-b-2 border-spec-ofi text-xs font-mono uppercase tracking-wider">
+          <span class="inline-flex items-center gap-2 font-bold text-ink">
+            <span class="w-2.5 h-2.5 rounded-full bg-spec-ofi"></span>
+            Oficialismo
+          </span>
+          <span class="text-ink-muted">{ofiArticles.length} {ofiArticles.length === 1 ? 'medio' : 'medios'}</span>
+        </div>
+
+        {ofiArticles.length > 0 ? (
+          <div class="space-y-3">
+            {ofiArticles.map(({ art, outlet, factualityLabel, fundingLabel, ownerGroup }) => (
+              <a
+                href={art.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                class="group block p-4 rounded-md bg-surface border border-rule hover:border-ink-muted/70 transition-colors space-y-2"
+              >
+                <div class="flex flex-wrap items-start justify-between gap-2">
+                  <div class="min-w-0">
+                    <div class="font-sans text-xs font-bold text-ink">{outlet.name}</div>
+                    <div class="font-sans text-[11px] text-ink-muted truncate max-w-[240px]" title={`${ownerGroup} · ${fundingLabel}`}>
+                      {ownerGroup} · {fundingLabel}
+                    </div>
+                  </div>
+                  <span class="shrink-0 px-2 py-0.5 rounded bg-surface-muted border border-rule font-mono text-[10px] font-semibold text-ink-secondary">
+                    {factualityLabel}
+                  </span>
+                </div>
+
+                <h4 class="font-editorial text-base font-bold text-ink group-hover:text-accent leading-[1.22] transition-colors">
+                  “{art.title}”
+                </h4>
+
+                {art.snippet && (
+                  <p class="text-xs text-ink-secondary line-clamp-2 leading-relaxed font-sans">
+                    {art.snippet}
+                  </p>
+                )}
+
+                <div class="flex items-center justify-between text-[11px] font-mono text-ink-muted pt-2 border-t border-rule">
+                  <span>{art.publishedAt}</span>
+                  <span class="inline-flex items-center gap-1 text-accent font-semibold group-hover:underline">
+                    Leer en {art.outletName} ↗
+                  </span>
+                </div>
+              </a>
+            ))}
+          </div>
+        ) : (
+          <div class="p-5 rounded-md bg-surface-muted/60 border border-dashed border-rule text-xs text-ink-muted font-sans">
+            Ningún medio de línea oficialista registró cobertura de esta historia en el período analizado.
+          </div>
+        )}
+      </div>
+
+      <!-- Oposición Column -->
+      <div
+        class={`pole-column space-y-3 ${initialMobilePole !== 'oposicion' ? 'hidden md:block' : ''}`}
+        data-pole-col="oposicion"
+      >
+        <div class="flex items-center justify-between pb-2 border-b-2 border-spec-opo text-xs font-mono uppercase tracking-wider">
+          <span class="inline-flex items-center gap-2 font-bold text-ink">
+            <span class="w-2.5 h-2.5 rounded-full bg-spec-opo"></span>
+            Oposición
+          </span>
+          <span class="text-ink-muted">{opoArticles.length} {opoArticles.length === 1 ? 'medio' : 'medios'}</span>
+        </div>
+
+        {opoArticles.length > 0 ? (
+          <div class="space-y-3">
+            {opoArticles.map(({ art, outlet, factualityLabel, fundingLabel, ownerGroup }) => (
+              <a
+                href={art.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                class="group block p-4 rounded-md bg-surface border border-rule hover:border-ink-muted/70 transition-colors space-y-2"
+              >
+                <div class="flex flex-wrap items-start justify-between gap-2">
+                  <div class="min-w-0">
+                    <div class="font-sans text-xs font-bold text-ink">{outlet.name}</div>
+                    <div class="font-sans text-[11px] text-ink-muted truncate max-w-[240px]" title={`${ownerGroup} · ${fundingLabel}`}>
+                      {ownerGroup} · {fundingLabel}
+                    </div>
+                  </div>
+                  <span class="shrink-0 px-2 py-0.5 rounded bg-surface-muted border border-rule font-mono text-[10px] font-semibold text-ink-secondary">
+                    {factualityLabel}
+                  </span>
+                </div>
+
+                <h4 class="font-editorial text-base font-bold text-ink group-hover:text-accent leading-[1.22] transition-colors">
+                  “{art.title}”
+                </h4>
+
+                {art.snippet && (
+                  <p class="text-xs text-ink-secondary line-clamp-2 leading-relaxed font-sans">
+                    {art.snippet}
+                  </p>
+                )}
+
+                <div class="flex items-center justify-between text-[11px] font-mono text-ink-muted pt-2 border-t border-rule">
+                  <span>{art.publishedAt}</span>
+                  <span class="inline-flex items-center gap-1 text-accent font-semibold group-hover:underline">
+                    Leer en {art.outletName} ↗
+                  </span>
+                </div>
+              </a>
+            ))}
+          </div>
+        ) : (
+          <div class="p-5 rounded-md bg-surface-muted/60 border border-dashed border-rule text-xs text-ink-muted font-sans">
+            Ningún medio de línea opositora registró cobertura de esta historia en el período analizado.
+          </div>
+        )}
+      </div>
+    </div>
+
+    <!-- Reference Strip: Centro / Datos -->
+    {cenArticles.length > 0 && (
+      <div
+        class={`pole-column rounded-md bg-surface-muted border border-rule p-4 space-y-3 ${initialMobilePole !== 'centro_datos' ? 'hidden md:block' : ''}`}
+        data-pole-col="centro_datos"
+      >
+        <div class="flex items-center justify-between border-b border-rule pb-2 text-xs font-mono uppercase tracking-wider">
+          <span class="inline-flex items-center gap-2 font-bold text-ink">
+            <span class="w-2.5 h-2.5 rounded-full bg-spec-cen"></span>
+            Referencia Centro / Datos
+          </span>
+          <span class="text-ink-muted">{cenArticles.length} {cenArticles.length === 1 ? 'medio' : 'medios'}</span>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+          {cenArticles.map(({ art, outlet, factualityLabel, fundingLabel, ownerGroup }) => (
+            <a
+              href={art.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="group block p-3.5 rounded-md bg-surface border border-rule hover:border-ink-muted/70 transition-colors space-y-1.5"
+            >
+              <div class="flex flex-wrap items-start justify-between gap-2">
+                <div class="min-w-0">
+                  <div class="font-sans text-xs font-bold text-ink">{outlet.name}</div>
+                  <div class="font-sans text-[11px] text-ink-muted truncate max-w-[220px]">
+                    {ownerGroup} · {fundingLabel}
+                  </div>
+                </div>
+                <span class="shrink-0 px-2 py-0.5 rounded bg-surface-muted border border-rule font-mono text-[10px] font-semibold text-ink-secondary">
+                  {factualityLabel}
+                </span>
+              </div>
+
+              <h4 class="font-editorial text-sm sm:text-base font-bold text-ink group-hover:text-accent leading-snug transition-colors">
+                “{art.title}”
+              </h4>
+
+              <div class="flex items-center justify-between text-[11px] font-mono text-ink-muted pt-1.5 border-t border-rule">
+                <span>{art.publishedAt}</span>
+                <span class="text-accent font-semibold group-hover:underline">Leer ↗</span>
+              </div>
+            </a>
+          ))}
+        </div>
+      </div>
+    )}
+  </div>
+
+  <!-- =========================================================================
+       MODE 2: VISTA GRILLA ENRIQUECIDA (Sin paginado prematuro de a 4 — Fix #8)
+       ========================================================================= -->
+  <div class="grilla-view hidden space-y-4">
+    <!-- Non-partisan Leaning Filter Pills -->
     <div class="flex items-center gap-1.5 overflow-x-auto text-[11px] font-mono py-0.5 filter-buttons-row">
       <button
         type="button"
-        class="filter-pill-btn active px-3 py-1 rounded-lg bg-slate-900 text-white dark:bg-white dark:text-slate-950 font-bold transition-colors shadow-2xs cursor-pointer border border-transparent"
+        class="filter-pill-btn active px-3 py-1 rounded-md bg-ink text-canvas font-semibold transition-colors cursor-pointer border border-ink"
         data-filter="all"
       >
         Todos ({leaningCounts.all})
@@ -35,10 +300,10 @@ const leaningCounts = {
       {leaningCounts.oficialismo > 0 && (
         <button
           type="button"
-          class="filter-pill-btn px-2.5 py-1 rounded-lg bg-slate-100 hover:bg-violet-100/80 text-slate-700 dark:bg-slate-900/80 dark:hover:bg-violet-950/60 dark:text-slate-300 hover:text-violet-900 dark:hover:text-violet-200 border border-slate-200 dark:border-slate-800 transition-colors cursor-pointer inline-flex items-center gap-1.5"
+          class="filter-pill-btn px-2.5 py-1 rounded-md bg-surface hover:border-ink text-ink-secondary border border-rule transition-colors cursor-pointer inline-flex items-center gap-1.5"
           data-filter="oficialismo"
         >
-          <span class="w-2 h-2 rounded-full bg-violet-600 dark:bg-violet-500"></span>
+          <span class="w-2 h-2 rounded-full bg-spec-ofi"></span>
           <span>Oficialismo ({leaningCounts.oficialismo})</span>
         </button>
       )}
@@ -46,10 +311,10 @@ const leaningCounts = {
       {leaningCounts.centro_datos > 0 && (
         <button
           type="button"
-          class="filter-pill-btn px-2.5 py-1 rounded-lg bg-slate-100 hover:bg-emerald-100/80 text-slate-700 dark:bg-slate-900/80 dark:hover:bg-emerald-950/60 dark:text-slate-300 hover:text-emerald-900 dark:hover:text-emerald-200 border border-slate-200 dark:border-slate-800 transition-colors cursor-pointer inline-flex items-center gap-1.5"
+          class="filter-pill-btn px-2.5 py-1 rounded-md bg-surface hover:border-ink text-ink-secondary border border-rule transition-colors cursor-pointer inline-flex items-center gap-1.5"
           data-filter="centro_datos"
         >
-          <span class="w-2 h-2 rounded-full bg-emerald-500 dark:bg-emerald-400"></span>
+          <span class="w-2 h-2 rounded-full bg-spec-cen"></span>
           <span>Centro / Datos ({leaningCounts.centro_datos})</span>
         </button>
       )}
@@ -57,98 +322,73 @@ const leaningCounts = {
       {leaningCounts.oposicion > 0 && (
         <button
           type="button"
-          class="filter-pill-btn px-2.5 py-1 rounded-lg bg-slate-100 hover:bg-amber-100/80 text-slate-700 dark:bg-slate-900/80 dark:hover:bg-amber-950/60 dark:text-slate-300 hover:text-amber-900 dark:hover:text-amber-200 border border-slate-200 dark:border-slate-800 transition-colors cursor-pointer inline-flex items-center gap-1.5"
+          class="filter-pill-btn px-2.5 py-1 rounded-md bg-surface hover:border-ink text-ink-secondary border border-rule transition-colors cursor-pointer inline-flex items-center gap-1.5"
           data-filter="oposicion"
         >
-          <span class="w-2 h-2 rounded-full bg-amber-500 dark:bg-amber-400"></span>
+          <span class="w-2 h-2 rounded-full bg-spec-opo"></span>
           <span>Oposición ({leaningCounts.oposicion})</span>
         </button>
       )}
     </div>
 
-    <!-- Live filter status indicator -->
-    <span class="filter-status-badge text-[11px] font-mono text-slate-500 dark:text-slate-400 hidden sm:inline">
-      {articles.length} medios
-    </span>
-  </div>
-
-  <!-- Cards Grid -->
-  <div class={`articles-grid grid gap-3 ${isLeadStory ? 'grid-cols-1 md:grid-cols-2' : 'grid-cols-1'}`}>
-    {articles.map((art) => {
-      const outlet = getOutletMeta(art.outletId);
-      return (
-        <a 
-          href={art.url} 
-          target="_blank" 
+    <!-- Cards Grid (shows up to 8 before optional expand) -->
+    <div class={`articles-grid grid gap-3.5 ${isLeadStory ? 'grid-cols-1 md:grid-cols-2' : 'grid-cols-1'}`}>
+      {enrichedArticles.map(({ art, outlet, leaning, factualityLabel, fundingLabel, ownerGroup }) => (
+        <a
+          href={art.url}
+          target="_blank"
           rel="noopener noreferrer"
-          class="article-comparison-card group block p-3.5 rounded-xl bg-slate-50/70 hover:bg-slate-100 dark:bg-slate-950/40 dark:hover:bg-slate-900 border border-slate-200/80 hover:border-slate-300 dark:border-slate-800/80 dark:hover:border-slate-700 transition-colors duration-200 shadow-2xs"
-          data-leaning={outlet.baselineLeaning}
+          class="article-comparison-card group block p-4 rounded-md bg-surface border border-rule hover:border-ink-muted/70 transition-colors space-y-2"
+          data-leaning={leaning}
         >
-          <!-- Outlet badge + Specific focus pill -->
-          <div class="flex flex-wrap items-center justify-between gap-1.5 mb-2">
-            <span class={`px-2 py-0.5 rounded text-[11px] font-sans font-bold border ${outlet.badgeClass}`}>
-              {outlet.code}
+          <div class="flex flex-wrap items-start justify-between gap-2">
+            <div class="min-w-0">
+              <div class="flex items-center gap-2">
+                <span class={`w-2 h-2 rounded-full shrink-0 ${leaning === 'oficialismo' ? 'bg-spec-ofi' : leaning === 'oposicion' ? 'bg-spec-opo' : 'bg-spec-cen'}`}></span>
+                <span class="font-sans text-xs font-bold text-ink">{outlet.name}</span>
+              </div>
+              <div class="font-sans text-[11px] text-ink-muted truncate max-w-[240px]" title={`${ownerGroup} · ${fundingLabel}`}>
+                {ownerGroup} · {fundingLabel}
+              </div>
+            </div>
+            <span class="shrink-0 px-2 py-0.5 rounded bg-surface-muted border border-rule font-mono text-[10px] font-semibold text-ink-secondary">
+              {factualityLabel}
             </span>
-            {art.specificFocus && (
-              <span class="text-[11px] font-sans px-2 py-0.5 rounded bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700 truncate max-w-[220px]">
-                Foco: {art.specificFocus}
-              </span>
-            )}
           </div>
 
-          <!-- Headline -->
-          <h4 class="font-editorial text-sm sm:text-base font-bold text-slate-900 group-hover:text-blue-900 dark:text-slate-200 dark:group-hover:text-blue-300 leading-snug transition-colors mb-1.5">
-            "{art.title}"
+          {art.specificFocus && (
+            <div class="text-[11px] font-sans text-ink-muted">
+              Foco: <span class="text-ink-secondary font-medium">{art.specificFocus}</span>
+            </div>
+          )}
+
+          <h4 class="font-editorial text-base font-bold text-ink group-hover:text-accent leading-[1.22] transition-colors">
+            “{art.title}”
           </h4>
 
-          <!-- Snippet -->
           {art.snippet && (
-            <p class="text-xs text-slate-600 dark:text-slate-400 line-clamp-2 leading-relaxed mb-2 font-sans">
+            <p class="text-xs text-ink-secondary line-clamp-2 leading-relaxed font-sans">
               {art.snippet}
             </p>
           )}
 
-          <!-- Footer: timestamp and read link -->
-          <div class="flex items-center justify-between text-[11px] font-mono text-slate-500 dark:text-slate-400 pt-1.5 border-t border-slate-200/50 dark:border-slate-800/50">
+          <div class="flex items-center justify-between text-[11px] font-mono text-ink-muted pt-2 border-t border-rule">
             <span>{art.publishedAt}</span>
-            <span class="inline-flex items-center gap-1 text-slate-600 group-hover:text-slate-950 dark:text-slate-400 dark:group-hover:text-slate-100 font-semibold transition-colors">
-              Ir a {art.outletName}
-              <svg aria-hidden="true" class="w-3 h-3 motion-safe:group-hover:translate-x-0.5 motion-safe:transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-              </svg>
+            <span class="inline-flex items-center gap-1 text-accent font-semibold group-hover:underline">
+              Ir a {art.outletName} ↗
             </span>
           </div>
         </a>
-      );
-    })}
-  </div>
-
-  <!-- Pagination Toolbar -->
-  <div class="pagination-footer flex items-center justify-between pt-2.5 border-t border-slate-200/80 dark:border-slate-800/80 text-xs font-mono">
-    <div class="text-[11px] text-slate-500 dark:text-slate-400 pagination-label">
-      Mostrando 1-4 de {articles.length} redacciones
+      ))}
     </div>
 
-    <div class="flex items-center gap-1.5">
+    <!-- Expand button if > 8 cards -->
+    <div class="expand-more-wrap hidden pt-2 text-center">
       <button
         type="button"
-        class="prev-btn inline-flex items-center gap-1 px-2.5 py-1 rounded-lg border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 font-medium text-xs transition-colors cursor-pointer disabled:opacity-30 disabled:pointer-events-none"
-        disabled
+        class="expand-more-btn px-4 py-2 rounded-md border border-rule bg-surface hover:border-ink text-xs font-sans font-semibold text-ink transition-colors cursor-pointer"
       >
-        <svg aria-hidden="true" class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" /></svg>
-        <span>Anterior</span>
-      </button>
-
-      <div class="page-indicators flex items-center gap-1 px-1">
-        <!-- Rendered by JS -->
-      </div>
-
-      <button
-        type="button"
-        class="next-btn inline-flex items-center gap-1 px-2.5 py-1 rounded-lg border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 font-medium text-xs transition-colors cursor-pointer disabled:opacity-30 disabled:pointer-events-none"
-      >
-        <span>Siguiente</span>
-        <svg aria-hidden="true" class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>
+        Ver todos los medios restantes
       </button>
     </div>
   </div>
@@ -161,138 +401,146 @@ const leaningCounts = {
       if (container.hasAttribute('data-initialized')) return;
       container.setAttribute('data-initialized', 'true');
 
-      const cards = Array.from(container.querySelectorAll('.article-comparison-card'));
-      const filterBtns = Array.from(container.querySelectorAll('.filter-pill-btn'));
-      const prevBtn = container.querySelector('.prev-btn') as HTMLButtonElement | null;
-      const nextBtn = container.querySelector('.next-btn') as HTMLButtonElement | null;
-      const pageIndicators = container.querySelector('.page-indicators');
-      const paginationFooter = container.querySelector('.pagination-footer');
-      const paginationLabel = container.querySelector('.pagination-label');
-      const filterStatusBadge = container.querySelector('.filter-status-badge');
+      const viewModeBtns = Array.from(container.querySelectorAll<HTMLButtonElement>('.view-mode-btn'));
+      const caraView = container.querySelector<HTMLElement>('.cara-a-cara-view');
+      const grillaView = container.querySelector<HTMLElement>('.grilla-view');
+
+      const mobilePoleBtns = Array.from(container.querySelectorAll<HTMLButtonElement>('.mobile-pole-btn'));
+      const poleCols = Array.from(container.querySelectorAll<HTMLElement>('.pole-column'));
+
+      const cards = Array.from(container.querySelectorAll<HTMLElement>('.article-comparison-card'));
+      const filterBtns = Array.from(container.querySelectorAll<HTMLButtonElement>('.filter-pill-btn'));
+      const expandWrap = container.querySelector<HTMLElement>('.expand-more-wrap');
+      const expandBtn = container.querySelector<HTMLButtonElement>('.expand-more-btn');
+      const filterStatusBadge = container.querySelector<HTMLElement>('.filter-status-badge');
 
       let currentFilter = 'all';
-      let currentPage = 1;
-      const pageSize = 4; // 4 cards per page (2x2 grid) eliminates scroll fatigue
+      let showAll = false;
+      const initialLimit = 8;
 
-      function render() {
+      function switchViewMode(mode: 'cara-a-cara' | 'grilla') {
+        viewModeBtns.forEach(btn => {
+          const isActive = btn.getAttribute('data-view-mode') === mode;
+          btn.setAttribute('aria-selected', String(isActive));
+          btn.classList.toggle('bg-ink', isActive);
+          btn.classList.toggle('text-canvas', isActive);
+          btn.classList.toggle('font-semibold', isActive);
+          btn.classList.toggle('text-ink-muted', !isActive);
+          btn.classList.toggle('font-medium', !isActive);
+        });
+        if (caraView && grillaView) {
+          caraView.classList.toggle('hidden', mode !== 'cara-a-cara');
+          grillaView.classList.toggle('hidden', mode !== 'grilla');
+        }
+      }
+
+      viewModeBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+          const mode = btn.getAttribute('data-view-mode') === 'grilla' ? 'grilla' : 'cara-a-cara';
+          switchViewMode(mode);
+        });
+      });
+
+      // Mobile pole tabs inside Cara a Cara
+      mobilePoleBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+          const pole = btn.getAttribute('data-mobile-pole');
+          if (!pole) return;
+          mobilePoleBtns.forEach(b => {
+            const active = b.getAttribute('data-mobile-pole') === pole;
+            b.classList.toggle('bg-ink', active);
+            b.classList.toggle('text-canvas', active);
+            b.classList.toggle('border-ink', active);
+            b.classList.toggle('font-semibold', active);
+            b.classList.toggle('bg-surface', !active);
+            b.classList.toggle('border-rule', !active);
+            b.classList.toggle('text-ink-muted', !active);
+          });
+          poleCols.forEach(col => {
+            const match = col.getAttribute('data-pole-col') === pole;
+            col.classList.toggle('hidden', !match);
+            col.classList.add('md:block');
+          });
+        });
+      });
+
+      function renderGrilla() {
         const filtered = cards.filter(card => {
           if (currentFilter === 'all') return true;
           return card.getAttribute('data-leaning') === currentFilter;
         });
 
-        const totalItems = filtered.length;
-        const totalPages = Math.max(1, Math.ceil(totalItems / pageSize));
-        if (currentPage > totalPages) currentPage = 1;
+        cards.forEach(c => c.classList.add('hidden'));
+        const visibleCount = showAll ? filtered.length : Math.min(filtered.length, initialLimit);
+        filtered.slice(0, visibleCount).forEach(c => c.classList.remove('hidden'));
 
-        // Hide all cards
-        cards.forEach(card => card.classList.add('hidden'));
-
-        // Show cards for current page
-        const startIdx = (currentPage - 1) * pageSize;
-        const endIdx = startIdx + pageSize;
-        const currentSlice = filtered.slice(startIdx, endIdx);
-        currentSlice.forEach(card => card.classList.remove('hidden'));
-
-        // Update range labels
-        const startNum = totalItems > 0 ? startIdx + 1 : 0;
-        const endNum = Math.min(totalItems, endIdx);
-        const labelText = `Mostrando ${startNum}-${endNum} de ${totalItems} redacciones`;
-        if (paginationLabel) paginationLabel.textContent = labelText;
         if (filterStatusBadge) {
-          filterStatusBadge.textContent = totalPages > 1 ? `Página ${currentPage} de ${totalPages}` : `${totalItems} medios`;
+          filterStatusBadge.textContent = `${filtered.length} ${filtered.length === 1 ? 'medio' : 'medios'} cotejados`;
         }
 
-        // Toggle pagination visibility
-        if (paginationFooter) {
-          if (totalPages <= 1) {
-            paginationFooter.classList.add('hidden');
+        if (expandWrap && expandBtn) {
+          const remaining = filtered.length - visibleCount;
+          if (remaining > 0) {
+            expandWrap.classList.remove('hidden');
+            expandBtn.textContent = `Ver los ${remaining} medios restantes`;
           } else {
-            paginationFooter.classList.remove('hidden');
-          }
-        }
-
-        // Update Prev / Next button states
-        if (prevBtn) prevBtn.disabled = currentPage <= 1;
-        if (nextBtn) nextBtn.disabled = currentPage >= totalPages;
-
-        // Render page indicator buttons
-        if (pageIndicators) {
-          pageIndicators.innerHTML = '';
-          for (let p = 1; p <= totalPages; p++) {
-            const pageBtn = document.createElement('button');
-            pageBtn.type = 'button';
-            pageBtn.className = `w-6 h-6 rounded-md font-mono text-[11px] font-bold transition-all cursor-pointer ${
-              p === currentPage 
-                ? 'bg-slate-900 text-white dark:bg-white dark:text-slate-900 shadow-2xs' 
-                : 'text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-800'
-            }`;
-            pageBtn.textContent = String(p);
-            pageBtn.addEventListener('click', () => {
-              currentPage = p;
-              render();
-            });
-            pageIndicators.appendChild(pageBtn);
+            expandWrap.classList.add('hidden');
           }
         }
       }
 
-      // Filter click listeners
+      function applyLeaningFilter(leaning: string) {
+        currentFilter = leaning;
+        showAll = false;
+        filterBtns.forEach(b => {
+          const active = b.getAttribute('data-filter') === leaning;
+          b.classList.toggle('active', active);
+          b.classList.toggle('bg-ink', active);
+          b.classList.toggle('text-canvas', active);
+          b.classList.toggle('border-ink', active);
+          b.classList.toggle('font-semibold', active);
+          b.classList.toggle('bg-surface', !active);
+          b.classList.toggle('text-ink-secondary', !active);
+          b.classList.toggle('border-rule', !active);
+        });
+        renderGrilla();
+      }
+
       filterBtns.forEach(btn => {
         btn.addEventListener('click', () => {
-          const filter = btn.getAttribute('data-filter') || 'all';
-          currentFilter = filter;
-          currentPage = 1;
-
-          filterBtns.forEach(b => {
-            b.classList.remove('active', 'bg-slate-900', 'text-white', 'dark:bg-white', 'dark:text-slate-950', 'shadow-2xs', 'border-transparent');
-            b.classList.add('bg-slate-100', 'text-slate-700', 'dark:bg-slate-900/80', 'dark:text-slate-300', 'border-slate-200', 'dark:border-slate-800');
-          });
-
-          btn.classList.add('active', 'bg-slate-900', 'text-white', 'dark:bg-white', 'dark:text-slate-950', 'shadow-2xs', 'border-transparent');
-          btn.classList.remove('bg-slate-100', 'text-slate-700', 'dark:bg-slate-900/80', 'dark:text-slate-300', 'border-slate-200', 'dark:border-slate-800');
-
-          render();
+          applyLeaningFilter(btn.getAttribute('data-filter') || 'all');
         });
       });
 
-      // Pagination button listeners
-      if (prevBtn) {
-        prevBtn.addEventListener('click', () => {
-          if (currentPage > 1) {
-            currentPage--;
-            render();
-          }
-        });
-      }
-      if (nextBtn) {
-        nextBtn.addEventListener('click', () => {
-          currentPage++;
-          render();
+      if (expandBtn) {
+        expandBtn.addEventListener('click', () => {
+          showAll = true;
+          renderGrilla();
         });
       }
 
-      // Initial render
-      render();
-    });
+      renderGrilla();
 
-    // Wire clicks on SpectrumBar triggers to activate the corresponding filter pill
-    document.querySelectorAll('.spectrum-filter-trigger').forEach(trigger => {
-      trigger.addEventListener('click', () => {
-        const leaning = trigger.getAttribute('data-trigger-leaning');
-        if (!leaning) return;
-        const parentCard = trigger.closest('article, .story-item, #view-temas-del-dia, main');
-        if (parentCard) {
-          const targetBtn = parentCard.querySelector(`.filter-pill-btn[data-filter="${leaning}"]`) as HTMLButtonElement | null;
-          if (targetBtn) {
-            targetBtn.click();
-            targetBtn.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-          }
-        }
+      // Read ?sesgo= query param from Portada SpectrumBar navigation (Fix #2)
+      const urlSesgo = new URLSearchParams(window.location.search).get('sesgo');
+      if (urlSesgo && ['oficialismo', 'centro_datos', 'oposicion'].includes(urlSesgo)) {
+        switchViewMode('grilla');
+        applyLeaningFilter(urlSesgo);
+      }
+
+      // Wire clicks on in-page SpectrumBar triggers
+      document.querySelectorAll('.spectrum-filter-trigger').forEach(trigger => {
+        trigger.addEventListener('click', () => {
+          const leaning = trigger.getAttribute('data-trigger-leaning');
+          if (!leaning) return;
+          switchViewMode('grilla');
+          applyLeaningFilter(leaning);
+          document.getElementById('comparativa')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        });
       });
     });
   }
 
-  // Run on initial load and on Astro view transitions
   initHeadlineComparators();
   document.addEventListener('astro:page-load', initHeadlineComparators);
 </script>

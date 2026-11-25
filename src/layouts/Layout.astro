@@ -50,16 +50,16 @@ const absoluteImageUrl = image.startsWith('http') ? image : `https://www.politic
     <!-- Image CDN Preconnect for instantaneous mobile LCP -->
     <link rel="preconnect" href="https://wsrv.nl" crossorigin />
 
-    <!-- Editorial Web Fonts (Preconnected & Asynchronous Non-Blocking Load for instant FCP) -->
+    <!-- Editorial Web Fonts (ADR-0008: Fraunces + DM Sans + JetBrains Mono) -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link rel="preload" as="style" id="editorial-fonts" href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,600..800;1,6..72,600&family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700&family=JetBrains+Mono:wght@500&display=swap" />
+    <link rel="preload" as="style" id="editorial-fonts" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,SOFT,wght@0,9..144,50,600..800;1,9..144,50,500&family=DM+Sans:ital,opsz,wght@0,9..40,400..700;1,9..40,400&family=JetBrains+Mono:wght@400;500;600&display=swap" />
     <script is:inline>
       const ef = document.getElementById('editorial-fonts');
       if (ef) ef.rel = 'stylesheet';
     </script>
     <noscript>
-      <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,600..800;1,6..72,600&family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700&family=JetBrains+Mono:wght@500&display=swap" />
+      <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,SOFT,wght@0,9..144,50,600..800;1,9..144,50,500&family=DM+Sans:ital,opsz,wght@0,9..40,400..700;1,9..40,400&family=JetBrains+Mono:wght@400;500;600&display=swap" />
     </noscript>
 
     {preloadImage && (
@@ -110,9 +110,9 @@ const absoluteImageUrl = image.startsWith('http') ? image : `https://www.politic
     <meta name="author" content="Politicheck Argentina" />
     <meta name="keywords" content="politica argentina, elecciones 2027, elecciones brasil 2026, lula da silva, elecciones presidenciales brasil, candidatos argentina, sesgo mediatico, encuadre de medios, noticias politica argentina, promesas de campaña, clarin, la nacion, infobae, pagina 12, ambito, editorial perfil, verificacion periodistica, espectro politico" />
 
-    <!-- Theme & Colors -->
-    <meta name="theme-color" content="#090D16" media="(prefers-color-scheme: dark)" />
-    <meta name="theme-color" content="#F8FAFC" media="(prefers-color-scheme: light)" />
+    <!-- Theme & Colors (ADR-0008: Crema Editorial / Carbón Cálido) -->
+    <meta name="theme-color" content="#121210" media="(prefers-color-scheme: dark)" />
+    <meta name="theme-color" content="#FAF9F6" media="(prefers-color-scheme: light)" />
 
     <!-- Structured Data (JSON-LD) for Google Rich Snippets -->
     <script type="application/ld+json" is:inline>
@@ -155,7 +155,7 @@ const absoluteImageUrl = image.startsWith('http') ? image : `https://www.politic
       }
     </script>
   </head>
-  <body class="min-h-screen flex flex-col bg-slate-50 dark:bg-canvas-dark text-slate-900 dark:text-slate-100 antialiased selection:bg-slate-300 dark:selection:bg-slate-700 selection:text-slate-900 dark:selection:text-white transition-colors duration-200 overflow-x-clip w-full">
+  <body class="min-h-screen flex flex-col bg-canvas text-ink antialiased selection:bg-accent-soft selection:text-ink transition-colors duration-200 overflow-x-clip w-full pb-16 md:pb-0">
     <Header stories={stories} serverSyncIso={serverSyncIso} />
     <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 py-6 sm:py-8">
       <slot />
@@ -165,10 +165,10 @@ const absoluteImageUrl = image.startsWith('http') ? image : `https://www.politic
     <PwaBanner />
     <LiveChat />
 
-    <!-- Global Floating Toast Notification (Viral Share & Feedback) -->
+    <!-- Global Floating Toast Notification (Bottom-left to avoid collision with LiveChat & Mobile Bottom Nav) -->
     <div 
       id="politicheck-toast" 
-      class="fixed bottom-6 right-6 z-50 transform translate-y-20 opacity-0 pointer-events-none motion-safe:transition-transform transition-opacity duration-300 max-w-sm w-full p-4 rounded-2xl bg-slate-950 dark:bg-white text-white dark:text-slate-950 shadow-2xl border border-slate-800 dark:border-slate-200 flex items-start gap-3"
+      class="fixed bottom-20 md:bottom-6 left-4 md:left-6 z-50 transform translate-y-20 opacity-0 pointer-events-none motion-safe:transition-transform transition-opacity duration-300 max-w-sm w-[calc(100vw-2rem)] sm:w-full p-4 rounded-md bg-ink text-canvas shadow-lg border border-rule flex items-start gap-3"
       role="alert"
     >
       <div id="toast-icon" class="shrink-0 mt-0.5 text-emerald-400 dark:text-emerald-600" aria-hidden="true">

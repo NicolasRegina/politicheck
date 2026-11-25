@@ -5,9 +5,11 @@ import { getOutletMeta } from '../utils/outlets';
 interface Props {
   spectrum?: SpectrumBreakdown;
   articles?: Article[];
+  /** When provided (e.g. on Portada), clicking any pole navigates directly to /historia/[storyId]?sesgo=<pole>#comparativa */
+  storyId?: string;
 }
 
-const { spectrum: initialSpectrum, articles } = Astro.props;
+const { spectrum: initialSpectrum, articles, storyId } = Astro.props;
 
 // Calculate mathematically exact spectrum based on participating articles
 let spectrum = initialSpectrum;
@@ -42,78 +44,147 @@ if (articles && articles.length > 0) {
 if (!spectrum) {
   spectrum = { oficialismoPct: 0, centroDatosPct: 100, oposicionPct: 0, totalOutlets: 1 };
 }
+
+const poleUrl = (leaning: string) =>
+  storyId ? `/historia/${storyId}?sesgo=${leaning}#comparativa` : undefined;
 ---
 
-<div class="space-y-1.5 sm:space-y-2">
-  <!-- Legend with real percentages derived from participating outlets (Clickable to filter) -->
-  <div class="flex flex-wrap items-center justify-between gap-x-2 gap-y-1.5 text-[10px] sm:text-xs font-mono">
-    <button 
-      type="button"
-      class={`spectrum-filter-trigger flex items-center gap-1.5 transition-colors motion-safe:transition-transform motion-safe:hover:scale-105 cursor-pointer text-left focus:outline-none focus:ring-1 focus:ring-violet-400 rounded px-1 -mx-1 py-0.5 ${spectrum.oficialismoPct > 0 ? 'text-violet-700 dark:text-violet-300 font-semibold' : 'text-slate-400 dark:text-slate-600 opacity-60'}`}
-      data-trigger-leaning="oficialismo"
-      title="Clic para filtrar por medios de línea oficialista"
-    >
-      <span class={`w-2 h-2 sm:w-2.5 sm:h-2.5 rounded-full shrink-0 ${spectrum.oficialismoPct > 0 ? 'bg-violet-600 dark:bg-violet-500 shadow-xs' : 'bg-slate-300 dark:bg-slate-700'}`}></span>
-      <span>Oficialismo:</span> <strong class="font-bold">{spectrum.oficialismoPct}%</strong>
-    </button>
-
-    <button 
-      type="button"
-      class={`spectrum-filter-trigger flex items-center gap-1.5 transition-colors motion-safe:transition-transform motion-safe:hover:scale-105 cursor-pointer text-left focus:outline-none focus:ring-1 focus:ring-emerald-400 rounded px-1 -mx-1 py-0.5 ${spectrum.centroDatosPct > 0 ? 'text-emerald-700 dark:text-emerald-300 font-semibold' : 'text-slate-400 dark:text-slate-600'}`}
-      data-trigger-leaning="centro_datos"
-      title="Clic para filtrar por medios de centro y datos factuales"
-    >
-      <span class={`w-2 h-2 sm:w-2.5 sm:h-2.5 rounded-full shrink-0 ${spectrum.centroDatosPct > 0 ? 'bg-emerald-500 dark:bg-emerald-400 shadow-xs' : 'bg-slate-300 dark:bg-slate-700'}`}></span>
-      <span>Centro / Datos:</span> <strong class="font-bold">{spectrum.centroDatosPct}%</strong>
-    </button>
-
-    <button 
-      type="button"
-      class={`spectrum-filter-trigger flex items-center gap-1.5 transition-colors motion-safe:transition-transform motion-safe:hover:scale-105 cursor-pointer text-left focus:outline-none focus:ring-1 focus:ring-amber-400 rounded px-1 -mx-1 py-0.5 ${spectrum.oposicionPct > 0 ? 'text-amber-700 dark:text-amber-300 font-semibold' : 'text-slate-400 dark:text-slate-600'}`}
-      data-trigger-leaning="oposicion"
-      title="Clic para filtrar por medios de línea crítica / opositora"
-    >
-      <span class={`w-2 h-2 sm:w-2.5 sm:h-2.5 rounded-full shrink-0 ${spectrum.oposicionPct > 0 ? 'bg-amber-500 dark:bg-amber-400 shadow-xs' : 'bg-slate-300 dark:bg-slate-700'}`}></span>
-      <span>Oposición:</span> <strong class="font-bold">{spectrum.oposicionPct}%</strong>
-    </button>
-  </div>
-
-  <!-- Spectrum Bar: only renders segments with actual percentage > 0 -->
-  <div class="w-full h-2.5 sm:h-3 rounded-full bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-0.5 flex overflow-hidden gap-0.5 shadow-inner">
-    {spectrum.oficialismoPct > 0 && (
-      <div 
-        class="spectrum-filter-trigger h-full bg-violet-600 dark:bg-violet-500 rounded-l-full transition-opacity duration-500 hover:opacity-90 cursor-pointer focus:outline-none focus:ring-1 focus:ring-white/50" 
-        style={`width: ${spectrum.oficialismoPct}%`}
+<div class="space-y-2">
+  <!-- Legend with real percentages (Non-partisan mineral trio — ADR-0008) -->
+  <div class="flex flex-wrap items-center justify-between gap-x-3 gap-y-1 text-[11px] sm:text-xs font-mono">
+    {storyId ? (
+      <a
+        href={poleUrl('oficialismo')}
+        class={`inline-flex items-center gap-1.5 transition-colors hover:text-accent rounded py-0.5 ${spectrum.oficialismoPct > 0 ? 'text-ink font-medium' : 'text-ink-muted opacity-50'}`}
+        title="Ver titulares de medios de línea oficialista"
+      >
+        <span class={`w-2 h-2 rounded-full shrink-0 ${spectrum.oficialismoPct > 0 ? 'bg-spec-ofi' : 'bg-rule'}`}></span>
+        <strong class="font-semibold">{spectrum.oficialismoPct}%</strong>
+        <span class="text-ink-muted">Oficialismo</span>
+      </a>
+    ) : (
+      <button
+        type="button"
+        class={`spectrum-filter-trigger inline-flex items-center gap-1.5 transition-colors hover:text-accent cursor-pointer text-left rounded px-1 -mx-1 py-0.5 ${spectrum.oficialismoPct > 0 ? 'text-ink font-medium' : 'text-ink-muted opacity-50'}`}
         data-trigger-leaning="oficialismo"
-        title={`Enfoque Oficialista: ${spectrum.oficialismoPct}% (Clic para filtrar)`}
-        tabindex="0"
-        role="button"
-      ></div>
+        title="Clic para filtrar por medios de línea oficialista"
+      >
+        <span class={`w-2 h-2 rounded-full shrink-0 ${spectrum.oficialismoPct > 0 ? 'bg-spec-ofi' : 'bg-rule'}`}></span>
+        <strong class="font-semibold">{spectrum.oficialismoPct}%</strong>
+        <span class="text-ink-muted">Oficialismo</span>
+      </button>
     )}
-    {spectrum.centroDatosPct > 0 && (
-      <div 
-        class={`spectrum-filter-trigger h-full bg-emerald-500 dark:bg-emerald-400 transition-opacity duration-500 hover:opacity-90 cursor-pointer focus:outline-none focus:ring-1 focus:ring-white/50 ${spectrum.oficialismoPct === 0 ? 'rounded-l-full' : ''} ${spectrum.oposicionPct === 0 ? 'rounded-r-full' : ''}`} 
-        style={`width: ${spectrum.centroDatosPct}%`}
+
+    {storyId ? (
+      <a
+        href={poleUrl('centro_datos')}
+        class={`inline-flex items-center gap-1.5 transition-colors hover:text-accent rounded py-0.5 ${spectrum.centroDatosPct > 0 ? 'text-ink font-medium' : 'text-ink-muted opacity-50'}`}
+        title="Ver titulares de medios de centro y datos factuales"
+      >
+        <span class={`w-2 h-2 rounded-full shrink-0 ${spectrum.centroDatosPct > 0 ? 'bg-spec-cen' : 'bg-rule'}`}></span>
+        <strong class="font-semibold">{spectrum.centroDatosPct}%</strong>
+        <span class="text-ink-muted">Centro</span>
+      </a>
+    ) : (
+      <button
+        type="button"
+        class={`spectrum-filter-trigger inline-flex items-center gap-1.5 transition-colors hover:text-accent cursor-pointer text-left rounded px-1 -mx-1 py-0.5 ${spectrum.centroDatosPct > 0 ? 'text-ink font-medium' : 'text-ink-muted opacity-50'}`}
         data-trigger-leaning="centro_datos"
-        title={`Centro / Datos Factuales: ${spectrum.centroDatosPct}% (Clic para filtrar)`}
-        tabindex="0"
-        role="button"
-      ></div>
+        title="Clic para filtrar por medios de centro y datos factuales"
+      >
+        <span class={`w-2 h-2 rounded-full shrink-0 ${spectrum.centroDatosPct > 0 ? 'bg-spec-cen' : 'bg-rule'}`}></span>
+        <strong class="font-semibold">{spectrum.centroDatosPct}%</strong>
+        <span class="text-ink-muted">Centro</span>
+      </button>
     )}
-    {spectrum.oposicionPct > 0 && (
-      <div 
-        class="spectrum-filter-trigger h-full bg-amber-500 dark:bg-amber-400 rounded-r-full transition-opacity duration-500 hover:opacity-90 cursor-pointer focus:outline-none focus:ring-1 focus:ring-white/50" 
-        style={`width: ${spectrum.oposicionPct}%`}
+
+    {storyId ? (
+      <a
+        href={poleUrl('oposicion')}
+        class={`inline-flex items-center gap-1.5 transition-colors hover:text-accent rounded py-0.5 ${spectrum.oposicionPct > 0 ? 'text-ink font-medium' : 'text-ink-muted opacity-50'}`}
+        title="Ver titulares de medios de línea opositora"
+      >
+        <span class={`w-2 h-2 rounded-full shrink-0 ${spectrum.oposicionPct > 0 ? 'bg-spec-opo' : 'bg-rule'}`}></span>
+        <strong class="font-semibold">{spectrum.oposicionPct}%</strong>
+        <span class="text-ink-muted">Oposición</span>
+      </a>
+    ) : (
+      <button
+        type="button"
+        class={`spectrum-filter-trigger inline-flex items-center gap-1.5 transition-colors hover:text-accent cursor-pointer text-left rounded px-1 -mx-1 py-0.5 ${spectrum.oposicionPct > 0 ? 'text-ink font-medium' : 'text-ink-muted opacity-50'}`}
         data-trigger-leaning="oposicion"
-        title={`Enfoque Opositor: ${spectrum.oposicionPct}% (Clic para filtrar)`}
-        tabindex="0"
-        role="button"
-      ></div>
+        title="Clic para filtrar por medios de línea opositora"
+      >
+        <span class={`w-2 h-2 rounded-full shrink-0 ${spectrum.oposicionPct > 0 ? 'bg-spec-opo' : 'bg-rule'}`}></span>
+        <strong class="font-semibold">{spectrum.oposicionPct}%</strong>
+        <span class="text-ink-muted">Oposición</span>
+      </button>
     )}
   </div>
 
-  <!-- Clear Framing Descriptive Micro-Copy -->
-  <p class="text-[10px] font-mono text-slate-500 dark:text-slate-400 mt-1 italic leading-tight">
-    Distribución calculada sobre el encuadre editorial de las notas publicadas en las últimas 24 horas.
-  </p>
+  <!-- Editorial Fine Spectrum Track (6px — no partisan colors, no shadow-inner) -->
+  <div class="w-full h-1.5 rounded-full bg-surface-muted flex overflow-hidden gap-0.5" role="img" aria-label={`Espectro de cobertura: ${spectrum.oficialismoPct}% oficialismo, ${spectrum.centroDatosPct}% centro, ${spectrum.oposicionPct}% oposición`}>
+    {spectrum.oficialismoPct > 0 && (
+      storyId ? (
+        <a
+          href={poleUrl('oficialismo')}
+          class="h-full bg-spec-ofi transition-opacity duration-200 hover:opacity-80"
+          style={`width: ${spectrum.oficialismoPct}%`}
+          title={`Oficialismo: ${spectrum.oficialismoPct}% — Ver titulares`}
+          aria-label={`Ver titulares oficialistas (${spectrum.oficialismoPct}%)`}
+        ></a>
+      ) : (
+        <div
+          class="spectrum-filter-trigger h-full bg-spec-ofi transition-opacity duration-200 hover:opacity-80 cursor-pointer"
+          style={`width: ${spectrum.oficialismoPct}%`}
+          data-trigger-leaning="oficialismo"
+          title={`Enfoque Oficialista: ${spectrum.oficialismoPct}% (Clic para filtrar)`}
+          tabindex="0"
+          role="button"
+        ></div>
+      )
+    )}
+
+    {spectrum.centroDatosPct > 0 && (
+      storyId ? (
+        <a
+          href={poleUrl('centro_datos')}
+          class="h-full bg-spec-cen transition-opacity duration-200 hover:opacity-80"
+          style={`width: ${spectrum.centroDatosPct}%`}
+          title={`Centro / Datos: ${spectrum.centroDatosPct}% — Ver titulares`}
+          aria-label={`Ver titulares de centro y datos (${spectrum.centroDatosPct}%)`}
+        ></a>
+      ) : (
+        <div
+          class="spectrum-filter-trigger h-full bg-spec-cen transition-opacity duration-200 hover:opacity-80 cursor-pointer"
+          style={`width: ${spectrum.centroDatosPct}%`}
+          data-trigger-leaning="centro_datos"
+          title={`Centro / Datos Factuales: ${spectrum.centroDatosPct}% (Clic para filtrar)`}
+          tabindex="0"
+          role="button"
+        ></div>
+      )
+    )}
+
+    {spectrum.oposicionPct > 0 && (
+      storyId ? (
+        <a
+          href={poleUrl('oposicion')}
+          class="h-full bg-spec-opo transition-opacity duration-200 hover:opacity-80"
+          style={`width: ${spectrum.oposicionPct}%`}
+          title={`Oposición: ${spectrum.oposicionPct}% — Ver titulares`}
+          aria-label={`Ver titulares opositores (${spectrum.oposicionPct}%)`}
+        ></a>
+      ) : (
+        <div
+          class="spectrum-filter-trigger h-full bg-spec-opo transition-opacity duration-200 hover:opacity-80 cursor-pointer"
+          style={`width: ${spectrum.oposicionPct}%`}
+          data-trigger-leaning="oposicion"
+          title={`Enfoque Opositor: ${spectrum.oposicionPct}% (Clic para filtrar)`}
+          tabindex="0"
+          role="button"
+        ></div>
+      )
+    )}
+  </div>
 </div>

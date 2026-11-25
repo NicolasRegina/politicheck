@@ -308,6 +308,27 @@
 - [ ] **Escalado a Salón Central de Debates Cívicos (`/debates`) [ROADMAP FASE 2]:**
   - Espacio centralizado para debatir los temas más calientes del ciclo electoral y discusiones ciudadanas transversales.
 
+---
+
+### ✅ Tarea 19: Rediseño Editorial Contemporáneo (ADR-0008), Fixes UX Ola 1 y Features de Contraste — [COMPLETADA]
+- [x] **Identidad Visual *Revista Política Contemporánea* ([ADR-0008](docs/adr/0008-editorial-identity-and-ux-redesign.md)):**
+  - Tokens semánticos en `src/styles/global.css` (Crema Editorial `#FAF9F6` / Carbón Cálido `#121210`, acento `#1E3A5F` / `#7FB3E0`, radios `rounded-md` máx., sin *glassmorphism*).
+  - Tipografía depurada en `src/layouts/Layout.astro` a 3 familias reales (`Fraunces`, `DM Sans`, `JetBrains Mono` con `tabular-nums`).
+  - Erradicación total de colores partidarios (`violet`, `emerald`, `amber` y `🟣 | 🟢 | 🟠`) en `SpectrumBar.astro`, `StoryCard.astro`, `ShareModal.astro`, `historia/[id].astro` y `src/services/twitter.ts`.
+- [x] **Fixes UX Críticos y Medios Core (Ola 1):**
+  - Header dividido en `Header.astro` (Ticker + Masthead con isotipo `P-Checkmark` estáticos; barra `sticky` compacta de ~50px) + **Bottom Nav fija en mobile** (`Temas`, `Últ. Mom.`, `Promesas`, `Guías` + `Más`).
+  - `SpectrumBar` en Portada clickeable hacia `/historia/[id]?sesgo=<polo>#comparativa` con pre-filtrado automático.
+  - Toast global y `#live-news-update-pill` reubicados sin colisiones; listener duplicado de `.share-story-btn` eliminado; pie redundante de Portada unificado.
+  - `/historia/[id].astro` reordenado (Lectura rápida → Comparador → Foto → Compartir/Debate con contador `(N)` real).
+  - `/promesa/[id].astro` y Monitor de Promesas corregidos: retorno a `/?tab=promesas`, soporte de `#monitor-promesas`, `getPromisesWithLiveVotes()`, toast post-voto, `scrollIntoView` reparado, colores semánticos preservados en filtros y buscador contextual.
+- [x] **Nuevas Features de Producto:**
+  - **Puntos Ciegos del Día:** detección automática (≥75% de un solo polo, mín. 3 medios) con franja destacada en Portada.
+  - **Comparador Cara a Cara:** vista por defecto en `/historia/[id]` (2 columnas Oficialismo vs Oposición + franja Centro/Datos, tabs en mobile, toggle a Vista Grilla sin paginado prematuro de a 4, enriquecido con **Calidad Factual** y **Estructura de Propiedad**).
+- [ ] **Ola de Comunidad & Routing [PENDIENTE]:**
+  - Refactor SSR/cliente y confirmación inline en `StoryCivicForum.astro` (#10) + unificación de alias/presencia con `LiveChat.astro` (#11).
+  - Separación de `Promesas 2027` (`/promesas`) y `Mirada Exterior` (`/mirada-exterior`) a rutas dedicadas.
+
+
 
 
 

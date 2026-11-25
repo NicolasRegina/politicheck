@@ -48,9 +48,17 @@ _Evitar_: Bajada, intención, manipulación.
 
 **Historia (Story Cluster)**:
 Agrupación de múltiples Noticias de distintos Medios que cubren exactamente el mismo acontecimiento, sintetizada con un titular neutral y un desglose del espectro de cobertura. Se presenta en dos niveles de profundidad:
-- **Ficha Ejecutiva de Historia (Story Card)**: Representación sintética y ligera en Portada que resume el acontecimiento mediante titular neutral, imagen de prensa, síntesis breve y barra de espectro editorial.
-- **Análisis Completo de Historia (Full Story View)**: Vista monográfica detallada (`/historia/:id`) que expone el dictamen de encuadres por IA, la comparativa cruzada de titulares por diario, filtros por sesgo y enlaces directos a las fuentes.
+- **Ficha Ejecutiva de Historia (Story Card)**: Representación sintética y ligera en Portada que resume el acontecimiento mediante titular neutral, imagen de prensa, síntesis breve y barra de espectro editorial (clickeable por polo hacia el comparador filtrado).
+- **Análisis Completo de Historia (Full Story View)**: Vista monográfica detallada (`/historia/:id`) que expone el dictamen de encuadres por IA, el **Comparador Cara a Cara** de titulares enriquecido con Calidad Factual y Estructura de Propiedad, filtros por sesgo y enlaces directos a las fuentes.
 _Evitar_: Tema, hilo, nota agrupada.
+
+**Punto Ciego del Día (Daily Blindspot)**:
+Historia cuya cobertura mediática se concentra en ≥75% dentro de un único polo editorial (`oficialismo` u `oposicion`) con un mínimo de 3 Medios, destacada en una franja superior de Portada para visibilizar asimetrías de agenda.
+_Evitar_: Noticia censurada, noticia oculta.
+
+**Comparador Cara a Cara (Side-by-Side Framing View)**:
+Vista por defecto dentro de `/historia/:id` que enfrenta en dos columnas paralelas los titulares de Oficialismo y Oposición (con Centro / Datos como franja de referencia), mostrando Calidad Factual y Estructura de Propiedad de cada Medio, con alternancia opcional a Vista Grilla.
+_Evitar_: Tabla de diarios, grilla simple.
 
 **Noticia (Article)**:
 Publicación individual proveniente del feed RSS oficial de un Medio, con titular, fecha, autor, resumen breve y enlace a la fuente original.
@@ -83,10 +91,13 @@ _Evitar_: Juicio de valor, opinión.
 ### Identidad Visual y Marca
 
 **Isotipo Oficial (P-Checkmark)**:
-Símbolo compuesto por un círculo base azul oscuro (`#0B111A`), anillo perimetral marfil (`#F4F2EB`), letra **P** arquitectónica en blanco puro (`#F8F9FA`) y tilde celeste bandera argentina (`#6BA4D9`). Representa simultáneamente política periodística y verificación factual. Utilizado en favicon, iconos PWA e identidad institucional.
+Símbolo compuesto por un círculo base azul oscuro (`#0B111A`), anillo perimetral marfil (`#F4F2EB`), letra **P** arquitectónica en blanco puro (`#F8F9FA`) y tilde celeste bandera argentina (`#6BA4D9`). Representa simultáneamente política periodística y verificación factual. Utilizado en el masthead editorial, favicon, iconos PWA e identidad institucional.
 
-**Lienzo Monocromático**:
-Paleta técnica neutral (Zinc / Carbon / Slate) para todo el sitio, reservando colores partidarios única y estrictamente para la pertenencia política de los candidatos.
+**Identidad Editorial Contemporánea (Modern Editorial)**:
+Sistema visual definido en el [ADR-0008](./docs/adr/0008-editorial-identity-and-ux-redesign.md) sobre lienzo **Crema Editorial** (`#FAF9F6`) en modo claro y **Carbón Cálido** (`#121210`) en modo oscuro, con tipografía `Fraunces` (titulares), `DM Sans` (interfaz y cuerpo) y `JetBrains Mono` (datos tabulares), acento institucional único azul tinta marino (`#1E3A5F` / `#7FB3E0`), radios contenidos (`rounded-md` máx.) y sin *glassmorphism*.
+
+**Espectro Mineral No-Partidario (SpectrumBar)**:
+Visualización neutral de la distribución de cobertura (`#161614` / `#A8A29E` / `#475569` en claro; `#F2F0EB` / `#6B6860` / `#8FA3B8` en oscuro) que prohíbe colores partidarios argentinos (violeta, celeste saturado, amarillo, rojo) tanto en la interfaz como en el copy compartido. Los colores partidarios se reservan exclusivamente para la filiación de los Candidatos en el Promesómetro.
 
 ---
 

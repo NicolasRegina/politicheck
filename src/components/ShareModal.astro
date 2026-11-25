@@ -286,29 +286,25 @@
       const width = 1080;
       const height = 1080;
 
-      // 1. Background: Deep rich dark canvas with subtle gradient
-      const bgGrad = ctx.createLinearGradient(0, 0, width, height);
-      bgGrad.addColorStop(0, '#0F1626');
-      bgGrad.addColorStop(0.5, '#0A0E17');
-      bgGrad.addColorStop(1, '#07090F');
-      ctx.fillStyle = bgGrad;
+      // 1. Background: ADR-0008 Carbón Cálido editorial canvas
+      ctx.fillStyle = '#121210';
       ctx.fillRect(0, 0, width, height);
 
-      // Outer accent border
-      ctx.strokeStyle = '#1E293B';
-      ctx.lineWidth = 14;
-      ctx.strokeRect(7, 7, width - 14, height - 14);
+      // Outer editorial border
+      ctx.strokeStyle = '#2E2E29';
+      ctx.lineWidth = 10;
+      ctx.strokeRect(5, 5, width - 10, height - 10);
 
       // 2. Header: Logo, Institutional Title & Category Badge
       drawBrandLogo(ctx, 110, 110, 48);
 
-      ctx.fillStyle = '#F8F9FA';
-      ctx.font = "900 42px 'Plus Jakarta Sans', sans-serif";
-      ctx.fillText('POLITICHECK', 180, 115);
+      ctx.fillStyle = '#F2F0EB';
+      ctx.font = "700 44px 'Fraunces', Georgia, serif";
+      ctx.fillText('Politicheck', 180, 118);
 
-      ctx.fillStyle = '#94A3B8';
+      ctx.fillStyle = '#A3A098';
       ctx.font = "500 16px 'JetBrains Mono', monospace";
-      ctx.fillText('OBSERVATORIO DE COBERTURA & AUDITORÍA CÍVICA', 182, 145);
+      ctx.fillText('OBSERVATORIO DE ENCUADRES & AUDITORÍA CÍVICA', 182, 148);
 
       // Category Pill at top right
       const category = (currentShareData.category || 'POLÍTICA').toUpperCase();
@@ -317,19 +313,19 @@
       const catBoxWidth = catMetrics.width + 36;
       const catBoxX = width - 80 - catBoxWidth;
 
-      ctx.fillStyle = '#1E293B';
+      ctx.fillStyle = '#1B1B18';
       ctx.beginPath();
-      ctx.roundRect(catBoxX, 85, catBoxWidth, 44, 22);
+      ctx.roundRect(catBoxX, 85, catBoxWidth, 44, 6);
       ctx.fill();
-      ctx.strokeStyle = '#334155';
+      ctx.strokeStyle = '#2E2E29';
       ctx.lineWidth = 2;
       ctx.stroke();
 
-      ctx.fillStyle = '#6BA4D9';
+      ctx.fillStyle = '#7FB3E0';
       ctx.fillText(category, catBoxX + 18, 113);
 
       // Top separator rule
-      ctx.strokeStyle = '#1E293B';
+      ctx.strokeStyle = '#2E2E29';
       ctx.lineWidth = 2;
       ctx.beginPath();
       ctx.moveTo(80, 190);
@@ -337,118 +333,115 @@
       ctx.stroke();
 
       // 3. Volanta / Kicker
-      ctx.fillStyle = '#6BA4D9';
+      ctx.fillStyle = '#7FB3E0';
       ctx.font = "bold 18px 'JetBrains Mono', monospace";
-      ctx.fillText('🗞️ CRUCE SIMULTÁNEO DE REDACCIONES', 80, 240);
+      ctx.fillText('CRUCE SIMULTÁNEO DE REDACCIONES', 80, 240);
 
       // 4. Grand Headline
-      ctx.fillStyle = '#FFFFFF';
-      ctx.font = "bold 44px 'Newsreader', serif, sans-serif";
+      ctx.fillStyle = '#F2F0EB';
+      ctx.font = "bold 46px 'Fraunces', Georgia, serif";
       const headlineText = currentShareData.headline || currentShareData.title || 'Cobertura periodística del día';
-      const endY = wrapText(ctx, headlineText, 80, 310, width - 160, 56, 4);
+      const endY = wrapText(ctx, headlineText, 80, 310, width - 160, 58, 4);
 
       // 5. Outlets cited
       if (currentShareData.outlets) {
-        ctx.fillStyle = '#94A3B8';
-        ctx.font = "18px 'Inter', sans-serif";
+        ctx.fillStyle = '#A3A098';
+        ctx.font = "20px 'DM Sans', sans-serif";
         ctx.fillText(`Medios contrastados: ${currentShareData.outlets}`, 80, Math.min(endY + 30, 570));
       }
 
-      // 6. Spectrum Card Container
+      // 6. Spectrum Card Container (ADR-0008 Neutral Mineral Palette)
       const spectrumCardY = 620;
       const spectrumCardH = 260;
 
-      ctx.fillStyle = '#0F1626';
+      ctx.fillStyle = '#1B1B18';
       ctx.beginPath();
-      ctx.roundRect(80, spectrumCardY, width - 160, spectrumCardH, 20);
+      ctx.roundRect(80, spectrumCardY, width - 160, spectrumCardH, 10);
       ctx.fill();
-      ctx.strokeStyle = '#1E293B';
+      ctx.strokeStyle = '#2E2E29';
       ctx.lineWidth = 2;
       ctx.stroke();
 
       // Spectrum Card Title
-      ctx.fillStyle = '#E2E8F0';
+      ctx.fillStyle = '#F2F0EB';
       ctx.font = "bold 20px 'JetBrains Mono', monospace";
       ctx.fillText('ESPECTRO DE ENCUADRE EDITORIAL', 115, spectrumCardY + 45);
 
-      ctx.fillStyle = '#64748B';
+      ctx.fillStyle = '#A3A098';
       ctx.font = "14px 'JetBrains Mono', monospace";
-      ctx.fillText('Basado en análisis de IA neutral sobre fuentes RSS públicas', 115, spectrumCardY + 75);
+      ctx.fillText('Cálculo determinístico sobre fuentes RSS públicas (sin colores partidarios)', 115, spectrumCardY + 75);
 
       // Spectrum Horizontal Bar
       const barX = 115;
-      const barY = spectrumCardY + 105;
+      const barY = spectrumCardY + 108;
       const barW = width - 230;
-      const barH = 34;
+      const barH = 24;
 
       const ofi = currentShareData.spectrum.oficialismo || 0;
       const cen = currentShareData.spectrum.centro || 0;
       const opo = currentShareData.spectrum.oposicion || 0;
 
       // Base bar background
-      ctx.fillStyle = '#1E293B';
+      ctx.fillStyle = '#252521';
       ctx.beginPath();
-      ctx.roundRect(barX, barY, barW, barH, 17);
+      ctx.roundRect(barX, barY, barW, barH, 12);
       ctx.fill();
 
-      // Render Bar Segments
+      // Render Neutral Mineral Segments (ADR-0008)
       let curX = barX;
       if (ofi > 0) {
         const segW = (barW * ofi) / 100;
-        ctx.fillStyle = '#8B5CF6'; // Violet Oficialismo
+        ctx.fillStyle = '#F2F0EB'; // Oficialismo (Tinta clara)
         ctx.beginPath();
-        ctx.roundRect(curX, barY, segW, barH, [17, 0, 0, 17]);
+        ctx.roundRect(curX, barY, segW, barH, [12, 0, 0, 12]);
         ctx.fill();
         curX += segW;
       }
       if (cen > 0) {
         const segW = (barW * cen) / 100;
-        ctx.fillStyle = '#10B981'; // Emerald Centro
+        ctx.fillStyle = '#6B6860'; // Centro / Datos (Piedra)
         ctx.beginPath();
-        ctx.roundRect(curX, barY, segW, barH, (ofi === 0 ? [17, 0, 0, 17] : [0, 0, 0, 0]));
+        ctx.roundRect(curX, barY, segW, barH, (ofi === 0 ? [12, 0, 0, 12] : [0, 0, 0, 0]));
         ctx.fill();
         curX += segW;
       }
       if (opo > 0) {
         const segW = (barW * opo) / 100;
-        ctx.fillStyle = '#F59E0B'; // Amber Oposición
+        ctx.fillStyle = '#8FA3B8'; // Oposición (Pizarra)
         ctx.beginPath();
-        ctx.roundRect(curX, barY, segW, barH, [0, 17, 17, 0]);
+        ctx.roundRect(curX, barY, segW, barH, [0, 12, 12, 0]);
         ctx.fill();
       }
 
-      // Legend Numbers under the bar
-      const legY = barY + 70;
+      // Legend Numbers under the bar (Zero partisan emojis)
+      const legY = barY + 68;
       ctx.font = "bold 22px 'JetBrains Mono', monospace";
 
-      // 🟣 Oficialismo
-      ctx.fillStyle = '#C4B5FD';
-      ctx.fillText(`🟣 Oficialismo: ${ofi}%`, 115, legY);
+      ctx.fillStyle = '#F2F0EB';
+      ctx.fillText(`Oficialismo: ${ofi}%`, 115, legY);
 
-      // 🟢 Centro / Datos
-      ctx.fillStyle = '#6EE7B7';
-      ctx.fillText(`🟢 Centro: ${cen}%`, 430, legY);
+      ctx.fillStyle = '#A3A098';
+      ctx.fillText(`Centro: ${cen}%`, 435, legY);
 
-      // 🟠 Oposición
-      ctx.fillStyle = '#FCD34D';
-      ctx.fillText(`🟠 Oposición: ${opo}%`, 740, legY);
+      ctx.fillStyle = '#8FA3B8';
+      ctx.fillText(`Oposición: ${opo}%`, 725, legY);
 
       // 7. Footer: Transparency watermark and live web URL
-      ctx.strokeStyle = '#1E293B';
+      ctx.strokeStyle = '#2E2E29';
       ctx.lineWidth = 2;
       ctx.beginPath();
       ctx.moveTo(80, 930);
       ctx.lineTo(width - 80, 930);
       ctx.stroke();
 
-      ctx.fillStyle = '#94A3B8';
-      ctx.font = "18px 'Inter', sans-serif";
+      ctx.fillStyle = '#A3A098';
+      ctx.font = "18px 'DM Sans', sans-serif";
       ctx.fillText('Comparativa sin sesgo de 31 redacciones en simultáneo', 80, 985);
 
-      ctx.fillStyle = '#6BA4D9';
+      ctx.fillStyle = '#7FB3E0';
       ctx.font = "bold 26px 'JetBrains Mono', monospace";
       ctx.textAlign = 'right';
-      ctx.fillText('👉 www.politicheck.com.ar', width - 80, 985);
+      ctx.fillText('www.politicheck.com.ar', width - 80, 985);
       ctx.textAlign = 'left';
 
       // Export canvas to Image preview and cache blob

@@ -1,70 +1,95 @@
-/* Hallmark — editorial | app */
+/* Politicheck — ADR-0008: Modern Editorial (Revista Política Contemporánea) */
 @import "tailwindcss";
 
 @custom-variant dark (&:where(.dark, .dark *));
 
 @theme {
-  --color-canvas-dark: #090D16;
-  --color-header-dark: #0A0E17;
-  --color-surface-dark: #0F1420;
-  --color-rail-dark: #0C101A;
-  --color-navy-dark: #0B111A;
-  --color-navy-deep: #07151E;
-  --color-navy-card: #0B1524;
-  --color-arg-blue: #6BA4D9;
+  /* Semantic Editorial Tokens (Light defaults; overridden by CSS vars in .dark) */
+  --color-canvas: var(--pc-canvas);
+  --color-surface: var(--pc-surface);
+  --color-surface-muted: var(--pc-surface-muted);
+  --color-ink: var(--pc-ink);
+  --color-ink-secondary: var(--pc-ink-secondary);
+  --color-ink-muted: var(--pc-ink-muted);
+  --color-rule: var(--pc-rule);
+  --color-rule-strong: var(--pc-rule-strong);
+  --color-accent: var(--pc-accent);
+  --color-accent-soft: var(--pc-accent-soft);
+
+  /* Non-Partisan Spectrum Tokens */
+  --color-spec-ofi: var(--pc-spec-ofi);
+  --color-spec-cen: var(--pc-spec-cen);
+  --color-spec-opo: var(--pc-spec-opo);
+
+  /* Legacy dark-surface aliases mapped to Carbón Cálido for seamless transition across secondary pages */
+  --color-canvas-dark: #121210;
+  --color-header-dark: #121210;
+  --color-surface-dark: #1B1B18;
+  --color-rail-dark: #1B1B18;
+  --color-navy-dark: #121210;
+  --color-navy-deep: #0E1724;
+  --color-navy-card: #162235;
+  --color-arg-blue: #7FB3E0;
 }
 
 @layer base {
   :root {
-    --font-serif: 'Newsreader', Georgia, Cambria, 'Times New Roman', Times, serif;
-    --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-    --font-heading: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-    --font-mono: 'JetBrains Mono', monospace;
+    --font-serif: 'Fraunces', Georgia, Cambria, 'Times New Roman', Times, serif;
+    --font-sans: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, monospace;
 
-    --bg-canvas-light: #F8FAFC;
-    --text-ink-light: #0F172A;
-    --rule-light-val: rgba(203, 213, 225, 0.9);
-    --rule-double-light-val: rgba(15, 23, 42, 0.85);
-    --divider-col-light-val: rgba(226, 232, 240, 1);
-    --glass-bg-light-val: rgba(255, 255, 255, 0.98);
-    --glass-border-light-val: rgba(226, 232, 240, 0.95);
-    --glass-shadow-light-val: 0 1px 3px 0 rgba(0, 0, 0, 0.03);
-    --scroll-track-light-val: #F1F5F9;
-    --scroll-thumb-light-val: #CBD5E1;
+    /* Light Mode: Crema Editorial */
+    --pc-canvas: #FAF9F6;
+    --pc-surface: #FFFFFF;
+    --pc-surface-muted: #F1EFE9;
+    --pc-ink: #161614;
+    --pc-ink-secondary: #3C3A36;
+    --pc-ink-muted: #575550;
+    --pc-rule: #E3DFD5;
+    --pc-rule-strong: #161614;
+    --pc-accent: #1E3A5F;
+    --pc-accent-soft: #EBF0F6;
 
-    --bg-canvas-dark: #090D16;
-    --text-ink-dark: #F8FAFC;
-    --rule-dark-val: rgba(255, 255, 255, 0.1);
-    --rule-double-dark-val: rgba(248, 250, 252, 0.8);
-    --divider-col-dark-val: rgba(255, 255, 255, 0.08);
-    --glass-bg-dark-val: rgba(17, 24, 39, 0.7);
-    --glass-border-dark-val: rgba(255, 255, 255, 0.08);
-    --scroll-track-dark: #090D16;
-    --scroll-thumb-dark: #1F2937;
+    /* SpectrumBar Light (Neutral Mineral Trio — ADR-0008) */
+    --pc-spec-ofi: #161614;
+    --pc-spec-cen: #A8A29E;
+    --pc-spec-opo: #475569;
 
-    --bg-canvas: var(--bg-canvas-light);
-    --text-ink: var(--text-ink-light);
-    --rule-light: var(--rule-light-val);
-    --rule-double: var(--rule-double-light-val);
-    --divider-col: var(--divider-col-light-val);
-    --glass-bg: var(--glass-bg-light-val);
-    --glass-border: var(--glass-border-light-val);
-    --glass-shadow: var(--glass-shadow-light-val);
-    --scroll-track: var(--scroll-track-light-val);
-    --scroll-thumb: var(--scroll-thumb-light-val);
+    /* Legacy variable compatibility */
+    --bg-canvas: var(--pc-canvas);
+    --text-ink: var(--pc-ink);
+    --rule-light: var(--pc-rule);
+    --rule-double: var(--pc-rule-strong);
+    --divider-col: var(--pc-rule);
+    --scroll-track: #F1EFE9;
+    --scroll-thumb: #CFCBC0;
   }
 
   .dark {
-    --bg-canvas: var(--bg-canvas-dark);
-    --text-ink: var(--text-ink-dark);
-    --rule-light: var(--rule-dark-val);
-    --rule-double: var(--rule-double-dark-val);
-    --divider-col: var(--divider-col-dark-val);
-    --glass-bg: var(--glass-bg-dark-val);
-    --glass-border: var(--glass-border-dark-val);
-    --glass-shadow: none;
-    --scroll-track: var(--scroll-track-dark);
-    --scroll-thumb: var(--scroll-thumb-dark);
+    /* Dark Mode: Carbón Cálido */
+    --pc-canvas: #121210;
+    --pc-surface: #1B1B18;
+    --pc-surface-muted: #252521;
+    --pc-ink: #F2F0EB;
+    --pc-ink-secondary: #D4D1C9;
+    --pc-ink-muted: #A3A098;
+    --pc-rule: #2E2E29;
+    --pc-rule-strong: #F2F0EB;
+    --pc-accent: #7FB3E0;
+    --pc-accent-soft: #1D2936;
+
+    /* SpectrumBar Dark (Neutral Mineral Trio — ADR-0008) */
+    --pc-spec-ofi: #F2F0EB;
+    --pc-spec-cen: #6B6860;
+    --pc-spec-opo: #8FA3B8;
+
+    --bg-canvas: var(--pc-canvas);
+    --text-ink: var(--pc-ink);
+    --rule-light: var(--pc-rule);
+    --rule-double: var(--pc-rule-strong);
+    --divider-col: var(--pc-rule);
+    --scroll-track: #121210;
+    --scroll-thumb: #2E2E29;
   }
 
   html {
@@ -74,8 +99,8 @@
 
   body {
     font-family: var(--font-sans);
-    background-color: var(--bg-canvas);
-    color: var(--text-ink);
+    background-color: var(--pc-canvas);
+    color: var(--pc-ink);
     overflow-x: clip;
     width: 100%;
     position: relative;
@@ -91,49 +116,51 @@
     touch-action: pan-x pan-y !important;
   }
 
-  /* Editorial Serif Headings for Journalism */
+  /* Editorial Serif Headings (Fraunces) */
   .font-editorial {
     font-family: var(--font-serif);
-    letter-spacing: -0.015em;
+    letter-spacing: -0.02em;
+  }
+
+  .font-mono {
+    font-family: var(--font-mono);
+    font-variant-numeric: tabular-nums;
   }
 
   h1, h2, h3 {
-    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
     text-wrap: balance;
     overflow-wrap: break-word;
     min-width: 0;
   }
 
   :focus-visible {
-    outline: 2px solid var(--color-arg-blue);
+    outline: 2px solid var(--pc-accent);
     outline-offset: 2px;
   }
 }
 
-/* Newspaper Rules & Editorial Lines (NYT & La Nación style) */
+/* Editorial Rules */
 .newspaper-rule {
-  border-bottom: 1px solid var(--rule-light);
+  border-bottom: 1px solid var(--pc-rule);
 }
 
 .newspaper-double-rule {
-  border-top: 3px double var(--rule-double);
-  border-bottom: 1px solid var(--rule-double);
+  border-top: 2px solid var(--pc-rule-strong);
+  border-bottom: 1px solid var(--pc-rule);
 }
 
 .newspaper-column-divider {
-  border-right: 1px solid var(--divider-col);
+  border-right: 1px solid var(--pc-rule);
 }
 
 .newspaper-border {
-  border-color: var(--divider-col);
+  border-color: var(--pc-rule);
 }
 
+/* Solid editorial panel (replaces deprecated glassmorphism) */
 .glass-panel {
-  background: var(--glass-bg);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid var(--glass-border);
-  box-shadow: var(--glass-shadow);
+  background: var(--pc-surface);
+  border: 1px solid var(--pc-rule);
 }
 
 .brazil-pill-bg {

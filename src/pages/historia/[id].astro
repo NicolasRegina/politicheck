@@ -4,6 +4,7 @@ import SpectrumBar from '../../components/SpectrumBar.astro';
 import HeadlineComparison from '../../components/HeadlineComparison.astro';
 import StoryCivicForum from '../../components/StoryCivicForum.astro';
 import { getStoryClusterByIdAsync } from '../../services/ai/clustering';
+import { getForumComments } from '../../services/supabase';
 import { getOptimizedImageUrl } from '../../utils/image';
 
 export const prerender = false;
@@ -14,6 +15,11 @@ Astro.response.headers.set(
   'Cache-Control',
   story ? 'public, s-maxage=3600, stale-while-revalidate=86400' : 'public, s-maxage=60'
 );
+
+// Fetch initial comments once and reuse for both counter (ADR-0007 / Fix #9) and StoryCivicForum
+const initialComments = story ? await getForumComments(story.id, 'top') : [];
+const totalContributions = initialComments.reduce((acc, c) => acc + 1 + (c.replies?.length || 0), 0);
+
 const isBrazilStory = Boolean(story?.id?.startsWith('brasil-'));
 const backHref = isBrazilStory ? '/elecciones-brasil' : '/';
 const backLabel = isBrazilStory ? 'Volver al Especial Brasil 2026' : 'Volver a la Portada';
@@ -23,10 +29,12 @@ const topOutlets = story ? story.articles.slice(0, 4).map(a => a.outletName) : [
 const outletsText = topOutlets.length > 1
   ? `${topOutlets.slice(0, -1).join(', ')} y ${topOutlets[topOutlets.length - 1]}`
   : topOutlets[0] || 'múltiples redacciones';
-const spectrumText = story 
-  ? `Espectro: 🟣 ${story.spectrum.oficialismoPct}% Oficialismo | 🟢 ${story.spectrum.centroDatosPct}% Centro | 🟠 ${story.spectrum.oposicionPct}% Oposición.`
+
+// Non-partisan spectrum text (ADR-0008 — no partisan color circles)
+const spectrumText = story
+  ? `Espectro: Oficialismo ${story.spectrum.oficialismoPct}% · Centro ${story.spectrum.centroDatosPct}% · Oposición ${story.spectrum.oposicionPct}%.`
   : '';
-const metaDesc = story 
+const metaDesc = story
   ? `${story.summary} Cotejo de ${story.articles.length} medios (${outletsText}). ${spectrumText}`
   : undefined;
 const pageUrl = `https://www.politicheck.com.ar/historia/${id}`;
@@ -34,7 +42,7 @@ const cleanHeadline = (story?.neutralHeadline || '').length > 110
   ? story!.neutralHeadline.slice(0, 110).trim().replace(/[,.:;]+$/, '') + '...'
   : (story?.neutralHeadline || '');
 const viralShareText = story
-  ? `🗞️ "${cleanHeadline}"\n\nMedios: ${outletsText}\n📊 Espectro: 🟣 ${story.spectrum.oficialismoPct}% | 🟢 ${story.spectrum.centroDatosPct}% | 🟠 ${story.spectrum.oposicionPct}%\n\n👉 Comparativa sin sesgo:`
+  ? `"${cleanHeadline}"\n\nMedios: ${outletsText}\n${spectrumText}\n\nComparativa de encuadres en Politicheck:`
   : '';
 
 const OUTLET_GUIDES = [
@@ -57,7 +65,7 @@ const matchedGuides = story
   : [];
 ---
 
-<Layout 
+<Layout
   title={story ? `${story.neutralHeadline} • Comparativa de Medios | Politicheck` : 'Historia no encontrada | Politicheck'}
   description={metaDesc}
   image={story?.imageUrl}
@@ -66,12 +74,12 @@ const matchedGuides = story
   preloadImage={optimizedHeroImage}
 >
   {story ? (
-    <article class="max-w-4xl mx-auto space-y-8 pb-16">
-      <!-- Breadcrumb & Back button -->
-      <nav class="flex items-center justify-between text-xs font-mono border-b border-slate-200 dark:border-slate-800 pb-3">
-        <a 
-          href={backHref} 
-          class="inline-flex items-center gap-1.5 text-slate-600 dark:text-slate-400 hover:text-slate-950 dark:hover:text-white font-bold transition-colors"
+    <article class="max-w-4xl mx-auto space-y-7 pb-16">
+      <!-- 1. Breadcrumb & Back button -->
+      <nav class="flex items-center justify-between text-xs font-mono border-b border-rule pb-3">
+        <a
+          href={backHref}
+          class="inline-flex items-center gap-1.5 text-ink-muted hover:text-ink font-semibold transition-colors"
         >
           <svg aria-hidden="true" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
@@ -79,95 +87,75 @@ const matchedGuides = story
           <span>{backLabel}</span>
         </a>
 
-        <div class="flex items-center gap-2 text-slate-400 dark:text-slate-500">
+        <div class="flex items-center gap-2 text-ink-muted">
           <span>{story.category}</span>
-          <span aria-hidden="true">|</span>
+          <span aria-hidden="true">·</span>
           <span>Actualizado: {story.updatedAt}</span>
         </div>
       </nav>
 
-      <!-- Header & Volanta -->
-      <header class="space-y-4">
+      <!-- 2. Header (Volanta + Titular + Síntesis) -->
+      <header class="space-y-3.5">
         {story.kicker && (
-          <div class="inline-flex items-center gap-2 px-2.5 py-0.5 rounded-full bg-slate-100 dark:bg-slate-800/90 text-xs font-sans font-semibold text-slate-800 dark:text-slate-200 border border-slate-200 dark:border-slate-700">
-            <span>{story.kicker}</span>
+          <div class="inline-flex items-center px-2.5 py-0.5 rounded-md bg-surface-muted border border-rule text-[11px] font-sans font-bold uppercase tracking-wider text-accent">
+            {story.kicker}
           </div>
         )}
 
-        <h1 class="font-editorial text-3xl sm:text-4xl md:text-5xl font-extrabold text-slate-950 dark:text-white leading-[1.15] tracking-tight min-w-0 break-words">
+        <h1 class="font-editorial text-3xl sm:text-4xl md:text-[2.75rem] font-bold text-ink leading-[1.12] tracking-tight min-w-0 break-words">
           {story.neutralHeadline}
         </h1>
 
-        <p class="text-lg sm:text-xl text-slate-700 dark:text-slate-300 leading-relaxed font-sans font-light">
+        <p class="text-base sm:text-lg text-ink-secondary leading-relaxed font-sans">
           {story.summary}
         </p>
       </header>
 
-      <!-- Viral Contrast Share Bar -->
-      <section class="flex flex-wrap items-center justify-between gap-3 p-4 sm:p-5 rounded-2xl bg-slate-100/90 dark:bg-slate-900/90 border border-slate-200 dark:border-slate-800">
-        <div class="flex items-center gap-2">
-          <svg aria-hidden="true" class="w-4 h-4 text-slate-600 dark:text-slate-300 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" /></svg>
-          <span class="text-xs font-sans font-medium text-slate-800 dark:text-slate-200">
-            ¿Querés debatir este contraste de redacciones?
-          </span>
+      <!-- 3. Lectura Rápida: SpectrumBar + Dictamen IA (Unificado — Fix #9) -->
+      <section class="bg-surface border border-rule rounded-md p-5 sm:p-6 space-y-5">
+        <div class="space-y-3">
+          <div class="flex flex-wrap items-center justify-between gap-2 border-b border-rule pb-2.5">
+            <h2 class="font-sans text-xs font-bold uppercase tracking-wider text-ink">
+              Distribución del espectro editorial ({story.articles.length} medios)
+            </h2>
+            <span class="text-[11px] font-mono text-ink-muted">Clic en un polo para filtrar</span>
+          </div>
+          <SpectrumBar spectrum={story.spectrum} articles={story.articles} />
         </div>
-        <div class="flex flex-wrap items-center gap-2">
-          <a 
-            href={`https://api.whatsapp.com/send?text=${encodeURIComponent(viralShareText + ' ' + pageUrl)}`}
-            target="_blank"
-            rel="noopener noreferrer"
-            class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white font-sans text-xs font-bold shadow-2xs transition-colors"
-          >
-            <span>WhatsApp</span>
-          </a>
 
-          <a 
-            href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(viralShareText)}&url=${encodeURIComponent(pageUrl)}`}
-            target="_blank"
-            rel="noopener noreferrer"
-            class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-black hover:bg-slate-800 dark:bg-white dark:hover:bg-slate-200 text-white dark:text-black font-sans text-xs font-bold shadow-2xs transition-colors"
-          >
-            <span class="font-mono">𝕏</span>
-            <span>Twitter</span>
-          </a>
-
-          <a 
-            href={`https://t.me/share/url?url=${encodeURIComponent(pageUrl)}&text=${encodeURIComponent(viralShareText)}`}
-            target="_blank"
-            rel="noopener noreferrer"
-            class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-sky-500 hover:bg-sky-600 text-white font-sans text-xs font-bold shadow-2xs transition-colors"
-          >
-            <span>Telegram</span>
-          </a>
-
-          <a 
-            href="#debate-civico"
-            class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-700 font-sans text-xs font-semibold transition-colors cursor-pointer"
-          >
-            <span>Debate Cívico</span>
-          </a>
-
-          <button 
-            type="button"
-            id="copy-story-link-btn"
-            data-url={pageUrl}
-            class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-700 font-sans text-xs font-semibold transition-colors cursor-pointer"
-          >
-            <span id="copy-story-btn-text">Copiar enlace</span>
-          </button>
-        </div>
+        {story.aiComparisonNotice && (
+          <div class="pt-4 border-t border-rule space-y-2">
+            <div class="font-sans text-xs font-bold uppercase tracking-wider text-accent">
+              Dictamen de encuadres mediáticos (Auditoría de IA)
+            </div>
+            <p class="text-sm sm:text-base text-ink-secondary leading-relaxed font-sans">
+              {story.aiComparisonNotice}
+            </p>
+          </div>
+        )}
       </section>
 
-      <!-- Lead Press Photo -->
+      <!-- 4. Comparador Cara a Cara / Cobertura Comparada por Medio (Valor central — Fix #8 & #9) -->
+      <section id="comparativa" class="space-y-4 scroll-mt-20">
+        <div class="flex items-baseline justify-between border-b border-rule-strong pb-2.5">
+          <h2 class="font-editorial text-2xl font-bold text-ink">
+            Cobertura Comparada por Medio
+          </h2>
+          <span class="font-mono text-xs text-ink-muted">{story.articles.length} notas cotejadas</span>
+        </div>
+
+        <HeadlineComparison articles={story.articles} storyId={story.id} isLeadStory={true} />
+      </section>
+
+      <!-- 5. Press Photo (Compact, after the core framing comparison) -->
       {story.imageUrl && (
-        <figure class="space-y-2.5">
-          <div class="overflow-hidden rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-100 dark:bg-slate-900 max-h-[520px]">
-            <img 
-              src={optimizedHeroImage} 
+        <figure class="space-y-2">
+          <div class="overflow-hidden rounded-md border border-rule bg-surface-muted max-h-[400px]">
+            <img
+              src={optimizedHeroImage}
               data-original-src={story.imageUrl}
               alt={story.neutralHeadline}
-              loading="eager"
-              fetchpriority="high"
+              loading="lazy"
               decoding="async"
               width="1000"
               height="562"
@@ -177,76 +165,88 @@ const matchedGuides = story
             />
           </div>
           {story.imageCaption && (
-            <figcaption class="text-xs font-mono text-slate-500 dark:text-slate-400 pl-1 leading-normal">
+            <figcaption class="text-xs font-sans italic text-ink-muted">
               {story.imageCaption}
             </figcaption>
           )}
         </figure>
       )}
 
-      <!-- Media Spectrum Breakdown -->
-      <section class="bg-white dark:bg-surface-dark border border-slate-200 dark:border-slate-800/90 rounded-2xl p-6 space-y-4 shadow-2xs">
-        <div class="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-3">
-          <h3 class="font-sans text-xs font-bold text-slate-700 dark:text-slate-300 flex items-center gap-2">
-            <svg aria-hidden="true" class="w-4 h-4 text-slate-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
-            </svg>
-            <span>Distribución del espectro editorial ({story.articles.length} medios analizados)</span>
-          </h3>
-          <span class="text-[11px] font-sans text-slate-400">Algoritmo Politicheck</span>
+      <!-- 6. Share & Debate Bar (After reading the contrast, with real (N) count per ADR-0007 / Fix #9) -->
+      <section class="flex flex-wrap items-center justify-between gap-3 p-4 sm:p-5 rounded-md bg-surface-muted border border-rule">
+        <div class="flex items-center gap-2">
+          <span class="text-xs sm:text-sm font-sans font-semibold text-ink">
+            ¿Querés compartir o debatir este contraste de redacciones?
+          </span>
         </div>
+        <div class="flex flex-wrap items-center gap-2">
+          <a
+            href={`https://api.whatsapp.com/send?text=${encodeURIComponent(viralShareText + ' ' + pageUrl)}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-surface border border-rule hover:border-ink text-ink font-sans text-xs font-semibold transition-colors"
+          >
+            WhatsApp
+          </a>
 
-        <SpectrumBar spectrum={story.spectrum} articles={story.articles} />
+          <a
+            href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(viralShareText)}&url=${encodeURIComponent(pageUrl)}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-ink text-canvas hover:opacity-90 font-sans text-xs font-semibold transition-opacity"
+          >
+            <span class="font-mono">𝕏</span>
+            <span>Publicar</span>
+          </a>
+
+          <a
+            href={`https://t.me/share/url?url=${encodeURIComponent(pageUrl)}&text=${encodeURIComponent(viralShareText)}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-surface border border-rule hover:border-ink text-ink font-sans text-xs font-semibold transition-colors"
+          >
+            Telegram
+          </a>
+
+          <a
+            href="#debate-civico"
+            class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-accent text-white hover:opacity-90 font-sans text-xs font-semibold transition-opacity cursor-pointer"
+          >
+            <span>Debate Cívico ({totalContributions})</span>
+          </a>
+
+          <button
+            type="button"
+            id="copy-story-link-btn"
+            data-url={pageUrl}
+            class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md border border-rule bg-surface text-ink hover:border-ink font-sans text-xs font-semibold transition-colors cursor-pointer"
+          >
+            <span id="copy-story-btn-text">Copiar enlace</span>
+          </button>
+        </div>
       </section>
 
-      <!-- AI Framing Synthesis Notice -->
-      {story.aiComparisonNotice && (
-        <section class="bg-slate-50 dark:bg-slate-900/60 border border-slate-200/90 dark:border-slate-800 rounded-2xl p-6 space-y-3 shadow-2xs">
-          <div class="flex items-center gap-2 font-sans text-xs font-bold text-slate-800 dark:text-slate-200">
-            <svg aria-hidden="true" class="w-4 h-4 text-slate-700 dark:text-slate-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
-            </svg>
-            <span>Dictamen de encuadres mediáticos (Auditoría de IA)</span>
-          </div>
-          <p class="text-sm sm:text-base text-slate-700 dark:text-slate-300 leading-relaxed font-sans">
-            {story.aiComparisonNotice}
-          </p>
-        </section>
-      )}
-
-      <!-- Side-by-side Outlet Headlines Matrix with Leaning Filter & Pagination -->
-      <section class="space-y-4">
-        <div class="flex items-center justify-between border-b border-slate-200 dark:border-slate-800 pb-3">
-          <h2 class="font-editorial text-2xl font-bold text-slate-950 dark:text-white">
-            Cobertura Comparada por Diario
-          </h2>
-          <span class="font-mono text-xs text-slate-500">{story.articles.length} artículos cotejados</span>
-        </div>
-
-        <HeadlineComparison articles={story.articles} storyId={story.id} isLeadStory={true} />
-      </section>
-
-      <!-- Contextual Internal Links to Media Ownership Guides -->
-      <section class="bg-slate-50 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 rounded-2xl p-5 sm:p-6 space-y-3">
+      <!-- 7. Contextual Internal Links to Media Ownership Guides -->
+      <section class="bg-surface border border-rule rounded-md p-5 sm:p-6 space-y-3">
         <div class="flex flex-wrap items-center justify-between gap-2">
-          <h3 class="font-editorial text-lg font-bold text-slate-950 dark:text-white">
+          <h3 class="font-editorial text-lg font-bold text-ink">
             ¿Quiénes están detrás de estos medios?
           </h3>
           <a
             href="/guias/mapa-de-medios-argentina"
-            class="text-xs font-mono font-semibold text-arg-blue hover:underline"
+            class="text-xs font-mono font-semibold text-accent hover:underline"
           >
-            Ver mapa completo de medios argentinos
+            Ver mapa completo de medios →
           </a>
         </div>
-        <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-400 font-sans">
+        <p class="text-xs sm:text-sm text-ink-secondary font-sans">
           Consultá la estructura societaria, los grupos económicos propietarios y la auditoría de sesgo de las redacciones citadas en esta cobertura:
         </p>
         <div class="flex flex-wrap gap-2 pt-1">
           {matchedGuides.map((guide) => (
             <a
               href={`/guias/${guide.slug}`}
-              class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 hover:border-arg-blue dark:hover:border-arg-blue text-xs font-sans font-medium text-slate-800 dark:text-slate-200 transition-colors"
+              class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-surface-muted border border-rule hover:border-accent text-xs font-sans font-medium text-ink transition-colors"
             >
               <span>{guide.label}</span>
             </a>
@@ -254,7 +254,7 @@ const matchedGuides = story
           {matchedGuides.length === 0 && (
             <a
               href="/guias"
-              class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 hover:border-arg-blue dark:hover:border-arg-blue text-xs font-sans font-medium text-slate-800 dark:text-slate-200 transition-colors"
+              class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-surface-muted border border-rule hover:border-accent text-xs font-sans font-medium text-ink transition-colors"
             >
               <span>Explorar todas las guías de propiedad y sesgo de medios en Argentina</span>
             </a>
@@ -262,24 +262,20 @@ const matchedGuides = story
         </div>
       </section>
 
-      <!-- Story Civic Forum: Ciudadanía, Contraste de Fuentes & Deliberación -->
-      <StoryCivicForum storyId={story.id} storyTitle={story.neutralHeadline} />
+      <!-- 8. Story Civic Forum -->
+      <StoryCivicForum storyId={story.id} storyTitle={story.neutralHeadline} initialComments={initialComments} />
     </article>
-
   ) : (
     <div class="max-w-xl mx-auto text-center py-24 space-y-4">
-      <div class="flex justify-center text-slate-400" aria-hidden="true">
-        <svg class="w-10 h-10" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z" /></svg>
-      </div>
-      <h1 class="font-editorial text-2xl font-bold text-slate-950 dark:text-white">
+      <h1 class="font-editorial text-2xl font-bold text-ink">
         Historia no encontrada
       </h1>
-      <p class="text-xs text-slate-500 dark:text-slate-400 font-sans">
+      <p class="text-xs text-ink-muted font-sans">
         El identificador solicitado no coincide con los clusters activos del día.
       </p>
-      <a 
-        href="/" 
-        class="inline-block px-4 py-2 rounded-xl bg-slate-900 dark:bg-white text-white dark:text-slate-900 font-mono text-xs font-bold"
+      <a
+        href="/"
+        class="inline-block px-4 py-2 rounded-md bg-ink text-canvas font-mono text-xs font-bold"
       >
         Volver a la Portada
       </a>

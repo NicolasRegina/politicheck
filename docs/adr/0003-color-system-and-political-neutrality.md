@@ -1,5 +1,7 @@
 # 0003: Sistema de Colorimetría y Neutralidad Política
 
+> **Estado:** Reemplazado (*Superseded*) por [ADR-0008: Identidad Visual Editorial Contemporánea, Espectro No-Partidario y Rediseño UX](./0008-editorial-identity-and-ux-redesign.md). Se conserva como registro histórico de la doctrina original de neutralidad partidaria.
+
 ## Contexto
 En la política argentina, los colores primarios (violeta para LLA, celeste/azul para el peronismo/kirchnerismo, amarillo para el PRO, rojo para la izquierda) tienen una carga ideológica inmediata. Asignar colores partidarios a la interfaz general o a la barra de cobertura mediática generaría acusaciones de sesgo partidario hacia la plataforma.
 
