@@ -38,7 +38,7 @@ function linkifyText(text: string): string {
 
 <section 
   id="debate-civico" 
-  class="bg-white dark:bg-surface-dark border border-slate-200 dark:border-slate-800/90 rounded-2xl p-4 sm:p-6 md:p-8 space-y-6 shadow-2xs scroll-mt-20 font-sans"
+  class="bg-surface border border-rule rounded-md p-4 sm:p-6 md:p-8 space-y-6 scroll-mt-20 font-sans"
   data-story-id={storyId}
 >
   <!-- Section Header & Civic Mission -->
@@ -558,6 +558,18 @@ function linkifyText(text: string): string {
     }
   });
 
+  // Live character counter for nested reply forms (Fix #10)
+  document.addEventListener('input', (e) => {
+    const target = e.target as HTMLElement;
+    if (target.tagName === 'TEXTAREA' && target.closest('.forum-nested-reply-form')) {
+      const form = target.closest('.forum-nested-reply-form');
+      const counter = form?.querySelector('.forum-reply-char-counter');
+      if (counter) {
+        counter.textContent = `${(target as HTMLTextAreaElement).value.length} / 350`;
+      }
+    }
+  });
+
   // Handle Nested Reply Form Submit
   document.addEventListener('submit', async (e) => {
     const form = e.target as HTMLFormElement;
@@ -586,49 +598,88 @@ function linkifyText(text: string): string {
       const data = await res.json();
       if (data && data.success) {
         textarea.value = '';
+        const counter = form.querySelector('.forum-reply-char-counter');
+        if (counter) counter.textContent = '0 / 350';
         form.closest('.forum-reply-box-container')?.classList.add('hidden');
         await fetchAndRenderComments();
+        (window as any).showPoliticheckToast?.('Respuesta publicada', 'Tu aporte ya figura en el debate cívico.', 'check');
       } else {
-        alert(data.error || 'No se pudo publicar la respuesta.');
+        (window as any).showPoliticheckToast?.('No se pudo publicar', data.error || 'Verificá tu texto e intentá nuevamente.', 'check');
       }
     } catch {
-      alert('Error de conexión al enviar respuesta.');
+      (window as any).showPoliticheckToast?.('Error de conexión', 'No pudimos enviar tu respuesta. Intentá nuevamente.', 'check');
     } finally {
       if (submitBtn) submitBtn.disabled = false;
     }
   });
 
-  // Handle Reporting
+  // Handle Reporting with Inline Confirmation (Replaces window.confirm — Fix #10)
+  const reportFlagSvg = '<svg aria-hidden="true" class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 21v-4m0 0V5a2 2 0 012-2h6.5l1 1H21l-3 6 3 6h-8.5l-1-1H5a2 2 0 00-2 2zm9-13.5V9" /></svg>';
+
   document.addEventListener('click', async (e) => {
     const target = e.target as HTMLElement;
+
+    // Confirm inline report
+    const confirmYes = target.closest('.forum-report-confirm-yes') as HTMLButtonElement | null;
+    if (confirmYes) {
+      const commentId = confirmYes.getAttribute('data-comment-id');
+      const wrap = confirmYes.closest('.forum-report-inline-wrap');
+      if (!commentId || !wrap) return;
+
+      confirmYes.disabled = true;
+      try {
+        const res = await fetch('/api/forum/moderate', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ commentId, action: 'report' })
+        });
+        const data = await res.json();
+        if (data && data.success) {
+          wrap.innerHTML = '<span class="text-[11px] font-mono text-ink-muted">Reportado</span>';
+          (window as any).showPoliticheckToast?.('Aporte reportado', 'Gracias por cuidar la calidad del debate cívico.', 'check');
+          if (data.isCollapsed) {
+            await fetchAndRenderComments();
+          }
+        }
+      } catch (err) {
+        console.warn('[Forum Client] Error reporting comment:', err);
+      }
+      return;
+    }
+
+    // Cancel inline report
+    const confirmNo = target.closest('.forum-report-confirm-no') as HTMLButtonElement | null;
+    if (confirmNo) {
+      const commentId = confirmNo.getAttribute('data-comment-id');
+      const wrap = confirmNo.closest('.forum-report-inline-wrap');
+      if (wrap && commentId) {
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'forum-report-btn text-xs font-sans text-ink-muted hover:text-rose-500 transition-colors cursor-pointer shrink-0 p-1';
+        btn.setAttribute('data-comment-id', commentId);
+        btn.setAttribute('title', 'Reportar aporte');
+        btn.setAttribute('aria-label', 'Reportar aporte');
+        btn.innerHTML = reportFlagSvg;
+        wrap.replaceWith(btn);
+      }
+      return;
+    }
+
+    // Initial click on report flag -> show inline confirm
     const reportBtn = target.closest('.forum-report-btn') as HTMLButtonElement | null;
     if (!reportBtn) return;
 
     const commentId = reportBtn.getAttribute('data-comment-id');
     if (!commentId) return;
 
-    if (!confirm('¿Querés reportar este aporte a la moderación comunitaria por infringir las normas de convivencia cívica?')) {
-      return;
-    }
-
-    try {
-      const res = await fetch('/api/forum/moderate', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ commentId, action: 'report' })
-      });
-
-      const data = await res.json();
-      if (data && data.success) {
-        reportBtn.textContent = 'Reportado';
-        reportBtn.setAttribute('title', 'Aporte reportado');
-        if (data.isCollapsed) {
-          await fetchAndRenderComments();
-        }
-      }
-    } catch (err) {
-      console.warn('[Forum Client] Error reporting comment:', err);
-    }
+    const wrap = document.createElement('span');
+    wrap.className = 'forum-report-inline-wrap inline-flex items-center gap-1.5 text-[11px] font-sans';
+    wrap.innerHTML = `
+      <span class="text-ink-muted">¿Reportar?</span>
+      <button type="button" class="forum-report-confirm-yes px-1.5 py-0.5 rounded bg-rose-600 text-white font-semibold hover:bg-rose-700 cursor-pointer" data-comment-id="${commentId}">Sí</button>
+      <button type="button" class="forum-report-confirm-no px-1.5 py-0.5 rounded border border-rule text-ink-muted hover:text-ink cursor-pointer" data-comment-id="${commentId}">No</button>
+    `;
+    reportBtn.replaceWith(wrap);
   });
 
   // Handle Sort Tabs
@@ -704,83 +755,100 @@ function linkifyText(text: string): string {
         }
       }
 
+      function renderRoleBadge(role: string) {
+        if (role === 'superadmin') {
+          return '<span class="px-1.5 py-0.5 rounded text-[10px] font-bold bg-ink text-canvas">Superadmin</span>';
+        }
+        if (role === 'admin') {
+          return '<span class="px-1.5 py-0.5 rounded text-[10px] font-bold bg-sky-100 text-sky-900 dark:bg-sky-950 dark:text-sky-300 border border-sky-300 dark:border-sky-800">Admin</span>';
+        }
+        if (role === 'moderator') {
+          return '<span class="px-1.5 py-0.5 rounded text-[10px] font-bold bg-purple-100 text-purple-900 dark:bg-purple-950 dark:text-purple-300 border border-purple-300 dark:border-purple-800">Moderación</span>';
+        }
+        if (role === 'verified') {
+          return '<span class="px-1.5 py-0.5 rounded text-[10px] font-bold bg-emerald-100 text-emerald-900 dark:bg-emerald-950 dark:text-emerald-300 border border-emerald-300 dark:border-emerald-800">Ciudadano Verificado</span>';
+        }
+        return '<span class="px-1.5 py-0.5 rounded text-[10px] font-medium bg-surface-muted text-ink-muted">Ciudadano</span>';
+      }
+
       commentsContainer.innerHTML = comments.map((comment: any) => {
         const isUpvoted = comment.user_vote === 1;
         const isDownvoted = comment.user_vote === -1;
-        const karmaColor = comment.karma_score > 0 ? 'text-emerald-600 dark:text-emerald-400' : comment.karma_score < 0 ? 'text-amber-600 dark:text-amber-400' : 'text-slate-600 dark:text-slate-400';
+        const karmaColor = comment.karma_score > 0 ? 'text-emerald-600 dark:text-emerald-400' : comment.karma_score < 0 ? 'text-amber-600 dark:text-amber-400' : 'text-ink-muted';
         const karmaText = comment.karma_score > 0 ? `+${comment.karma_score}` : `${comment.karma_score}`;
 
         const repliesHtml = (comment.replies || []).map((reply: any) => `
-          <div class="forum-reply-item space-y-2 py-2 border-b border-slate-100 dark:border-slate-800/60 last:border-b-0 last:pb-0" id="comment-${reply.id}" data-comment-id="${reply.id}">
+          <div class="forum-reply-item space-y-2 py-2 border-b border-rule last:border-b-0 last:pb-0" id="comment-${reply.id}" data-comment-id="${reply.id}">
             <div class="flex items-center justify-between gap-2 text-xs font-sans">
               <div class="flex items-center gap-1.5">
-                <span class="font-bold text-slate-900 dark:text-white">${escape(reply.author_name)}</span>
+                <span class="font-bold text-ink">${escape(reply.author_name)}</span>
                 ${reply.author_role === 'verified' ? '<span class="px-1 py-0.5 rounded text-[10px] font-bold bg-emerald-100 text-emerald-900 dark:bg-emerald-950 dark:text-emerald-300">✓</span>' : ''}
-                <span class="text-slate-400 text-[11px]">${formatIso(reply.created_at)}</span>
+                <span class="text-ink-muted text-[11px]">${formatIso(reply.created_at)}</span>
               </div>
-              <button type="button" class="forum-report-btn text-xs text-slate-400 hover:text-rose-500 cursor-pointer" data-comment-id="${reply.id}" aria-label="Reportar respuesta">Reportar</button>
+              <button type="button" class="forum-report-btn text-xs text-ink-muted hover:text-rose-500 cursor-pointer p-1" data-comment-id="${reply.id}" aria-label="Reportar respuesta" title="Reportar respuesta">${reportFlagSvg}</button>
             </div>
-            <div class="text-xs text-slate-800 dark:text-slate-200 leading-relaxed font-sans break-words">${linkify(reply.content)}</div>
+            <div class="text-xs text-ink-secondary leading-relaxed font-sans break-words">${linkify(reply.content)}</div>
             <div class="flex items-center gap-1 text-[11px] font-mono pt-1">
-              <button type="button" class="forum-vote-btn p-0.5 px-1.5 rounded hover:bg-slate-200 dark:hover:bg-slate-800 cursor-pointer ${reply.user_vote === 1 ? 'text-emerald-600 font-bold' : 'text-slate-400'}" data-comment-id="${reply.id}" data-vote-type="1">▲</button>
-              <span class="font-bold forum-karma-score ${reply.karma_score > 0 ? 'text-emerald-600' : reply.karma_score < 0 ? 'text-amber-600' : 'text-slate-500'}">${reply.karma_score > 0 ? `+${reply.karma_score}` : reply.karma_score}</span>
-              <button type="button" class="forum-vote-btn p-0.5 px-1.5 rounded hover:bg-slate-200 dark:hover:bg-slate-800 cursor-pointer ${reply.user_vote === -1 ? 'text-amber-600 font-bold' : 'text-slate-400'}" data-comment-id="${reply.id}" data-vote-type="-1">▼</button>
+              <button type="button" class="forum-vote-btn p-0.5 px-1.5 rounded hover:bg-surface-muted cursor-pointer ${reply.user_vote === 1 ? 'text-emerald-600 font-bold' : 'text-ink-muted'}" data-comment-id="${reply.id}" data-vote-type="1">▲</button>
+              <span class="font-bold forum-karma-score ${reply.karma_score > 0 ? 'text-emerald-600' : reply.karma_score < 0 ? 'text-amber-600' : 'text-ink-muted'}">${reply.karma_score > 0 ? `+${reply.karma_score}` : reply.karma_score}</span>
+              <button type="button" class="forum-vote-btn p-0.5 px-1.5 rounded hover:bg-surface-muted cursor-pointer ${reply.user_vote === -1 ? 'text-amber-600 font-bold' : 'text-ink-muted'}" data-comment-id="${reply.id}" data-vote-type="-1">▼</button>
             </div>
           </div>
         `).join('');
 
         return `
-          <article class="forum-comment-card space-y-3 p-4 sm:p-5 rounded-2xl bg-white dark:bg-slate-900/50 border border-slate-200 dark:border-slate-800 transition-colors hover:border-slate-300 dark:hover:border-slate-700" id="comment-${comment.id}" data-comment-id="${comment.id}">
+          <article class="forum-comment-card space-y-3 p-4 sm:p-5 rounded-md bg-surface border border-rule transition-colors hover:border-ink-muted/60" id="comment-${comment.id}" data-comment-id="${comment.id}">
             <div class="flex items-start justify-between gap-3">
               <div class="flex flex-wrap items-center gap-2 text-xs font-sans">
-                <span class="font-bold text-slate-900 dark:text-white">${escape(comment.author_name)}</span>
-                ${comment.author_role === 'verified' ? '<span class="px-1.5 py-0.5 rounded text-[10px] font-bold bg-emerald-100 text-emerald-900 dark:bg-emerald-950 dark:text-emerald-300 border border-emerald-300 dark:border-emerald-800">Verificado</span>' : '<span class="px-1.5 py-0.5 rounded text-[10px] font-medium bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-400">Ciudadano</span>'}
+                <span class="font-bold text-ink">${escape(comment.author_name)}</span>
+                ${renderRoleBadge(comment.author_role)}
                 ${comment.is_pinned ? '<span class="px-1.5 py-0.5 rounded text-[10px] font-bold bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/30">Fijado</span>' : ''}
-                <span class="text-slate-400 dark:text-slate-500 text-[11px]">${formatIso(comment.created_at)}</span>
+                <span class="text-ink-muted text-[11px]">${formatIso(comment.created_at)}</span>
               </div>
-              <button type="button" class="forum-report-btn text-xs font-sans text-slate-400 hover:text-rose-500 dark:hover:text-rose-400 transition-colors cursor-pointer shrink-0" data-comment-id="${comment.id}">Reportar</button>
+              <button type="button" class="forum-report-btn text-xs font-sans text-ink-muted hover:text-rose-500 transition-colors cursor-pointer shrink-0 p-1" data-comment-id="${comment.id}" title="Reportar aporte" aria-label="Reportar aporte">${reportFlagSvg}</button>
             </div>
 
-            <div class="forum-content-wrapper text-sm text-slate-800 dark:text-slate-200 leading-relaxed font-sans">
+            <div class="forum-content-wrapper text-sm text-ink-secondary leading-relaxed font-sans">
               ${comment.is_collapsed ? `
-                <div class="p-3 rounded-xl bg-amber-50/60 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-900/40 text-xs font-sans text-amber-800 dark:text-amber-300 space-y-2">
+                <div class="p-3 rounded-md bg-amber-50/60 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-900/40 text-xs font-sans text-amber-800 dark:text-amber-300 space-y-2">
                   <p>Este aporte fue colapsado por la comunidad (karma bajo o reportes).</p>
                   <button type="button" class="forum-uncollapse-btn underline font-bold hover:text-amber-950 cursor-pointer">Mostrar contenido</button>
-                  <div class="hidden forum-collapsed-text pt-2 text-slate-700 dark:text-slate-300 font-sans text-sm">${linkify(comment.content)}</div>
+                  <div class="hidden forum-collapsed-text pt-2 text-ink-secondary font-sans text-sm">${linkify(comment.content)}</div>
                 </div>
               ` : `
                 <div class="break-words">${linkify(comment.content)}</div>
               `}
             </div>
 
-            <div class="flex items-center justify-between gap-4 pt-1 border-t border-slate-100 dark:border-slate-800/80">
+            <div class="flex items-center justify-between gap-4 pt-2 border-t border-rule">
               <div class="flex items-center gap-1 text-xs font-mono">
-                <button type="button" class="forum-vote-btn p-1 sm:px-2 sm:py-1 rounded-md hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors cursor-pointer ${isUpvoted ? 'text-emerald-600 dark:text-emerald-400 font-bold bg-emerald-50 dark:bg-emerald-950/40' : 'text-slate-500'}" data-comment-id="${comment.id}" data-vote-type="1">▲</button>
+                <button type="button" class="forum-vote-btn p-1 sm:px-2 sm:py-1 rounded-md hover:bg-surface-muted transition-colors cursor-pointer ${isUpvoted ? 'text-emerald-600 dark:text-emerald-400 font-bold bg-emerald-50 dark:bg-emerald-950/40' : 'text-ink-muted'}" data-comment-id="${comment.id}" data-vote-type="1">▲</button>
                 <span class="font-bold px-1.5 forum-karma-score ${karmaColor}">${karmaText}</span>
-                <button type="button" class="forum-vote-btn p-1 sm:px-2 sm:py-1 rounded-md hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors cursor-pointer ${isDownvoted ? 'text-amber-600 dark:text-amber-400 font-bold bg-amber-50 dark:bg-amber-950/40' : 'text-slate-500'}" data-comment-id="${comment.id}" data-vote-type="-1">▼</button>
+                <button type="button" class="forum-vote-btn p-1 sm:px-2 sm:py-1 rounded-md hover:bg-surface-muted transition-colors cursor-pointer ${isDownvoted ? 'text-amber-600 dark:text-amber-400 font-bold bg-amber-50 dark:bg-amber-950/40' : 'text-ink-muted'}" data-comment-id="${comment.id}" data-vote-type="-1">▼</button>
               </div>
 
-              <button type="button" class="forum-reply-toggle-btn text-xs font-mono font-medium text-slate-600 hover:text-slate-950 dark:text-slate-400 dark:hover:text-white transition-colors cursor-pointer inline-flex items-center gap-1.5" data-comment-id="${comment.id}">
+              <button type="button" class="forum-reply-toggle-btn text-xs font-sans font-medium text-ink-muted hover:text-ink transition-colors cursor-pointer inline-flex items-center gap-1.5" data-comment-id="${comment.id}">
+                <svg aria-hidden="true" class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6" /></svg>
                 <span>Responder</span>
-                ${comment.replies?.length ? `<span class="px-1.5 py-0.2 rounded-full bg-slate-100 dark:bg-slate-800 text-[10px]">${comment.replies.length}</span>` : ''}
+                ${comment.replies?.length ? `<span class="px-1.5 py-0.5 rounded-full bg-surface-muted text-[10px] font-mono">${comment.replies.length}</span>` : ''}
               </button>
             </div>
 
             <div class="forum-reply-box-container hidden pt-3" id="reply-box-${comment.id}">
-              <form class="forum-nested-reply-form space-y-2 p-3 sm:p-4 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800" data-parent-id="${comment.id}">
-                <div class="flex items-center justify-between text-xs font-mono text-slate-500">
-                  <span>Respondiendo a <strong class="text-slate-800 dark:text-slate-200">@${escape(comment.author_name)}</strong></span>
-                  <span class="forum-reply-char-counter">0 / 350</span>
+              <form class="forum-nested-reply-form space-y-2 p-3 sm:p-4 rounded-md bg-surface-muted border border-rule" data-parent-id="${comment.id}">
+                <div class="flex items-center justify-between text-xs font-sans text-ink-muted">
+                  <span>Respondiendo a <strong class="text-ink">@${escape(comment.author_name)}</strong></span>
+                  <span class="forum-reply-char-counter font-mono">0 / 350</span>
                 </div>
-                <textarea rows="2" maxlength="350" placeholder="Escribí tu respuesta fundamentada..." class="w-full p-2.5 text-xs rounded-lg bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 text-slate-900 dark:text-white placeholder-slate-400 focus:outline-hidden transition-all resize-y min-h-[60px]" required></textarea>
+                <textarea rows="2" maxlength="350" placeholder="Escribí tu respuesta fundamentada..." class="w-full p-2.5 text-xs rounded-md bg-surface border border-rule text-ink placeholder-ink-muted focus:outline-hidden focus:border-accent transition-colors resize-y min-h-[60px]" required></textarea>
                 <div class="flex items-center justify-end gap-2">
-                  <button type="button" class="forum-cancel-reply-btn px-3 py-1 text-xs font-mono text-slate-500 hover:text-slate-800 dark:hover:text-slate-200 cursor-pointer">Cancelar</button>
-                  <button type="submit" class="px-3 py-1 text-xs font-mono font-bold rounded-lg bg-slate-950 dark:bg-white text-white dark:text-slate-950 hover:bg-slate-800 cursor-pointer">Publicar Respuesta</button>
+                  <button type="button" class="forum-cancel-reply-btn px-3 py-1 text-xs font-sans text-ink-muted hover:text-ink cursor-pointer">Cancelar</button>
+                  <button type="submit" class="px-3 py-1 text-xs font-sans font-semibold rounded-md bg-ink text-canvas hover:opacity-90 cursor-pointer">Publicar respuesta</button>
                 </div>
               </form>
             </div>
 
-            ${comment.replies?.length ? `<div class="forum-nested-replies-list ml-3 sm:ml-6 pl-3 sm:pl-4 border-l-2 border-slate-200 dark:border-slate-800 space-y-3 pt-2">${repliesHtml}</div>` : ''}
+            ${comment.replies?.length ? `<div class="forum-nested-replies-list ml-3 sm:ml-6 pl-3 sm:pl-4 border-l-2 border-rule space-y-3 pt-2">${repliesHtml}</div>` : ''}
           </article>
         `;
       }).join('');

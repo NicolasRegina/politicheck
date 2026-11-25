@@ -3,22 +3,16 @@
 import BrandLogo from './BrandLogo.astro';
 ---
 
-<!-- Floating Chat Launcher Trigger Button -->
-<div class="fixed bottom-5 right-5 z-40" id="live-chat-launcher-container">
+<!-- Floating Chat Launcher Trigger Button (Hidden on /historia/* & /guias/* — Fix #11) -->
+<div class="fixed bottom-20 md:bottom-5 right-4 md:right-5 z-40" id="live-chat-launcher-container">
   <button 
     type="button" 
     id="open-live-chat-btn" 
-    class="group inline-flex items-center gap-2.5 px-4 py-2.5 rounded-full bg-slate-950 dark:bg-white text-white dark:text-slate-950 border border-slate-800 dark:border-slate-200 shadow-xl motion-safe:hover:scale-105 motion-safe:active:scale-95 motion-safe:transition-transform transition-colors duration-200 font-sans text-xs font-bold cursor-pointer"
-    aria-label="Abrir Sala de Debate Cívico en Vivo"
+    class="group inline-flex items-center gap-2 px-3.5 py-2 rounded-md bg-ink text-canvas border border-rule shadow-lg hover:opacity-90 transition-opacity duration-150 font-sans text-xs font-semibold cursor-pointer"
+    aria-label="Abrir Sala de Chat Electoral en Vivo"
   >
-    <span class="relative flex h-2 w-2" aria-hidden="true">
-      <span class="motion-safe:animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-      <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
-    </span>
-    <span class="tracking-tight">Chat en Vivo</span>
-    <span class="px-1.5 py-0.5 rounded-full bg-slate-800 dark:bg-slate-200 text-slate-300 dark:text-slate-700 text-[10px] font-sans" id="chat-launcher-unread">
-      Debate
-    </span>
+    <span class="inline-flex rounded-full h-2 w-2 bg-accent" aria-hidden="true"></span>
+    <span class="tracking-tight">Chat Electoral</span>
   </button>
 </div>
 
@@ -181,15 +175,23 @@ import BrandLogo from './BrandLogo.astro';
   const pinnedBox = document.getElementById('chat-pinned-box');
   const pinnedContent = document.getElementById('chat-pinned-content');
 
-  // Load alias from localStorage
-  const savedAlias = localStorage.getItem('politicheck_chat_alias');
-  if (savedAlias && aliasInput) {
-    aliasInput.value = savedAlias;
+  // Hide floating launcher on longform reading & story debate pages (Fix #11)
+  const isReadingPage = /^\/(historia|guias)\//.test(window.location.pathname);
+  if (isReadingPage && launcherContainer) {
+    launcherContainer.classList.add('hidden');
+  }
+
+  // Unified alias key with StoryCivicForum (Fix #11: politicheck_citizen_alias)
+  const unifiedAlias = localStorage.getItem('politicheck_citizen_alias') || localStorage.getItem('politicheck_chat_alias');
+  if (unifiedAlias && aliasInput) {
+    aliasInput.value = unifiedAlias;
+    localStorage.setItem('politicheck_citizen_alias', unifiedAlias);
   }
 
   aliasInput?.addEventListener('input', () => {
-    if (aliasInput.value.trim()) {
-      localStorage.setItem('politicheck_chat_alias', aliasInput.value.trim());
+    const val = aliasInput.value.trim();
+    if (val) {
+      localStorage.setItem('politicheck_citizen_alias', val);
     }
   });
 
@@ -227,7 +229,9 @@ import BrandLogo from './BrandLogo.astro';
     setTimeout(() => {
       panel?.classList.add('hidden');
       backdrop?.classList.add('hidden');
-      launcherContainer?.classList.remove('hidden');
+      if (!isReadingPage) {
+        launcherContainer?.classList.remove('hidden');
+      }
     }, 300);
     stopPolling();
   }
