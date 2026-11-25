@@ -324,9 +324,13 @@
 - [x] **Nuevas Features de Producto:**
   - **Puntos Ciegos del Día:** detección automática (≥75% de un solo polo, mín. 3 medios) con franja destacada en Portada.
   - **Comparador Cara a Cara:** vista por defecto en `/historia/[id]` (2 columnas Oficialismo vs Oposición + franja Centro/Datos, tabs en mobile, toggle a Vista Grilla sin paginado prematuro de a 4, enriquecido con **Calidad Factual** y **Estructura de Propiedad**).
-- [ ] **Ola de Comunidad & Routing [PENDIENTE]:**
-  - Refactor SSR/cliente y confirmación inline en `StoryCivicForum.astro` (#10) + unificación de alias/presencia con `LiveChat.astro` (#11).
-  - Separación de `Promesas 2027` (`/promesas`) y `Mirada Exterior` (`/mirada-exterior`) a rutas dedicadas.
+- [x] **Ola 2 — Comunidad (`StoryCivicForum.astro` & `LiveChat.astro`) [COMPLETADA]:**
+  - Unificación SSR/cliente en `StoryCivicForum.astro` (insignias `Superadmin`/`Admin`/`Moderación`, ícono de reporte SVG y tipografía `font-sans`), contador `0 / 350` en vivo en respuestas anidadas y reemplazo de `alert()`/`confirm()` por confirmación inline y toasts.
+  - Unificación de alias en `localStorage` (`politicheck_citizen_alias`) y ocultamiento automático del lanzador flotante de `LiveChat.astro` en `/historia/*` y `/guias/*` para no competir con el Debate Cívico ni la lectura larga.
+- [x] **Ola 3 — Guías, Metodología, Promesómetro SVG y Footer [COMPLETADA]:**
+  - Corrección de `<main>` anidado en `guias/index.astro` y `metodologia.astro`, TOC colapsable y tokens ADR-0008 en `guias/[slug].astro` con enlace contextual a búsqueda en vivo, IDs únicos por SVG en `Promesometro.astro`, filtros con ocultamiento de secciones vacías en `guias/index.astro`, y conteo dinámico de medios nacionales/internacionales en `metodologia.astro` y `Footer.astro`.
+- [x] **Ola 4 — Rutas Dedicadas SEO (`/promesas` y `/mirada-exterior`) [COMPLETADA]:**
+  - Nuevas rutas dedicadas `src/pages/promesas.astro` (con scorecard dinámico por candidato y votos en vivo) y `src/pages/mirada-exterior.astro`, incorporadas a `src/pages/sitemap.xml.ts` manteniendo compatibilidad total con las vistas de Portada.
 
 
 

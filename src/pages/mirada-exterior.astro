@@ -1,0 +1,95 @@
+---
+import Layout from '../layouts/Layout.astro';
+import StoryCard from '../components/StoryCard.astro';
+import LiveFeedItem from '../components/LiveFeedItem.astro';
+import { getCachedForeignArticlesAsync, getLastSyncTimestampAsync } from '../services/rss/sync';
+import { getCachedForeignClustersAsync } from '../services/ai/clustering';
+import { getNewsClustersFromSupabase } from '../services/supabase';
+
+export const prerender = false;
+Astro.response.headers.set('Cache-Control', 'public, s-maxage=300, stale-while-revalidate=900');
+
+const [foreignArticles, cachedForeignClusters, cloudClusters, lastSyncIso] = await Promise.all([
+  getCachedForeignArticlesAsync(),
+  getCachedForeignClustersAsync(),
+  getNewsClustersFromSupabase({ maxAgeDays: 7, limit: 45 }),
+  getLastSyncTimestampAsync(),
+]);
+
+const foreignCloudClusters = cloudClusters
+  ? cloudClusters.filter(c => c.category === 'Internacional' || c.kicker?.includes('MIRADA EXTERIOR'))
+  : [];
+
+const foreignStories = foreignCloudClusters.length > 0 ? foreignCloudClusters : (cachedForeignClusters || []);
+const dispatches = (foreignArticles || []).slice(0, 30);
+---
+
+<Layout
+  title="Mirada Exterior: Prensa Internacional sobre Argentina | Politicheck"
+  description="Seguimiento en tiempo real de lo que publican Financial Times, El País, BBC Mundo, France 24, The Guardian, Le Monde y la prensa global sobre la política y economía de Argentina."
+  canonicalUrl="https://www.politicheck.com.ar/mirada-exterior"
+  serverSyncIso={lastSyncIso}
+>
+  <div class="space-y-8 pb-12">
+    <!-- Breadcrumb -->
+    <nav class="flex items-center justify-between text-xs font-mono border-b border-rule pb-3">
+      <a href="/" class="inline-flex items-center gap-1.5 text-ink-muted hover:text-ink font-semibold transition-colors">
+        <span>← Volver a la Portada</span>
+      </a>
+      <span class="text-ink-muted">Prensa Internacional sobre Argentina</span>
+    </nav>
+
+    <!-- Header -->
+    <header class="space-y-2.5 max-w-3xl">
+      <span class="font-sans text-[11px] font-bold uppercase tracking-wider text-accent">
+        Mirada Exterior
+      </span>
+      <h1 class="font-editorial text-3xl sm:text-5xl font-bold text-ink leading-[1.12] tracking-tight">
+        Cómo ve el mundo a la Argentina hoy
+      </h1>
+      <p class="text-sm sm:text-base text-ink-secondary font-sans leading-relaxed">
+        Cobertura exclusiva de redacciones internacionales sobre economía, política exterior, reformas y mercados argentinos, agregada directamente desde sus canales RSS públicos.
+      </p>
+    </header>
+
+    <!-- Clustered Foreign Stories -->
+    {foreignStories.length > 0 && (
+      <section class="space-y-4">
+        <div class="flex items-baseline justify-between border-b border-rule-strong pb-2">
+          <h2 class="font-sans text-xs font-bold uppercase tracking-wider text-ink">
+            Temas destacados en la prensa global
+          </h2>
+          <span class="font-mono text-[11px] text-ink-muted">{foreignStories.length} historias</span>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {foreignStories.map((story) => (
+            <StoryCard story={story} />
+          ))}
+        </div>
+      </section>
+    )}
+
+    <!-- Foreign Dispatches Feed -->
+    <section class="space-y-4">
+      <div class="flex items-baseline justify-between border-b border-rule-strong pb-2">
+        <h2 class="font-sans text-xs font-bold uppercase tracking-wider text-ink">
+          Últimos despachos internacionales
+        </h2>
+        <span class="font-mono text-[11px] text-ink-muted">{dispatches.length} cables</span>
+      </div>
+
+      {dispatches.length > 0 ? (
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {dispatches.map((article) => (
+            <LiveFeedItem article={article} />
+          ))}
+        </div>
+      ) : (
+        <div class="p-8 text-center rounded-md bg-surface border border-dashed border-rule text-xs font-sans text-ink-muted">
+          Sincronizando despachos de la prensa internacional...
+        </div>
+      )}
+    </section>
+  </div>
+</Layout>

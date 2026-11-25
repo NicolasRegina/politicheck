@@ -1,0 +1,318 @@
+---
+import Layout from '../layouts/Layout.astro';
+import PromiseCard from '../components/PromiseCard.astro';
+import { getPromisesWithLiveVotes, getPromisesStats } from '../services/promises';
+import { getLastSyncTimestampAsync } from '../services/rss/sync';
+
+export const prerender = false;
+Astro.response.headers.set('Cache-Control', 'public, s-maxage=300, stale-while-revalidate=900');
+
+const [allPromises, lastSyncIso] = await Promise.all([
+  getPromisesWithLiveVotes(),
+  getLastSyncTimestampAsync(),
+]);
+
+const stats = getPromisesStats(allPromises);
+const uniqueCandidates = Array.from(new Set(allPromises.map(p => p.candidate)));
+
+const candidateScorecards: Record<string, { total: number; cumplida: number; en_progreso: number; en_pausa: number; incumplida: number }> = {};
+for (const cand of uniqueCandidates) {
+  const list = allPromises.filter(p => p.candidate === cand);
+  candidateScorecards[cand] = {
+    total: list.length,
+    cumplida: list.filter(p => p.status === 'cumplida').length,
+    en_progreso: list.filter(p => p.status === 'en_progreso').length,
+    en_pausa: list.filter(p => p.status === 'en_pausa').length,
+    incumplida: list.filter(p => p.status === 'incumplida').length,
+  };
+}
+---
+
+<Layout
+  title="Monitor de Promesas 2027 • Auditoría de Campaña y Voto Ciudadano | Politicheck"
+  description="Auditá el cumplimiento de las promesas de campaña de los principales dirigentes argentinos con prueba documental del Boletín Oficial, INDEC y votación ciudadana en vivo."
+  canonicalUrl="https://www.politicheck.com.ar/promesas"
+  serverSyncIso={lastSyncIso}
+>
+  <div class="space-y-8 pb-12">
+    <!-- Breadcrumb -->
+    <nav class="flex items-center justify-between text-xs font-mono border-b border-rule pb-3">
+      <a href="/" class="inline-flex items-center gap-1.5 text-ink-muted hover:text-ink font-semibold transition-colors">
+        <span>← Volver a la Portada</span>
+      </a>
+      <span class="text-ink-muted">Auditoría Elecciones 2025 / 2027</span>
+    </nav>
+
+    <!-- Header & Global Scorecard -->
+    <header class="space-y-5">
+      <div class="space-y-2 max-w-3xl">
+        <span class="font-sans text-[11px] font-bold uppercase tracking-wider text-accent">
+          Promesómetro Argentina
+        </span>
+        <h1 class="font-editorial text-3xl sm:text-5xl font-bold text-ink leading-[1.12] tracking-tight">
+          Monitor de Promesas de Campaña 2027
+        </h1>
+        <p class="text-sm sm:text-base text-ink-secondary font-sans leading-relaxed">
+          Compromisos verificables contrastados con documentación oficial primaria (Boletín Oficial, INDEC, BCRA y proyectos legislativos) y evaluación ciudadana anónima sin sesgo de anclaje.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-2 sm:grid-cols-5 gap-3">
+        <div class="p-3.5 rounded-md bg-surface border border-rule">
+          <div class="font-mono text-2xl font-bold text-ink">{stats.total}</div>
+          <div class="text-[11px] font-sans text-ink-muted">Total auditadas</div>
+        </div>
+        <div class="p-3.5 rounded-md bg-surface border border-rule">
+          <div class="font-mono text-2xl font-bold text-emerald-600 dark:text-emerald-400">{stats.fulfilled}</div>
+          <div class="text-[11px] font-sans text-ink-muted">Cumplidas</div>
+        </div>
+        <div class="p-3.5 rounded-md bg-surface border border-rule">
+          <div class="font-mono text-2xl font-bold text-amber-600 dark:text-amber-400">{stats.inProgress}</div>
+          <div class="text-[11px] font-sans text-ink-muted">En progreso</div>
+        </div>
+        <div class="p-3.5 rounded-md bg-surface border border-rule">
+          <div class="font-mono text-2xl font-bold text-orange-600 dark:text-orange-400">{stats.paused}</div>
+          <div class="text-[11px] font-sans text-ink-muted">En pausa</div>
+        </div>
+        <div class="p-3.5 rounded-md bg-surface border border-rule col-span-2 sm:col-span-1">
+          <div class="font-mono text-2xl font-bold text-rose-600 dark:text-rose-400">{stats.broken}</div>
+          <div class="text-[11px] font-sans text-ink-muted">Incumplidas</div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Filters Toolbar -->
+    <section class="p-4 sm:p-5 rounded-md bg-surface border border-rule space-y-4">
+      <!-- Candidate Filter Pills -->
+      <div class="flex flex-wrap items-center gap-1.5 text-xs font-sans">
+        <button
+          type="button"
+          data-cand="all"
+          class="prom-cand-btn px-3 py-1.5 rounded-md bg-ink text-canvas font-semibold border border-ink cursor-pointer transition-colors"
+        >
+          Todos ({allPromises.length})
+        </button>
+        {uniqueCandidates.map((cand) => (
+          <button
+            type="button"
+            data-cand={cand}
+            class="prom-cand-btn px-3 py-1.5 rounded-md bg-surface-muted text-ink-secondary hover:text-ink border border-rule font-medium cursor-pointer transition-colors"
+          >
+            {cand} ({candidateScorecards[cand].total})
+          </button>
+        ))}
+      </div>
+
+      <!-- Status Pills + Search -->
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pt-3 border-t border-rule">
+        <div class="flex flex-wrap items-center gap-1.5 text-xs font-sans">
+          <button type="button" data-stat="all" class="prom-stat-btn px-2.5 py-1 rounded-md border border-rule bg-surface-muted text-ink font-bold ring-2 ring-ink cursor-pointer">Todos</button>
+          <button type="button" data-stat="cumplida" class="prom-stat-btn px-2.5 py-1 rounded-md border border-emerald-300 dark:border-emerald-800 bg-emerald-50 dark:bg-emerald-950/60 text-emerald-800 dark:text-emerald-300 opacity-80 cursor-pointer">Cumplida</button>
+          <button type="button" data-stat="en_progreso" class="prom-stat-btn px-2.5 py-1 rounded-md border border-amber-300 dark:border-amber-800 bg-amber-50 dark:bg-amber-950/60 text-amber-800 dark:text-amber-300 opacity-80 cursor-pointer">En progreso</button>
+          <button type="button" data-stat="en_pausa" class="prom-stat-btn px-2.5 py-1 rounded-md border border-orange-300 dark:border-orange-800 bg-orange-50 dark:bg-orange-950/60 text-orange-800 dark:text-orange-300 opacity-80 cursor-pointer">En pausa</button>
+          <button type="button" data-stat="incumplida" class="prom-stat-btn px-2.5 py-1 rounded-md border border-rose-300 dark:border-rose-800 bg-rose-50 dark:bg-rose-950/60 text-rose-800 dark:text-rose-300 opacity-80 cursor-pointer">Incumplida</button>
+        </div>
+
+        <input
+          type="search"
+          id="prom-page-search"
+          placeholder="Filtrar promesas por tema o cita..."
+          class="w-full sm:w-64 px-3 py-1.5 rounded-md bg-surface-muted border border-rule text-xs text-ink placeholder-ink-muted focus:outline-none focus:border-accent"
+        />
+      </div>
+
+      <!-- Dynamic Per-Candidate Mini Scorecard (Shown when a specific candidate is selected) -->
+      <div
+        id="candidate-mini-scorecard"
+        class="hidden p-3.5 rounded-md bg-surface-muted border border-rule flex flex-wrap items-center justify-between gap-2 text-xs font-mono"
+        data-scorecards={JSON.stringify(candidateScorecards)}
+      >
+        <span class="font-sans font-bold text-ink" id="mini-scorecard-name"></span>
+        <div class="flex flex-wrap items-center gap-3 text-[11px]" id="mini-scorecard-stats"></div>
+      </div>
+    </section>
+
+    <!-- Promises Grid -->
+    <section class="grid grid-cols-1 md:grid-cols-2 gap-6" id="prom-page-grid">
+      {allPromises.map((promise) => (
+        <div
+          class="prom-page-card"
+          data-candidate={promise.candidate}
+          data-status={promise.status}
+          data-search={`${promise.candidate} ${promise.promiseText} ${promise.category} ${promise.auditNotes}`.toLowerCase()}
+        >
+          <PromiseCard promise={promise} />
+        </div>
+      ))}
+    </section>
+
+    <div id="prom-page-empty" class="hidden p-10 text-center rounded-md bg-surface border border-dashed border-rule space-y-2">
+      <p class="font-editorial text-lg font-bold text-ink">No hay compromisos que coincidan con el filtro.</p>
+      <button type="button" id="prom-page-reset" class="px-3.5 py-1.5 rounded-md bg-ink text-canvas text-xs font-sans font-semibold cursor-pointer">
+        Limpiar filtros
+      </button>
+    </div>
+  </div>
+</Layout>
+
+<script>
+  const candBtns = document.querySelectorAll<HTMLButtonElement>('.prom-cand-btn');
+  const statBtns = document.querySelectorAll<HTMLButtonElement>('.prom-stat-btn');
+  const searchEl = document.getElementById('prom-page-search') as HTMLInputElement | null;
+  const cards = Array.from(document.querySelectorAll<HTMLElement>('.prom-page-card'));
+  const emptyEl = document.getElementById('prom-page-empty');
+  const resetBtn = document.getElementById('prom-page-reset');
+  const miniBox = document.getElementById('candidate-mini-scorecard');
+  const miniName = document.getElementById('mini-scorecard-name');
+  const miniStats = document.getElementById('mini-scorecard-stats');
+
+  const scorecards = miniBox ? JSON.parse(miniBox.getAttribute('data-scorecards') || '{}') : {};
+  let activeCand = 'all';
+  let activeStat = 'all';
+  let query = '';
+
+  function filterPromises() {
+    let visible = 0;
+    cards.forEach((c) => {
+      const okCand = activeCand === 'all' || c.getAttribute('data-candidate') === activeCand;
+      const okStat = activeStat === 'all' || c.getAttribute('data-status') === activeStat;
+      const okQuery = !query || (c.getAttribute('data-search') || '').includes(query);
+      const show = okCand && okStat && okQuery;
+      c.classList.toggle('hidden', !show);
+      if (show) visible++;
+    });
+
+    if (emptyEl) emptyEl.classList.toggle('hidden', visible > 0);
+
+    if (miniBox && miniName && miniStats) {
+      if (activeCand !== 'all' && scorecards[activeCand]) {
+        const sc = scorecards[activeCand];
+        miniName.textContent = `Balance de ${activeCand} (${sc.total} promesas):`;
+        miniStats.innerHTML = `
+          <span class="text-emerald-600 dark:text-emerald-400 font-semibold">${sc.cumplida} Cumplidas</span>
+          <span class="text-amber-600 dark:text-amber-400 font-semibold">${sc.en_progreso} En progreso</span>
+          <span class="text-orange-600 dark:text-orange-400 font-semibold">${sc.en_pausa} En pausa</span>
+          <span class="text-rose-600 dark:text-rose-400 font-semibold">${sc.incumplida} Incumplidas</span>
+        `;
+        miniBox.classList.remove('hidden');
+      } else {
+        miniBox.classList.add('hidden');
+      }
+    }
+  }
+
+  candBtns.forEach((btn) => {
+    btn.addEventListener('click', () => {
+      activeCand = btn.getAttribute('data-cand') || 'all';
+      candBtns.forEach((b) => {
+        const active = b === btn;
+        b.classList.toggle('bg-ink', active);
+        b.classList.toggle('text-canvas', active);
+        b.classList.toggle('border-ink', active);
+        b.classList.toggle('font-semibold', active);
+        b.classList.toggle('bg-surface-muted', !active);
+        b.classList.toggle('text-ink-secondary', !active);
+        b.classList.toggle('border-rule', !active);
+      });
+      filterPromises();
+    });
+  });
+
+  statBtns.forEach((btn) => {
+    btn.addEventListener('click', () => {
+      activeStat = btn.getAttribute('data-stat') || 'all';
+      statBtns.forEach((b) => {
+        const active = b === btn;
+        b.classList.toggle('ring-2', active);
+        b.classList.toggle('ring-ink', active);
+        b.classList.toggle('font-bold', active);
+        b.classList.toggle('opacity-100', active);
+        b.classList.toggle('opacity-80', !active);
+      });
+      filterPromises();
+    });
+  });
+
+  searchEl?.addEventListener('input', () => {
+    query = searchEl.value.trim().toLowerCase();
+    filterPromises();
+  });
+
+  resetBtn?.addEventListener('click', () => {
+    activeCand = 'all';
+    activeStat = 'all';
+    query = '';
+    if (searchEl) searchEl.value = '';
+    document.querySelector<HTMLButtonElement>('.prom-cand-btn[data-cand="all"]')?.click();
+    document.querySelector<HTMLButtonElement>('.prom-stat-btn[data-stat="all"]')?.click();
+  });
+
+  // Citizen voting interaction inside /promesas
+  document.querySelectorAll<HTMLElement>('.citizen-audit-widget').forEach((widget) => {
+    const promiseId = widget.getAttribute('data-promise-id');
+    if (!promiseId) return;
+
+    function render(votes: { fulfilled: number; inProgress: number; broken: number }, activeVote?: string) {
+      const total = (votes.fulfilled || 0) + (votes.inProgress || 0) + (votes.broken || 0);
+      const fPct = total > 0 ? Math.round((votes.fulfilled / total) * 100) : 0;
+      const ipPct = total > 0 ? Math.round((votes.inProgress / total) * 100) : 0;
+      const bPct = total > 0 ? Math.round((votes.broken / total) * 100) : 0;
+
+      const cf = widget.querySelector<HTMLElement>('.count-fulfilled');
+      const cip = widget.querySelector<HTMLElement>('.count-in-progress');
+      const cb = widget.querySelector<HTMLElement>('.count-broken');
+      if (cf) { cf.textContent = `(${fPct}%)`; cf.classList.remove('hidden'); }
+      if (cip) { cip.textContent = `(${ipPct}%)`; cip.classList.remove('hidden'); }
+      if (cb) { cb.textContent = `(${bPct}%)`; cb.classList.remove('hidden'); }
+
+      const ph = widget.querySelector<HTMLElement>('.bar-placeholder');
+      if (ph) ph.style.opacity = '0';
+      const bf = widget.querySelector<HTMLElement>('.bar-fulfilled');
+      const bip = widget.querySelector<HTMLElement>('.bar-in-progress');
+      const bb = widget.querySelector<HTMLElement>('.bar-broken');
+      if (bf) { bf.style.width = `${fPct}%`; bf.style.opacity = '1'; }
+      if (bip) { bip.style.width = `${ipPct}%`; bip.style.opacity = '1'; }
+      if (bb) { bb.style.width = `${bPct}%`; bb.style.opacity = '1'; }
+
+      const sub = widget.querySelector<HTMLElement>('.widget-sub');
+      if (sub) sub.textContent = `${total} votos auditados`;
+
+      if (activeVote) {
+        widget.querySelectorAll<HTMLButtonElement>('.vote-btn').forEach((b) => {
+          b.classList.toggle('ring-2', b.getAttribute('data-vote-type') === activeVote);
+          b.classList.toggle('ring-ink', b.getAttribute('data-vote-type') === activeVote);
+        });
+      }
+    }
+
+    const saved = localStorage.getItem(`politicheck_vote_${promiseId}`);
+    if (saved) {
+      try {
+        render(JSON.parse(widget.getAttribute('data-votes') || '{}'), saved);
+      } catch {}
+    }
+
+    widget.querySelectorAll<HTMLButtonElement>('.vote-btn').forEach((btn) => {
+      btn.addEventListener('click', async () => {
+        const voteType = btn.getAttribute('data-vote-type') as 'fulfilled' | 'inProgress' | 'broken';
+        if (!voteType || localStorage.getItem(`politicheck_vote_${promiseId}`) === voteType) return;
+        try {
+          const res = await fetch('/api/promises/vote', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ promiseId, voteType })
+          });
+          if (res.ok) {
+            const data = await res.json();
+            if (data.success && data.promise?.votes) {
+              localStorage.setItem(`politicheck_vote_${promiseId}`, voteType);
+              widget.setAttribute('data-votes', JSON.stringify(data.promise.votes));
+              render(data.promise.votes, voteType);
+              (window as any).showPoliticheckToast?.('¡Voto registrado!', 'Ya podés ver la tendencia ciudadana en vivo.', 'check');
+            }
+          }
+        } catch {}
+      });
+    });
+  });
+</script>
