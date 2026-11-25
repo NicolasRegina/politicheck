@@ -123,10 +123,10 @@ const faqSchema = guia.faq.length > 0 ? {
       </div>
     </header>
 
-    <!-- Viral Contrast Share Bar -->
-    <section class="flex flex-wrap items-center justify-between gap-3 p-4 rounded-xl bg-slate-50 dark:bg-[#0C101A] border border-slate-200 dark:border-slate-800">
-      <div class="flex items-center gap-2 text-xs font-mono text-slate-700 dark:text-slate-300">
-        <svg class="w-4 h-4 text-slate-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+    <!-- Viral Contrast Share Bar (ADR-0008 tokens, font-sans) -->
+    <section class="flex flex-wrap items-center justify-between gap-3 p-4 rounded-md bg-surface-muted border border-rule">
+      <div class="flex items-center gap-2 text-xs font-sans font-medium text-ink">
+        <svg class="w-4 h-4 text-ink-muted" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" />
         </svg>
         <span>Compartir esta investigación:</span>
@@ -137,7 +137,7 @@ const faqSchema = guia.faq.length > 0 ? {
           href={`https://api.whatsapp.com/send?text=${encodeURIComponent(viralShareText + ' ' + pageUrl)}`}
           target="_blank"
           rel="noopener noreferrer"
-          class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white font-mono text-xs font-bold transition-all shadow-2xs"
+          class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-surface border border-rule hover:border-ink text-ink font-sans text-xs font-semibold transition-colors"
         >
           <span>WhatsApp</span>
         </a>
@@ -146,16 +146,16 @@ const faqSchema = guia.faq.length > 0 ? {
           href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(viralShareText)}&url=${encodeURIComponent(pageUrl)}`}
           target="_blank"
           rel="noopener noreferrer"
-          class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-900 hover:bg-slate-800 dark:bg-white dark:hover:bg-slate-200 text-white dark:text-slate-950 font-mono text-xs font-bold transition-all shadow-2xs"
+          class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-ink text-canvas hover:opacity-90 font-sans text-xs font-semibold transition-opacity"
         >
-          <span>Twitter / X</span>
+          <span>Publicar en X</span>
         </a>
 
         <a 
           href={`https://t.me/share/url?url=${encodeURIComponent(pageUrl)}&text=${encodeURIComponent(viralShareText)}`}
           target="_blank"
           rel="noopener noreferrer"
-          class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-sky-600 hover:bg-sky-700 text-white font-mono text-xs font-bold transition-all shadow-2xs"
+          class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-surface border border-rule hover:border-ink text-ink font-sans text-xs font-semibold transition-colors"
         >
           <span>Telegram</span>
         </a>
@@ -164,7 +164,7 @@ const faqSchema = guia.faq.length > 0 ? {
           type="button"
           id="copy-guia-btn"
           data-url={pageUrl}
-          class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-800 font-mono text-xs font-semibold transition-all cursor-pointer"
+          class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md border border-rule bg-surface text-ink hover:border-ink font-sans text-xs font-semibold transition-colors cursor-pointer"
         >
           <span id="copy-guia-text">Copiar enlace</span>
         </button>
@@ -191,12 +191,30 @@ const faqSchema = guia.faq.length > 0 ? {
     )}
 
     <!-- Lead Box (Google Featured Snippet Target) -->
-    <div class="p-6 rounded-2xl bg-slate-50 dark:bg-[#0F1420] border-l-4 border-slate-900 dark:border-slate-100 space-y-3">
-      <div class="text-[11px] font-mono font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
-        Resumen Ejecutivo & Respuesta Directa
+    <div class="p-6 rounded-md bg-surface-muted border border-rule border-l-4 border-l-ink space-y-3">
+      <div class="text-[11px] font-mono font-bold uppercase tracking-wider text-ink-muted">
+        Resumen Ejecutivo &amp; Respuesta Directa
       </div>
       <div set:html={guia.content.leadHtml} />
     </div>
+
+    <!-- Collapsible Table of Contents (TOC) -->
+    {guia.content.sections.length > 2 && (
+      <details class="p-4 rounded-md bg-surface border border-rule text-xs font-sans" open>
+        <summary class="font-bold uppercase tracking-wider text-ink-muted cursor-pointer select-none">
+          Índice de esta investigación ({guia.content.sections.length} secciones)
+        </summary>
+        <ol class="mt-3 space-y-1.5 list-decimal list-inside text-ink-secondary">
+          {guia.content.sections.map((sec) => (
+            <li>
+              <a href={`#${sec.id}`} class="hover:text-accent hover:underline underline-offset-2">
+                {sec.title}
+              </a>
+            </li>
+          ))}
+        </ol>
+      </details>
+    )}
 
     <!-- Topic Cluster Bidirectional Interlinking Banner -->
     {guia.slug !== 'mapa-de-medios-argentina' ? (
@@ -220,7 +238,7 @@ const faqSchema = guia.faq.length > 0 ? {
         </a>
       </div>
     ) : (
-      <div class="p-5 rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-[#0F1420] space-y-3">
+      <div class="p-5 rounded-md border border-rule bg-surface-muted space-y-3">
         <div class="flex items-center justify-between">
           <span class="text-[11px] font-mono font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
             Monografías Corporativas Detalladas
@@ -266,32 +284,32 @@ const faqSchema = guia.faq.length > 0 ? {
     )}
 
     <!-- Main Editorial Article Sections -->
-    <div class="space-y-10 text-slate-800 dark:text-slate-200 leading-relaxed font-sans">
+    <div class="space-y-10 text-ink-secondary leading-relaxed font-sans">
       {guia.content.sections.map((section) => (
-        <section id={section.id} class="space-y-4 pt-4 border-t border-slate-100 dark:border-slate-800/80">
-          <h2 class="font-editorial text-2xl sm:text-3xl font-bold text-slate-950 dark:text-white tracking-tight">
+        <section id={section.id} class="space-y-4 pt-4 border-t border-rule scroll-mt-20">
+          <h2 class="font-editorial text-2xl sm:text-3xl font-bold text-ink tracking-tight">
             {section.title}
           </h2>
-          <div class="space-y-4 text-sm sm:text-base text-slate-700 dark:text-slate-300 leading-relaxed" set:html={section.bodyHtml} />
+          <div class="space-y-4 text-sm sm:text-base text-ink-secondary leading-relaxed" set:html={section.bodyHtml} />
         </section>
       ))}
     </div>
 
-    <!-- Live Contrast Civic Callout -->
-    <div class="rounded-2xl border border-slate-200 dark:border-slate-800 bg-gradient-to-br from-slate-50 to-white dark:from-[#0F1420] dark:to-[#0A0E17] p-6 sm:p-8 space-y-4 shadow-xs">
-      <div class="flex items-center gap-2 text-xs font-mono font-bold uppercase tracking-wider text-slate-900 dark:text-white">
-        <span class="w-2 h-2 rounded-full bg-emerald-500 animate-ping"></span>
+    <!-- Live Contrast Civic Callout (Linked to live search for this outlet) -->
+    <div class="rounded-md border border-rule bg-surface p-6 sm:p-8 space-y-4">
+      <div class="flex items-center gap-2 text-xs font-mono font-bold uppercase tracking-wider text-accent">
+        <span class="w-2 h-2 rounded-full bg-accent"></span>
         <span>Compará las noticias de hoy en tiempo real</span>
       </div>
-      <p class="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+      <p class="text-sm text-ink-secondary leading-relaxed">
         En Politicheck podés auditar en este mismo instante cómo titula {guia.outletName || 'este medio'} cada noticia relevante frente a más de 30 redacciones con una barra de espectro editorial tripartito en tiempo real.
       </p>
       <div>
         <a 
-          href="/" 
-          class="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-slate-950 hover:bg-slate-800 dark:bg-white dark:hover:bg-slate-100 text-white dark:text-slate-950 font-mono text-xs font-bold transition-all shadow-xs"
+          href={guia.outletName ? `/?q=${encodeURIComponent(guia.outletName)}` : '/'} 
+          class="inline-flex items-center gap-2 px-4 py-2 rounded-md bg-ink hover:opacity-90 text-canvas font-sans text-xs font-semibold transition-opacity"
         >
-          <span>Ir a la Portada de Politicheck</span>
+          <span>{guia.outletName ? `Ver cobertura de ${guia.outletName} hoy` : 'Ir a la Portada de Politicheck'}</span>
           <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
           </svg>

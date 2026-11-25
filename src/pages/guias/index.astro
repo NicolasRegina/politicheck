@@ -14,7 +14,7 @@ const otherPublishedGuides = publishedGuides.slice(1);
   title="Cuadernos de Investigación: Mapa de Medios y Concentración Editorial • Politicheck"
   description="Investigaciones cívicas sobre quiénes son los dueños de los medios en Argentina, cómo se financian los grupos económicos y cómo se audita su sesgo periodístico."
 >
-  <main class="max-w-6xl mx-auto px-4 sm:px-6 py-8 sm:py-12 space-y-12">
+  <div class="max-w-6xl mx-auto py-4 sm:py-6 space-y-12">
     
     <!-- Top Breadcrumb Navigation -->
     <nav class="flex items-center justify-between border-b border-slate-200 dark:border-slate-800 pb-4 text-xs font-mono">
@@ -37,7 +37,7 @@ const otherPublishedGuides = publishedGuides.slice(1);
         <span>Investigaciones y mapa de medios</span>
       </div>
 
-      <h1 class="font-editorial text-3xl sm:text-5xl lg:text-6xl font-black text-slate-950 dark:text-white leading-[1.1] tracking-tight">
+      <h1 class="font-editorial text-3xl sm:text-5xl lg:text-6xl font-bold text-ink leading-[1.1] tracking-tight">
         Quién Controla las Noticias en Argentina
       </h1>
 
@@ -131,7 +131,7 @@ const otherPublishedGuides = publishedGuides.slice(1);
 
       <!-- OTHER PUBLISHED GUIDES GRID -->
       {otherPublishedGuides.length > 0 && (
-        <div class="space-y-4">
+        <div class="guia-section-group space-y-4">
           <div class="flex items-center justify-between border-b border-slate-200 dark:border-slate-800 pb-2">
             <h3 class="font-sans text-xs font-bold text-slate-800 dark:text-slate-200">
               Investigaciones publicadas
@@ -194,7 +194,7 @@ const otherPublishedGuides = publishedGuides.slice(1);
       )}
 
       <!-- SECONDARY BENTO GRID: Upcoming Cluster Articles -->
-      <div>
+      <div class="guia-section-group">
         <div class="flex items-center justify-between border-b border-slate-200 dark:border-slate-800 pb-2 mb-6">
           <h3 class="font-sans text-xs font-bold text-slate-700 dark:text-slate-300">
             Próximas entregas del observatorio
@@ -235,6 +235,11 @@ const otherPublishedGuides = publishedGuides.slice(1);
           ))}
         </div>
       </div>
+      <!-- Empty State when filter yields 0 guides -->
+      <div id="guias-empty-state" class="hidden p-8 text-center rounded-md bg-surface border border-dashed border-rule space-y-2">
+        <p class="font-editorial text-lg font-bold text-ink">No hay investigaciones en esta categoría todavía.</p>
+        <p class="text-xs font-sans text-ink-muted">Seleccioná "Todas las investigaciones" para explorar el catálogo completo.</p>
+      </div>
     </section>
 
     <!-- Institutional Callout Box -->
@@ -261,13 +266,15 @@ const otherPublishedGuides = publishedGuides.slice(1);
       </div>
     </section>
 
-  </main>
+  </div>
 </Layout>
 
 <script>
   function setupCategoryFilters() {
     const filterButtons = document.querySelectorAll('.guia-filter-btn');
     const cards = document.querySelectorAll('.guia-card');
+    const sectionGroups = document.querySelectorAll('.guia-section-group');
+    const emptyState = document.getElementById('guias-empty-state');
 
     filterButtons.forEach((btn) => {
       btn.addEventListener('click', () => {
@@ -281,14 +288,24 @@ const otherPublishedGuides = publishedGuides.slice(1);
         btn.classList.add('active', 'border-slate-900', 'dark:border-white', 'bg-slate-950', 'dark:bg-white', 'text-white', 'dark:text-slate-950', 'font-bold');
         btn.classList.remove('border-slate-200', 'dark:border-slate-800', 'bg-white', 'dark:bg-slate-900/60', 'text-slate-700', 'dark:text-slate-300', 'font-medium');
 
+        let visibleTotal = 0;
         cards.forEach((card) => {
           const category = card.getAttribute('data-category');
-          if (target === 'all' || category === target) {
-            (card as HTMLElement).style.display = '';
-          } else {
-            (card as HTMLElement).style.display = 'none';
-          }
+          const visible = target === 'all' || category === target;
+          (card as HTMLElement).style.display = visible ? '' : 'none';
+          if (visible) visibleTotal++;
         });
+
+        // Hide section headings that have 0 visible cards
+        sectionGroups.forEach((group) => {
+          const groupCards = Array.from(group.querySelectorAll<HTMLElement>('.guia-card'));
+          const anyVisible = groupCards.some(c => c.style.display !== 'none');
+          (group as HTMLElement).style.display = anyVisible ? '' : 'none';
+        });
+
+        if (emptyState) {
+          emptyState.classList.toggle('hidden', visibleTotal > 0);
+        }
       });
     });
   }

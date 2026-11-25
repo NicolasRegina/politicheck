@@ -51,7 +51,7 @@ const FACTUALITY_BADGES: Record<FactualityRating, string> = {
   title="Metodología Científica, Fórmula Editorial y Catálogo de 31 Medios • Politicheck"
   description="Conocé en detalle la fórmula matemática del espectro editorial, la auditoría documental con el Boletín Oficial y el catálogo público de los 31 medios monitoreados sin pauta oficial."
 >
-  <main class="max-w-6xl mx-auto px-4 sm:px-6 py-10 space-y-16">
+  <div class="max-w-6xl mx-auto py-4 sm:py-6 space-y-14">
     
     <!-- Top Breadcrumb Navigation -->
     <nav class="flex items-center justify-between border-b border-slate-200 dark:border-slate-800 pb-4 text-xs font-sans">
@@ -75,20 +75,20 @@ const FACTUALITY_BADGES: Record<FactualityRating, string> = {
         <span>Transparencia cívica y neutralidad algorítmica</span>
       </div>
       
-      <h1 class="font-editorial text-3xl sm:text-5xl lg:text-6xl font-black text-slate-950 dark:text-white leading-[1.1] tracking-tight">
+      <h1 class="font-editorial text-3xl sm:text-5xl lg:text-6xl font-bold text-ink leading-[1.1] tracking-tight">
         Cómo Funciona Politicheck
       </h1>
 
-      <p class="text-lg sm:text-xl text-slate-700 dark:text-slate-300 font-editorial leading-relaxed">
+      <p class="text-lg sm:text-xl text-ink-secondary font-editorial leading-relaxed">
         Un observatorio cívico automatizado para contrastar el sesgo de la prensa, desarmar cámaras de eco partidarias y auditar los compromisos de campaña con prueba documental primaria verificable.
       </p>
 
       <!-- Key Metrics Strip -->
       <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-4">
-        <div class="p-4 rounded-xl bg-slate-50 dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800">
-          <div class="font-mono text-2xl sm:text-3xl font-bold text-slate-950 dark:text-white">{totalOutlets}</div>
-          <div class="text-xs font-sans text-slate-500 dark:text-slate-400 mt-0.5">Medios en simultáneo</div>
-          <div class="text-[11px] text-slate-400 dark:text-slate-500 mt-1">15 Nac. / 16 Internacionales</div>
+        <div class="p-4 rounded-md bg-surface border border-rule">
+          <div class="font-mono text-2xl sm:text-3xl font-bold text-ink">{totalOutlets}</div>
+          <div class="text-xs font-sans text-ink-muted mt-0.5">Medios en simultáneo</div>
+          <div class="text-[11px] font-mono text-ink-muted mt-1">{nationalCount} Nac. / {foreignCount} Internacionales</div>
         </div>
         <div class="p-4 rounded-xl bg-slate-50 dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800">
           <div class="font-mono text-2xl sm:text-3xl font-bold text-emerald-600 dark:text-emerald-400">$0</div>
@@ -108,8 +108,8 @@ const FACTUALITY_BADGES: Record<FactualityRating, string> = {
       </div>
     </header>
 
-    <!-- Quick Navigation Index / Jump Anchors -->
-    <div class="sticky top-2 z-20 p-2.5 rounded-2xl bg-white/90 dark:bg-slate-900/90 backdrop-blur border border-slate-200 dark:border-slate-800 shadow-sm overflow-x-auto">
+    <!-- Quick Navigation Index / Jump Anchors (Positioned cleanly below 52px sticky bar) -->
+    <div class="sticky top-14 z-20 p-2.5 rounded-md bg-surface border border-rule overflow-x-auto">
       <div class="flex items-center gap-2 text-xs font-sans whitespace-nowrap px-1">
         <span class="text-slate-400 text-[11px] font-bold mr-1">Índice:</span>
         <a href="#manifiesto" class="px-2.5 py-1 rounded-lg bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-200 transition-colors">1. Manifiesto Cívico</a>
@@ -684,7 +684,7 @@ const FACTUALITY_BADGES: Record<FactualityRating, string> = {
       </div>
     </div>
 
-  </main>
+  </div>
 </Layout>
 
 <!-- Client-side script for Outlet Catalog live filtering & search -->
