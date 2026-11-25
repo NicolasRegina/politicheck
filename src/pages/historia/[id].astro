@@ -111,6 +111,32 @@ const matchedGuides = story
         </p>
       </header>
 
+      <!-- 2b. Press Photo (Compact 16:9 editorial framing, prioritizing upper-center for portraits) -->
+      {story.imageUrl && (
+        <figure class="space-y-2">
+          <div class="overflow-hidden rounded-md border border-rule bg-surface-muted aspect-video max-h-[360px] w-full">
+            <img
+              src={optimizedHeroImage}
+              data-original-src={story.imageUrl}
+              alt={story.neutralHeadline}
+              loading="eager"
+              fetchpriority="high"
+              decoding="async"
+              width="1000"
+              height="562"
+              class="w-full h-full object-cover object-[50%_20%]"
+              referrerpolicy="no-referrer"
+              onerror="if (this.dataset.retry !== '1') { this.dataset.retry = '1'; this.setAttribute('src', this.dataset.originalSrc); } else { this.closest('figure')?.style.setProperty('display', 'none'); }"
+            />
+          </div>
+          {story.imageCaption && (
+            <figcaption class="text-xs font-sans italic text-ink-muted">
+              {story.imageCaption}
+            </figcaption>
+          )}
+        </figure>
+      )}
+
       <!-- 3. Lectura Rápida: SpectrumBar + Dictamen IA (Unificado — Fix #9) -->
       <section class="bg-surface border border-rule rounded-md p-5 sm:p-6 space-y-5">
         <div class="space-y-3">
@@ -147,32 +173,7 @@ const matchedGuides = story
         <HeadlineComparison articles={story.articles} storyId={story.id} isLeadStory={true} />
       </section>
 
-      <!-- 5. Press Photo (Compact, after the core framing comparison) -->
-      {story.imageUrl && (
-        <figure class="space-y-2">
-          <div class="overflow-hidden rounded-md border border-rule bg-surface-muted max-h-[400px]">
-            <img
-              src={optimizedHeroImage}
-              data-original-src={story.imageUrl}
-              alt={story.neutralHeadline}
-              loading="lazy"
-              decoding="async"
-              width="1000"
-              height="562"
-              class="w-full h-full object-cover object-center"
-              referrerpolicy="no-referrer"
-              onerror="if (this.dataset.retry !== '1') { this.dataset.retry = '1'; this.setAttribute('src', this.dataset.originalSrc); } else { this.closest('figure')?.style.setProperty('display', 'none'); }"
-            />
-          </div>
-          {story.imageCaption && (
-            <figcaption class="text-xs font-sans italic text-ink-muted">
-              {story.imageCaption}
-            </figcaption>
-          )}
-        </figure>
-      )}
-
-      <!-- 6. Share & Debate Bar (After reading the contrast, with real (N) count per ADR-0007 / Fix #9) -->
+      <!-- 5. Share & Debate Bar (After reading the contrast, with real (N) count per ADR-0007 / Fix #9) -->
       <section class="flex flex-wrap items-center justify-between gap-3 p-4 sm:p-5 rounded-md bg-surface-muted border border-rule">
         <div class="flex items-center gap-2">
           <span class="text-xs sm:text-sm font-sans font-semibold text-ink">
