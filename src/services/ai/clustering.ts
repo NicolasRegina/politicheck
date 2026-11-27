@@ -262,6 +262,12 @@ async function callGeminiInteractionsJson(
 
       const candidateText = interaction.output_text;
       if (candidateText) {
+        const usage = (interaction as any).usage;
+        if (usage) {
+          console.log(
+            `[AI Clustering] ${label} (${model}) usage — in: ${usage.total_input_tokens ?? usage.input_tokens ?? '?'}, out: ${usage.total_output_tokens ?? usage.output_tokens ?? '?'}, thought: ${usage.total_thought_tokens ?? usage.thought_tokens ?? 0}`
+          );
+        }
         return { rawJson: candidateText, usedModel: model };
       }
       console.warn(`[AI Clustering] ${label} model ${model} returned empty output_text. Trying fallback...`);
@@ -403,7 +409,7 @@ export async function clusterArticlesWithGemini(
   }
 
   try {
-    const candidateArticles = selectCrossOutletCandidates(articles, 80);
+    const candidateArticles = selectCrossOutletCandidates(articles, 58);
     console.log(`[AI Clustering] Calling Gemini Interactions API with ${candidateArticles.length} cross-outlet curated articles (from ${articles.length} total)...`);
     const systemInstruction = `Eres el motor de análisis editorial y verificación de Politicheck (Observatorio de Cobertura Periodística de Argentina).
 Tu objetivo es analizar noticias argentinas y agruparlas en torno a los hechos centrales de gran impacto ("Historias").
@@ -424,9 +430,12 @@ REGLAS DE ORO OBLIGATORIAS:
 5. Escribe "neutralHeadline" estrictamente factual sin adjetivos tendenciosos, "summary" en dos oraciones objetivas, "aiComparisonNotice" explicando qué priorizó y qué omitió cada redacción, y en "articles" cada objeto con "id" y "specificFocus" (3 a 7 palabras).`;
 
     const inputPayload = `Noticias a analizar:\n${JSON.stringify(
-      candidateArticles.map(a => ({ id: a.id, medio: a.outletName, titulo: a.title, bajada: a.snippet })),
-      null,
-      2
+      candidateArticles.map(a => ({
+        id: a.id,
+        medio: a.outletName,
+        titulo: a.title,
+        bajada: (a.snippet || '').slice(0, 160),
+      }))
     )}`;
 
     const { rawJson, usedModel } = await callGeminiInteractionsJson(
@@ -768,7 +777,13 @@ Instrucciones:
    - "category": Siempre "Internacional".`;
 
   try {
-    const foreignInput = `Artículos internacionales sobre Argentina para analizar:\n${JSON.stringify(articlesPromptPayload, null, 2)}`;
+    const foreignInput = `Artículos internacionales sobre Argentina para analizar:\n${JSON.stringify(
+      articlesPromptPayload.map((a: any) => ({
+        ...a,
+        bajada: typeof a.bajada === 'string' ? a.bajada.slice(0, 160) : a.bajada,
+        snippet: typeof a.snippet === 'string' ? a.snippet.slice(0, 160) : a.snippet,
+      }))
+    )}`;
     const { rawJson, usedModel } = await callGeminiInteractionsJson(
       apiKey,
       systemPrompt,
