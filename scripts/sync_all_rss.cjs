@@ -413,73 +413,82 @@ async function run() {
     }
   }
 
-  const prompt = `
-Eres el motor de análisis editorial y verificación de Politicheck (Observatorio de Cobertura Periodística de Argentina).
-Tu objetivo es analizar las siguientes noticias argentinas de última hora y agruparlas en torno a los hechos centrales de gran impacto ("Historias").
+  const systemInstruction = `Eres el motor de análisis editorial y verificación de Politicheck (Observatorio de Cobertura Periodística de Argentina).
+Tu objetivo es analizar noticias argentinas de última hora y agruparlas en torno a los hechos centrales de gran impacto ("Historias").
 
 REGLAS DE ORO OBLIGATORIAS:
-1. REGLA FUNDAMENTAL - COMPARACIÓN MULTI-MEDIO ESTRICTA:
-   - El propósito central de Politicheck es comparar cómo DISTINTAS REDACCIONES cubren el mismo hecho.
-   - ESTÁ TERMINANTEMENTE PROHIBIDO que un cluster contenga más de 1 artículo del mismo medio. Cada noticia en "articleIds" DEBE ser de un diario DIFERENTE (por ejemplo: 1 de Clarín, 1 de La Nación, 1 de Infobae, 1 de Ámbito, 1 de Página 12, 1 de elDiarioAR, etc.).
+1. COMPARACIÓN MULTI-MEDIO ESTRICTA:
+   - ESTÁ TERMINANTEMENTE PROHIBIDO que un cluster contenga más de 1 artículo del mismo medio. Cada noticia en "articleIds" DEBE ser de un medio DIFERENTE.
    - Cada cluster DEBE incluir un MÍNIMO de 2 medios distintos (idealmente entre 3 y 6 medios distintos).
-   - NUNCA agrupes noticias de un solo diario.
-
 2. COHERENCIA FACTUAL Y TEMÁTICA ESTRICTA:
    - Todas las noticias del cluster deben cubrir EXACTAMENTE EL MISMO ACONTECIMIENTO OBJETIVO.
-   - NO agrupes noticias solo porque compartan una palabra genérica. Por ejemplo: NO juntes "Fútbol en Malvinas" con "Debate de sanciones por hidrocarburos en Malvinas". Son dos noticias completamente distintas. Si un artículo no trata del suceso específico central, descártalo.
-
+   - NO agrupes noticias solo porque compartan una palabra genérica.
 3. VARIEDAD TEMÁTICA Y NÚMERO DE HISTORIAS (OBLIGATORIO):
-   Debes generar obligatoriamente entre 4 y 6 clusters/historias diferentes y equilibradas:
-   - Al menos 1 o 2 historias de "Política" (ej. declaraciones del gobierno, Congreso, internas políticas, relaciones internacionales).
-   - Al menos 1 o 2 historias de "Economía" (ej. actividad económica, recesión, dólar, deuda, reservas, inflación).
-   - Al menos 1 historia de "Sociedad", "Educación" o "Justicia" (ej. causas judiciales, universidades, reclamos salariales, seguridad).
-   El primer cluster del array ("clusters[0]") será la Gran Apertura de Tapa de mayor trascendencia e impacto nacional.
+   - Genera entre 4 y 6 historias equilibradas (al menos 1-2 de "Política", 1-2 de "Economía", y 1 de "Sociedad" o "Justicia").
+   - "clusters[0]" será la Gran Apertura de Tapa de mayor trascendencia nacional.
+4. Escribe "neutralHeadline" estrictamente factual, "summary" en dos oraciones objetivas, y "aiComparisonNotice" explicando qué priorizó y qué omitió cada redacción.`;
 
-4. Escribe un titular neutral ("neutralHeadline") estrictamente factual, sin adjetivos tendenciosos.
-5. Redacta un dictamen comparativo de encuadres ("aiComparisonNotice") que explique con rigor periodístico: qué priorizó cada redacción en su titular y qué omitió.
-6. Clasifica la categoría ("Política", "Economía", "Sociedad", "Justicia" o "Internacional").
-7. Estima la distribución del espectro editorial (oficialismoPct, centroDatosPct, oposicionPct) sumando el 100%.
+  const inputPayload = `Noticias a analizar:\n${JSON.stringify(
+    candidateArticles.map(a => ({ id: a.id, medio: a.outletName, titulo: a.title, bajada: a.snippet })),
+    null,
+    2
+  )}`;
 
-Responde ÚNICAMENTE en JSON con la siguiente estructura:
-{
-  "clusters": [
-    {
-      "kicker": "VOLANTA EN MAYÚSCULAS",
-      "neutralHeadline": "Titular neutral y factual",
-      "category": "Política",
-      "summary": "Resumen objetivo en dos oraciones.",
-      "aiComparisonNotice": "Síntesis del contraste de enfoques entre las redacciones.",
-      "articleIds": ["id_medio_1", "id_medio_2", "id_medio_3"],
-      "spectrum": {
-        "oficialismoPct": 40,
-        "centroDatosPct": 35,
-        "oposicionPct": 25,
-        "totalOutlets": 3
-      }
-    }
-  ]
-}
-
-Noticias a analizar:
-${JSON.stringify(candidateArticles.map(a => ({ id: a.id, medio: a.outletName, titulo: a.title, bajada: a.snippet })), null, 2)}
-`;
+  const clusteringSchema = {
+    type: 'object',
+    properties: {
+      clusters: {
+        type: 'array',
+        items: {
+          type: 'object',
+          properties: {
+            kicker: { type: 'string' },
+            neutralHeadline: { type: 'string' },
+            category: { type: 'string', enum: ['Política', 'Economía', 'Sociedad', 'Justicia', 'Internacional'] },
+            summary: { type: 'string' },
+            aiComparisonNotice: { type: 'string' },
+            articleIds: { type: 'array', items: { type: 'string' } },
+          },
+          required: ['kicker', 'neutralHeadline', 'category', 'summary', 'aiComparisonNotice', 'articleIds'],
+        },
+      },
+    },
+    required: ['clusters'],
+  };
 
   try {
-    const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-lite-latest:generateContent?key=${apiKey}`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        contents: [{ parts: [{ text: prompt }] }],
-        generationConfig: {
-          responseMimeType: 'application/json',
-          temperature: 0.2
-        }
-      })
-    });
+    const { GoogleGenAI } = await import('@google/genai');
+    const ai = new GoogleGenAI({ apiKey });
+    const models = ['gemini-4-hydrogen', 'gemini-3.5-flash-lite'];
+    let text = '';
+    let usedModel = '';
 
-    if (res.ok) {
-      const data = await res.json();
-      const text = data.candidates?.[0]?.content?.parts?.[0]?.text;
+    for (const model of models) {
+      try {
+        const interaction = await ai.interactions.create({
+          model,
+          system_instruction: systemInstruction,
+          input: inputPayload,
+          store: false,
+          generation_config: { thinking_level: 'low' },
+          response_format: {
+            type: 'text',
+            mime_type: 'application/json',
+            schema: clusteringSchema,
+          },
+        });
+        if (interaction.output_text) {
+          text = interaction.output_text;
+          usedModel = model;
+          break;
+        }
+      } catch (modelErr) {
+        console.warn(`⚠️ Model ${model} failed (${modelErr?.status || modelErr?.message}), trying fallback...`);
+      }
+    }
+
+    if (text) {
+      console.log(`🤖 Clustered with ${usedModel} (Interactions API v1)`);
       if (text) {
         const parsed = JSON.parse(text);
         const articleMap = new Map(combinedArticles.map(a => [a.id, a]));
@@ -586,7 +595,7 @@ ${JSON.stringify(candidateArticles.map(a => ({ id: a.id, medio: a.outletName, ti
         }
       }
     } else {
-      console.warn('Gemini returned error:', res.status, await res.text());
+      console.warn('Gemini returned empty output from all candidate models.');
     }
   } catch (err) {
     console.error('Error clustering with Gemini:', err);
