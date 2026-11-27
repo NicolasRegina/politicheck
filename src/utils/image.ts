@@ -23,6 +23,14 @@ export function getOptimizedImageUrl(
     return url;
   }
 
+  // Bypass wsrv.nl for already-optimized CDNs that block server-side proxies (e.g. La Nación Arc Resizer)
+  const DIRECT_CDN_PATTERNS = [
+    'resizer.glanacion.com',
+  ];
+  if (DIRECT_CDN_PATTERNS.some((host) => url.includes(host))) {
+    return url;
+  }
+
   // Encode origin url and apply compression parameters
   return `https://wsrv.nl/?url=${encodeURIComponent(url)}&w=${width}&q=${quality}&output=webp`;
 }

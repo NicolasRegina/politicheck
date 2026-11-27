@@ -75,8 +75,8 @@ const displayTimestamp = (story.updatedAt && story.updatedAt !== 'Reciente')
             >
               <img
                 src={optimizedLeadImageUrl}
-                srcset={optimizedLeadMobileImageUrl ? `${optimizedLeadMobileImageUrl} 480w, ${optimizedLeadImageUrl} 800w` : undefined}
-                sizes="(max-width: 640px) 100vw, 800px"
+                srcset={optimizedLeadImageUrl.includes('wsrv.nl') && optimizedLeadMobileImageUrl ? `${optimizedLeadMobileImageUrl} 480w, ${optimizedLeadImageUrl} 800w` : undefined}
+                sizes={optimizedLeadImageUrl.includes('wsrv.nl') ? '(max-width: 640px) 100vw, 800px' : undefined}
                 data-original-src={story.imageUrl}
                 alt={story.neutralHeadline}
                 loading="eager"
@@ -85,8 +85,8 @@ const displayTimestamp = (story.updatedAt && story.updatedAt !== 'Reciente')
                 width="800"
                 height="450"
                 referrerpolicy="no-referrer"
-                onerror="if (this.dataset.retry !== '1') { this.dataset.retry = '1'; this.setAttribute('src', this.dataset.originalSrc); } else { this.closest('.story-img-wrapper')?.style.setProperty('display', 'none'); }"
-                class="w-full h-full object-cover object-center motion-safe:transition-transform duration-300 motion-safe:group-hover:scale-[1.015]"
+                onerror="if (this.dataset.retry !== '1') { this.dataset.retry = '1'; this.removeAttribute('srcset'); this.setAttribute('src', this.dataset.originalSrc); } else { this.closest('.story-img-wrapper')?.style.setProperty('display', 'none'); }"
+                class="w-full h-full object-cover object-[50%_20%] motion-safe:transition-transform duration-300 motion-safe:group-hover:scale-[1.015]"
               />
             </a>
             {story.imageCaption && (
