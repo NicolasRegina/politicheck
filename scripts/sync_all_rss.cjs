@@ -417,14 +417,15 @@ async function run() {
 Tu objetivo es analizar noticias argentinas de última hora y agruparlas en torno a los hechos centrales de gran impacto ("Historias").
 
 REGLAS DE ORO OBLIGATORIAS:
-1. COMPARACIÓN MULTI-MEDIO ESTRICTA:
+1. COMPARACIÓN MULTI-MEDIO ESTRICTA SIN TOPE:
    - ESTÁ TERMINANTEMENTE PROHIBIDO que un cluster contenga más de 1 artículo del mismo medio. Cada noticia en "articleIds" DEBE ser de un medio DIFERENTE.
-   - Cada cluster DEBE incluir un MÍNIMO de 2 medios distintos (idealmente entre 3 y 6 medios distintos).
-2. COHERENCIA FACTUAL Y TEMÁTICA ESTRICTA:
+   - Cada cluster DEBE incluir un MÍNIMO de 2 medios distintos e incluir TODOS los medios distintos del listado que cubran ese mismo hecho (sin límite máximo).
+2. COHERENCIA FACTUAL Y ANTI-DUPLICADOS ESTRICTA:
    - Todas las noticias del cluster deben cubrir EXACTAMENTE EL MISMO ACONTECIMIENTO OBJETIVO.
+   - ESTÁ PROHIBIDO crear más de 1 cluster sobre el mismo tema o acontecimiento central en esta misma corrida. Si varios artículos cubren ángulos distintos del mismo hecho (ej. votación en el Senado y repercusiones), unificalos en UN SOLO cluster.
    - NO agrupes noticias solo porque compartan una palabra genérica.
 3. VARIEDAD TEMÁTICA Y NÚMERO DE HISTORIAS (OBLIGATORIO):
-   - Genera entre 4 y 6 historias equilibradas (al menos 1-2 de "Política", 1-2 de "Economía", y 1 de "Sociedad" o "Justicia").
+   - Genera entre 4 y 6 historias DISTINTAS y equilibradas (al menos 1-2 de "Política", 1-2 de "Economía", y 1 de "Sociedad" o "Justicia").
    - "clusters[0]" será la Gran Apertura de Tapa de mayor trascendencia nacional.
 4. Escribe "neutralHeadline" estrictamente factual, "summary" en dos oraciones objetivas, y "aiComparisonNotice" explicando qué priorizó y qué omitió cada redacción.`;
 

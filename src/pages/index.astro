@@ -16,6 +16,7 @@ import { getNewsClustersFromSupabase, getActiveCivicBanner } from '../services/s
 import { getPromisesWithLiveVotes, getPromisesStats } from '../services/promises';
 import { getPolitician } from '../data/politicians';
 import { getOptimizedImageUrl } from '../utils/image';
+import { deduplicateStoryClusters } from '../utils/clusterDedup';
 import { isBrazilElectionActive, brazilElectionMetadata, brazilElectionClusters, getLiveBrazilDispatches } from '../data/brasil_election';
 
 export const prerender = false;
@@ -99,6 +100,19 @@ dynamicStories.sort((a, b) => {
   return timeB - timeA;
 });
 
+// Collapse duplicate clusters (merging all distinct outlets & recalculating spectrum)
+dynamicStories = deduplicateStoryClusters(dynamicStories, 48);
+
+// Re-rank after merging outlets so stories with highest combined coverage lead
+dynamicStories.sort((a, b) => {
+  const scoreA = computeClusterEditorialScore(a);
+  const scoreB = computeClusterEditorialScore(b);
+  if (scoreA !== scoreB) return scoreB - scoreA;
+  const timeA = a.timestamp || new Date(a.updatedAt).getTime() || 0;
+  const timeB = b.timestamp || new Date(b.updatedAt).getTime() || 0;
+  return timeB - timeA;
+});
+
 if (dynamicStories.length > 0) {
   dynamicStories.forEach((s, idx) => {
     s.isLeadStory = (idx === 0);
@@ -110,7 +124,7 @@ const storiesToDisplay = dynamicStories;
 // Dynamic Foreign Stories & Full Live Foreign Articles for "La Mirada Exterior"
 const liveForeignArticles = await getCachedForeignArticlesAsync();
 const cachedForeignClusters = await getCachedForeignClustersAsync();
-const dynamicForeignStories = (foreignCloudClusters.length > 0)
+const rawForeignStories = (foreignCloudClusters.length > 0)
   ? foreignCloudClusters
   : (cachedForeignClusters.length > 0
     ? cachedForeignClusters
@@ -118,12 +132,13 @@ const dynamicForeignStories = (foreignCloudClusters.length > 0)
       ? await clusterForeignArticlesWithGemini(liveForeignArticles, import.meta.env.GEMINI_API_KEY)
       : []));
 
-dynamicForeignStories.sort((a, b) => {
+rawForeignStories.sort((a, b) => {
   const scoreA = computeClusterEditorialScore(a);
   const scoreB = computeClusterEditorialScore(b);
   if (scoreA !== scoreB) return scoreB - scoreA;
   return (b.timestamp || 0) - (a.timestamp || 0);
 });
+const dynamicForeignStories = deduplicateStoryClusters(rawForeignStories, 48);
 if (dynamicForeignStories.length > 0) {
   dynamicForeignStories.forEach((s, idx) => {
     s.isLeadStory = (idx === 0);

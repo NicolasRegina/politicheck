@@ -6,6 +6,7 @@ import { saveNewsClustersToSupabase, getNewsClustersFromSupabase } from '../supa
 import { OUTLETS_REGISTRY } from '../../utils/outlets';
 import { isEditorialRelevantArticle } from '../rss/parser';
 import { brazilElectionClusters } from '../../data/brasil_election';
+import { deduplicateStoryClusters, enrichClustersWithAllOutlets } from '../../utils/clusterDedup';
 
 function isSportsOrIrrelevant(a: Article): boolean {
   if (!a) return true;
@@ -411,17 +412,18 @@ export async function clusterArticlesWithGemini(
 Tu objetivo es analizar noticias argentinas y agruparlas en torno a los hechos centrales de gran impacto ("Historias").
 
 REGLAS DE ORO OBLIGATORIAS:
-1. COMPARACIÓN MULTI-MEDIO ESTRICTA:
+1. COMPARACIÓN MULTI-MEDIO ESTRICTA SIN TOPE:
    - ESTÁ TERMINANTEMENTE PROHIBIDO que un cluster contenga más de 1 artículo del mismo medio. Cada noticia DEBE ser de un medio DIFERENTE.
-   - Cada cluster DEBE incluir un MÍNIMO de 2 medios distintos (idealmente entre 3 y 6 medios distintos).
-2. COHERENCIA FACTUAL Y TEMÁTICA ESTRICTA:
+   - Cada cluster DEBE incluir un MÍNIMO de 2 medios distintos e incluir TODOS los medios distintos del listado que cubran ese mismo hecho (sin límite máximo de medios).
+2. COHERENCIA FACTUAL Y ANTI-DUPLICADOS ESTRICTA:
    - Todas las noticias del cluster deben cubrir EXACTAMENTE EL MISMO ACONTECIMIENTO OBJETIVO.
+   - ESTÁ PROHIBIDO crear más de 1 cluster sobre el mismo acontecimiento o tema central en esta misma corrida. Si varios artículos cubren ángulos distintos del mismo hecho (ej. votación en el Senado y sus repercusiones), unificalos en UN SOLO cluster.
    - Si la noticia central es un discurso o evento puntual, TODAS las notas agrupadas deben cubrir ese mismo evento (indicando el ángulo en "specificFocus"), sin mezclar hechos ajenos.
 3. CRITERIO EDITORIAL PARA DEPORTES Y CULTURA (ADR 0006):
    - Descarta partidos deportivos de rutina, fixtures, resultados y farándula.
    - SOLO admite noticias deportivas o culturales si involucran un cruce institucional directo (conflicto con el Estado, AFA/SAD, causas judiciales, regulación o financiamiento público) o conmoción nacional masiva, clasificándolas en "Sociedad" o "Política".
 4. VARIEDAD TEMÁTICA Y NÚMERO DE HISTORIAS (OBLIGATORIO):
-   - Genera entre 4 y 6 historias equilibradas (al menos 1-2 de "Política", 1-2 de "Economía", y 1 de "Sociedad" o "Justicia").
+   - Genera entre 4 y 6 historias DISTINTAS y equilibradas (al menos 1-2 de "Política", 1-2 de "Economía", y 1 de "Sociedad" o "Justicia").
    - "clusters[0]" será la Gran Apertura de Tapa de mayor trascendencia nacional.
 5. Escribe "neutralHeadline" estrictamente factual sin adjetivos tendenciosos, "summary" en dos oraciones objetivas, "aiComparisonNotice" explicando qué priorizó y qué omitió cada redacción, y en "articles" cada objeto con "id" y "specificFocus" (3 a 7 palabras).`;
 
@@ -569,22 +571,27 @@ REGLAS DE ORO OBLIGATORIAS:
       }
     }
 
+    // Deduplicate intra-run clusters (merging unique outlets if Gemini split one event into two)
+    // and enrich each cluster with ALL matching outlets from the full live RSS pool (zero extra tokens).
+    let finalStories = deduplicateStoryClusters(stories, 48);
+    finalStories = enrichClustersWithAllOutlets(finalStories, articles, isSportsOrIrrelevant);
+
     // Rank stories: highest concurrent newsrooms (most outlets) leads the front page
-    stories.sort((a, b) => {
+    finalStories.sort((a, b) => {
       const outletsA = (a.articles || []).length;
       const outletsB = (b.articles || []).length;
       if (outletsB !== outletsA) return outletsB - outletsA;
       return (b.timestamp || 0) - (a.timestamp || 0);
     });
-    if (stories.length > 0) {
-      stories.forEach((s, i) => { s.isLeadStory = (i === 0); });
+    if (finalStories.length > 0) {
+      finalStories.forEach((s, i) => { s.isLeadStory = (i === 0); });
     }
 
-    if (stories.length > 0) {
-      await saveClusteredStories(stories);
+    if (finalStories.length > 0) {
+      await saveClusteredStories(finalStories);
     }
-    console.log(`[AI Clustering] Gemini successfully generated ${stories.length} story clusters!`);
-    return stories;
+    console.log(`[AI Clustering] Gemini successfully generated ${finalStories.length} deduplicated & enriched story clusters!`);
+    return finalStories;
   } catch (err) {
     console.warn('[AI Clustering] Gemini call failed, falling back to rule-based clustering:', (err as Error).message);
     const fallbackStories = ruleBasedClustering(articles);

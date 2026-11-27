@@ -1,6 +1,12 @@
 import { createClient } from '@supabase/supabase-js';
 import type { ChatChannel, ChatMessage, ForumComment, ForumAuthorRole } from '../types';
 import { MemoryTtlCache } from './cache.ts';
+import {
+  areClustersDuplicate,
+  deduplicateStoryClusters,
+  mergeClusterArticles,
+  recalculateSpectrum,
+} from '../utils/clusterDedup';
 
 const supabaseUrl = import.meta.env?.SUPABASE_URL || process.env.SUPABASE_URL || import.meta.env?.PUBLIC_SUPABASE_URL || process.env.PUBLIC_SUPABASE_URL;
 const supabaseKey = import.meta.env?.SUPABASE_ANON_KEY || process.env.SUPABASE_ANON_KEY || import.meta.env?.PUBLIC_SUPABASE_ANON_KEY || process.env.PUBLIC_SUPABASE_ANON_KEY;
@@ -173,26 +179,65 @@ export function computeClusterEditorialScore(story: any): number {
 }
 
 /**
- * Save clustered news stories into Supabase cloud cache
+ * Save clustered news stories into Supabase cloud cache.
+ * Deduplicates incoming clusters and merges into any matching cluster from the last 36 hours
+ * so existing story URLs, forum debates, and all accumulated outlets are preserved.
  */
 export async function saveNewsClustersToSupabase(clusters: any[]): Promise<boolean> {
   if (!supabase || !clusters || clusters.length === 0) return false;
 
   try {
-    const rows = clusters.map((c, idx) => {
-      const articleTimes = (Array.isArray(c.articles) ? c.articles : [])
+    // 1. Deduplicate incoming batch against itself first
+    const uniqueIncoming = deduplicateStoryClusters(clusters, 48);
+
+    // 2. Load recent clusters (last 36h) to detect ongoing stories and merge outlets into their existing ID
+    const lookbackIso = new Date(Date.now() - 36 * 60 * 60 * 1000).toISOString();
+    const { data: recentExisting } = await supabase
+      .from('news_clusters')
+      .select('id, lead_title, neutral_headline, category, articles, key_quotes, updated_at')
+      .neq('id', 'live-feed-cache')
+      .neq('id', 'foreign-feed-cache')
+      .gt('updated_at', lookbackIso)
+      .order('updated_at', { ascending: false })
+      .limit(40);
+
+    const existingPool = Array.isArray(recentExisting) ? recentExisting : [];
+    const claimedExistingIds = new Set<string>();
+
+    const mergedById = new Map<string, any>();
+
+    uniqueIncoming.forEach((c, idx) => {
+      const matchedExisting = existingPool.find(
+        (ex) => !claimedExistingIds.has(ex.id) && areClustersDuplicate(ex, c, 36)
+      );
+
+      let targetId = c.id;
+      let finalArticles = Array.isArray(c.articles) ? c.articles : [];
+      let finalSpectrum = c.spectrum;
+
+      if (matchedExisting) {
+        claimedExistingIds.add(matchedExisting.id);
+        targetId = matchedExisting.id;
+        finalArticles = mergeClusterArticles(finalArticles, Array.isArray(matchedExisting.articles) ? matchedExisting.articles : []);
+        finalSpectrum = recalculateSpectrum(finalArticles);
+      }
+
+      const articleTimes = finalArticles
         .map((a: any) => typeof a.timestamp === 'number' ? a.timestamp : new Date(a.publishedAt).getTime())
         .filter((t: number) => !isNaN(t) && t > 0);
-      const clusterTimestamp = c.timestamp || (articleTimes.length > 0 ? Math.max(...articleTimes) : Date.now());
+      const clusterTimestamp = Math.max(
+        c.timestamp || 0,
+        articleTimes.length > 0 ? Math.max(...articleTimes) : Date.now()
+      );
 
-      return {
-        id: c.id,
+      mergedById.set(targetId, {
+        id: targetId,
         lead_title: c.leadTitle || c.neutralHeadline,
         neutral_headline: c.neutralHeadline,
         summary: c.summary,
         category: c.category || 'Política',
-        spectrum: c.spectrum,
-        articles: c.articles,
+        spectrum: finalSpectrum,
+        articles: finalArticles,
         key_quotes: {
           kicker: c.kicker,
           imageUrl: c.imageUrl,
@@ -201,11 +246,13 @@ export async function saveNewsClustersToSupabase(clusters: any[]): Promise<boole
           isLeadStory: c.isLeadStory ?? (idx === 0),
           updatedAt: c.updatedAt,
           timestamp: clusterTimestamp,
-          outletsCount: Array.isArray(c.articles) ? new Set(c.articles.map((a: any) => a.outletId || a.outletName)).size : 1
+          outletsCount: new Set(finalArticles.map((a: any) => a.outletId || a.outletName)).size
         },
         updated_at: new Date(clusterTimestamp).toISOString()
-      };
+      });
     });
+
+    const rows = Array.from(mergedById.values());
 
     const { error } = await supabase
       .from('news_clusters')
