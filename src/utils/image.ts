@@ -12,25 +12,29 @@ export function getOptimizedImageUrl(
   quality: number = 75
 ): string {
   if (!url) return '';
-  
+
+  // Clean HTML-encoded ampersands left over from XML RSS feeds (e.g. &amp;height=1080)
+  const cleanUrl = url.replace(/&amp;/g, '&').trim();
+
   // If it's already a relative path, SVG, or data URI, keep as-is
-  if (url.startsWith('/') || url.endsWith('.svg') || url.includes('data:image/')) {
-    return url;
-  }
-  
-  // Prevent double wrapping
-  if (url.includes('wsrv.nl')) {
-    return url;
+  if (cleanUrl.startsWith('/') || cleanUrl.endsWith('.svg') || cleanUrl.includes('data:image/')) {
+    return cleanUrl;
   }
 
-  // Bypass wsrv.nl for already-optimized CDNs that block server-side proxies (e.g. La Nación Arc Resizer)
+  // Prevent double wrapping
+  if (cleanUrl.includes('wsrv.nl')) {
+    return cleanUrl;
+  }
+
+  // Bypass wsrv.nl for already-optimized Arc/media CDNs that serve native AVIF/WebP and block server-side proxies
   const DIRECT_CDN_PATTERNS = [
     'resizer.glanacion.com',
+    'infobae.com/resizer',
   ];
-  if (DIRECT_CDN_PATTERNS.some((host) => url.includes(host))) {
-    return url;
+  if (DIRECT_CDN_PATTERNS.some((host) => cleanUrl.includes(host))) {
+    return cleanUrl;
   }
 
   // Encode origin url and apply compression parameters
-  return `https://wsrv.nl/?url=${encodeURIComponent(url)}&w=${width}&q=${quality}&output=webp`;
+  return `https://wsrv.nl/?url=${encodeURIComponent(cleanUrl)}&w=${width}&q=${quality}&output=webp`;
 }
