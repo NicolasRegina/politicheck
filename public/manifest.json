@@ -1,13 +1,13 @@
 {
-  "name": "Politicheck Argentina • Monitor de Sesgo y Promesas",
+  "name": "Politicheck Argentina • Observatorio de Medios y Promesas",
   "short_name": "Politicheck",
   "description": "Plataforma cívica independiente para comparar el sesgo mediático de 31 redacciones y auditar promesas electorales en Argentina.",
   "start_url": "/",
   "id": "/?source=pwa",
   "scope": "/",
   "display": "standalone",
-  "background_color": "#090D16",
-  "theme_color": "#090D16",
+  "background_color": "#121210",
+  "theme_color": "#121210",
   "orientation": "portrait-primary",
   "lang": "es-AR",
   "categories": ["news", "politics", "education"],
@@ -22,36 +22,48 @@
       "src": "/images/icon-192.png",
       "sizes": "192x192",
       "type": "image/png",
-      "purpose": "any maskable"
+      "purpose": "any"
+    },
+    {
+      "src": "/images/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable"
     },
     {
       "src": "/images/icon-512.png",
       "sizes": "512x512",
       "type": "image/png",
-      "purpose": "any maskable"
+      "purpose": "any"
+    },
+    {
+      "src": "/images/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
     }
   ],
   "shortcuts": [
     {
-      "name": "Gran Apertura de Tapa",
-      "short_name": "Tapa del Día",
-      "description": "Contraste de encuadre en el tema central del día",
-      "url": "/#tapa-principal",
-      "icons": [{ "src": "/favicon.svg", "sizes": "any" }]
+      "name": "Temas del Día",
+      "short_name": "Temas",
+      "description": "Contraste de encuadre en los temas centrales del día",
+      "url": "/",
+      "icons": [{ "src": "/images/icon-192.png", "sizes": "192x192", "type": "image/png" }]
     },
     {
       "name": "Monitor de Promesas 2027",
       "short_name": "Promesas",
       "description": "Auditoría ciudadana y termómetro de cumplimiento",
-      "url": "/#promesas",
-      "icons": [{ "src": "/favicon.svg", "sizes": "any" }]
+      "url": "/promesas",
+      "icons": [{ "src": "/images/icon-192.png", "sizes": "192x192", "type": "image/png" }]
     },
     {
       "name": "Metodología y Fuentes",
       "short_name": "Metodología",
       "description": "Catálogo de 31 medios y fórmula del espectro",
       "url": "/metodologia",
-      "icons": [{ "src": "/favicon.svg", "sizes": "any" }]
+      "icons": [{ "src": "/images/icon-192.png", "sizes": "192x192", "type": "image/png" }]
     }
   ]
 }
