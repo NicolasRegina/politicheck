@@ -378,19 +378,30 @@ const serverSyncIso = propSyncIso || (await getLastSyncTimestampAsync()) || new 
 </nav>
 
 <script>
-  // 1. Theme Toggle Logic
+  // 1. Theme Toggle Logic (syncs <meta name="color-scheme">, .dark class, and cross-tab storage)
+  const colorSchemeMeta = document.querySelector<HTMLMetaElement>('meta[name="color-scheme"]');
+  function applyThemeScheme(scheme: 'light' | 'dark') {
+    if (colorSchemeMeta) colorSchemeMeta.content = scheme;
+    document.documentElement.classList.toggle('dark', scheme === 'dark');
+  }
+
   const themeToggles = document.querySelectorAll('.theme-toggle');
   themeToggles.forEach(toggle => {
     toggle.addEventListener('click', () => {
-      const isDark = document.documentElement.classList.contains('dark');
-      if (isDark) {
-        document.documentElement.classList.remove('dark');
-        localStorage.setItem('politicheck-theme', 'light');
-      } else {
-        document.documentElement.classList.add('dark');
-        localStorage.setItem('politicheck-theme', 'dark');
+      const nextScheme: 'light' | 'dark' = document.documentElement.classList.contains('dark') ? 'light' : 'dark';
+      applyThemeScheme(nextScheme);
+      try {
+        localStorage.setItem('politicheck-theme', nextScheme);
+      } catch {
+        // Ignore storage errors in restricted browsing contexts
       }
     });
+  });
+
+  window.addEventListener('storage', (event) => {
+    if (event.key === 'politicheck-theme') {
+      applyThemeScheme(event.newValue === 'dark' ? 'dark' : 'light');
+    }
   });
 
   // 2. Dynamic Live Date Formatting (Intl in Spanish)
@@ -549,13 +560,15 @@ const serverSyncIso = propSyncIso || (await getLastSyncTimestampAsync()) || new 
     });
   });
 
-  // Global header search input: handle enter key if on external page
+  // Global header search input: IME-safe enter key handling on external pages
   const headerSearchInput = document.getElementById('search-input') as HTMLInputElement | null;
   if (headerSearchInput) {
     headerSearchInput.addEventListener('keydown', (e) => {
       if (e.key === 'Enter') {
+        if (e.isComposing || e.keyCode === 229) return;
         const val = headerSearchInput.value.trim();
         if (window.location.pathname !== '/' && window.location.pathname !== '') {
+          e.preventDefault();
           window.location.href = `/?q=${encodeURIComponent(val)}`;
         }
       }

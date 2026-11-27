@@ -303,11 +303,7 @@ function getGeminiKey(explicitKey?: string): string | undefined {
 
 export function selectCrossOutletCandidates(articles: Article[], maxArticles = 75): Article[] {
   // 1. Group articles by outlet
-  const byOutlet: Record<string, Article[]> = {};
-  articles.forEach(a => {
-    if (!byOutlet[a.outletId]) byOutlet[a.outletId] = [];
-    byOutlet[a.outletId].push(a);
-  });
+  const byOutlet = Object.groupBy(articles, (a) => a.outletId);
 
   // 2. Extract meaningful tokens from titles and snippets
   const stopWords = new Set([
@@ -383,8 +379,8 @@ export function selectCrossOutletCandidates(articles: Article[], maxArticles = 7
   }
 
   // Ensure every monitored outlet has representation in candidate pool
-  Object.values(byOutlet).forEach(outletArticles => {
-    for (const a of outletArticles.slice(0, 2)) {
+  Object.values(byOutlet).forEach((outletArticles) => {
+    for (const a of (outletArticles ?? []).slice(0, 2)) {
       const currentCount = outletCounts[a.outletId] || 0;
       if (!selectedIds.has(a.id) && selected.length < maxArticles + 25 && currentCount < 4) {
         selected.push(a);

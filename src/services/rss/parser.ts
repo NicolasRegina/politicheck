@@ -159,19 +159,15 @@ export function isEditorialRelevantArticle(
 }
 
 export async function parseFeed(config: RssFeedConfig, timeoutMs = 8000): Promise<Article[]> {
-  const controller = new AbortController();
-  const timer = setTimeout(() => controller.abort(), timeoutMs);
-
   try {
     const res = await fetch(config.url, {
-      signal: controller.signal,
+      signal: AbortSignal.timeout(timeoutMs),
       headers: {
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) PoliticheckBot/1.0 (+https://politicheck.ar)',
         'Accept': 'application/rss+xml, application/xml, text/xml;q=0.9, */*;q=0.8'
       }
     });
 
-    clearTimeout(timer);
     if (!res.ok) {
       console.warn(`[RSS Parser] Feed ${config.id} returned status ${res.status}`);
       return [];
@@ -230,7 +226,6 @@ export async function parseFeed(config: RssFeedConfig, timeoutMs = 8000): Promis
 
     return articles;
   } catch (err) {
-    clearTimeout(timer);
     console.warn(`[RSS Parser] Failed to fetch feed ${config.id}:`, (err as Error).message);
     return [];
   }

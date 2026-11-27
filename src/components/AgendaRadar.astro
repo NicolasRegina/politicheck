@@ -26,8 +26,7 @@ function toExactPercentages(ofi: number, cen: number, opo: number): { ofiPct: nu
   }));
   let remainder = 100 - floored.reduce((acc, item) => acc + item.val, 0);
   floored
-    .slice()
-    .sort((a, b) => b.rem - a.rem)
+    .toSorted((a, b) => b.rem - a.rem)
     .forEach((item) => {
       if (remainder > 0) {
         item.val += 1;

@@ -113,8 +113,40 @@ const absoluteImageUrl = image.startsWith('http') ? image : `https://www.politic
     <meta name="keywords" content="politica argentina, elecciones 2027, elecciones brasil 2026, lula da silva, elecciones presidenciales brasil, candidatos argentina, sesgo mediatico, encuadre de medios, noticias politica argentina, promesas de campaña, clarin, la nacion, infobae, pagina 12, ambito, editorial perfil, verificacion periodistica, espectro politico" />
 
     <!-- Theme & Colors (ADR-0008: Crema Editorial / Carbón Cálido) -->
+    <meta name="color-scheme" content="light dark" />
+    <script is:inline>
+      try {
+        const savedTheme = localStorage.getItem('politicheck-theme');
+        const resolved = savedTheme === 'dark' ? 'dark' : 'light';
+        const meta = document.querySelector('meta[name="color-scheme"]');
+        if (meta) meta.setAttribute('content', resolved);
+        document.documentElement.classList.toggle('dark', resolved === 'dark');
+      } catch {
+        document.documentElement.classList.remove('dark');
+      }
+    </script>
     <meta name="theme-color" content="#121210" media="(prefers-color-scheme: dark)" />
     <meta name="theme-color" content="#FAF9F6" media="(prefers-color-scheme: light)" />
+
+    <!-- Speculation Rules API: conservative hover prefetch for internal editorial routes -->
+    <script type="speculationrules" is:inline>
+      {
+        "prefetch": [
+          {
+            "tag": "politicheck-editorial-prefetch",
+            "where": {
+              "and": [
+                { "href_matches": "/*" },
+                { "not": { "href_matches": "/api/*" } },
+                { "not": { "selector_matches": ".do-not-prefetch" } },
+                { "not": { "selector_matches": "[rel~=nofollow]" } }
+              ]
+            },
+            "eagerness": "moderate"
+          }
+        ]
+      }
+    </script>
 
     <!-- Structured Data (JSON-LD) for Google Rich Snippets -->
     <script type="application/ld+json" is:inline>
@@ -143,17 +175,6 @@ const absoluteImageUrl = image.startsWith('http') ? image : `https://www.politic
             "inLanguage": "es-AR"
           }
         ]
-      }
-    </script>
-
-    <!-- Theme Initialization Script (Default to White/Light Theme) -->
-    <script is:inline>
-      const savedTheme = localStorage.getItem('politicheck-theme');
-      // Default to Light Mode as explicitly requested
-      if (savedTheme === 'dark') {
-        document.documentElement.classList.add('dark');
-      } else {
-        document.documentElement.classList.remove('dark');
       }
     </script>
   </head>
@@ -224,18 +245,19 @@ const absoluteImageUrl = image.startsWith('http') ? image : `https://www.politic
 
         if (actionsEl) {
           if (actions && actions.length > 0) {
-            actionsEl.innerHTML = '';
-            actionsEl.classList.remove('hidden');
-            actions.forEach(a => {
+            const links = actions.map(a => {
               const link = document.createElement('a');
               link.href = a.url;
               link.target = '_blank';
               link.rel = 'noopener noreferrer';
               link.className = `px-2.5 py-1 rounded-md text-[10px] font-sans font-bold motion-safe:transition-transform motion-safe:hover:scale-105 ${a.bg || 'bg-slate-800 text-white'}`;
               link.textContent = a.label;
-              actionsEl.appendChild(link);
+              return link;
             });
+            actionsEl.replaceChildren(...links);
+            actionsEl.classList.remove('hidden');
           } else {
+            actionsEl.replaceChildren();
             actionsEl.classList.add('hidden');
           }
         }

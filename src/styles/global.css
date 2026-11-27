@@ -34,6 +34,7 @@
 
 @layer base {
   :root {
+    color-scheme: light dark;
     --font-serif: 'Fraunces', Georgia, Cambria, 'Times New Roman', Times, serif;
     --font-sans: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, monospace;
@@ -62,7 +63,17 @@
     --rule-double: var(--pc-rule-strong);
     --divider-col: var(--pc-rule);
     --scroll-track: #F1EFE9;
-    --scroll-thumb: #CFCBC0;
+    --scroll-thumb: #8A867C;
+
+    scrollbar-color: var(--scroll-thumb) var(--scroll-track);
+    scrollbar-width: thin;
+
+    &:has(> head > meta[name="color-scheme"][content="dark"]) {
+      color-scheme: dark;
+    }
+    &:has(> head > meta[name="color-scheme"][content="light"]) {
+      color-scheme: light;
+    }
   }
 
   .dark {
@@ -89,7 +100,7 @@
     --rule-double: var(--pc-rule-strong);
     --divider-col: var(--pc-rule);
     --scroll-track: #121210;
-    --scroll-thumb: #2E2E29;
+    --scroll-thumb: #5E5D57;
   }
 
   html {
@@ -167,19 +178,43 @@
   background: linear-gradient(90deg, var(--color-navy-deep) 0%, var(--color-navy-card) 46%, transparent 100%), url('/images/flags/brasil.svg') right 0px center / 44px auto no-repeat;
 }
 
-/* Custom scrollbars */
-::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+/* Standard scrollbar fallback for browsers without scrollbar-color */
+@supports not (scrollbar-color: auto) {
+  :root {
+    scrollbar-width: auto;
+  }
+
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: var(--scroll-track);
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: var(--scroll-thumb);
+    border-radius: 9999px;
+  }
 }
 
-::-webkit-scrollbar-track {
-  background: var(--scroll-track);
+/* Cross-document view transitions (progressive enhancement) */
+@media (prefers-reduced-motion: no-preference) {
+  @view-transition {
+    navigation: auto;
+  }
 }
 
-::-webkit-scrollbar-thumb {
-  background: var(--scroll-thumb);
-  border-radius: 9999px;
+/* Defer rendering strictly below-the-fold heavy sections/cards */
+.deferred-section {
+  content-visibility: auto;
+  contain-intrinsic-size: auto none auto 280px;
+}
+
+.deferred-card {
+  content-visibility: auto;
+  contain-intrinsic-size: auto none auto 420px;
 }
 
 @media (prefers-reduced-motion: reduce) {

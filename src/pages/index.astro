@@ -133,7 +133,7 @@ if (dynamicForeignStories.length > 0) {
 const foreignStoriesToDisplay = dynamicForeignStories;
 
 // Sort live foreign articles chronologically descending
-const sortedForeignArticles = [...liveForeignArticles].sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
+const sortedForeignArticles = liveForeignArticles.toSorted((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
 
 const leadStory = storiesToDisplay[0];
 const leadStoryPreload = leadStory?.imageUrl ? getOptimizedImageUrl(leadStory.imageUrl, 800, 75) : undefined;
@@ -330,8 +330,8 @@ const blindspotStories = storiesToDisplay
       </div>
 
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 items-stretch" id="secondary-stories-grid">
-        {secondaryStories.map((story) => (
-          <div class="story-item h-full flex flex-col" data-category={story.category} data-text={`${story.neutralHeadline} ${story.summary} ${story.articles.map((a: any) => a.title + ' ' + a.outletName).join(' ')}`}>
+        {secondaryStories.map((story, idx) => (
+          <div class={`story-item h-full flex flex-col${idx >= 3 ? ' deferred-card' : ''}`} data-category={story.category} data-text={`${story.neutralHeadline} ${story.summary} ${story.articles.map((a: any) => a.title + ' ' + a.outletName).join(' ')}`}>
             <StoryCard story={story} />
           </div>
         ))}
@@ -367,7 +367,7 @@ const blindspotStories = storiesToDisplay
 
     <!-- SECTION 3.5: Observatorio Cívico: Política Argentina, Medios & Elecciones 2027 -->
     <!-- SECTION 3.5: Franja compacta de acceso rápido (Fix #7: elimina duplicación con Footer) -->
-    <section id="metodologia" class="bg-surface border border-rule rounded-md p-5 sm:p-6 space-y-4">
+    <section id="metodologia" class="deferred-section bg-surface border border-rule rounded-md p-5 sm:p-6 space-y-4">
       <div class="flex flex-wrap items-baseline justify-between gap-2 border-b border-rule pb-3">
         <h2 class="font-editorial text-lg sm:text-xl font-bold text-ink">
           Observatorio Electoral y Transparencia
@@ -961,7 +961,7 @@ const blindspotStories = storiesToDisplay
     if (paginationNextBtn) paginationNextBtn.disabled = (currentNewsPage >= totalPages);
 
     if (paginationPages) {
-      paginationPages.innerHTML = '';
+      paginationPages.replaceChildren();
       for (let p = 1; p <= totalPages; p++) {
         const pBtn = document.createElement('button');
         pBtn.type = 'button';
@@ -1365,7 +1365,7 @@ const blindspotStories = storiesToDisplay
 
         // Render page numeric indicators
         if (promisesPageIndicators) {
-          promisesPageIndicators.innerHTML = '';
+          promisesPageIndicators.replaceChildren();
           if (totalPages > 1) {
             for (let p = 1; p <= totalPages; p++) {
               const pageBtn = document.createElement('button');
