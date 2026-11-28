@@ -1,5 +1,6 @@
 import type { Article } from '../../types';
 import type { RssFeedConfig } from './sources';
+import { isValidNewsImageUrl } from '../../utils/image';
 
 // HTML Entity decoder helper
 function decodeHtmlEntities(str: string): string {
@@ -58,30 +59,40 @@ import { optimizeMediaImageUrl } from '../../utils/images';
 
 // Extract image URL from enclosure, media:content, or img tag
 function extractImageUrl(itemXml: string): string | undefined {
-  let rawUrl: string | undefined;
+  const candidates: string[] = [];
 
-  // 1. Enclosure
-  const enclosureMatch = itemXml.match(/<enclosure[^>]+url=["']([^"']+)["']/i);
-  if (enclosureMatch && enclosureMatch[1] && !enclosureMatch[1].endsWith('.gif')) {
-    rawUrl = enclosureMatch[1];
-  } else {
-    // 2. Media content
-    const mediaMatch = itemXml.match(/<media:content[^>]+url=["']([^"']+)["']/i);
-    if (mediaMatch && mediaMatch[1] && !mediaMatch[1].endsWith('.gif')) {
-      rawUrl = mediaMatch[1];
-    } else {
-      // 3. Img inside description
-      const descMatch = itemXml.match(/<description>([\s\S]*?)<\/description>/i);
-      if (descMatch) {
-        const imgMatch = descMatch[1].match(/<img[^>]+src=["']([^"']+)["']/i);
-        if (imgMatch && imgMatch[1] && !imgMatch[1].includes('tracking') && !imgMatch[1].endsWith('.gif')) {
-          rawUrl = imgMatch[1];
-        }
-      }
+  // 1. Enclosures (skip video/audio enclosures)
+  for (const m of itemXml.matchAll(/<enclosure\b([^>]+)>/gi)) {
+    const attrs = m[1] || '';
+    if (/type=["'](?:video|audio)\//i.test(attrs)) continue;
+    const urlMatch = attrs.match(/\burl=["']([^"']+)["']/i);
+    if (urlMatch?.[1]) candidates.push(urlMatch[1]);
+  }
+
+  // 2. Media content (skip video/audio media:content tags)
+  for (const m of itemXml.matchAll(/<media:content\b([^>]+)>/gi)) {
+    const attrs = m[1] || '';
+    if (/medium=["'](?:video|audio)["']/i.test(attrs) || /type=["'](?:video|audio)\//i.test(attrs)) continue;
+    const urlMatch = attrs.match(/\burl=["']([^"']+)["']/i);
+    if (urlMatch?.[1]) candidates.push(urlMatch[1]);
+  }
+
+  // 3. Media thumbnails (recovers real still thumbnails when an item's main media:content is a video player)
+  for (const m of itemXml.matchAll(/<media:thumbnail\b([^>]+)>/gi)) {
+    const urlMatch = (m[1] || '').match(/\burl=["']([^"']+)["']/i);
+    if (urlMatch?.[1]) candidates.push(urlMatch[1]);
+  }
+
+  // 4. Img inside description
+  const descMatch = itemXml.match(/<description>([\s\S]*?)<\/description>/i);
+  if (descMatch) {
+    for (const m of descMatch[1].matchAll(/<img[^>]+src=["']([^"']+)["']/gi)) {
+      if (m[1]) candidates.push(m[1]);
     }
   }
 
-  return rawUrl ? optimizeMediaImageUrl(rawUrl, 800) : undefined;
+  const validRaw = candidates.find((u) => isValidNewsImageUrl(u));
+  return validRaw ? optimizeMediaImageUrl(validRaw, 800) : undefined;
 }
 
 // Filter out non-civic/non-political content (sports fixtures, entertainment gossip, horoscopes, or foreign non-Argentine local hubs)

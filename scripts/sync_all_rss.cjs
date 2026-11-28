@@ -161,24 +161,47 @@ function optimizeMediaImageUrl(url, maxWidth = 800) {
   }
 }
 
+const NON_IMAGE_PATTERNS = [
+  'vodgc.net', '/player/', '/embed/', 'youtube.com', 'youtu.be', 'vimeo.com',
+  'dailymotion.com', 'jwplatform.com', 'brightcove', 'rudo.video', 'mdstrm.com',
+  'twitch.tv', 'spotify.com', 'soundcloud.com', 'tracking', 'pixel.'
+];
+const NON_IMAGE_EXT = /\.(mp4|m3u8|webm|mov|avi|mp3|wav|ogg|m4a|pdf|html?|php|js|css|gif)(\?|#|$)/i;
+
+function isValidImageUrl(u) {
+  if (!u) return false;
+  const clean = u.replace(/&amp;/g, '&').trim();
+  if (!/^https?:\/\//i.test(clean)) return false;
+  const lower = clean.toLowerCase();
+  return !NON_IMAGE_EXT.test(lower) && !NON_IMAGE_PATTERNS.some((p) => lower.includes(p));
+}
+
 function extractImageUrl(itemXml) {
-  let rawUrl;
-  const encMatch = itemXml.match(/<enclosure[^>]+url=["']([^"']+)["']/i);
-  if (encMatch && encMatch[1] && !encMatch[1].endsWith('.gif')) rawUrl = encMatch[1];
-  else {
-    const mediaMatch = itemXml.match(/<media:content[^>]+url=["']([^"']+)["']/i);
-    if (mediaMatch && mediaMatch[1] && !mediaMatch[1].endsWith('.gif')) rawUrl = mediaMatch[1];
-    else {
-      const descMatch = itemXml.match(/<description>([\s\S]*?)<\/description>/i);
-      if (descMatch) {
-        const imgMatch = descMatch[1].match(/<img[^>]+src=["']([^"']+)["']/i);
-        if (imgMatch && imgMatch[1] && !imgMatch[1].includes('tracking') && !imgMatch[1].endsWith('.gif')) {
-          rawUrl = imgMatch[1];
-        }
-      }
+  const candidates = [];
+  for (const m of itemXml.matchAll(/<enclosure\b([^>]+)>/gi)) {
+    const attrs = m[1] || '';
+    if (/type=["'](?:video|audio)\//i.test(attrs)) continue;
+    const urlMatch = attrs.match(/\burl=["']([^"']+)["']/i);
+    if (urlMatch?.[1]) candidates.push(urlMatch[1]);
+  }
+  for (const m of itemXml.matchAll(/<media:content\b([^>]+)>/gi)) {
+    const attrs = m[1] || '';
+    if (/medium=["'](?:video|audio)["']/i.test(attrs) || /type=["'](?:video|audio)\//i.test(attrs)) continue;
+    const urlMatch = attrs.match(/\burl=["']([^"']+)["']/i);
+    if (urlMatch?.[1]) candidates.push(urlMatch[1]);
+  }
+  for (const m of itemXml.matchAll(/<media:thumbnail\b([^>]+)>/gi)) {
+    const urlMatch = (m[1] || '').match(/\burl=["']([^"']+)["']/i);
+    if (urlMatch?.[1]) candidates.push(urlMatch[1]);
+  }
+  const descMatch = itemXml.match(/<description>([\s\S]*?)<\/description>/i);
+  if (descMatch) {
+    for (const m of descMatch[1].matchAll(/<img[^>]+src=["']([^"']+)["']/gi)) {
+      if (m[1]) candidates.push(m[1]);
     }
   }
-  return rawUrl ? optimizeMediaImageUrl(rawUrl, 800) : undefined;
+  const validRaw = candidates.find(isValidImageUrl);
+  return validRaw ? optimizeMediaImageUrl(validRaw, 800) : undefined;
 }
 
 const ARGENTINA_KEYWORDS = [

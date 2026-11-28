@@ -19,7 +19,7 @@ const optimizedThumbnailUrl = article.imageUrl ? getOptimizedImageUrl(article.im
   class="group block bg-white dark:bg-surface-dark rounded-xl p-3.5 sm:p-4 border border-slate-200 dark:border-slate-800/80 hover:border-slate-300 dark:hover:border-slate-700 transition-colors duration-200 shadow-xs"
 >
   <div class="flex gap-3.5 items-start">
-    {article.imageUrl && (
+    {optimizedThumbnailUrl && (
       <div class="thumbnail-wrapper w-20 h-20 sm:w-24 sm:h-20 shrink-0 overflow-hidden rounded-lg border border-slate-200 dark:border-slate-800 bg-slate-100 dark:bg-slate-900">
         <img 
           src={optimizedThumbnailUrl} 
