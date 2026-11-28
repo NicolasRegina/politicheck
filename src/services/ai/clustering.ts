@@ -241,7 +241,13 @@ async function callGeminiInteractionsJson(
   input: string,
   schema: Record<string, unknown>,
   label: string
-): Promise<{ rawJson: string; usedModel: string }> {
+): Promise<{
+  rawJson: string;
+  usedModel: string;
+  inputTokens: number;
+  outputTokens: number;
+  thoughtTokens: number;
+}> {
   const ai = new GoogleGenAI({ apiKey });
 
   for (const model of GEMINI_CLUSTERING_MODELS) {
@@ -263,13 +269,18 @@ async function callGeminiInteractionsJson(
 
       const candidateText = interaction.output_text;
       if (candidateText) {
-        const usage = (interaction as any).usage;
-        if (usage) {
-          console.log(
-            `[AI Clustering] ${label} (${model}) usage — in: ${usage.total_input_tokens ?? usage.input_tokens ?? '?'}, out: ${usage.total_output_tokens ?? usage.output_tokens ?? '?'}, thought: ${usage.total_thought_tokens ?? usage.thought_tokens ?? 0}`
-          );
-        }
-        return { rawJson: candidateText, usedModel: model };
+        const usage = (interaction as any).usage || {};
+        const inputTokens = Number(
+          usage.total_input_tokens ?? usage.input_tokens ?? Math.round((systemInstruction.length + input.length) / 4)
+        );
+        const outputTokens = Number(
+          usage.total_output_tokens ?? usage.output_tokens ?? Math.round(candidateText.length / 4)
+        );
+        const thoughtTokens = Number(usage.total_thought_tokens ?? usage.thought_tokens ?? 0);
+        console.log(
+          `[AI Clustering] ${label} (${model}) usage — in: ${inputTokens}, out: ${outputTokens}, thought: ${thoughtTokens}`
+        );
+        return { rawJson: candidateText, usedModel: model, inputTokens, outputTokens, thoughtTokens };
       }
       console.warn(`[AI Clustering] ${label} model ${model} returned empty output_text. Trying fallback...`);
     } catch (err: any) {
@@ -277,7 +288,7 @@ async function callGeminiInteractionsJson(
     }
   }
 
-  return { rawJson: '', usedModel: '' };
+  return { rawJson: '', usedModel: '', inputTokens: 0, outputTokens: 0, thoughtTokens: 0 };
 }
 
 function getGeminiKey(explicitKey?: string): string | undefined {
@@ -436,7 +447,7 @@ REGLAS DE ORO OBLIGATORIAS:
       }))
     )}`;
 
-    const { rawJson, usedModel } = await callGeminiInteractionsJson(
+    const { rawJson, usedModel, inputTokens, outputTokens, thoughtTokens } = await callGeminiInteractionsJson(
       geminiKey,
       systemInstruction,
       inputPayload,
@@ -589,6 +600,29 @@ REGLAS DE ORO OBLIGATORIAS:
 
     if (finalStories.length > 0) {
       await saveClusteredStories(finalStories);
+
+      // Persist real Gemini & enrichment telemetry for /admin
+      try {
+        const { saveClusteringTelemetryToSupabase } = await import('../supabase');
+        const outletCounts = finalStories.map((s) => (s.articles || []).length);
+        const totalArticlesEnriched = outletCounts.reduce((acc, n) => acc + n, 0);
+        const avgOutletsPerCluster = Number((totalArticlesEnriched / finalStories.length).toFixed(1));
+        const maxOutletsPerCluster = Math.max(...outletCounts);
+        await saveClusteringTelemetryToSupabase({
+          model: usedModel || GEMINI_CLUSTERING_MODELS[0],
+          inputTokens,
+          outputTokens,
+          thoughtTokens,
+          clustersCount: finalStories.length,
+          avgOutletsPerCluster,
+          maxOutletsPerCluster,
+          totalArticlesEnriched,
+          source: 'cron',
+          updatedAt: new Date().toISOString(),
+        });
+      } catch (telErr: any) {
+        console.warn('[AI Clustering] Non-fatal telemetry save error:', telErr?.message || telErr);
+      }
     }
     console.log(`[AI Clustering] Gemini successfully generated ${finalStories.length} deduplicated & enriched story clusters!`);
     return finalStories;

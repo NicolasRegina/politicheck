@@ -3,13 +3,10 @@ import Layout from '../../layouts/Layout.astro';
 import PromiseCard from '../../components/PromiseCard.astro';
 import StoryCard from '../../components/StoryCard.astro';
 import SpectrumBar from '../../components/SpectrumBar.astro';
-import { getPoliticianBySlugAsync, computePoliticianMediaStats } from '../../services/politicians';
-import { calculateAge, slugifyPolitician, getPolitician } from '../../data/politicians';
+import { getPoliticianBySlugAsync, computePoliticianMediaStats, getRecentStoryClustersWithFallback } from '../../services/politicians';
+import { calculateAge, getPoliticianInitials, slugifyPolitician, getPolitician } from '../../data/politicians';
 import { getPromisesWithLiveVotes, getPromisesStats } from '../../services/promises';
-import { getNewsClustersFromSupabase } from '../../services/supabase';
-import { getCachedClusteredStories } from '../../services/ai/clustering';
 import { getLastSyncTimestampAsync } from '../../services/rss/sync';
-import type { StoryCluster } from '../../types';
 
 export const prerender = false;
 Astro.response.headers.set('Cache-Control', 'public, s-maxage=300, stale-while-revalidate=900');
@@ -17,10 +14,10 @@ Astro.response.headers.set('Cache-Control', 'public, s-maxage=300, stale-while-r
 const rawSlug = Astro.params.slug || '';
 const normalizedSlug = slugifyPolitician(rawSlug);
 
-const [dbPolitician, allPromises, cloudClusters, lastSyncIso] = await Promise.all([
+const [dbPolitician, allPromises, sourceStories, lastSyncIso] = await Promise.all([
   getPoliticianBySlugAsync(normalizedSlug),
   getPromisesWithLiveVotes(),
-  getNewsClustersFromSupabase({ maxAgeDays: 14, limit: 60 }).catch(() => null),
+  getRecentStoryClustersWithFallback(14, 60),
   getLastSyncTimestampAsync().catch(() => null),
 ]);
 
@@ -43,27 +40,12 @@ const candidatePromises = politician
   : [];
 const promiseStats = getPromisesStats(candidatePromises);
 
-const sourceStories: StoryCluster[] =
-  Array.isArray(cloudClusters) && cloudClusters.length > 0
-    ? (cloudClusters as StoryCluster[])
-    : getCachedClusteredStories();
-
 const mediaStats = politician
   ? computePoliticianMediaStats(politician, sourceStories)
   : { mentions: 0, stories: [], spectrum: { oficialismo: 0, centro_datos: 0, oposicion: 0, totalArticles: 0 } };
 
 const recentStories = mediaStats.stories.slice(0, 6);
 const age = politician ? calculateAge(politician.birthDate) : null;
-
-function getInitials(name: string): string {
-  return name
-    .split(/\s+/)
-    .filter(Boolean)
-    .map((part) => part[0])
-    .slice(0, 2)
-    .join('')
-    .toUpperCase();
-}
 
 const pageTitle = politician
   ? `${politician.name} • Biografía, Trayectoria y Cobertura | Politicheck`
@@ -140,7 +122,7 @@ const personJsonLd = politician
               <div
                 class={`w-full h-full font-mono text-4xl font-bold items-center justify-center ${politician.partyColor.badgeBg} ${politician.avatar ? 'hidden' : 'flex'}`}
               >
-                {getInitials(politician.name)}
+                {getPoliticianInitials(politician.name)}
               </div>
             </div>
             {politician.avatarCredit && (
@@ -190,7 +172,7 @@ const personJsonLd = politician
               </div>
               <div class="p-3 rounded-md bg-surface-muted/70 border border-rule">
                 <div class="font-mono text-xl font-bold text-ink">{mediaStats.spectrum.totalArticles}</div>
-                <div class="text-[11px] font-sans text-ink-muted">Notas relevadas</div>
+                <div class="text-[11px] font-sans text-ink-muted">Noticias relevadas</div>
               </div>
               <div class="p-3 rounded-md bg-surface-muted/70 border border-rule">
                 <div class="font-mono text-xl font-bold text-ink">{promiseStats.total}</div>
@@ -256,7 +238,7 @@ const personJsonLd = politician
           {mediaStats.spectrum.totalArticles > 0 ? (
             <div class="space-y-4">
               <p class="text-xs font-sans text-ink-secondary leading-relaxed">
-                Distribución editorial calculada automáticamente sobre <strong>{mediaStats.spectrum.totalArticles} notas</strong> pertenecientes a <strong>{mediaStats.mentions} Historias</strong> recientes que mencionan a {politician.name}.
+                Distribución editorial calculada automáticamente sobre <strong>{mediaStats.spectrum.totalArticles} Noticias</strong> pertenecientes a <strong>{mediaStats.mentions} Historias</strong> recientes que mencionan a {politician.name}.
               </p>
 
               <SpectrumBar

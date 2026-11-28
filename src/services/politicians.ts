@@ -1,5 +1,6 @@
-import { supabase, supabaseReadCache } from './supabase';
+import { createServiceRoleClient, getNewsClustersFromSupabase, supabase, supabaseReadCache } from './supabase';
 import { getOutletMeta } from '../utils/outlets';
+import { getCachedClusteredStories } from './ai/clustering';
 import {
   POLITICIANS_LIST,
   normalizePoliticianText,
@@ -15,6 +16,13 @@ import type { StoryCluster } from '../types';
 
 const POLITICIANS_CACHE_KEY = 'politicians:active:all';
 const POLITICIANS_TTL_MS = 5 * 60 * 1000;
+
+const FALLBACK_PARTY_COLOR: PoliticianPartyColor = {
+  badgeBg: 'bg-surface-muted text-ink border-rule',
+  border: 'border-rule',
+  accentBar: 'border-l-ink',
+  lightRing: 'ring-rule',
+};
 
 export interface PoliticianMediaStats {
   mentions: number;
@@ -43,8 +51,24 @@ export interface PoliticianAlert {
   created_at: string;
 }
 
+export interface DetectedRoleAlert {
+  politician_slug: string;
+  politician_name: string;
+  story_id: string;
+  story_headline: string;
+  story_url: string;
+  trigger_keyword: string;
+  detected_snippet: string;
+  suggested_role: string | null;
+  status: 'pending';
+}
+
 function escapeRegExp(value: string): string {
   return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
+function getStaticPoliticiansSorted(): PoliticianConfig[] {
+  return [...POLITICIANS_LIST].sort((a, b) => a.name.localeCompare(b.name, 'es'));
 }
 
 function mapDbRowToPolitician(row: any): PoliticianConfig {
@@ -76,12 +100,7 @@ function mapDbRowToPolitician(row: any): PoliticianConfig {
     sources: Array.isArray(row.sources) ? row.sources : staticFallback?.sources || [],
     partyColor: (row.party_color && row.party_color.badgeBg
       ? row.party_color
-      : staticFallback?.partyColor || {
-          badgeBg: 'bg-slate-100 text-slate-800 border-slate-300 dark:bg-slate-800 dark:text-slate-200 dark:border-slate-700',
-          border: 'border-slate-400',
-          accentBar: 'border-l-slate-500',
-          lightRing: 'ring-slate-300',
-        }) as PoliticianPartyColor,
+      : staticFallback?.partyColor || FALLBACK_PARTY_COLOR) as PoliticianPartyColor,
     matchAliases: staticFallback?.matchAliases,
     updatedAt: row.updated_at,
   };
@@ -99,9 +118,7 @@ export async function getAllPoliticians(): Promise<PoliticianConfig[]> {
   const cached = supabaseReadCache.get<PoliticianConfig[]>(POLITICIANS_CACHE_KEY);
   if (cached && cached.length > 0) return cached;
 
-  if (!supabase) {
-    return [...POLITICIANS_LIST].sort((a, b) => a.name.localeCompare(b.name, 'es'));
-  }
+  if (!supabase) return getStaticPoliticiansSorted();
 
   try {
     const { data, error } = await supabase
@@ -111,14 +128,14 @@ export async function getAllPoliticians(): Promise<PoliticianConfig[]> {
       .order('name', { ascending: true });
 
     if (error || !data || data.length === 0) {
-      return [...POLITICIANS_LIST].sort((a, b) => a.name.localeCompare(b.name, 'es'));
+      return getStaticPoliticiansSorted();
     }
 
     const mapped = data.map(mapDbRowToPolitician).sort((a, b) => a.name.localeCompare(b.name, 'es'));
     supabaseReadCache.set(POLITICIANS_CACHE_KEY, mapped, POLITICIANS_TTL_MS);
     return mapped;
   } catch {
-    return [...POLITICIANS_LIST].sort((a, b) => a.name.localeCompare(b.name, 'es'));
+    return getStaticPoliticiansSorted();
   }
 }
 
@@ -126,6 +143,19 @@ export async function getPoliticianBySlugAsync(rawSlug: string): Promise<Politic
   const normalized = slugifyPolitician(rawSlug);
   const all = await getAllPoliticians();
   return all.find((p) => p.slug === normalized) || null;
+}
+
+/**
+ * Shared loader for recent 14-day StoryClusters with local fallback.
+ */
+export async function getRecentStoryClustersWithFallback(
+  maxAgeDays = 14,
+  limit = 60
+): Promise<StoryCluster[]> {
+  const cloudClusters = await getNewsClustersFromSupabase({ maxAgeDays, limit }).catch(() => null);
+  return Array.isArray(cloudClusters) && cloudClusters.length > 0
+    ? (cloudClusters as StoryCluster[])
+    : getCachedClusteredStories();
 }
 
 /**
@@ -206,69 +236,112 @@ export function computePoliticianMediaStats(
   };
 }
 
-const ROLE_CHANGE_TRIGGERS: Array<{ keyword: string; regex: RegExp }> = [
-  { keyword: 'renunció', regex: /\b(renuncio|renuncia|presento su renuncia)\b/i },
-  { keyword: 'dimitió', regex: /\b(dimitio|dimision)\b/i },
-  { keyword: 'asumió', regex: /\b(asumio como|asume como|asuncion de)\b/i },
-  { keyword: 'juró', regex: /\b(juro como|jura como)\b/i },
-  { keyword: 'designado', regex: /\b(fue designad[oa]|designaron a|nuevo ministro|nueva ministra|jefe de gabinete)\b/i },
-  { keyword: 'destituido', regex: /\b(destituid[oa]|desplazad[oa] del cargo|echo a|despidio a)\b/i },
-  { keyword: 'inhabilitación', regex: /\b(inhabilitacion perpetua|condena firme|fallo firme)\b/i },
-  { keyword: 'dejó el cargo', regex: /\b(dejo el cargo|deja el cargo|dejo el ministerio|deja el ministerio)\b/i },
+interface RoleTriggerRule {
+  keyword: string;
+  kind: 'resignation' | 'appointment' | 'disqualification';
+  regex: RegExp;
+}
+
+const ROLE_CHANGE_TRIGGERS: RoleTriggerRule[] = [
+  { keyword: 'renunció', kind: 'resignation', regex: /\b(renuncio|presento su renuncia|renuncia de)\b/i },
+  { keyword: 'dimitió', kind: 'resignation', regex: /\b(dimitio|presento su dimision|dimision de)\b/i },
+  { keyword: 'dejó el cargo', kind: 'resignation', regex: /\b(dejo el cargo|deja el cargo|dejo el ministerio|deja el ministerio)\b/i },
+  { keyword: 'destituido', kind: 'resignation', regex: /\b(destituid[oa]|desplazad[oa] del cargo|removido del cargo|removida del cargo)\b/i },
+  { keyword: 'asumió', kind: 'appointment', regex: /\b(asumio como|asume como|asumio al frente de)\b/i },
+  { keyword: 'juró', kind: 'appointment', regex: /\b(juro como|jura como)\b/i },
+  { keyword: 'designado', kind: 'appointment', regex: /\b(fue designad[oa]|designaron a|nombro como|fue nombrad[oa])\b/i },
+  { keyword: 'inhabilitación', kind: 'disqualification', regex: /\b(inhabilitacion perpetua|inhabilitacion absoluta|condena firme)\b/i },
 ];
 
-/**
- * Scans incoming StoryClusters for verifiable institutional role-change signals
- * (resignations, appointments, swearing-in, disqualifications) and inserts pending
- * human-in-the-loop alerts into `politician_alerts`. Never overwrites live profiles.
- */
-export async function detectAndRecordPoliticianRoleAlerts(
-  clusters: StoryCluster[]
-): Promise<number> {
-  if (!supabase || !Array.isArray(clusters) || clusters.length === 0) return 0;
+function extractSuggestedRole(rawSentence: string, rule: RoleTriggerRule): string | null {
+  if (rule.kind === 'resignation') {
+    return 'Sin cargo público estatal (verificar renuncia)';
+  }
+  if (rule.kind === 'disqualification') {
+    return 'Sin cargo estatal · inhabilitado/a (verificar fallo)';
+  }
+  // Appointment: extract role right after "como" / "al frente de"
+  const match = rawSentence.match(
+    /\b(?:asumi[oó]|asume|jur[oó]|jura|designad[oa]|nombrad[oa]|nombr[oó])\s+(?:como|al frente de)\s+([^.,;:()]{4,85})/i
+  );
+  if (match && match[1]) {
+    const cleaned = match[1].trim().replace(/\s+(y|en medio|tras|luego|despu[eé]s)\b.*$/i, '').trim();
+    if (cleaned.length >= 4) {
+      return cleaned.charAt(0).toUpperCase() + cleaned.slice(1);
+    }
+  }
+  return null;
+}
 
-  const politicians = await getAllPoliticians();
-  const candidatesToInsert: Array<{
-    politician_slug: string;
-    politician_name: string;
-    story_id: string;
-    story_headline: string;
-    story_url: string;
-    trigger_keyword: string;
-    detected_snippet: string;
-    status: 'pending';
-  }> = [];
+/**
+ * Pure, testable institutional role-change detector (ADR-0009).
+ * Matches a Politician ONLY when their unambiguous alias and a genuine transition verb
+ * co-occur in the same sentence (headline or summary), avoiding multi-person false positives.
+ */
+export function extractPoliticianRoleAlerts(
+  clusters: Array<{ id: string; neutralHeadline?: string; neutral_headline?: string; summary?: string }>,
+  politicians: PoliticianConfig[]
+): DetectedRoleAlert[] {
+  const alerts: DetectedRoleAlert[] = [];
+  const seenKeys = new Set<string>();
 
   for (const story of clusters) {
-    const headline = String(story.neutralHeadline || '').trim();
+    const storyId = String(story.id || '').trim();
+    const headline = String(story.neutralHeadline || story.neutral_headline || '').trim();
     const summary = String(story.summary || '').trim();
-    if (!headline || !story.id) continue;
+    if (!storyId || !headline) continue;
 
-    const normalizedLead = normalizePoliticianText(`${headline} ${summary}`);
-    const matchedTrigger = ROLE_CHANGE_TRIGGERS.find((t) => t.regex.test(normalizedLead));
-    if (!matchedTrigger) continue;
+    // Split into individual sentences so politician + transition verb must co-occur locally
+    const sentences = [headline, ...summary.split(/(?<=[.!?])\s+/)].filter(Boolean);
 
-    for (const pol of politicians) {
-      const patterns = buildPoliticianMatchPatterns(pol);
-      if (patterns.some((rx) => rx.test(normalizedLead))) {
-        candidatesToInsert.push({
-          politician_slug: pol.slug,
-          politician_name: pol.name,
-          story_id: String(story.id),
-          story_headline: headline.slice(0, 280),
-          story_url: `/historia/${story.id}`,
-          trigger_keyword: matchedTrigger.keyword,
-          detected_snippet: summary.slice(0, 400),
-          status: 'pending',
-        });
+    for (const rawSentence of sentences) {
+      const normalizedSentence = normalizePoliticianText(rawSentence);
+      const matchedRule = ROLE_CHANGE_TRIGGERS.find((r) => r.regex.test(normalizedSentence));
+      if (!matchedRule) continue;
+
+      for (const pol of politicians) {
+        const dedupKey = `${pol.slug}::${storyId}`;
+        if (seenKeys.has(dedupKey)) continue;
+
+        const patterns = buildPoliticianMatchPatterns(pol);
+        if (patterns.some((rx) => rx.test(normalizedSentence))) {
+          seenKeys.add(dedupKey);
+          alerts.push({
+            politician_slug: pol.slug,
+            politician_name: pol.name,
+            story_id: storyId,
+            story_headline: headline.slice(0, 280),
+            story_url: `/historia/${storyId}`,
+            trigger_keyword: matchedRule.keyword,
+            detected_snippet: rawSentence.slice(0, 400),
+            suggested_role: extractSuggestedRole(rawSentence, matchedRule),
+            status: 'pending',
+          });
+        }
       }
     }
   }
 
+  return alerts;
+}
+
+/**
+ * Persists detected institutional role-change alerts into `politician_alerts`.
+ * Requires a service-role or authenticated admin Supabase client (anon INSERT is blocked by RLS).
+ */
+export async function detectAndRecordPoliticianRoleAlerts(
+  clusters: Array<{ id: string; neutralHeadline?: string; neutral_headline?: string; summary?: string }>,
+  explicitClient?: any
+): Promise<number> {
+  const writerClient = explicitClient || createServiceRoleClient();
+  if (!writerClient || !Array.isArray(clusters) || clusters.length === 0) return 0;
+
+  const politicians = await getAllPoliticians();
+  const candidatesToInsert = extractPoliticianRoleAlerts(clusters, politicians);
   if (candidatesToInsert.length === 0) return 0;
 
   try {
-    const { error } = await supabase
+    const { error } = await writerClient
       .from('politician_alerts')
       .upsert(candidatesToInsert, {
         onConflict: 'politician_slug,story_id',

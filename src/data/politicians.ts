@@ -1010,6 +1010,16 @@ export function getPoliticianBySlug(slug: string): PoliticianConfig | null {
   return POLITICIANS_BY_SLUG[normalized] || null;
 }
 
+export function getPoliticianInitials(name: string): string {
+  return (name || '')
+    .split(/\s+/)
+    .filter(Boolean)
+    .map((part) => part[0])
+    .slice(0, 2)
+    .join('')
+    .toUpperCase();
+}
+
 export function calculateAge(birthDateDDMMYYYY: string): number | null {
   const match = /^(\d{2})\/(\d{2})\/(\d{4})$/.exec((birthDateDDMMYYYY || '').trim());
   if (!match) return null;

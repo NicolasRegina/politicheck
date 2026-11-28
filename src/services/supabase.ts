@@ -17,6 +17,19 @@ export const supabase = isSupabaseConfigured
   ? createClient(supabaseUrl!, supabaseKey!)
   : null;
 
+/**
+ * Creates a privileged server-side Supabase client when SUPABASE_SERVICE_ROLE_KEY is configured.
+ * Used exclusively by server-side cron/sync jobs to write protected tables (e.g. politician_alerts).
+ */
+export function createServiceRoleClient() {
+  const serviceKey =
+    import.meta.env?.SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABASE_SERVICE_ROLE_KEY;
+  if (!supabaseUrl || !serviceKey) return null;
+  return createClient(supabaseUrl, serviceKey, {
+    auth: { persistSession: false, autoRefreshToken: false },
+  });
+}
+
 export const supabaseReadCache = new MemoryTtlCache();
 
 const CLUSTERS_TTL_MS = 3 * 60 * 1000;
@@ -32,6 +45,82 @@ export function invalidateNewsCache(): void {
 
 export function invalidateBannersCache(): void {
   supabaseReadCache.invalidate('banner:');
+}
+
+export interface ClusteringTelemetry {
+  model: string;
+  inputTokens: number;
+  outputTokens: number;
+  thoughtTokens: number;
+  clustersCount: number;
+  avgOutletsPerCluster: number;
+  maxOutletsPerCluster: number;
+  totalArticlesEnriched: number;
+  source: 'cron' | 'admin' | 'manual_script';
+  updatedAt: string;
+}
+
+export async function saveClusteringTelemetryToSupabase(
+  telemetry: ClusteringTelemetry
+): Promise<boolean> {
+  if (!supabase) return false;
+  try {
+    const { error } = await supabase.from('news_clusters').upsert(
+      {
+        id: 'clustering-telemetry-cache',
+        lead_title: `Telemetry (${telemetry.model})`,
+        neutral_headline: `Telemetry (${telemetry.model})`,
+        summary: `avg=${telemetry.avgOutletsPerCluster}, in=${telemetry.inputTokens}, out=${telemetry.outputTokens}`,
+        category: 'Sistema',
+        spectrum: { oficialismoPct: 0, centroDatosPct: 100, oposicionPct: 0, totalOutlets: 1 },
+        articles: [],
+        key_quotes: telemetry,
+        updated_at: telemetry.updatedAt || new Date().toISOString(),
+      },
+      { onConflict: 'id' }
+    );
+    if (error) {
+      console.warn('[Supabase] Error saving clustering telemetry:', error.message);
+      return false;
+    }
+    supabaseReadCache.invalidate('telemetry:');
+    return true;
+  } catch (err: any) {
+    console.warn('[Supabase] Exception saving clustering telemetry:', err?.message || err);
+    return false;
+  }
+}
+
+export async function getClusteringTelemetryFromSupabase(): Promise<ClusteringTelemetry | null> {
+  if (!supabase) return null;
+  return supabaseReadCache.getOrLoad('telemetry:latest', TIMESTAMP_TTL_MS, async () => {
+    try {
+      const { data, error } = await supabase
+        .from('news_clusters')
+        .select('key_quotes, updated_at')
+        .eq('id', 'clustering-telemetry-cache')
+        .maybeSingle();
+
+      if (error || !data || !data.key_quotes || typeof data.key_quotes !== 'object') {
+        return null;
+      }
+      const q = data.key_quotes as any;
+      return {
+        model: String(q.model || 'gemini-3.5-flash-lite'),
+        inputTokens: Number(q.inputTokens || 0),
+        outputTokens: Number(q.outputTokens || 0),
+        thoughtTokens: Number(q.thoughtTokens || 0),
+        clustersCount: Number(q.clustersCount || 0),
+        avgOutletsPerCluster: Number(q.avgOutletsPerCluster || 0),
+        maxOutletsPerCluster: Number(q.maxOutletsPerCluster || 0),
+        totalArticlesEnriched: Number(q.totalArticlesEnriched || 0),
+        source: (q.source || 'cron') as ClusteringTelemetry['source'],
+        updatedAt: String(q.updatedAt || data.updated_at || new Date().toISOString()),
+      };
+    } catch {
+      return null;
+    }
+  });
 }
 
 /**
@@ -197,6 +286,7 @@ export async function saveNewsClustersToSupabase(clusters: any[]): Promise<boole
       .select('id, lead_title, neutral_headline, category, articles, key_quotes, updated_at')
       .neq('id', 'live-feed-cache')
       .neq('id', 'foreign-feed-cache')
+      .neq('id', 'clustering-telemetry-cache')
       .gt('updated_at', lookbackIso)
       .order('updated_at', { ascending: false })
       .limit(40);
@@ -265,9 +355,10 @@ export async function saveNewsClustersToSupabase(clusters: any[]): Promise<boole
     invalidateNewsCache();
 
     // Non-blocking human-in-the-loop institutional role-change detector (ADR-0009)
+    // Uses final post-merge `rows` so every alert links to the canonical merged /historia/:id
     try {
       const { detectAndRecordPoliticianRoleAlerts } = await import('./politicians');
-      await detectAndRecordPoliticianRoleAlerts(uniqueIncoming);
+      await detectAndRecordPoliticianRoleAlerts(rows);
     } catch (alertErr: any) {
       console.warn('[Supabase] Non-fatal role-alert scan error:', alertErr?.message || alertErr);
     }
@@ -332,6 +423,7 @@ export async function getNewsClustersFromSupabase(
         .select('id, lead_title, neutral_headline, summary, category, spectrum, articles, key_quotes, updated_at')
         .neq('id', 'live-feed-cache')
         .neq('id', 'foreign-feed-cache')
+        .neq('id', 'clustering-telemetry-cache')
         .gt('updated_at', minTime)
         .order('updated_at', { ascending: false })
         .limit(limit);

@@ -463,6 +463,7 @@ REGLAS DE ORO OBLIGATORIAS:
     const models = ['gemini-4-hydrogen', 'gemini-3.5-flash-lite'];
     let text = '';
     let usedModel = '';
+    let usedUsage = null;
 
     for (const model of models) {
       try {
@@ -481,6 +482,7 @@ REGLAS DE ORO OBLIGATORIAS:
         if (interaction.output_text) {
           text = interaction.output_text;
           usedModel = model;
+          usedUsage = interaction.usage || null;
           break;
         }
       } catch (modelErr) {
@@ -511,8 +513,8 @@ REGLAS DE ORO OBLIGATORIAS:
           derechadiario: 'oficialismo'
         };
 
-        const clusters = parsed.clusters.map((c, idx) => {
-          const rawArticles = c.articleIds.map(id => articleMap.get(id)).filter(Boolean);
+        const rawClusters = parsed.clusters.map((c, idx) => {
+          const rawArticles = (c.articleIds || []).map(id => articleMap.get(id)).filter(Boolean);
           const seenOutlets = new Set();
           const clusterArticles = [];
           for (const a of rawArticles) {
@@ -521,45 +523,120 @@ REGLAS DE ORO OBLIGATORIAS:
               clusterArticles.push(a);
             }
           }
-          const leadImg = clusterArticles.find(a => Boolean(a.imageUrl))?.imageUrl || 
+          const leadImg = clusterArticles.find(a => Boolean(a.imageUrl))?.imageUrl ||
             (c.category === 'Economía' ? '/images/regalias.jpg' : c.category === 'Sociedad' ? '/images/universidad.jpg' : '/images/malvinas.jpg');
 
-          let ofi = 0, centro = 0, opo = 0;
-          clusterArticles.forEach(a => {
-            const l = OUTLETS_LEANING[a.outletId] || 'centro_datos';
-            if (l === 'oficialismo') ofi++;
-            else if (l === 'oposicion') opo++;
-            else centro++;
-          });
-          const total = clusterArticles.length || 1;
-          const ofiPct = Math.round((ofi / total) * 100);
-          const centroPct = Math.round((centro / total) * 100);
-          const opoPct = Math.max(0, 100 - ofiPct - centroPct);
+          const cleanSlug = (c.neutralHeadline || '')
+            .toLowerCase()
+            .normalize('NFD')
+            .replace(/[\u0300-\u036f]/g, '')
+            .replace(/[^a-z0-9]+/g, '-')
+            .slice(0, 50)
+            .replace(/^-|-$/g, '');
+          const uniqueId = cleanSlug ? `story-${cleanSlug}` : `story-ai-${Date.now().toString(36)}-${idx + 1}`;
 
           const time = clusterArticles[0]?.publishedAt || 'Hoy';
-
           return {
-            id: `story-ai-${idx + 1}`,
+            id: uniqueId,
             isLeadStory: idx === 0,
             kicker: c.kicker,
             neutralHeadline: c.neutralHeadline,
-            category: c.category,
+            category: c.category || 'Política',
             summary: c.summary,
             updatedAt: time,
+            timestamp: clusterArticles[0]?.timestamp || Date.now(),
             imageUrl: leadImg,
             imageCaption: `Cobertura periodística de ${clusterArticles[0]?.outletName || 'prensa oficial'}.`,
-            spectrum: {
-              oficialismoPct: ofiPct,
-              centroDatosPct: centroPct,
-              oposicionPct: opoPct,
-              totalOutlets: total
-            },
             articles: clusterArticles,
             aiComparisonNotice: c.aiComparisonNotice
           };
         });
 
-        console.log(`🎉 Gemini generated ${clusters.length} fresh clusters!`);
+        // Shared dedup + zero-token all-outlet enrichment helpers (mirroring src/utils/clusterDedup.ts)
+        const STOP = new Set([
+          'para','como','sobre','tras','ante','pero','entre','desde','hasta','contra','hacia','segun',
+          'este','esta','estos','estas','ese','esa','esos','esas','aquel','todo','toda','todos','todas',
+          'otro','otra','otros','otras','mas','menos','muy','tambien','solo','ahora','hoy','ayer','luego',
+          'cuando','donde','quien','cual','porque','aunque','mientras','sera','fueron','estaba','tiene',
+          'tienen','hace','hacer','dijo','aseguro','afirmo','senalo','destaco','explico','anuncio','pidio',
+          'confirmo','nego','cruzo','apunto','volvio','marco','advirtio','argentina','argentino','argentinos',
+          'pais','nacional','gobierno','casa','rosada','presidente','ministro','nota','noticia','diario'
+        ]);
+        const tokenize = (text) => new Set(
+          String(text || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+            .replace(/[^a-z0-9\s]/g, ' ').split(/\s+/).filter(w => w.length >= 4 && !STOP.has(w))
+        );
+        const tokenSim = (a, b) => {
+          if (a.size === 0 || b.size === 0) return 0;
+          let inter = 0;
+          for (const t of a) if (b.has(t)) inter++;
+          return Math.max(inter / Math.min(a.size, b.size), inter / (a.size + b.size - inter));
+        };
+        const computeSpec = (arts) => {
+          let ofi = 0, centro = 0, opo = 0;
+          for (const a of arts) {
+            const l = OUTLETS_LEANING[a.outletId] || 'centro_datos';
+            if (l === 'oficialismo') ofi++;
+            else if (l === 'oposicion') opo++;
+            else centro++;
+          }
+          const total = arts.length || 1;
+          const ofiPct = Math.round((ofi / total) * 100);
+          const centroPct = Math.round((centro / total) * 100);
+          return { oficialismoPct: ofiPct, centroDatosPct: centroPct, oposicionPct: Math.max(0, 100 - ofiPct - centroPct), totalOutlets: total };
+        };
+        const mergeArts = (base, incoming) => {
+          const map = new Map();
+          for (const a of [...(base || []), ...(incoming || [])]) {
+            if (!a || !a.outletId) continue;
+            if (!map.has(a.outletId)) map.set(a.outletId, a);
+          }
+          return Array.from(map.values()).sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
+        };
+        const isDup = (a, b) => {
+          const urlsA = new Set((a.articles || []).map(x => x.url).filter(Boolean));
+          if ((b.articles || []).some(x => x.url && urlsA.has(x.url))) return true;
+          const tA = tokenize(`${a.neutralHeadline || ''} ${a.summary || ''}`);
+          const tB = tokenize(`${b.neutralHeadline || ''} ${b.summary || ''}`);
+          let shared = 0;
+          for (const t of tA) if (tB.has(t)) shared++;
+          return shared >= 3 && tokenSim(tA, tB) >= 0.38;
+        };
+
+        // 1. Intra-run deduplication
+        const deduped = [];
+        for (const c of rawClusters) {
+          const match = deduped.find(d => isDup(d, c));
+          if (match) {
+            match.articles = mergeArts(match.articles, c.articles);
+          } else {
+            deduped.push({ ...c, articles: mergeArts([], c.articles) });
+          }
+        }
+
+        // 2. Zero-token enrichment across ALL national RSS outlets (no max cap)
+        const clusters = deduped.map((c) => {
+          const cTokens = tokenize(`${c.neutralHeadline} ${c.summary}`);
+          const existingOutlets = new Set(c.articles.map(a => a.outletId));
+          const extra = [];
+          for (const art of combinedArticles) {
+            if (existingOutlets.has(art.outletId)) continue;
+            const aTokens = tokenize(`${art.title} ${(art.snippet || '').slice(0, 140)}`);
+            let shared = 0;
+            for (const t of aTokens) if (cTokens.has(t)) shared++;
+            if (shared >= 3 && tokenSim(aTokens, cTokens) >= 0.42) {
+              existingOutlets.add(art.outletId);
+              extra.push(art);
+            }
+          }
+          const finalArts = mergeArts(c.articles, extra);
+          return { ...c, articles: finalArts, spectrum: computeSpec(finalArts) };
+        });
+
+        clusters.sort((a, b) => (b.articles.length - a.articles.length) || ((b.timestamp || 0) - (a.timestamp || 0)));
+        clusters.forEach((c, i) => { c.isLeadStory = i === 0; });
+
+        console.log(`🎉 Gemini generated ${clusters.length} deduplicated & enriched clusters!`);
         clusters.forEach((c, i) => {
           console.log(`  ${i + 1}. [${c.category}] (${c.updatedAt}) ${c.neutralHeadline.slice(0, 60)}... (${c.articles.length} medios)`);
         });
@@ -569,27 +646,130 @@ REGLAS DE ORO OBLIGATORIAS:
 
         if (supabase && clusters.length > 0) {
           try {
-            const rows = clusters.map((c, idx) => ({
-              id: c.id,
-              lead_title: c.neutralHeadline,
-              neutral_headline: c.neutralHeadline,
-              summary: c.summary,
-              category: c.category || 'Política',
-              spectrum: c.spectrum,
-              articles: c.articles,
-              key_quotes: {
-                kicker: c.kicker,
-                imageUrl: c.imageUrl,
-                imageCaption: c.imageCaption,
-                aiComparisonNotice: c.aiComparisonNotice,
-                isLeadStory: idx === 0,
-                updatedAt: c.updatedAt
-              },
-              updated_at: new Date().toISOString()
+            // 3. 36-hour Supabase merge (preserves existing /historia/:id URLs & Debate Cívico)
+            const lookbackIso = new Date(Date.now() - 36 * 60 * 60 * 1000).toISOString();
+            const { data: recentExisting } = await supabase
+              .from('news_clusters')
+              .select('id, lead_title, neutral_headline, category, articles, key_quotes, updated_at')
+              .neq('id', 'live-feed-cache')
+              .neq('id', 'foreign-feed-cache')
+              .neq('id', 'clustering-telemetry-cache')
+              .gt('updated_at', lookbackIso)
+              .order('updated_at', { ascending: false })
+              .limit(60);
+
+            const existingPool = (recentExisting || []).map(row => ({
+              id: row.id,
+              neutralHeadline: row.neutral_headline || row.lead_title || '',
+              summary: '',
+              articles: Array.isArray(row.articles) ? row.articles : [],
+              key_quotes: row.key_quotes || {}
             }));
+
+            const mergedById = new Map();
+            clusters.forEach((c, idx) => {
+              const matchedExisting = existingPool.find(ex => ex.id === c.id || isDup(ex, c));
+              const targetId = matchedExisting ? matchedExisting.id : c.id;
+              const mergedArticles = matchedExisting ? mergeArts(matchedExisting.articles, c.articles) : c.articles;
+              const finalSpec = computeSpec(mergedArticles);
+
+              mergedById.set(targetId, {
+                id: targetId,
+                lead_title: c.neutralHeadline,
+                neutral_headline: c.neutralHeadline,
+                summary: c.summary,
+                category: c.category || 'Política',
+                spectrum: finalSpec,
+                articles: mergedArticles,
+                key_quotes: {
+                  kicker: c.kicker,
+                  imageUrl: c.imageUrl,
+                  imageCaption: c.imageCaption,
+                  aiComparisonNotice: c.aiComparisonNotice,
+                  isLeadStory: idx === 0,
+                  updatedAt: c.updatedAt
+                },
+                updated_at: new Date().toISOString()
+              });
+            });
+
+            const rows = Array.from(mergedById.values());
             const { error: clustErr } = await supabase.from('news_clusters').upsert(rows, { onConflict: 'id' });
             if (clustErr) console.warn('⚠️ Supabase clusters save error:', clustErr.message);
-            else console.log(`☁️ Successfully saved ${rows.length} clusters to Supabase cloud!`);
+            else console.log(`☁️ Successfully merged & saved ${rows.length} clusters to Supabase cloud!`);
+
+            // 4. Save clustering telemetry for /admin
+            const totalEnriched = rows.reduce((acc, r) => acc + (r.articles?.length || 0), 0);
+            const avgOutlets = Number((totalEnriched / Math.max(1, rows.length)).toFixed(1));
+            const maxOutlets = Math.max(...rows.map(r => r.articles?.length || 0));
+            await supabase.from('news_clusters').upsert({
+              id: 'clustering-telemetry-cache',
+              lead_title: `Telemetry (${usedModel || 'gemini-3.5-flash-lite'})`,
+              neutral_headline: `Telemetry (${usedModel || 'gemini-3.5-flash-lite'})`,
+              summary: `avg=${avgOutlets}, manual_script`,
+              category: 'Sistema',
+              spectrum: { oficialismoPct: 0, centroDatosPct: 100, oposicionPct: 0, totalOutlets: 1 },
+              articles: [],
+              key_quotes: {
+                model: usedModel || 'gemini-3.5-flash-lite',
+                inputTokens: Number(usedUsage?.total_input_tokens ?? usedUsage?.input_tokens ?? Math.round(((systemInstruction?.length || 0) + (inputPayload?.length || 0)) / 4)),
+                outputTokens: Number(usedUsage?.total_output_tokens ?? usedUsage?.output_tokens ?? Math.round((text?.length || 0) / 4)),
+                thoughtTokens: Number(usedUsage?.total_thought_tokens ?? usedUsage?.thought_tokens ?? 0),
+                clustersCount: rows.length,
+                avgOutletsPerCluster: avgOutlets,
+                maxOutletsPerCluster: maxOutlets,
+                totalArticlesEnriched: totalEnriched,
+                source: 'manual_script',
+                updatedAt: new Date().toISOString()
+              },
+              updated_at: new Date().toISOString()
+            }, { onConflict: 'id' });
+
+            // 5. Institutional role-change alert scan on merged rows (service-role only)
+            if (process.env.SUPABASE_SERVICE_ROLE_KEY) {
+              const serviceSb = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_ROLE_KEY, {
+                auth: { persistSession: false, autoRefreshToken: false }
+              });
+              const { data: pols } = await serviceSb.from('politicians').select('slug, name').eq('is_active', true);
+              const VERBS = [
+                { kw: 'renunció', rx: /\b(renuncio|presento su renuncia|renuncia de)\b/i, sug: 'Sin cargo público estatal (verificar renuncia)' },
+                { kw: 'dimitió', rx: /\b(dimitio|dimision de)\b/i, sug: 'Sin cargo público estatal (verificar renuncia)' },
+                { kw: 'asumió', rx: /\b(asumio como|asume como)\b/i, sug: null },
+                { kw: 'juró', rx: /\b(juro como|jura como)\b/i, sug: null },
+                { kw: 'designado', rx: /\b(fue designad[oa]|designaron a|nombro como)\b/i, sug: null },
+                { kw: 'destituido', rx: /\b(destituid[oa]|desplazad[oa] del cargo)\b/i, sug: 'Sin cargo público estatal (verificar renuncia)' },
+                { kw: 'inhabilitación', rx: /\b(inhabilitacion perpetua|condena firme)\b/i, sug: 'Sin cargo estatal · inhabilitado/a (verificar fallo)' }
+              ];
+              const alertRows = [];
+              for (const row of rows) {
+                const sentences = [row.neutral_headline, ...(row.summary || '').split(/(?<=[.!?])\s+/)].filter(Boolean);
+                for (const s of sentences) {
+                  const norm = s.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+                  const trig = VERBS.find(v => v.rx.test(norm));
+                  if (!trig) continue;
+                  for (const p of (pols || [])) {
+                    const pNorm = p.name.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+                    if (new RegExp(`\\b${pNorm.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\b`, 'i').test(norm)) {
+                      alertRows.push({
+                        politician_slug: p.slug,
+                        politician_name: p.name,
+                        story_id: row.id,
+                        story_headline: row.neutral_headline.slice(0, 280),
+                        story_url: `/historia/${row.id}`,
+                        trigger_keyword: trig.kw,
+                        detected_snippet: s.slice(0, 400),
+                        suggested_role: trig.sug,
+                        status: 'pending'
+                      });
+                    }
+                  }
+                }
+              }
+              if (alertRows.length > 0) {
+                await serviceSb.from('politician_alerts').upsert(alertRows, { onConflict: 'politician_slug,story_id', ignoreDuplicates: true });
+                console.log(`🔔 Recorded ${alertRows.length} pending politician role alert(s).`);
+              }
+            }
           } catch (sbErr) {
             console.warn('⚠️ Supabase clusters exception:', sbErr.message);
           }
