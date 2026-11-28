@@ -37,7 +37,7 @@ export const POST: APIRoute = async ({ request }) => {
     let foreignClusters: any[] = [];
 
     if (articles.length > 0) {
-      nationalClusters = await clusterArticlesWithGemini(articles);
+      nationalClusters = await clusterArticlesWithGemini(articles, undefined, 'admin');
     }
 
     if (foreignArticles.length > 0) {

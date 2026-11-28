@@ -164,7 +164,8 @@ function optimizeMediaImageUrl(url, maxWidth = 800) {
 const NON_IMAGE_PATTERNS = [
   'vodgc.net', '/player/', '/embed/', 'youtube.com', 'youtu.be', 'vimeo.com',
   'dailymotion.com', 'jwplatform.com', 'brightcove', 'rudo.video', 'mdstrm.com',
-  'twitch.tv', 'spotify.com', 'soundcloud.com', 'tracking', 'pixel.'
+  'twitch.tv', 'spotify.com', 'soundcloud.com', 'doubleclick.net', 'googlesyndication.com',
+  'tracking', 'pixel.'
 ];
 const NON_IMAGE_EXT = /\.(mp4|m3u8|webm|mov|avi|mp3|wav|ogg|m4a|pdf|html?|php|js|css|gif)(\?|#|$)/i;
 
@@ -693,7 +694,11 @@ REGLAS DE ORO OBLIGATORIAS:
             clusters.forEach((c, idx) => {
               const matchedExisting = existingPool.find(ex => ex.id === c.id || isDup(ex, c));
               const targetId = matchedExisting ? matchedExisting.id : c.id;
-              const mergedArticles = matchedExisting ? mergeArts(matchedExisting.articles, c.articles) : c.articles;
+              const prevInBatch = mergedById.get(targetId);
+              let mergedArticles = matchedExisting ? mergeArts(matchedExisting.articles, c.articles) : c.articles;
+              if (prevInBatch) {
+                mergedArticles = mergeArts(prevInBatch.articles, mergedArticles);
+              }
               const finalSpec = computeSpec(mergedArticles);
 
               mergedById.set(targetId, {
@@ -755,14 +760,25 @@ REGLAS DE ORO OBLIGATORIAS:
               });
               const { data: pols } = await serviceSb.from('politicians').select('slug, name').eq('is_active', true);
               const VERBS = [
-                { kw: 'renunció', rx: /\b(renuncio|presento su renuncia|renuncia de)\b/i, sug: 'Sin cargo público estatal (verificar renuncia)' },
-                { kw: 'dimitió', rx: /\b(dimitio|dimision de)\b/i, sug: 'Sin cargo público estatal (verificar renuncia)' },
-                { kw: 'asumió', rx: /\b(asumio como|asume como)\b/i, sug: null },
-                { kw: 'juró', rx: /\b(juro como|jura como)\b/i, sug: null },
-                { kw: 'designado', rx: /\b(fue designad[oa]|designaron a|nombro como)\b/i, sug: null },
-                { kw: 'destituido', rx: /\b(destituid[oa]|desplazad[oa] del cargo)\b/i, sug: 'Sin cargo público estatal (verificar renuncia)' },
-                { kw: 'inhabilitación', rx: /\b(inhabilitacion perpetua|condena firme)\b/i, sug: 'Sin cargo estatal · inhabilitado/a (verificar fallo)' }
+                { kw: 'renunció', kind: 'resignation', rx: /\b(renuncio|presento su renuncia|renuncia de)\b/i },
+                { kw: 'dimitió', kind: 'resignation', rx: /\b(dimitio|dimision de)\b/i },
+                { kw: 'dejó el cargo', kind: 'resignation', rx: /\b(dejo el cargo|deja el cargo|dejo el ministerio|deja el ministerio)\b/i },
+                { kw: 'destituido', kind: 'resignation', rx: /\b(destituid[oa]|desplazad[oa] del cargo)\b/i },
+                { kw: 'asumió', kind: 'appointment', rx: /\b(asumio como|asume como|asumio al frente de)\b/i },
+                { kw: 'juró', kind: 'appointment', rx: /\b(juro como|jura como)\b/i },
+                { kw: 'designado', kind: 'appointment', rx: /\b(fue designad[oa]|designaron a|nombro como)\b/i },
+                { kw: 'inhabilitación', kind: 'disqualification', rx: /\b(inhabilitacion perpetua|condena firme)\b/i }
               ];
+              const suggestRole = (sentence, trig) => {
+                if (trig.kind === 'resignation') return 'Sin cargo público estatal (verificar renuncia)';
+                if (trig.kind === 'disqualification') return 'Sin cargo estatal · inhabilitado/a (verificar fallo)';
+                const m = sentence.match(/\b(?:asumi[oó]|asume|jur[oó]|jura|designad[oa]|nombr[oó])\s+(?:como|al frente de)\s+([^.,;:()]{4,85})/i);
+                if (m && m[1]) {
+                  const cl = m[1].trim().replace(/\s+(y|en medio|tras|luego|despu[eé]s)\b.*$/i, '').trim();
+                  if (cl.length >= 4) return cl.charAt(0).toUpperCase() + cl.slice(1);
+                }
+                return null;
+              };
               const alertRows = [];
               for (const row of rows) {
                 const sentences = [row.neutral_headline, ...(row.summary || '').split(/(?<=[.!?])\s+/)].filter(Boolean);
@@ -781,7 +797,7 @@ REGLAS DE ORO OBLIGATORIAS:
                         story_url: `/historia/${row.id}`,
                         trigger_keyword: trig.kw,
                         detected_snippet: s.slice(0, 400),
-                        suggested_role: trig.sug,
+                        suggested_role: suggestRole(s, trig),
                         status: 'pending'
                       });
                     }

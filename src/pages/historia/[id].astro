@@ -5,7 +5,7 @@ import HeadlineComparison from '../../components/HeadlineComparison.astro';
 import StoryCivicForum from '../../components/StoryCivicForum.astro';
 import { getStoryClusterByIdAsync } from '../../services/ai/clustering';
 import { getForumComments } from '../../services/supabase';
-import { getOptimizedImageUrl } from '../../utils/image';
+import { getOptimizedImageUrl, isValidNewsImageUrl } from '../../utils/image';
 
 export const prerender = false;
 
@@ -23,7 +23,12 @@ const totalContributions = initialComments.reduce((acc, c) => acc + 1 + (c.repli
 const isBrazilStory = Boolean(story?.id?.startsWith('brasil-'));
 const backHref = isBrazilStory ? '/elecciones-brasil' : '/';
 const backLabel = isBrazilStory ? 'Volver al Especial Brasil 2026' : 'Volver a la Portada';
-const optimizedHeroImage = story?.imageUrl ? getOptimizedImageUrl(story.imageUrl, 1000, 75) : undefined;
+const resolvedHeroImage = story
+  ? isValidNewsImageUrl(story.imageUrl)
+    ? story.imageUrl!
+    : (story.articles || []).find((a) => isValidNewsImageUrl(a.imageUrl))?.imageUrl || ''
+  : '';
+const optimizedHeroImage = resolvedHeroImage ? getOptimizedImageUrl(resolvedHeroImage, 1000, 75) : undefined;
 
 const topOutlets = story ? story.articles.slice(0, 4).map(a => a.outletName) : [];
 const outletsText = topOutlets.length > 1
@@ -68,7 +73,7 @@ const matchedGuides = story
 <Layout
   title={story ? `${story.neutralHeadline} • Comparativa de Medios | Politicheck` : 'Historia no encontrada | Politicheck'}
   description={metaDesc}
-  image={story?.imageUrl}
+  image={resolvedHeroImage || undefined}
   canonicalUrl={pageUrl}
   ogType="article"
   preloadImage={optimizedHeroImage}
@@ -112,12 +117,12 @@ const matchedGuides = story
       </header>
 
       <!-- 2b. Press Photo (Compact 16:9 editorial framing, prioritizing upper-center for portraits) -->
-      {story.imageUrl && (
+      {optimizedHeroImage && (
         <figure class="space-y-2">
           <div class="overflow-hidden rounded-md border border-rule bg-surface-muted aspect-video max-h-[360px] w-full">
             <img
               src={optimizedHeroImage}
-              data-original-src={story.imageUrl}
+              data-original-src={resolvedHeroImage}
               alt={story.neutralHeadline}
               loading="eager"
               fetchpriority="high"
@@ -167,7 +172,7 @@ const matchedGuides = story
           <h2 class="font-editorial text-2xl font-bold text-ink">
             Cobertura Comparada por Medio
           </h2>
-          <span class="font-mono text-xs text-ink-muted">{story.articles.length} notas cotejadas</span>
+          <span class="font-mono text-xs text-ink-muted">{story.articles.length} noticias cotejadas</span>
         </div>
 
         <HeadlineComparison articles={story.articles} storyId={story.id} isLeadStory={true} />

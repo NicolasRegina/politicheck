@@ -407,7 +407,8 @@ export function selectCrossOutletCandidates(articles: Article[], maxArticles = 7
 
 export async function clusterArticlesWithGemini(
   articles: Article[],
-  apiKey?: string
+  apiKey?: string,
+  telemetrySource: 'cron' | 'admin' | 'manual_script' = 'cron'
 ): Promise<StoryCluster[]> {
   const geminiKey = getGeminiKey(apiKey);
 
@@ -617,7 +618,7 @@ REGLAS DE ORO OBLIGATORIAS:
           avgOutletsPerCluster,
           maxOutletsPerCluster,
           totalArticlesEnriched,
-          source: 'cron',
+          source: telemetrySource,
           updatedAt: new Date().toISOString(),
         });
       } catch (telErr: any) {
