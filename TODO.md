@@ -345,6 +345,9 @@
 - [x] **Detector automático de cambios de cargo + `/admin`:**
   - Escaneo determinista en `saveNewsClustersToSupabase` que detecta renuncias, asunciones, designaciones o inhabilitaciones en Historias nuevas y crea alertas *human-in-the-loop* en `politician_alerts`.
   - Nueva pestaña **"Políticos y alertas"** en `/admin` y endpoint protegido `/api/admin/politicians` para aprobar/descartar alertas y editar cargos en vivo sin redeploy.
+- [x] **Ola 2 de `/politicos` y Promesómetro ampliado [COMPLETADA]:**
+  - Incorporados **Diego Santilli**, **Martín Menem**, **Federico Sturzenegger** y **Facundo Manes** (total **26 políticos** verificados en código y Supabase con retratos locales en `public/images/politicians/`).
+  - Ampliado `src/data/promises.json` a **20 promesas auditadas** sumando compromisos documentados de Federico Sturzenegger, Luis Caputo, Maximiliano Pullaro y Martín Llaryora.
 
 
 

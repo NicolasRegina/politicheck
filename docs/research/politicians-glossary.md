@@ -910,3 +910,180 @@ Politólogo graduado en la Universidad Nacional de Rosario y dirigente de la Uni
 - **Economía y Producción:** Defiende la baja de retenciones agropecuarias, la infraestructura logística portuaria y vial de Santa Fe y el equilibrio fiscal provincial.
 - **Educación y Estado:** Promueve reformas administrativas en el Estado santafesino, incentivos por presentismo docente y modificaciones en los criterios de evaluación y promoción escolar.
 - **Federalismo e Instituciones:** Articula con otros gobernadores en el espacio Provincias Unidas para negociar recursos federales con el Ejecutivo nacional, respaldando el equilibrio fiscal pero reclamando inversión en infraestructura productiva.
+
+
+---
+
+## 4. Ola 2 — 4 Nuevas Incorporaciones (23 a 26)
+
+> **Fecha de corte:** Noviembre de 2026.
+> **Alcance:** Incorporación de **4 nuevos referentes** (Diego Santilli, Martín Menem, Federico Sturzenegger y Facundo Manes), llevando el glosario documentado a **26 figuras**. Cada ficha incluye clasificación sugerida para Politicheck (`spaceGroup` y `scopeGroup`), retrato verificado en Wikimedia Commons y 4 ejes programáticos fácticos y neutrales.
+
+---
+
+### 23. Diego Santilli
+
+- **Nombre completo:** Diego César Santilli
+- **Fecha y lugar de nacimiento:** 06/04/1967 — Ciudad Autónoma de Buenos Aires
+- **Formación académica:** Contador Público Nacional por la Facultad de Ciencias Económicas de la Universidad de Buenos Aires (UBA). Realizó estudios de posgrado y especialización en Marketing en la Universidad de California en Berkeley, en Mercados de Futuros y Opciones en el Institute for Financial Markets de Washington D. C. y en Administración y Gestión Pública en la European School of Management (París).
+- **Cargo actual (noviembre de 2026):** Jefe de Gabinete de Ministros de la Nación Argentina (desde el 29/06/2026, en reemplazo de Manuel Adorni; previamente ejerció como Ministro del Interior de la Nación entre el 10/11/2025 y junio de 2026).
+- **Distrito:** Nación Argentina (trayectoria legislativa y ejecutiva previa en CABA y Provincia de Buenos Aires)
+- **Espacio político / partido actual:** La Libertad Avanza (integrado al gabinete nacional; trayectoria previa en Propuesta Republicana — PRO).
+- **Clasificación Politicheck:** `spaceGroup`: `La Libertad Avanza` · `scopeGroup`: `Ejecutivo Nacional`
+- **Afiliaciones y coaliciones anteriores (cronológico):** Partido Justicialista (década de 1990) → Compromiso para el Cambio / Propuesta Republicana (PRO, 2003–2025) → Cambiemos / Juntos por el Cambio (2015–2023) → Alianza y gestión ejecutiva con La Libertad Avanza (2025–presente).
+- **Retrato oficial / Wikimedia Commons:**
+  - **URL:** `https://commons.wikimedia.org/wiki/File:SantilliOficial.jpg` (alternativas: `https://commons.wikimedia.org/wiki/File:SantilliOficial_(cropped).jpg` y `https://commons.wikimedia.org/wiki/File:DiegoSantilli.png`)
+  - **Fuente:** Portal oficial del Gobierno de la Nación Argentina (`argentina.gob.ar`) / Honorable Cámara de Diputados de la Nación (`hcdn.gob.ar` para `DiegoSantilli.png`)
+  - **Licencia:** Creative Commons Attribution 4.0 International (**CC BY 4.0**) para `SantilliOficial.jpg` y `SantilliOficial (cropped).jpg`; Dominio Público (con atribución HCDN) para `DiegoSantilli.png`.
+
+**Resumen neutral (2 oraciones):**
+Contador público egresado de la Universidad de Buenos Aires, se desempeñó como legislador porteño, ministro de Ambiente y Espacio Público, senador nacional, vicejefe de Gobierno y ministro de Justicia y Seguridad de la Ciudad de Buenos Aires, además de diputado nacional por la provincia de Buenos Aires entre 2021 y 2025. Tras integrar el armado bonaerense de La Libertad Avanza en los comicios de octubre de 2025, asumió como ministro del Interior en noviembre de ese año y fue designado jefe de Gabinete de Ministros de la Nación en junio de 2026.
+
+**Línea de tiempo institucional:**
+| Período | Cargo oficial | Jurisdicción / Distrito | Partido / Coalición |
+| :--- | :--- | :--- | :--- |
+| 2001–2003 | Director del Banco de la Ciudad de Buenos Aires | Ciudad Autónoma de Buenos Aires | Partido Justicialista |
+| 2003–2009 | Legislador de la Ciudad Autónoma de Buenos Aires (Vicepresidente 1.º) | Ciudad Autónoma de Buenos Aires | Compromiso para el Cambio / PRO |
+| 2009–2013 | Ministro de Ambiente y Espacio Público de la CABA | Ciudad Autónoma de Buenos Aires | Propuesta Republicana (PRO) |
+| 2013–2015 | Senador de la Nación Argentina | Ciudad Autónoma de Buenos Aires | Propuesta Republicana (PRO) |
+| 2015–2021 | Vicejefe de Gobierno de la Ciudad Autónoma de Buenos Aires | Ciudad Autónoma de Buenos Aires | PRO / Cambiemos / Juntos por el Cambio |
+| 2018–2021 | Ministro de Justicia y Seguridad de la CABA (en simultáneo con la Vicejefatura) | Ciudad Autónoma de Buenos Aires | Juntos por el Cambio (PRO) |
+| 2021–2025 | Diputado de la Nación Argentina (renunció en noviembre de 2025) | Provincia de Buenos Aires | Juntos por el Cambio / PRO |
+| 2025–2026 | Ministro del Interior de la Nación (10/11/2025 – junio de 2026) | Nación Argentina | La Libertad Avanza / PRO |
+| 2026–presente | Jefe de Gabinete de Ministros de la Nación (desde el 29/06/2026) | Nación Argentina | La Libertad Avanza |
+
+**Ejes programáticos:**
+- **Economía:** Respalda el equilibrio fiscal, la baja de impuestos distorsivos, la reforma laboral y la desregulación orientada a promover la inversión privada.
+- **Seguridad:** Impulsa el fortalecimiento operativo de las fuerzas policiales, el uso de tecnología de videovigilancia y reconocimiento, y reformas penales contra la reiterancia delictiva.
+- **Federalismo e Instituciones:** Prioriza la articulación política del Poder Ejecutivo nacional con los gobernadores provinciales y los bloques dialoguistas del Congreso para la sanción de leyes estructurales.
+- **Gestión Pública:** Promueve la modernización administrativa, la coordinación interministerial y la concesión o participación privada en obras de infraestructura.
+
+**Fuentes:**
+- Presidencia de la Nación / Boletín Oficial de la República Argentina (`argentina.gob.ar`, `boletinoficial.gob.ar`)
+- Honorable Cámara de Diputados de la Nación (`hcdn.gob.ar`) y Legislatura de la CABA (`legislatura.gob.ar`)
+- Chequeado — Perfil biográfico de Diego Santilli (`chequeado.com`)
+- Wikipedia en español — *Diego Santilli* (`es.wikipedia.org/wiki/Diego_Santilli`)
+
+---
+
+### 24. Martín Menem
+
+- **Nombre completo:** Martín Alexis Menem
+- **Fecha y lugar de nacimiento:** 19/04/1975 — Ciudad de La Rioja, Provincia de La Rioja
+- **Formación académica:** Abogado por la Universidad de Belgrano (UB, 1997).
+- **Cargo actual (noviembre de 2026):** Presidente de la Honorable Cámara de Diputados de la Nación Argentina (desde el 10/12/2023; reelecto para los períodos parlamentarios 2024, 2025 y 2026) y Diputado de la Nación Argentina por la Provincia de La Rioja (mandato 2023–2027). Ejerce además la vicepresidencia del partido La Libertad Avanza a nivel nacional.
+- **Distrito:** Provincia de La Rioja
+- **Espacio político / partido actual:** La Libertad Avanza (LLA).
+- **Clasificación Politicheck:** `spaceGroup`: `La Libertad Avanza` · `scopeGroup`: `Congreso y Legislatura`
+- **Afiliaciones y coaliciones anteriores (cronológico):** Actividad empresaria privada en el sector de suplementos dietarios (fundador de Gentech) → Unión del Centro Democrático (UCeDé) / La Libertad Avanza en La Rioja (2021–2023) → La Libertad Avanza (2023–presente).
+- **Retrato oficial / Wikimedia Commons:**
+  - **URL:** `https://commons.wikimedia.org/wiki/File:Mart%C3%ADn_Menem_HCDN.png` (alternativa: `https://commons.wikimedia.org/wiki/File:MenemMartin_(cropped).jpg`)
+  - **Fuente:** Honorable Cámara de Diputados de la Nación Argentina (`hcdn.gob.ar`)
+  - **Licencia:** Dominio Público (liberada por la HCDN con solicitud de atribución y reserva de derechos de personalidad).
+
+**Resumen neutral (2 oraciones):**
+Abogado graduado en la Universidad de Belgrano y empresario del rubro alimentario, ingresó a la función pública en 2021 al ser electo diputado provincial de La Rioja por el espacio liberal. Tras postularse a la gobernación riojana y resultar electo diputado nacional en 2023 por La Libertad Avanza, asumió la presidencia de la Cámara de Diputados de la Nación en diciembre de ese año y fue reelecto consecutivamente en el cargo.
+
+**Línea de tiempo institucional:**
+| Período | Cargo oficial | Jurisdicción / Distrito | Partido / Coalición |
+| :--- | :--- | :--- | :--- |
+| 2021–2023 | Diputado Provincial de La Rioja | Provincia de La Rioja | La Libertad Avanza / UCeDé |
+| 2023–presente | Diputado de la Nación Argentina y Presidente de la HCDN | Provincia de La Rioja / Nación Argentina | La Libertad Avanza |
+
+**Ejes programáticos:**
+- **Economía:** Respalda la disciplina fiscal estricta, la reducción de impuestos, la desregulación comercial y el programa de reformas económicas del Poder Ejecutivo nacional.
+- **Rol del Estado:** Impulsa el recorte del gasto operativo y de la planta administrativa del Poder Legislativo y la reducción del tamaño del Estado en jurisdicciones nacionales y provinciales.
+- **Instituciones y Parlamento:** Conduce la articulación legislativa oficialista en la Cámara de Diputados para la aprobación de paquetes de reformas (Ley Bases, reformas fiscales y penales) y apoya la implementación de la boleta única de papel.
+- **Construcción Partidaria:** Participa en la consolidación territorial de La Libertad Avanza en las provincias como fuerza nacional con estructura propia.
+
+**Fuentes:**
+- Honorable Cámara de Diputados de la Nación (`hcdn.gob.ar`)
+- Wikipedia en español — *Martín Menem* (`es.wikipedia.org/wiki/Mart%C3%ADn_Menem`)
+
+---
+
+### 25. Federico Sturzenegger
+
+- **Nombre completo:** Federico Adolfo Sturzenegger
+- **Fecha y lugar de nacimiento:** 11/02/1966 — Rufino, Provincia de Santa Fe
+- **Formación académica:** Licenciado en Economía por la Universidad Nacional de La Plata (UNLP, 1987). Doctor (PhD) en Economía por el Instituto Tecnológico de Massachusetts (MIT, 1991). Se desempeñó como docente e investigador en la Universidad de California en Los Ángeles (UCLA), la Harvard Kennedy School, la Universidad Torcuato Di Tella (donde fue decano de la Escuela de Negocios) y la Universidad de San Andrés (UdeSA).
+- **Cargo actual (noviembre de 2026):** Ministro de Desregulación y Transformación del Estado de la Nación Argentina (desde el 05/07/2024).
+- **Distrito:** Nación Argentina
+- **Espacio político / partido actual:** La Libertad Avanza (gestión ejecutiva nacional; trayectoria previa en Propuesta Republicana — PRO).
+- **Clasificación Politicheck:** `spaceGroup`: `La Libertad Avanza` · `scopeGroup`: `Ejecutivo Nacional`
+- **Afiliaciones y coaliciones anteriores (cronológico):** Actividad académica y economista jefe de YPF (1995–1998) → Gestión técnica en el gobierno de la Alianza (2001) → Propuesta Republicana (PRO) / Cambiemos (2008–2018) → Gestión ejecutiva en el gobierno de La Libertad Avanza (2024–presente).
+- **Retrato oficial / Wikimedia Commons:**
+  - **URL:** `https://commons.wikimedia.org/wiki/File:Federico_Sturzenegger_-_Retrato_Oficial_2024.png` (alternativa: `https://commons.wikimedia.org/wiki/File:FedericoSturzeneggerOficial.jpg`)
+  - **Fuente:** Portal oficial del Gobierno de la Nación Argentina (`argentina.gob.ar` / `mapadelestado.jefatura.gob.ar`)
+  - **Licencia:** Creative Commons Attribution 4.0 International (**CC BY 4.0**).
+
+**Resumen neutral (2 oraciones):**
+Doctor en Economía por el MIT y docente en universidades de Argentina y Estados Unidos, se desempeñó como secretario de Política Económica en 2001, presidente del Banco Ciudad de Buenos Aires, diputado nacional por el PRO y presidente del Banco Central entre 2015 y 2018. Participó en el diseño normativo del DNU 70/2023 y la Ley Bases, y desde julio de 2024 encabeza el Ministerio de Desregulación y Transformación del Estado de la Nación.
+
+**Línea de tiempo institucional:**
+| Período | Cargo oficial | Jurisdicción / Distrito | Partido / Coalición |
+| :--- | :--- | :--- | :--- |
+| 2001 | Secretario de Política Económica de la Nación | Nación Argentina | Alianza (gestión F. de la Rúa) |
+| 2008–2013 | Presidente del Banco de la Ciudad de Buenos Aires | Ciudad Autónoma de Buenos Aires | Propuesta Republicana (PRO) |
+| 2013–2015 | Diputado de la Nación Argentina | Ciudad Autónoma de Buenos Aires | Propuesta Republicana (PRO) |
+| 2015–2018 | Presidente del Banco Central de la República Argentina (BCRA) | Nación Argentina | Cambiemos (PRO) |
+| 2024–presente | Ministro de Desregulación y Transformación del Estado de la Nación | Nación Argentina | La Libertad Avanza |
+
+**Ejes programáticos:**
+- **Desregulación Económica:** Impulsa la derogación de normas, registros y barreras regulatorias en sectores como transporte aerocomercial, alquileres, comercio exterior, medicamentos y servicios profesionales.
+- **Reforma del Estado:** Promueve la reducción de organismos públicos, la reestructuración de plantas estatales, la digitalización de trámites y la aplicación de exámenes de idoneidad para el empleo público nacional.
+- **Economía y Competencia:** Defiende la apertura comercial, la libre competencia de mercados, la eliminación de monopolios regulatorios y el equilibrio fiscal sostenido en la baja del gasto público.
+- **Mercado Laboral:** Respalda la modernización de las relaciones laborales, la reducción de costos de litigiosidad y esquemas optativos de fondos de cese laboral.
+
+**Fuentes:**
+- Ministerio de Desregulación y Transformación del Estado (`argentina.gob.ar/desregulacion`)
+- Banco Central de la República Argentina (`bcra.gob.ar`) y Honorable Cámara de Diputados (`hcdn.gob.ar`)
+- Chequeado — Perfil biográfico de Federico Sturzenegger (`chequeado.com`)
+- Wikipedia en español — *Federico Sturzenegger* (`es.wikipedia.org/wiki/Federico_Sturzenegger`)
+
+---
+
+### 26. Facundo Manes
+
+- **Nombre completo:** Facundo Manes
+- **Fecha y lugar de nacimiento:** 11/01/1969 — Quilmes, Provincia de Buenos Aires
+- **Formación académica:** Médico por la Facultad de Medicina de la Universidad de Buenos Aires (UBA). Doctor (PhD) en Ciencias por la Universidad de Cambridge (Reino Unido). Investigador principal del CONICET, fundador del Instituto de Neurología Cognitiva (INECO) y de la Fundación INECO, y ex rector de la Universidad Favaloro.
+- **Cargo actual (noviembre de 2026):** Sin cargo público electivo o ejecutivo (finalizó su mandato como diputado nacional por la Provincia de Buenos Aires el 10/12/2025; se postuló a senador nacional por la CABA en octubre de 2025 por el espacio *Para Adelante*, obteniendo el 2,31 % de los votos sin acceder a una banca). Referente político de *Para Adelante* y presidente honorífico de la Fundación INECO.
+- **Distrito:** Provincia de Buenos Aires / Ciudad Autónoma de Buenos Aires
+- **Espacio político / partido actual:** Para Adelante (espacio propio lanzado en 2025 tras distanciarse orgánicamente de la conducción de la UCR).
+- **Clasificación Politicheck:** `spaceGroup`: `Otros` *(trayectoria previa en la UCR)* · `scopeGroup`: `Referentes`
+- **Afiliaciones y coaliciones anteriores (cronológico):** Unión Cívica Radical (UCR) / Juntos por el Cambio (2021–2024) → Bloque parlamentario Democracia Para Siempre (2024–2025) → Espacio político Para Adelante (2025–presente).
+- **Retrato oficial / Wikimedia Commons:**
+  - **URL:** `https://commons.wikimedia.org/wiki/File:Facundo_Manes.png` (alternativa: `https://commons.wikimedia.org/wiki/File:Facundo_Manes_-_La_Neurociencia_de_la_Creatividad_-_(27411957132).jpg`)
+  - **Fuente:** Honorable Cámara de Diputados de la Nación Argentina (`hcdn.gob.ar`)
+  - **Licencia:** Dominio Público (liberada por la HCDN con solicitud de atribución y reserva de derechos de personalidad).
+
+**Resumen neutral (2 oraciones):**
+Médico neurólogo graduado en la Universidad de Buenos Aires con un doctorado en Ciencias por la Universidad de Cambridge, fundó el Instituto de Neurología Cognitiva (INECO) y se desempeñó como rector de la Universidad Favaloro e investigador del CONICET antes de ingresar a la política electoral. Ejerció como diputado nacional por la provincia de Buenos Aires entre 2021 y 2025 —presidiendo la Comisión de Ciencia, Tecnología e Innovación Productiva—, lanzó en 2025 el espacio Para Adelante y compitió sin éxito por una banca en el Senado nacional por la Ciudad de Buenos Aires.
+
+**Línea de tiempo institucional:**
+| Período | Cargo oficial | Jurisdicción / Distrito | Partido / Coalición |
+| :--- | :--- | :--- | :--- |
+| 2021–2025 | Diputado de la Nación Argentina (Presidente de la Comisión de Ciencia, Tecnología e Innovación Productiva) | Provincia de Buenos Aires | Juntos por el Cambio (UCR) / Democracia Para Siempre |
+
+**Ejes programáticos:**
+- **Educación, Ciencia y Tecnología:** Propone incrementar la inversión estatal y privada en educación pública, ciencia, tecnología e innovación productiva como base del desarrollo económico ("economía del conocimiento").
+- **Salud y Capital Humano:** Impulsa políticas públicas de salud mental, nutrición infantil y protección de la salud cerebral frente al impacto de las nuevas tecnologías y la inteligencia artificial.
+- **Instituciones:** Defiende el equilibrio de poderes, los límites a los decretos de necesidad y urgencia y la construcción de acuerdos políticos de centro diferenciados tanto de La Libertad Avanza como del kirchnerismo.
+- **Economía:** Sostiene la necesidad de estabilidad macroeconómica combinada con fomento estatal a la producción de valor agregado, la educación universitaria gratuita y las exportaciones basadas en conocimiento.
+
+**Fuentes:**
+- Honorable Cámara de Diputados de la Nación (`hcdn.gob.ar`)
+- CONICET (`conicet.gov.ar`) y sitio biográfico oficial (`facundomanes.com`)
+- Wikipedia en español — *Facundo Manes* (`es.wikipedia.org/wiki/Facundo_Manes`)
+
+---
+
+### Tabla Resumen de Retratos para Descarga — Ola 2 (4 Nuevas Incorporaciones)
+
+| Slug sugerido | Político/a | Archivo en Wikimedia Commons | Alternativa | Fuente original | Licencia |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| `diego-santilli.jpg` | Diego Santilli | `File:SantilliOficial.jpg` | `File:DiegoSantilli.png` | Gobierno Nacional (`argentina.gob.ar`) | CC BY 4.0 |
+| `martin-menem.png` | Martín Menem | `File:Martín Menem HCDN.png` | `File:MenemMartin (cropped).jpg` | HCDN (`hcdn.gob.ar`) | Dominio Público (con atribución HCDN) |
+| `federico-sturzenegger.png` | Federico Sturzenegger | `File:Federico Sturzenegger - Retrato Oficial 2024.png` | `File:FedericoSturzeneggerOficial.jpg` | Gobierno Nacional (`argentina.gob.ar`) | CC BY 4.0 |
+| `facundo-manes.png` | Facundo Manes | `File:Facundo Manes.png` | `File:Facundo Manes - La Neurociencia de la Creatividad - (27411957132).jpg` | HCDN (`hcdn.gob.ar`) | Dominio Público (con atribución HCDN) |

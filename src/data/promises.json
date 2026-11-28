@@ -302,5 +302,81 @@
       "inProgress": 0,
       "broken": 0
     }
+  },
+  {
+    "id": "prom-17",
+    "candidate": "Federico Sturzenegger",
+    "coalition": "La Libertad Avanza",
+    "role": "Ministro de Desregulación y Transformación del Estado",
+    "category": "Reforma del Estado",
+    "promiseText": "\"Implementaremos exámenes obligatorios de idoneidad para todo el empleo público nacional y reduciremos el exceso regulatorio del Estado.\"",
+    "status": "cumplida",
+    "statusLabel": "Cumplida (en ejecución)",
+    "statedAt": "Lanzamiento del Ministerio de Desregulación y Transformación del Estado",
+    "sourceUrl": "https://www.boletinoficial.gob.ar",
+    "officialProof": "Resolución 26/2024 (Sistema de Evaluación Pública - SEP) y derogación de más de 600 normas y registros en Boletín Oficial.",
+    "auditNotes": "Se puso en marcha el examen obligatorio de idoneidad para contrataciones en la Administración Pública Nacional y se derogaron múltiples registros comerciales y trámites aerocomerciales y aduaneros.",
+    "votes": {
+      "fulfilled": 0,
+      "inProgress": 0,
+      "broken": 0
+    }
+  },
+  {
+    "id": "prom-18",
+    "candidate": "Luis Caputo",
+    "coalition": "La Libertad Avanza",
+    "role": "Ministro de Economía de la Nación",
+    "category": "Economía y Moneda",
+    "promiseText": "\"Sanearemos la hoja de balance del Banco Central eliminando los pasivos remunerados y levantaremos las restricciones cambiarias una vez acumuladas reservas.\"",
+    "status": "en_progreso",
+    "statusLabel": "En progreso / Salida gradual",
+    "statedAt": "Conferencias del Ministerio de Economía y presentaciones ante inversores",
+    "sourceUrl": "https://www.bcra.gob.ar",
+    "officialProof": "Informes monetarios del BCRA sobre migración de pases pasivos a Letras Fiscales de Liquidez (LEFI) y flexibilización cambiaria progresiva.",
+    "auditNotes": "El BCRA eliminó los pases pasivos y redujo la emisión monetaria por déficit fiscal, avanzando en una flexibilización gradual de restricciones cambiarias sujeta al nivel de reservas netas.",
+    "votes": {
+      "fulfilled": 0,
+      "inProgress": 0,
+      "broken": 0
+    }
+  },
+  {
+    "id": "prom-19",
+    "candidate": "Maximiliano Pullaro",
+    "coalition": "UCR / Unidos para Cambiar Santa Fe",
+    "role": "Gobernador de la Provincia de Santa Fe",
+    "category": "Seguridad y Justicia",
+    "promiseText": "\"Aislaremos a los jefes narcos de alto perfil en pabellones especiales con control estricto y reduciremos drásticamente los homicidios en Rosario.\"",
+    "status": "cumplida",
+    "statusLabel": "Cumplida (indicadores a la baja)",
+    "statedAt": "Discurso de asunción en la Legislatura de Santa Fe",
+    "sourceUrl": "https://www.santafe.gob.ar",
+    "officialProof": "Ley Provincial de Ejecución de la Pena Privativa de la Libertad y reportes del Observatorio de Seguridad Pública de Santa Fe.",
+    "auditNotes": "Santa Fe implementó pabellones de alto perfil con inhibidores de señal y coordinación federal (Plan Bandera), registrando una caída interanual pronunciada en la tasa de homicidios de Rosario respecto de 2022–2023.",
+    "votes": {
+      "fulfilled": 0,
+      "inProgress": 0,
+      "broken": 0
+    }
+  },
+  {
+    "id": "prom-20",
+    "candidate": "Martín Llaryora",
+    "coalition": "Hacemos Unidos por Córdoba",
+    "role": "Gobernador de la Provincia de Córdoba",
+    "category": "Seguridad y Federalismo",
+    "promiseText": "\"Crearemos Guardias Locales de Prevención en los municipios cordobeses con armas no letales y sostendremos la obra pública provincial con superávit.\"",
+    "status": "en_progreso",
+    "statusLabel": "En progreso / Despliegue municipal",
+    "statedAt": "Apertura de Sesiones Ordinarias de la Legislatura de Córdoba",
+    "sourceUrl": "https://www.cba.gov.ar",
+    "officialProof": "Ley Provincial de Seguridad Pública y Ciudadana 10.954 y convenios de adhesión con más de 150 municipios de Córdoba.",
+    "auditNotes": "La provincia sancionó la nueva Ley de Seguridad y desplegó guardias municipales preventivas equipadas con armas no letales en Córdoba Capital y ciudades del interior, manteniendo el plan de infraestructura provincial.",
+    "votes": {
+      "fulfilled": 0,
+      "inProgress": 0,
+      "broken": 0
+    }
   }
 ]
