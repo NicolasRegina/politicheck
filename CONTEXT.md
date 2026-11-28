@@ -72,11 +72,23 @@ Acontecimiento extraordinario de interés público masivo que, aun sin un actor 
 
 ---
 
-### Candidatos y Promesas (Fase 2)
+### Políticos, Candidatos y Promesas (Fase 2)
+
+**Político (Politician)**:
+Figura pública con trayectoria institucional, partidaria o electoral relevante en Argentina, documentada de forma neutral en el Directorio de Políticos (`/politicos`) con ficha biográfica, trayectoria cronológica, ejes programáticos verificables y cobertura mediática reciente.
+_Evitar_: Postulante genérico, funcionario suelto.
 
 **Candidato (Candidate)**:
-Figura política postulada formalmente para un cargo electivo en la contienda electoral.
-_Evitar_: Político, postulante.
+Un **Político** que se postula formalmente para un cargo electivo en la contienda electoral o cuenta con promesas de campaña auditadas en el Promesómetro. Todo Candidato es un Político, pero no todo Político es actualmente Candidato.
+_Evitar_: Usar como sinónimo cerrado cuando se incluye a dirigentes sin candidatura declarada.
+
+**Directorio de Políticos (Politicians Glossary)**:
+Sección editorial (`/politicos`) que reúne fichas objetivas ordenadas alfabéticamente por neutralidad, encabezada por la franja dinámica **En Agenda Hoy** con los referentes más mencionados en las Historias recientes.
+_Evitar_: Lista de candidatos, padrón.
+
+**Alerta de Actualización de Perfil (Role Change Alert)**:
+Notificación automática generada cuando las Historias entrantes detectan un posible cambio institucional en un Político (renuncia, asunción, designación, destitución o fallo de inhabilitación), sujeta a verificación y aprobación humana en el panel editorial antes de publicarse.
+_Evitar_: Sobrescritura automática por IA.
 
 **Promesa de Campaña (Promise)**:
 Compromiso verificable de acción, ley o política pública enunciado por un Candidato durante la campaña o en su plataforma oficial.

@@ -1,0 +1,433 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { getAllPoliticians, computePoliticianMediaStats } from '../services/politicians';
+import { getPromisesWithLiveVotes } from '../services/promises';
+import { getNewsClustersFromSupabase } from '../services/supabase';
+import { getCachedClusteredStories } from '../services/ai/clustering';
+import { getLastSyncTimestampAsync } from '../services/rss/sync';
+import { slugifyPolitician, type PoliticianSpaceGroup, type PoliticianScopeGroup } from '../data/politicians';
+import type { StoryCluster } from '../types';
+
+export const prerender = false;
+Astro.response.headers.set('Cache-Control', 'public, s-maxage=300, stale-while-revalidate=900');
+
+const [politicians, allPromises, cloudClusters, lastSyncIso] = await Promise.all([
+  getAllPoliticians(),
+  getPromisesWithLiveVotes(),
+  getNewsClustersFromSupabase({ maxAgeDays: 14, limit: 60 }).catch(() => null),
+  getLastSyncTimestampAsync().catch(() => null),
+]);
+
+const sourceStories: StoryCluster[] =
+  Array.isArray(cloudClusters) && cloudClusters.length > 0
+    ? (cloudClusters as StoryCluster[])
+    : getCachedClusteredStories();
+
+const promiseCountBySlug = new Map<string, number>();
+for (const p of allPromises) {
+  const s = slugifyPolitician(p.candidate);
+  promiseCountBySlug.set(s, (promiseCountBySlug.get(s) || 0) + 1);
+}
+
+const enriched = politicians.map((pol) => {
+  const media = computePoliticianMediaStats(pol, sourceStories);
+  return {
+    ...pol,
+    mentions: media.mentions,
+    spectrum: media.spectrum,
+    promiseCount: promiseCountBySlug.get(pol.slug) || 0,
+  };
+});
+
+// "En agenda hoy" — top 6 most-mentioned figures in the last 14 days
+const trendingPoliticians = [...enriched]
+  .filter((p) => p.mentions > 0)
+  .sort((a, b) => b.mentions - a.mentions || a.name.localeCompare(b.name, 'es'))
+  .slice(0, 6);
+
+// Alphabetical (A-Z) neutral main directory
+const alphabeticalPoliticians = [...enriched].sort((a, b) => a.name.localeCompare(b.name, 'es'));
+
+const spaceGroups: PoliticianSpaceGroup[] = [
+  'La Libertad Avanza',
+  'Unión por la Patria / PJ',
+  'PRO',
+  'UCR',
+  'Peronismo Federal',
+  'Izquierda',
+  'Otros',
+];
+
+const scopeGroups: PoliticianScopeGroup[] = [
+  'Ejecutivo Nacional',
+  'Congreso y Legislatura',
+  'Gobernadores y CABA',
+  'Referentes',
+];
+
+function getInitials(name: string): string {
+  return name
+    .split(/\s+/)
+    .filter(Boolean)
+    .map((p) => p[0])
+    .slice(0, 2)
+    .join('')
+    .toUpperCase();
+}
+---
+
+<Layout
+  title="Directorio de Políticos Argentinos • Biografías, Cargos y Cobertura | Politicheck"
+  description="Glosario objetivo de los principales políticos de Argentina: biografías verificadas, trayectoria institucional, ejes programáticos, promesas auditadas y espectro mediático en vivo."
+  canonicalUrl="https://www.politicheck.com.ar/politicos"
+  serverSyncIso={lastSyncIso}
+>
+  <div class="space-y-10 pb-14">
+    <!-- Breadcrumb -->
+    <nav class="flex flex-wrap items-center justify-between gap-2 text-xs font-mono border-b border-rule pb-3">
+      <a href="/" class="inline-flex items-center gap-1.5 text-ink-muted hover:text-ink font-semibold transition-colors">
+        <span>← Volver a la Portada</span>
+      </a>
+      <span class="text-ink-muted">{alphabeticalPoliticians.length} fichas verificadas · Orden alfabético neutral</span>
+    </nav>
+
+    <!-- Editorial Header -->
+    <header class="space-y-4 max-w-3xl">
+      <div class="inline-flex items-center gap-2 text-[11px] font-mono font-bold uppercase tracking-wider text-accent">
+        <span class="inline-flex flex-col w-3.5 h-2.5 rounded-[2px] overflow-hidden border border-rule shrink-0" aria-hidden="true">
+          <span class="h-1/3 bg-[#6BA4D9]"></span>
+          <span class="h-1/3 bg-white flex items-center justify-center"><span class="w-1 h-1 rounded-full bg-amber-400"></span></span>
+          <span class="h-1/3 bg-[#6BA4D9]"></span>
+        </span>
+        <span>Archivo Cívico Argentina</span>
+      </div>
+      <h1 class="font-editorial text-3xl sm:text-5xl font-bold text-ink leading-[1.12] tracking-tight">
+        Políticos de Argentina
+      </h1>
+      <p class="text-sm sm:text-base text-ink-secondary font-sans leading-relaxed">
+        Directorio editorial con fichas estrictamente fácticas: trayectoria de cargos públicos, formación académica, ejes programáticos documentados, auditoría de promesas y radiografía en vivo de cómo los cubren los 31 medios monitoreados.
+      </p>
+    </header>
+
+    <!-- EN AGENDA HOY (Top 5-6 most mentioned in last 14 days) -->
+    {trendingPoliticians.length > 0 && (
+      <section aria-labelledby="en-agenda-heading" class="space-y-4">
+        <div class="flex flex-wrap items-end justify-between gap-2 border-b-2 border-rule-strong pb-2">
+          <div>
+            <div class="text-[10px] font-mono uppercase tracking-wider text-accent font-semibold">
+              Actualidad mediática · últimos 14 días
+            </div>
+            <h2 id="en-agenda-heading" class="font-editorial text-xl sm:text-2xl font-bold text-ink leading-tight">
+              En agenda hoy
+            </h2>
+          </div>
+          <span class="text-[11px] font-mono text-ink-muted">
+            Top {trendingPoliticians.length} con más menciones en Historias
+          </span>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3.5">
+          {trendingPoliticians.map((pol, idx) => (
+            <a
+              href={`/politico/${pol.slug}`}
+              class="group flex items-center gap-3.5 p-3.5 rounded-md bg-surface border border-rule hover:border-ink transition-colors"
+            >
+              <div class="relative shrink-0 w-14 h-16 rounded-md overflow-hidden border border-rule bg-surface-muted">
+                {pol.avatar ? (
+                  <img
+                    src={pol.avatar}
+                    alt={pol.name}
+                    width="56"
+                    height="64"
+                    fetchpriority={idx < 2 ? 'high' : undefined}
+                    class="w-full h-full object-cover object-top"
+                    onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
+                  />
+                ) : null}
+                <div class={`w-full h-full font-mono text-xs font-bold items-center justify-center ${pol.partyColor.badgeBg} ${pol.avatar ? 'hidden' : 'flex'}`}>
+                  {getInitials(pol.name)}
+                </div>
+              </div>
+
+              <div class="min-w-0 flex-1 space-y-1">
+                <div class="flex items-center justify-between gap-2">
+                  <span class="font-editorial font-bold text-base text-ink group-hover:text-accent transition-colors truncate">
+                    {pol.name}
+                  </span>
+                  <span class="shrink-0 font-mono text-[10px] font-bold px-1.5 py-0.5 rounded bg-surface-muted border border-rule text-ink">
+                    {pol.mentions} {pol.mentions === 1 ? 'historia' : 'historias'}
+                  </span>
+                </div>
+                <p class="text-xs text-ink-secondary font-sans line-clamp-1">
+                  {pol.role}
+                </p>
+                <div class="flex items-center gap-1.5">
+                  <span class={`inline-flex px-1.5 py-0.5 rounded border text-[10px] font-sans font-semibold ${pol.partyColor.badgeBg}`}>
+                    {pol.spaceGroup}
+                  </span>
+                  {pol.promiseCount > 0 && (
+                    <span class="text-[10px] font-mono text-ink-muted">
+                      · {pol.promiseCount} promesas
+                    </span>
+                  )}
+                </div>
+              </div>
+            </a>
+          ))}
+        </div>
+      </section>
+    )}
+
+    <!-- FILTER & SEARCH TOOLBAR -->
+    <section class="p-4 sm:p-5 rounded-md bg-surface border border-rule space-y-4" aria-label="Filtros del directorio de políticos">
+      <div class="flex flex-col md:flex-row md:items-center justify-between gap-3">
+        <div class="relative flex-1 max-w-md">
+          <label for="politician-search-input" class="sr-only">Buscar político por nombre, cargo o distrito</label>
+          <input
+            type="search"
+            id="politician-search-input"
+            placeholder="Buscar por nombre, cargo, partido o provincia..."
+            class="w-full px-3 py-2 pl-9 rounded-md bg-surface-muted border border-rule text-xs sm:text-sm text-ink placeholder-ink-muted focus:outline-none focus:border-accent font-sans"
+          />
+          <svg aria-hidden="true" class="w-4 h-4 text-ink-muted absolute left-2.5 top-1/2 -translate-y-1/2 pointer-events-none" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+          </svg>
+        </div>
+
+        <div class="flex items-center gap-2 text-xs font-mono text-ink-muted">
+          <span id="politicians-visible-count">{alphabeticalPoliticians.length} de {alphabeticalPoliticians.length} perfiles</span>
+          <button
+            type="button"
+            id="politicians-reset-filters"
+            class="hidden px-2 py-1 rounded-md border border-rule hover:border-ink text-ink font-sans text-[11px] font-semibold cursor-pointer"
+          >
+            Limpiar filtros
+          </button>
+        </div>
+      </div>
+
+      <!-- Political Space Filter -->
+      <div class="space-y-1.5">
+        <div class="text-[10px] font-mono uppercase tracking-wider text-ink-muted font-semibold">
+          Espacio político
+        </div>
+        <div class="flex flex-wrap gap-1.5 text-xs font-sans">
+          <button
+            type="button"
+            data-space="all"
+            class="pol-space-btn px-2.5 py-1 rounded-md bg-ink text-canvas font-semibold border border-ink cursor-pointer transition-colors"
+          >
+            Todos
+          </button>
+          {spaceGroups.map((space) => (
+            <button
+              type="button"
+              data-space={space}
+              class="pol-space-btn px-2.5 py-1 rounded-md bg-surface-muted text-ink-secondary hover:text-ink border border-rule font-medium cursor-pointer transition-colors"
+            >
+              {space}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      <!-- Institutional Scope Filter -->
+      <div class="space-y-1.5 pt-2 border-t border-rule">
+        <div class="text-[10px] font-mono uppercase tracking-wider text-ink-muted font-semibold">
+          Ámbito institucional
+        </div>
+        <div class="flex flex-wrap gap-1.5 text-xs font-sans">
+          <button
+            type="button"
+            data-scope="all"
+            class="pol-scope-btn px-2.5 py-1 rounded-md bg-ink text-canvas font-semibold border border-ink cursor-pointer transition-colors"
+          >
+            Todos
+          </button>
+          {scopeGroups.map((scope) => (
+            <button
+              type="button"
+              data-scope={scope}
+              class="pol-scope-btn px-2.5 py-1 rounded-md bg-surface-muted text-ink-secondary hover:text-ink border border-rule font-medium cursor-pointer transition-colors"
+            >
+              {scope}
+            </button>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <!-- ALPHABETICAL DIRECTORY GRID (A-Z) -->
+    <section aria-labelledby="directorio-az-heading" class="space-y-4">
+      <div class="flex items-end justify-between border-b border-rule pb-2">
+        <h2 id="directorio-az-heading" class="font-editorial text-xl sm:text-2xl font-bold text-ink">
+          Directorio Completo (A–Z)
+        </h2>
+        <span class="text-[11px] font-mono text-ink-muted">Orden alfabético estricto</span>
+      </div>
+
+      <div id="politicians-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
+        {alphabeticalPoliticians.map((pol, idx) => (
+          <a
+            href={`/politico/${pol.slug}`}
+            class="politician-card group flex flex-col rounded-md bg-surface border border-rule hover:border-ink transition-colors overflow-hidden"
+            data-space={pol.spaceGroup}
+            data-scope={pol.scopeGroup}
+            data-search={`${pol.name} ${pol.fullName} ${pol.role} ${pol.coalition} ${pol.district} ${pol.spaceGroup}`.toLowerCase()}
+          >
+            <!-- Editorial Rectangular Portrait (aspect-[4/5], object-top) -->
+            <div class="relative aspect-[4/5] w-full bg-surface-muted overflow-hidden border-b border-rule">
+              {pol.avatar ? (
+                <img
+                  src={pol.avatar}
+                  alt={`Retrato de ${pol.name}`}
+                  width="320"
+                  height="400"
+                  loading={idx < 4 ? 'eager' : 'lazy'}
+                  class="w-full h-full object-cover object-top group-hover:scale-[1.02] transition-transform duration-300"
+                  onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
+                />
+              ) : null}
+              <div class={`w-full h-full font-mono text-3xl font-bold items-center justify-center ${pol.partyColor.badgeBg} ${pol.avatar ? 'hidden' : 'flex'}`}>
+                {getInitials(pol.name)}
+              </div>
+
+              <!-- Subtle top-right badge for active media mentions -->
+              {pol.mentions > 0 && (
+                <span class="absolute top-2.5 right-2.5 px-2 py-0.5 rounded bg-canvas/95 border border-rule text-[10px] font-mono font-semibold text-ink">
+                  {pol.mentions} {pol.mentions === 1 ? 'mención' : 'menciones'}
+                </span>
+              )}
+            </div>
+
+            <!-- Card Body -->
+            <div class="p-4 flex-1 flex flex-col justify-between gap-3">
+              <div class="space-y-1.5">
+                <div class="flex flex-wrap items-center gap-1.5">
+                  <span class={`inline-flex px-2 py-0.5 rounded border text-[10px] font-sans font-bold ${pol.partyColor.badgeBg}`}>
+                    {pol.spaceGroup}
+                  </span>
+                  <span class="text-[10px] font-mono text-ink-muted truncate">
+                    {pol.district}
+                  </span>
+                </div>
+
+                <h3 class="font-editorial text-xl font-bold text-ink group-hover:text-accent transition-colors leading-snug">
+                  {pol.name}
+                </h3>
+
+                <p class="text-xs font-sans font-medium text-ink-secondary line-clamp-2 leading-relaxed">
+                  {pol.role}
+                </p>
+              </div>
+
+              <div class="pt-2.5 border-t border-rule flex items-center justify-between text-[11px] font-mono text-ink-muted">
+                <span>{pol.careerTimeline.length} {pol.careerTimeline.length === 1 ? 'cargo' : 'cargos'}</span>
+                <span class="font-sans font-semibold text-accent group-hover:underline">
+                  Ver ficha →
+                </span>
+              </div>
+            </div>
+          </a>
+        ))}
+      </div>
+
+      <!-- Empty State -->
+      <div id="politicians-empty-state" class="hidden rounded-md bg-surface border border-rule p-8 text-center space-y-2">
+        <p class="font-editorial text-lg font-bold text-ink">No encontramos políticos con esos filtros</p>
+        <p class="text-xs font-sans text-ink-muted">Probá limpiar la búsqueda o seleccionar otro espacio político.</p>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    (function () {
+      const searchInput = document.getElementById('politician-search-input') as HTMLInputElement | null;
+      const spaceBtns = Array.from(document.querySelectorAll<HTMLButtonElement>('.pol-space-btn'));
+      const scopeBtns = Array.from(document.querySelectorAll<HTMLButtonElement>('.pol-scope-btn'));
+      const cards = Array.from(document.querySelectorAll<HTMLElement>('.politician-card'));
+      const countEl = document.getElementById('politicians-visible-count');
+      const resetBtn = document.getElementById('politicians-reset-filters');
+      const emptyState = document.getElementById('politicians-empty-state');
+
+      let activeSpace = 'all';
+      let activeScope = 'all';
+
+      function normalize(v: string): string {
+        return v.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().trim();
+      }
+
+      function updateButtonStates(buttons: HTMLButtonElement[], activeVal: string, attr: 'space' | 'scope') {
+        buttons.forEach((btn) => {
+          const val = btn.dataset[attr] || 'all';
+          const isActive = val === activeVal;
+          btn.classList.toggle('bg-ink', isActive);
+          btn.classList.toggle('text-canvas', isActive);
+          btn.classList.toggle('border-ink', isActive);
+          btn.classList.toggle('font-semibold', isActive);
+          btn.classList.toggle('bg-surface-muted', !isActive);
+          btn.classList.toggle('text-ink-secondary', !isActive);
+          btn.classList.toggle('border-rule', !isActive);
+          btn.classList.toggle('font-medium', !isActive);
+        });
+      }
+
+      function applyFilters() {
+        const query = normalize(searchInput?.value || '');
+        let visible = 0;
+
+        cards.forEach((card) => {
+          const cardSpace = card.dataset.space || '';
+          const cardScope = card.dataset.scope || '';
+          const haystack = normalize(card.dataset.search || '');
+
+          const matchSpace = activeSpace === 'all' || cardSpace === activeSpace;
+          const matchScope = activeScope === 'all' || cardScope === activeScope;
+          const matchQuery = !query || haystack.includes(query);
+
+          const show = matchSpace && matchScope && matchQuery;
+          card.classList.toggle('hidden', !show);
+          if (show) visible += 1;
+        });
+
+        if (countEl) {
+          countEl.textContent = `${visible} de ${cards.length} perfiles`;
+        }
+        if (emptyState) {
+          emptyState.classList.toggle('hidden', visible > 0);
+        }
+        if (resetBtn) {
+          const isFiltered = activeSpace !== 'all' || activeScope !== 'all' || query.length > 0;
+          resetBtn.classList.toggle('hidden', !isFiltered);
+        }
+      }
+
+      spaceBtns.forEach((btn) => {
+        btn.addEventListener('click', () => {
+          activeSpace = btn.dataset.space || 'all';
+          updateButtonStates(spaceBtns, activeSpace, 'space');
+          applyFilters();
+        });
+      });
+
+      scopeBtns.forEach((btn) => {
+        btn.addEventListener('click', () => {
+          activeScope = btn.dataset.scope || 'all';
+          updateButtonStates(scopeBtns, activeScope, 'scope');
+          applyFilters();
+        });
+      });
+
+      searchInput?.addEventListener('input', applyFilters);
+
+      resetBtn?.addEventListener('click', () => {
+        activeSpace = 'all';
+        activeScope = 'all';
+        if (searchInput) searchInput.value = '';
+        updateButtonStates(spaceBtns, 'all', 'space');
+        updateButtonStates(scopeBtns, 'all', 'scope');
+        applyFilters();
+      });
+    })();
+  </script>
+</Layout>

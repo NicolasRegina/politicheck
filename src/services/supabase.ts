@@ -263,6 +263,15 @@ export async function saveNewsClustersToSupabase(clusters: any[]): Promise<boole
       return false;
     }
     invalidateNewsCache();
+
+    // Non-blocking human-in-the-loop institutional role-change detector (ADR-0009)
+    try {
+      const { detectAndRecordPoliticianRoleAlerts } = await import('./politicians');
+      await detectAndRecordPoliticianRoleAlerts(uniqueIncoming);
+    } catch (alertErr: any) {
+      console.warn('[Supabase] Non-fatal role-alert scan error:', alertErr?.message || alertErr);
+    }
+
     return true;
   } catch (err: any) {
     console.error('[Supabase] Exception saving news clusters:', err.message);

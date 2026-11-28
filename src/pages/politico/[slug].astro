@@ -1,0 +1,432 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import PromiseCard from '../../components/PromiseCard.astro';
+import StoryCard from '../../components/StoryCard.astro';
+import SpectrumBar from '../../components/SpectrumBar.astro';
+import { getPoliticianBySlugAsync, computePoliticianMediaStats } from '../../services/politicians';
+import { calculateAge, slugifyPolitician, getPolitician } from '../../data/politicians';
+import { getPromisesWithLiveVotes, getPromisesStats } from '../../services/promises';
+import { getNewsClustersFromSupabase } from '../../services/supabase';
+import { getCachedClusteredStories } from '../../services/ai/clustering';
+import { getLastSyncTimestampAsync } from '../../services/rss/sync';
+import type { StoryCluster } from '../../types';
+
+export const prerender = false;
+Astro.response.headers.set('Cache-Control', 'public, s-maxage=300, stale-while-revalidate=900');
+
+const rawSlug = Astro.params.slug || '';
+const normalizedSlug = slugifyPolitician(rawSlug);
+
+const [dbPolitician, allPromises, cloudClusters, lastSyncIso] = await Promise.all([
+  getPoliticianBySlugAsync(normalizedSlug),
+  getPromisesWithLiveVotes(),
+  getNewsClustersFromSupabase({ maxAgeDays: 14, limit: 60 }).catch(() => null),
+  getLastSyncTimestampAsync().catch(() => null),
+]);
+
+// Fallback for any candidate present in promises.json even if not yet in politicians table
+let politician = dbPolitician;
+if (!politician) {
+  const matchedPromise = allPromises.find((p) => slugifyPolitician(p.candidate) === normalizedSlug);
+  if (matchedPromise) {
+    politician = getPolitician(matchedPromise.candidate);
+  }
+}
+
+const isFound = Boolean(politician);
+if (!isFound) {
+  Astro.response.status = 404;
+}
+
+const candidatePromises = politician
+  ? allPromises.filter((p) => slugifyPolitician(p.candidate) === politician.slug)
+  : [];
+const promiseStats = getPromisesStats(candidatePromises);
+
+const sourceStories: StoryCluster[] =
+  Array.isArray(cloudClusters) && cloudClusters.length > 0
+    ? (cloudClusters as StoryCluster[])
+    : getCachedClusteredStories();
+
+const mediaStats = politician
+  ? computePoliticianMediaStats(politician, sourceStories)
+  : { mentions: 0, stories: [], spectrum: { oficialismo: 0, centro_datos: 0, oposicion: 0, totalArticles: 0 } };
+
+const recentStories = mediaStats.stories.slice(0, 6);
+const age = politician ? calculateAge(politician.birthDate) : null;
+
+function getInitials(name: string): string {
+  return name
+    .split(/\s+/)
+    .filter(Boolean)
+    .map((part) => part[0])
+    .slice(0, 2)
+    .join('')
+    .toUpperCase();
+}
+
+const pageTitle = politician
+  ? `${politician.name} • Biografía, Trayectoria y Cobertura | Politicheck`
+  : 'Político no encontrado • Politicheck';
+
+const pageDescription = politician
+  ? `${politician.name} (${politician.coalition}): ${politician.role}. Biografía verificada, línea de tiempo de cargos, ejes programáticos y análisis de cobertura en 31 medios.`
+  : 'El perfil político solicitado no fue encontrado en el directorio de Politicheck.';
+
+const canonicalUrl = politician
+  ? `https://www.politicheck.com.ar/politico/${politician.slug}`
+  : 'https://www.politicheck.com.ar/politicos';
+
+const personJsonLd = politician
+  ? {
+      '@context': 'https://schema.org',
+      '@type': 'Person',
+      name: politician.fullName || politician.name,
+      alternateName: politician.name,
+      jobTitle: politician.role,
+      description: politician.summary,
+      image: politician.avatar ? `https://www.politicheck.com.ar${politician.avatar}` : undefined,
+      url: canonicalUrl,
+      affiliation: {
+        '@type': 'Organization',
+        name: politician.coalition,
+      },
+      nationality: 'Argentina',
+    }
+  : null;
+---
+
+<Layout
+  title={pageTitle}
+  description={pageDescription}
+  canonicalUrl={canonicalUrl}
+  image={politician?.avatar || '/images/social/twitter_banner.jpg'}
+  serverSyncIso={lastSyncIso}
+>
+  {personJsonLd && (
+    <script type="application/ld+json" set:html={JSON.stringify(personJsonLd)} />
+  )}
+
+  {isFound && politician ? (
+    <div class="space-y-10 pb-14">
+      <!-- Breadcrumb -->
+      <nav class="flex flex-wrap items-center justify-between gap-2 text-xs font-mono border-b border-rule pb-3">
+        <a
+          href="/politicos"
+          class="inline-flex items-center gap-1.5 text-ink-muted hover:text-ink font-semibold transition-colors"
+        >
+          <span>← Volver al Directorio de Políticos</span>
+        </a>
+        <span class="text-ink-muted">Ficha Oficial · {politician.scopeGroup}</span>
+      </nav>
+
+      <!-- EDITORIAL HERO: Rectangular Portrait + Identity + Key Metrics -->
+      <header class="bg-surface border border-rule rounded-md p-5 sm:p-7">
+        <div class="grid grid-cols-1 md:grid-cols-12 gap-6 items-start">
+          <!-- Portrait Column -->
+          <div class="md:col-span-4 lg:col-span-3 space-y-2">
+            <div class="relative aspect-[4/5] w-full max-w-[240px] mx-auto md:mx-0 rounded-md overflow-hidden border border-rule bg-surface-muted">
+              {politician.avatar ? (
+                <img
+                  src={politician.avatar}
+                  alt={`Retrato oficial de ${politician.name}`}
+                  width="320"
+                  height="400"
+                  fetchpriority="high"
+                  class="w-full h-full object-cover object-top"
+                  onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
+                />
+              ) : null}
+              <div
+                class={`w-full h-full font-mono text-4xl font-bold items-center justify-center ${politician.partyColor.badgeBg} ${politician.avatar ? 'hidden' : 'flex'}`}
+              >
+                {getInitials(politician.name)}
+              </div>
+            </div>
+            {politician.avatarCredit && (
+              <p class="text-[10px] font-mono text-ink-muted text-center md:text-left">
+                Foto: {politician.avatarCredit}
+              </p>
+            )}
+          </div>
+
+          <!-- Bio & Headline Column -->
+          <div class="md:col-span-8 lg:col-span-9 space-y-5">
+            <div class="space-y-2.5">
+              <div class="flex flex-wrap items-center gap-2">
+                <span class={`inline-flex px-2.5 py-0.5 rounded border text-xs font-sans font-bold ${politician.partyColor.badgeBg}`}>
+                  {politician.coalition}
+                </span>
+                <span class="px-2 py-0.5 rounded bg-surface-muted border border-rule text-[11px] font-mono text-ink-secondary">
+                  {politician.district}
+                </span>
+              </div>
+
+              <h1 class="font-editorial text-3xl sm:text-5xl font-bold text-ink leading-[1.08] tracking-tight">
+                {politician.name}
+              </h1>
+
+              <p class="text-sm sm:text-base font-sans font-semibold text-accent">
+                {politician.role}
+              </p>
+            </div>
+
+            <!-- 1. Neutral Biographical Summary -->
+            {politician.summary && (
+              <p class="text-sm sm:text-[15px] font-sans text-ink-secondary leading-relaxed max-w-3xl">
+                {politician.summary}
+              </p>
+            )}
+
+            <!-- Quick Factual Counters -->
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-2 border-t border-rule">
+              <div class="p-3 rounded-md bg-surface-muted/70 border border-rule">
+                <div class="font-mono text-xl font-bold text-ink">{politician.careerTimeline.length}</div>
+                <div class="text-[11px] font-sans text-ink-muted">Cargos públicos</div>
+              </div>
+              <div class="p-3 rounded-md bg-surface-muted/70 border border-rule">
+                <div class="font-mono text-xl font-bold text-ink">{mediaStats.mentions}</div>
+                <div class="text-[11px] font-sans text-ink-muted">Historias (14 días)</div>
+              </div>
+              <div class="p-3 rounded-md bg-surface-muted/70 border border-rule">
+                <div class="font-mono text-xl font-bold text-ink">{mediaStats.spectrum.totalArticles}</div>
+                <div class="text-[11px] font-sans text-ink-muted">Notas relevadas</div>
+              </div>
+              <div class="p-3 rounded-md bg-surface-muted/70 border border-rule">
+                <div class="font-mono text-xl font-bold text-ink">{promiseStats.total}</div>
+                <div class="text-[11px] font-sans text-ink-muted">Promesas auditadas</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <!-- TWO-COLUMN BODY: Ficha Técnica + Media Spectrum (4) -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+        <!-- 2. Ficha Técnica / Datos Duros -->
+        <section class="lg:col-span-7 bg-surface border border-rule rounded-md p-5 sm:p-6 space-y-4">
+          <h2 class="font-editorial text-xl font-bold text-ink border-b border-rule pb-2">
+            Ficha técnica
+          </h2>
+          <dl class="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-4 text-xs sm:text-sm font-sans">
+            <div>
+              <dt class="text-[11px] font-mono uppercase tracking-wider text-ink-muted">Nombre completo</dt>
+              <dd class="mt-0.5 font-semibold text-ink">{politician.fullName || politician.name}</dd>
+            </div>
+            {politician.birthDate && (
+              <div>
+                <dt class="text-[11px] font-mono uppercase tracking-wider text-ink-muted">Nacimiento</dt>
+                <dd class="mt-0.5 text-ink">
+                  <span class="font-mono">{politician.birthDate}</span>
+                  {age !== null && <span class="text-ink-muted"> ({age} años)</span>}
+                  {politician.birthPlace && <div class="text-xs text-ink-secondary">{politician.birthPlace}</div>}
+                </dd>
+              </div>
+            )}
+            {politician.education && (
+              <div class="sm:col-span-2">
+                <dt class="text-[11px] font-mono uppercase tracking-wider text-ink-muted">Formación académica</dt>
+                <dd class="mt-0.5 text-ink-secondary leading-relaxed">{politician.education}</dd>
+              </div>
+            )}
+            {politician.pastAffiliations.length > 0 && (
+              <div class="sm:col-span-2">
+                <dt class="text-[11px] font-mono uppercase tracking-wider text-ink-muted">Recorrido partidario y coaliciones</dt>
+                <dd class="mt-1.5 flex flex-wrap gap-1.5">
+                  {politician.pastAffiliations.map((aff) => (
+                    <span class="px-2 py-0.5 rounded bg-surface-muted border border-rule text-[11px] text-ink-secondary">
+                      {aff}
+                    </span>
+                  ))}
+                </dd>
+              </div>
+            )}
+          </dl>
+        </section>
+
+        <!-- 4. Cómo lo cubren los medios hoy -->
+        <section class="lg:col-span-5 bg-surface border border-rule rounded-md p-5 sm:p-6 space-y-4">
+          <div class="flex items-center justify-between border-b border-rule pb-2">
+            <h2 class="font-editorial text-xl font-bold text-ink">
+              Cómo lo cubren los medios hoy
+            </h2>
+            <span class="text-[10px] font-mono uppercase tracking-wider text-ink-muted">14 días</span>
+          </div>
+
+          {mediaStats.spectrum.totalArticles > 0 ? (
+            <div class="space-y-4">
+              <p class="text-xs font-sans text-ink-secondary leading-relaxed">
+                Distribución editorial calculada automáticamente sobre <strong>{mediaStats.spectrum.totalArticles} notas</strong> pertenecientes a <strong>{mediaStats.mentions} Historias</strong> recientes que mencionan a {politician.name}.
+              </p>
+
+              <SpectrumBar
+                spectrum={{
+                  oficialismoPct: mediaStats.spectrum.oficialismo,
+                  centroDatosPct: mediaStats.spectrum.centro_datos,
+                  oposicionPct: mediaStats.spectrum.oposicion,
+                  totalOutlets: mediaStats.spectrum.totalArticles,
+                }}
+              />
+
+              <div class="grid grid-cols-3 gap-2 pt-1 text-center font-mono">
+                <div class="p-2 rounded bg-surface-muted border border-rule">
+                  <div class="text-sm font-bold text-ink">{mediaStats.spectrum.oficialismo}%</div>
+                  <div class="text-[10px] font-sans text-ink-muted">Oficialismo</div>
+                </div>
+                <div class="p-2 rounded bg-surface-muted border border-rule">
+                  <div class="text-sm font-bold text-ink">{mediaStats.spectrum.centro_datos}%</div>
+                  <div class="text-[10px] font-sans text-ink-muted">Centro / Datos</div>
+                </div>
+                <div class="p-2 rounded bg-surface-muted border border-rule">
+                  <div class="text-sm font-bold text-ink">{mediaStats.spectrum.oposicion}%</div>
+                  <div class="text-[10px] font-sans text-ink-muted">Oposición</div>
+                </div>
+              </div>
+            </div>
+          ) : (
+            <p class="text-xs font-sans text-ink-muted leading-relaxed">
+              Sin menciones destacadas en las Historias agrupadas de los últimos 14 días. El espectro se actualiza automáticamente en cada sincronización de los 31 medios.
+            </p>
+          )}
+        </section>
+      </div>
+
+      <!-- 3. LÍNEA DE TIEMPO DE CARRERA POLÍTICA -->
+      {politician.careerTimeline.length > 0 && (
+        <section class="bg-surface border border-rule rounded-md p-5 sm:p-6 space-y-5">
+          <div class="flex flex-wrap items-end justify-between gap-2 border-b border-rule pb-2">
+            <h2 class="font-editorial text-xl sm:text-2xl font-bold text-ink">
+              Trayectoria en cargos públicos
+            </h2>
+            <span class="text-[11px] font-mono text-ink-muted">Orden cronológico</span>
+          </div>
+
+          <ol class="relative border-l border-rule ml-2 space-y-5 pl-6">
+            {politician.careerTimeline.map((entry) => (
+              <li class="relative">
+                <span class="absolute -left-[29px] top-1.5 w-2.5 h-2.5 rounded-full bg-ink border-2 border-surface" aria-hidden="true"></span>
+                <div class="flex flex-col sm:flex-row sm:items-baseline sm:justify-between gap-1">
+                  <h3 class="font-sans font-bold text-sm sm:text-base text-ink">
+                    {entry.role}
+                  </h3>
+                  <span class="font-mono text-xs font-semibold text-accent shrink-0">
+                    {entry.period}
+                  </span>
+                </div>
+                <div class="mt-0.5 text-xs font-sans text-ink-muted">
+                  <span>{entry.district}</span>
+                  {entry.coalition && <span> · {entry.coalition}</span>}
+                </div>
+              </li>
+            ))}
+          </ol>
+        </section>
+      )}
+
+      <!-- 5. EJES PROGRAMÁTICOS / POSICIONES PÚBLICAS DOCUMENTADAS -->
+      {politician.policyAxes.length > 0 && (
+        <section class="space-y-4">
+          <div class="flex flex-wrap items-end justify-between gap-2 border-b border-rule pb-2">
+            <div>
+              <h2 class="font-editorial text-xl sm:text-2xl font-bold text-ink">
+                Ejes programáticos y posiciones documentadas
+              </h2>
+              <p class="text-xs font-sans text-ink-muted mt-0.5">
+                Síntesis fáctica basada en plataformas electorales, votaciones legislativas y declaraciones oficiales de gestión.
+              </p>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {politician.policyAxes.map((axis) => (
+              <article class="p-4 sm:p-5 rounded-md bg-surface border border-rule space-y-2">
+                <h3 class="font-mono text-xs font-bold uppercase tracking-wider text-accent">
+                  {axis.topic}
+                </h3>
+                <p class="text-sm font-sans text-ink-secondary leading-relaxed">
+                  {axis.position}
+                </p>
+              </article>
+            ))}
+          </div>
+        </section>
+      )}
+
+      <!-- 6. PROMESÓMETRO (si tiene promesas auditadas) -->
+      {candidatePromises.length > 0 && (
+        <section class="space-y-4">
+          <div class="flex flex-wrap items-end justify-between gap-2 border-b border-rule pb-2">
+            <div>
+              <h2 class="font-editorial text-xl sm:text-2xl font-bold text-ink">
+                Promesas de campaña auditadas ({promiseStats.total})
+              </h2>
+              <p class="text-xs font-sans text-ink-muted mt-0.5">
+                {promiseStats.fulfilled} cumplidas · {promiseStats.inProgress} en progreso · {promiseStats.paused} en pausa · {promiseStats.broken} incumplidas
+              </p>
+            </div>
+            <a href="/promesas" class="text-xs font-sans font-semibold text-accent hover:underline">
+              Ver Promesómetro completo →
+            </a>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+            {candidatePromises.map((promise) => (
+              <PromiseCard promise={promise} />
+            ))}
+          </div>
+        </section>
+      )}
+
+      <!-- 7. COBERTURA MEDIÁTICA RECIENTE -->
+      <section class="space-y-4">
+        <div class="flex flex-wrap items-end justify-between gap-2 border-b border-rule pb-2">
+          <div>
+            <h2 class="font-editorial text-xl sm:text-2xl font-bold text-ink">
+              Cobertura mediática reciente
+            </h2>
+            <p class="text-xs font-sans text-ink-muted mt-0.5">
+              Historias de los últimos 14 días donde aparece {politician.name}.
+            </p>
+          </div>
+        </div>
+
+        {recentStories.length > 0 ? (
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+            {recentStories.map((story) => (
+              <StoryCard story={story} />
+            ))}
+          </div>
+        ) : (
+          <div class="rounded-md bg-surface border border-rule p-6 text-xs font-sans text-ink-muted">
+            No se registraron Historias agrupadas con menciones directas a {politician.name} en las últimas dos semanas.
+          </div>
+        )}
+      </section>
+
+      <!-- Sources Footer -->
+      {politician.sources.length > 0 && (
+        <footer class="pt-4 border-t border-rule flex flex-wrap items-center justify-between gap-2 text-[11px] font-mono text-ink-muted">
+          <div>
+            Fuentes primarias consultadas: {politician.sources.join(' · ')}
+          </div>
+          <div>
+            ¿Detectaste un cambio de cargo? El sistema audita noticias automáticamente y el equipo editorial valida cada actualización.
+          </div>
+        </footer>
+      )}
+    </div>
+  ) : (
+    <div class="py-16 text-center space-y-4">
+      <h1 class="font-editorial text-3xl font-bold text-ink">Político no encontrado</h1>
+      <p class="text-sm font-sans text-ink-muted">
+        El perfil solicitado no figura en el directorio actual de Politicheck.
+      </p>
+      <a
+        href="/politicos"
+        class="inline-flex items-center gap-2 px-4 py-2 rounded-md bg-ink text-canvas text-xs font-sans font-semibold hover:opacity-90 transition-opacity"
+      >
+        Ir al Directorio de Políticos
+      </a>
+    </div>
+  )}
+</Layout>

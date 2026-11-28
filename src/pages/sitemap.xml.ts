@@ -1,5 +1,6 @@
 import type { APIRoute } from 'astro';
 import { GUIAS_ARTICLES } from '../data/guias';
+import { POLITICIANS_LIST } from '../data/politicians';
 import rawPromises from '../data/promises.json';
 import rawStories from '../data/clustered_stories.json';
 import { brazilElectionClusters } from '../data/brasil_election';
@@ -30,6 +31,12 @@ export const GET: APIRoute = async () => {
       lastmod: today,
       changefreq: 'weekly',
       priority: '0.9'
+    },
+    {
+      loc: `${baseUrl}/politicos`,
+      lastmod: today,
+      changefreq: 'daily',
+      priority: '0.95'
     },
     {
       loc: `${baseUrl}/promesas`,
@@ -75,25 +82,13 @@ export const GET: APIRoute = async () => {
     });
   }
 
-  // Verified Candidate Profiles (/candidato/[slug])
-  const candidateSlugs = [
-    'javier-milei',
-    'axel-kicillof',
-    'mauricio-macri',
-    'victoria-villarruel',
-    'patricia-bullrich',
-    'jorge-macri',
-    'juan-schiaretti',
-    'horacio-rodriguez-larreta',
-    'leandro-santoro',
-    'sergio-massa',
-  ];
-  for (const slug of candidateSlugs) {
+  // Verified Politician Profiles (/politico/[slug])
+  for (const pol of POLITICIANS_LIST) {
     urls.push({
-      loc: `${baseUrl}/candidato/${slug}`,
+      loc: `${baseUrl}/politico/${pol.slug}`,
       lastmod: today,
       changefreq: 'weekly',
-      priority: '0.8'
+      priority: '0.85'
     });
   }
 

@@ -332,6 +332,21 @@
 - [x] **Ola 4 — Rutas Dedicadas SEO (`/promesas` y `/mirada-exterior`) [COMPLETADA]:**
   - Nuevas rutas dedicadas `src/pages/promesas.astro` (con scorecard dinámico por candidato y votos en vivo) y `src/pages/mirada-exterior.astro`, incorporadas a `src/pages/sitemap.xml.ts` manteniendo compatibilidad total con las vistas de Portada.
 
+---
+
+### ✅ Tarea 20: Directorio de Políticos Argentinos y Alertas de Cambio de Cargo (ADR-0009) — [COMPLETADA]
+- [x] **Base de datos y RLS en Supabase (`politicians` + `politician_alerts`):**
+  - Migración aplicada con lectura pública de perfiles activos, escritura exclusiva para `admin`/`superadmin` y registro seguro de alertas pendientes.
+  - Seed completo de **22 políticos argentinos** verificados a noviembre 2026 (con fallback tipado en `src/data/politicians.ts`) y **22 retratos locales** oficiales/Wikimedia en `public/images/politicians/`.
+- [x] **Directorio `/politicos` y Ficha Enriquecida `/politico/[slug]`:**
+  - Franja superior dinámica **"En agenda hoy"** (top 6 más mencionados en los últimos 14 días) + grilla principal ordenada alfabéticamente (A–Z) con retratos editoriales `aspect-[4/5]` (`object-top`), buscador y filtros por espacio político y ámbito institucional.
+  - Ficha `/politico/[slug]` con resumen biográfico neutral, ficha técnica de datos duros, línea de tiempo cronológica, bloque **"Cómo lo cubren los medios hoy"** (`SpectrumBar` de 14 días), 4 ejes programáticos documentados, Promesómetro y cobertura reciente.
+  - Redirección permanente `301` desde `/candidato/[slug]` hacia `/politico/[slug]`, botón destacado `Políticos` con micro-cinta celeste-blanco-celeste en `Header.astro`, acceso móvil en `Más`, `Footer.astro` y `sitemap.xml.ts`.
+- [x] **Detector automático de cambios de cargo + `/admin`:**
+  - Escaneo determinista en `saveNewsClustersToSupabase` que detecta renuncias, asunciones, designaciones o inhabilitaciones en Historias nuevas y crea alertas *human-in-the-loop* en `politician_alerts`.
+  - Nueva pestaña **"Políticos y alertas"** en `/admin` y endpoint protegido `/api/admin/politicians` para aprobar/descartar alertas y editar cargos en vivo sin redeploy.
+
+
 
 
 
